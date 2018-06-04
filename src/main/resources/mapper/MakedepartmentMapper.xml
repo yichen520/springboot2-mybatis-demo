@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.MakedepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Makedepartment" >
+    <id column="makedepartment_code" property="makedepartmentCode" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="department_nation_name" property="departmentNationName" jdbcType="VARCHAR" />
+    <result column="department_english_name" property="departmentEnglishName" jdbcType="VARCHAR" />
+    <result column="department_english_ahhr" property="departmentEnglishAhhr" jdbcType="VARCHAR" />
+    <result column="seal_makedepartment_status" property="sealMakedepartmentStatus" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
+    <result column="legal_id_type" property="legalIdType" jdbcType="VARCHAR" />
+    <result column="legal_englishsurname" property="legalEnglishsurname" jdbcType="VARCHAR" />
+    <result column="legal_englishname" property="legalEnglishname" jdbcType="VARCHAR" />
+    <result column="legal_telphone" property="legalTelphone" jdbcType="VARCHAR" />
+    <result column="department_address" property="departmentAddress" jdbcType="VARCHAR" />
+    <result column="department_address_detail" property="departmentAddressDetail" jdbcType="VARCHAR" />
+    <result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
+    <result column="logout_time" property="logoutTime" jdbcType="TIMESTAMP" />
+    <result column="department_status" property="departmentStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    makedepartment_code,  department_name, department_nation_name, department_english_name,
+    department_english_ahhr, seal_makedepartment_status, legal_name, legal_id, legal_id_type, 
+    legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail, 
+    telphone, postal_code, logout_time, department_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from makedepartment
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update  makedepartment set deleteStatus = 1
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </update>
+  <insert id="insert" parameterType="com.dhht.model.Makedepartment" >
+    insert into makedepartment (makedepartment_code, password, department_name, 
+      department_nation_name, department_english_name, 
+      department_english_ahhr, seal_makedepartment_status, 
+      legal_name, legal_id, legal_id_type, 
+      legal_englishsurname, legal_englishname, 
+      legal_telphone, department_address, department_address_detail, 
+      telphone, postal_code, logout_time, 
+      department_status)
+    values (#{makedepartmentCode,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, 
+      #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR}, 
+      #{departmentEnglishAhhr,jdbcType=VARCHAR}, #{sealMakedepartmentStatus,jdbcType=VARCHAR}, 
+      #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR}, #{legalIdType,jdbcType=VARCHAR}, 
+      #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR}, 
+      #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR}, 
+      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{logoutTime,jdbcType=TIMESTAMP}, 
+      #{departmentStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.Makedepartment" >
+    insert into makedepartment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="makedepartmentCode != null" >
+        makedepartment_code,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="departmentName != null" >
+        department_name,
+      </if>
+      <if test="departmentNationName != null" >
+        department_nation_name,
+      </if>
+      <if test="departmentEnglishName != null" >
+        department_english_name,
+      </if>
+      <if test="departmentEnglishAhhr != null" >
+        department_english_ahhr,
+      </if>
+      <if test="sealMakedepartmentStatus != null" >
+        seal_makedepartment_status,
+      </if>
+      <if test="legalName != null" >
+        legal_name,
+      </if>
+      <if test="legalId != null" >
+        legal_id,
+      </if>
+      <if test="legalIdType != null" >
+        legal_id_type,
+      </if>
+      <if test="legalEnglishsurname != null" >
+        legal_englishsurname,
+      </if>
+      <if test="legalEnglishname != null" >
+        legal_englishname,
+      </if>
+      <if test="legalTelphone != null" >
+        legal_telphone,
+      </if>
+      <if test="departmentAddress != null" >
+        department_address,
+      </if>
+      <if test="departmentAddressDetail != null" >
+        department_address_detail,
+      </if>
+      <if test="telphone != null" >
+        telphone,
+      </if>
+      <if test="postalCode != null" >
+        postal_code,
+      </if>
+      <if test="logoutTime != null" >
+        logout_time,
+      </if>
+      <if test="departmentStatus != null" >
+        department_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="makedepartmentCode != null" >
+        #{makedepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null" >
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentNationName != null" >
+        #{departmentNationName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentEnglishName != null" >
+        #{departmentEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentEnglishAhhr != null" >
+        #{departmentEnglishAhhr,jdbcType=VARCHAR},
+      </if>
+      <if test="sealMakedepartmentStatus != null" >
+        #{sealMakedepartmentStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalId != null" >
+        #{legalId,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdType != null" >
+        #{legalIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="legalEnglishsurname != null" >
+        #{legalEnglishsurname,jdbcType=VARCHAR},
+      </if>
+      <if test="legalEnglishname != null" >
+        #{legalEnglishname,jdbcType=VARCHAR},
+      </if>
+      <if test="legalTelphone != null" >
+        #{legalTelphone,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentAddress != null" >
+        #{departmentAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentAddressDetail != null" >
+        #{departmentAddressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null" >
+        #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logoutTime != null" >
+        #{logoutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="departmentStatus != null" >
+        #{departmentStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Makedepartment" >
+    update makedepartment
+    <set >
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null" >
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentNationName != null" >
+        department_nation_name = #{departmentNationName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentEnglishName != null" >
+        department_english_name = #{departmentEnglishName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentEnglishAhhr != null" >
+        department_english_ahhr = #{departmentEnglishAhhr,jdbcType=VARCHAR},
+      </if>
+      <if test="sealMakedepartmentStatus != null" >
+        seal_makedepartment_status = #{sealMakedepartmentStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        legal_name = #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalId != null" >
+        legal_id = #{legalId,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdType != null" >
+        legal_id_type = #{legalIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="legalEnglishsurname != null" >
+        legal_englishsurname = #{legalEnglishsurname,jdbcType=VARCHAR},
+      </if>
+      <if test="legalEnglishname != null" >
+        legal_englishname = #{legalEnglishname,jdbcType=VARCHAR},
+      </if>
+      <if test="legalTelphone != null" >
+        legal_telphone = #{legalTelphone,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentAddress != null" >
+        department_address = #{departmentAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentAddressDetail != null" >
+        department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null" >
+        postal_code = #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logoutTime != null" >
+        logout_time = #{logoutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="departmentStatus != null" >
+        department_status = #{departmentStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Makedepartment" >
+    update makedepartment
+    set password = #{password,jdbcType=VARCHAR},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      department_nation_name = #{departmentNationName,jdbcType=VARCHAR},
+      department_english_name = #{departmentEnglishName,jdbcType=VARCHAR},
+      department_english_ahhr = #{departmentEnglishAhhr,jdbcType=VARCHAR},
+      seal_makedepartment_status = #{sealMakedepartmentStatus,jdbcType=VARCHAR},
+      legal_name = #{legalName,jdbcType=VARCHAR},
+      legal_id = #{legalId,jdbcType=VARCHAR},
+      legal_id_type = #{legalIdType,jdbcType=VARCHAR},
+      legal_englishsurname = #{legalEnglishsurname,jdbcType=VARCHAR},
+      legal_englishname = #{legalEnglishname,jdbcType=VARCHAR},
+      legal_telphone = #{legalTelphone,jdbcType=VARCHAR},
+      department_address = #{departmentAddress,jdbcType=VARCHAR},
+      department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},
+      telphone = #{telphone,jdbcType=VARCHAR},
+      postal_code = #{postalCode,jdbcType=VARCHAR},
+      logout_time = #{logoutTime,jdbcType=TIMESTAMP},
+      department_status = #{departmentStatus,jdbcType=VARCHAR}
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findAllMake" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from makedepartment where deleteStatus = 0
+  </select>
+</mapper>
