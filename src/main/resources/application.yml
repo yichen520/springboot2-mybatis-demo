@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
 
 #超级管理员账号密码
 
@@ -51,3 +51,5 @@ pagehelper:
     params: count=countSql
     returnPageInfo: check
 
+  thymeleaf:
+       cache: false

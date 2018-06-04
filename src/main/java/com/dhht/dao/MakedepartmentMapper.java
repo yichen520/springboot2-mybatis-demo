@@ -18,4 +18,6 @@ public interface MakedepartmentMapper {
     int updateByPrimaryKey(Makedepartment record);
 
     List<Makedepartment> findAllMake();
+
+    int validateUserAccout(String code);
 }

@@ -26,7 +26,7 @@ public class AdminController {
     @Autowired
    private MakeDepartmentService makeDepartmentService;
 
-    //查看所有的制作单位
+    //@Log("查看所有的制作单位")
     @RequestMapping(value="/findallmake",produces="application/json;charset=UTF-8")
     public JsonObjectBO index(@RequestBody Map map) {
         int pageNum =(Integer) map.get("pageNum");
@@ -43,11 +43,19 @@ public class AdminController {
 
     //增加制作单位
     @RequestMapping(value="/addmake" ,method=RequestMethod.POST)
-    public JsonObjectBO addmake(@ModelAttribute("makedepartment")Makedepartment makedepartment) {
+    public JsonObjectBO addmake(@RequestBody Makedepartment makedepartment) {
+        if (makedepartment.getPassword() == null){
+            makedepartment.setPassword("123456");
+        }
         makedepartment.setPassword(MD5Util.toMd5(makedepartment.getPassword()));
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-       // boolean flag = makeDepartmentService.
+        int flag = makeDepartmentService.validateUserAccout(makedepartment.getMakedepartmentCode());
+        if (flag == 1){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("新增失败，有重复的用户名");
+            return jsonObjectBO;
+        }
         int users = makeDepartmentService.addMake(makedepartment);
         if (users>0){
             jsonObjectBO.setCode(1);
@@ -77,9 +85,11 @@ public class AdminController {
 
     //修改制作单位
     @RequestMapping(value="/updatemake" ,method=RequestMethod.POST)
-    public JsonObjectBO updatemake( Makedepartment makedepartment) {
+    public JsonObjectBO updatemake(@RequestBody Makedepartment makedepartment) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
+       // if (makedepartment.getDepartmentStatus().equals("0"));
+
         int users = makeDepartmentService.updatemake(makedepartment);
         if (users>0){
             jsonObjectBO.setCode(1);

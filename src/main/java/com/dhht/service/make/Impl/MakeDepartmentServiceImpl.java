@@ -38,6 +38,12 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     @Override
+    public int validateUserAccout(String code){
+        return makedepartmentMapper.validateUserAccout(code);
+    }
+
+
+    @Override
     public PageInfo<Makedepartment> findAllMakeBySize(int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
         List<Makedepartment> userDomains = makedepartmentMapper.findAllMake();

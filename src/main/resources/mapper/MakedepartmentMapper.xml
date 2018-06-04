@@ -45,16 +45,16 @@
       legal_name, legal_id, legal_id_type, 
       legal_englishsurname, legal_englishname, 
       legal_telphone, department_address, department_address_detail, 
-      telphone, postal_code, logout_time, 
-      department_status)
+      telphone, postal_code, logout_time
+      )
     values (#{makedepartmentCode,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, 
       #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR}, 
       #{departmentEnglishAhhr,jdbcType=VARCHAR}, #{sealMakedepartmentStatus,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR}, #{legalIdType,jdbcType=VARCHAR}, 
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR}, 
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR}, 
-      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{logoutTime,jdbcType=TIMESTAMP}, 
-      #{departmentStatus,jdbcType=VARCHAR})
+      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{logoutTime,jdbcType=TIMESTAMP}
+)
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Makedepartment" >
     insert into makedepartment
@@ -265,4 +265,12 @@
     <include refid="Base_Column_List" />
     from makedepartment where deleteStatus = 0
   </select>
+
+  <select id="validateUserAccout" parameterType="java.lang.String" resultType="java.lang.Integer"  >
+    select count(1)
+    from makedepartment where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </select>
+
+
+
 </mapper>

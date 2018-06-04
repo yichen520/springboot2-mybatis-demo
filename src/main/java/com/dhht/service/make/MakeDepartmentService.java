@@ -16,4 +16,6 @@ public interface MakeDepartmentService {
      int updatemake(Makedepartment makedepartment);
 
      PageInfo<Makedepartment> findAllMakeBySize(int pageNum, int pageSize);
+
+     int validateUserAccout(String code);
 }
