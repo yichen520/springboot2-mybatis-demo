@@ -51,5 +51,5 @@ pagehelper:
     params: count=countSql
     returnPageInfo: check
 
-  thymeleaf:
+thymeleaf:
        cache: false
