@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.DistrictMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.District" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="province_id" property="provinceId" jdbcType="INTEGER" />
+    <result column="province_name" property="provinceName" jdbcType="VARCHAR" />
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="INTEGER" />
+    <result column="district_name" property="districtName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, province_id, province_name, city_id, city_name, district_id, district_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dhht.model.DistrictExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_district
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_district
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_district
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dhht.model.DistrictExample" >
+    delete from sys_district
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.District" >
+    insert into sys_district (id, province_id, province_name, 
+      city_id, city_name, district_id, 
+      district_name)
+    values (#{id,jdbcType=INTEGER}, #{provinceId,jdbcType=INTEGER}, #{provinceName,jdbcType=VARCHAR}, 
+      #{cityId,jdbcType=INTEGER}, #{cityName,jdbcType=VARCHAR}, #{districtId,jdbcType=INTEGER}, 
+      #{districtName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.District" >
+    insert into sys_district
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="provinceId != null" >
+        province_id,
+      </if>
+      <if test="provinceName != null" >
+        province_name,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="districtId != null" >
+        district_id,
+      </if>
+      <if test="districtName != null" >
+        district_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="provinceId != null" >
+        #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="provinceName != null" >
+        #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="districtName != null" >
+        #{districtName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dhht.model.DistrictExample" resultType="java.lang.Integer" >
+    select count(*) from sys_district
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_district
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.provinceId != null" >
+        province_id = #{record.provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="record.provinceName != null" >
+        province_name = #{record.provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cityId != null" >
+        city_id = #{record.cityId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cityName != null" >
+        city_name = #{record.cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.districtId != null" >
+        district_id = #{record.districtId,jdbcType=INTEGER},
+      </if>
+      <if test="record.districtName != null" >
+        district_name = #{record.districtName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_district
+    set id = #{record.id,jdbcType=INTEGER},
+      province_id = #{record.provinceId,jdbcType=INTEGER},
+      province_name = #{record.provinceName,jdbcType=VARCHAR},
+      city_id = #{record.cityId,jdbcType=INTEGER},
+      city_name = #{record.cityName,jdbcType=VARCHAR},
+      district_id = #{record.districtId,jdbcType=INTEGER},
+      district_name = #{record.districtName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.District" >
+    update sys_district
+    <set >
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="provinceName != null" >
+        province_name = #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        district_id = #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="districtName != null" >
+        district_name = #{districtName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.District" >
+    update sys_district
+    set province_id = #{provinceId,jdbcType=INTEGER},
+      province_name = #{provinceName,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=INTEGER},
+      city_name = #{cityName,jdbcType=VARCHAR},
+      district_id = #{districtId,jdbcType=INTEGER},
+      district_name = #{districtName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
