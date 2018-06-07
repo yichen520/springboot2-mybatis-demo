@@ -1,8 +1,12 @@
 package com.dhht.dao;
 
 import com.dhht.model.Role;
+import org.springframework.stereotype.Repository;
 
-public interface RoleMapper {
+import java.util.List;
+
+@Repository
+public interface RoleDao {
     int deleteByPrimaryKey(String id);
 
     int insert(Role record);
@@ -14,4 +18,6 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+
+    List<Role> findAllRole();
 }

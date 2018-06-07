@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dhht.dao.RoleMapper" >
+<mapper namespace="com.dhht.dao.RoleDao" >
   <resultMap id="BaseResultMap" type="com.dhht.model.Role" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -68,4 +68,10 @@
       is_system = #{isSystem,jdbcType=TINYINT}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="findAllRole"  resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_role
+  </select>
 </mapper>
