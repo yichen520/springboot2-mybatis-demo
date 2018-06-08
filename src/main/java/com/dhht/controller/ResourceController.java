@@ -5,6 +5,7 @@ import com.dhht.model.Makedepartment;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
 
+import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping(value = "/sys/resource")
@@ -83,7 +84,7 @@ public class ResourceController {
     @RequestMapping(value = "/add")
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         //为资源添加一个UUID
-       // resource.setId(UUIDUtil.generate());
+        resource.setId(UUIDUtil.generate());
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
@@ -117,7 +118,7 @@ public class ResourceController {
     }
 
     //查找权限下的资源
-    @RequestMapping(value = "/selectRoleResource")
+    @RequestMapping(value = "/RoleResource")
     public JsonObjectBO selectRoleResource(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
