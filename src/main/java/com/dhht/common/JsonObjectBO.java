@@ -1,6 +1,8 @@
 package com.dhht.common;
 
 import com.alibaba.fastjson.JSONObject;
+//import com.dhht.util.WebUtil;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 public class JsonObjectBO {
     private int code;  //业务状态（编码）
@@ -72,4 +74,8 @@ public class JsonObjectBO {
 
         return json.toString();
     }
+
+//    public void writeJson(Object object) {
+//        WebUtil.writeJson(object);
+//    }
 }

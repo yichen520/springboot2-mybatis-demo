@@ -31,15 +31,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from makedepartment
+    from make_department
     where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
   </select>
   <update id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    update  makedepartment set deleteStatus = 1
+    update  make_department set deleteStatus = 1
     where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
   </update>
   <insert id="insert" parameterType="com.dhht.model.Makedepartment" >
-    insert into makedepartment (makedepartment_code, password, department_name, 
+    insert into make_department (makedepartment_code, password, department_name,
       department_nation_name, department_english_name, 
       department_english_ahhr, seal_makedepartment_status, 
       legal_name, legal_id, legal_id_type, 
@@ -57,7 +57,7 @@
 )
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Makedepartment" >
-    insert into makedepartment
+    insert into make_department
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="makedepartmentCode != null" >
         makedepartment_code,
@@ -238,7 +238,7 @@
     where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.Makedepartment" >
-    update makedepartment
+    update make_department
     set password = #{password,jdbcType=VARCHAR},
       department_name = #{departmentName,jdbcType=VARCHAR},
       department_nation_name = #{departmentNationName,jdbcType=VARCHAR},
@@ -263,12 +263,12 @@
   <select id="findAllMake" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
-    from makedepartment where deleteStatus = 0
+    from make_department where deleteStatus = 0
   </select>
 
   <select id="validateUserAccout" parameterType="java.lang.String" resultType="java.lang.Integer"  >
     select count(1)
-    from makedepartment where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+    from make_department where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
   </select>
 
 
