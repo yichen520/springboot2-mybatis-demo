@@ -74,4 +74,8 @@
     <include refid="Base_Column_List" />
     from sys_role
   </select>
+
+  <select id="getByNo" resultType="com.dhht.model.Role">
+    select * from sys_role where `id` = #{RoleId}
+  </select>
 </mapper>
