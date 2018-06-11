@@ -1,5 +1,7 @@
 package com.dhht.model;
 
+import java.util.List;
+
 public class Resource {
     private String id;
 
@@ -16,6 +18,8 @@ public class Resource {
     private Integer menuSort;
 
     private Byte isMenu;
+
+    private List<Resource> children;
 
     public String getId() {
         return id;
@@ -79,5 +83,21 @@ public class Resource {
 
     public void setIsMenu(Byte isMenu) {
         this.isMenu = isMenu;
+    }
+
+    public Boolean getRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(Boolean required) {
+        isRequired = required;
+    }
+
+    public List<Resource> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Resource> children) {
+        this.children = children;
     }
 }

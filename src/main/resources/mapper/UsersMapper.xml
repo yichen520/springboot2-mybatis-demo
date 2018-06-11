@@ -73,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_name, real_name, password, role_id, object_id, is_locked, login_error_times, 
+    id, user_name, real_name, password, role_id, object_id, is_locked, login_error_times,
     is_changed_pwd, is_deleted, region_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dhht.model.UsersExample" >
@@ -91,7 +91,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from sys_user
     where id = #{id,jdbcType=CHAR}
@@ -107,13 +107,13 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.dhht.model.Users" >
-    insert into sys_user (id, user_name, real_name, 
-      password, role_id, object_id, 
-      is_locked, login_error_times, is_changed_pwd, 
+    insert into sys_user (id, user_name, real_name,
+      password, role_id, object_id,
+      is_locked, login_error_times, is_changed_pwd,
       is_deleted, region_id)
-    values (#{id,jdbcType=CHAR}, #{userName,jdbcType=CHAR}, #{realName,jdbcType=VARCHAR}, 
-      #{password,jdbcType=CHAR}, #{roleId,jdbcType=CHAR}, #{objectId,jdbcType=CHAR}, 
-      #{isLocked,jdbcType=BIT}, #{loginErrorTimes,jdbcType=INTEGER}, #{isChangedPwd,jdbcType=BIT}, 
+    values (#{id,jdbcType=CHAR}, #{userName,jdbcType=CHAR}, #{realName,jdbcType=VARCHAR},
+      #{password,jdbcType=CHAR}, #{roleId,jdbcType=CHAR}, #{objectId,jdbcType=CHAR},
+      #{isLocked,jdbcType=BIT}, #{loginErrorTimes,jdbcType=INTEGER}, #{isChangedPwd,jdbcType=BIT},
       #{isDeleted,jdbcType=BIT}, #{regionId,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Users" >
@@ -304,8 +304,5 @@
     where id = #{id,jdbcType=CHAR}
   </update>
 
-  <select id="validate"  resultMap="BaseResultMap" parameterType="com.dhht.model.UserDomain" >
-    select * from sys_user where
-    user_name = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
-  </select>
+
 </mapper>

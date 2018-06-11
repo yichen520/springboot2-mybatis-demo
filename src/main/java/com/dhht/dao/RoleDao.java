@@ -20,4 +20,7 @@ public interface RoleDao {
     int updateByPrimaryKey(Role record);
 
     List<Role> findAllRole();
+
+    Role getByNo(String RoleId);
+
 }

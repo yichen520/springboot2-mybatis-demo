@@ -13,5 +13,9 @@ public interface UserService {
     int validateUserLoginTwo(UserDomain userDomain);
     int validateUserLoginThree(UserDomain userDomain);
 
-    Users validate(Users users);
+    int addUser(Users users);
+    int Update(Users users);
+    int deleteSuser(String id);
+    PageInfo<Users> findAllSuser(int pageNum, int pageSize);
+    int changePwd(String id , String password);
 }

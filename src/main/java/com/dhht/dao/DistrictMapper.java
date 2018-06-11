@@ -27,4 +27,7 @@ public interface DistrictMapper {
     int updateByPrimaryKeySelective(District record);
 
     int updateByPrimaryKey(District record);
+
+    District getByNo(String regionId);
+    District getById(String regionId);
 }

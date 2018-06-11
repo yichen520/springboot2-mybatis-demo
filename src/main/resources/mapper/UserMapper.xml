@@ -21,5 +21,142 @@
         employee_code = #{0} and password = #{1}
   </select>
 
+    <resultMap id="queryForListMap" type="com.dhht.model.Users">
+        <id column="id" property="id" jdbcType="CHAR"/>
+        <result column="user_name" property="userName" jdbcType="CHAR" />
+        <result column="real_name" property="realName"/>
+        <result column="password" property="password" jdbcType="CHAR" />
+        <result column="role_id" property="roleId" jdbcType="CHAR" />
+        <result column="object_id" property="objectId" jdbcType="CHAR"/>
+        <result column="is_locked" property="isLocked" jdbcType="BIT"/>
+        <result column="login_error_times" property="loginErrorTimes" jdbcType="INTEGER"/>
+        <result column="is_changed_pwd" property="isChangedPwd" jdbcType="BIT"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
+        <result column="district_id" property="regionId" jdbcType="CHAR"/>
+        <!--<association property="role" select="selectRole" column="role_id" javaType="com.dhht.model.Role"></association>-->
+        <!--<association property="district" select="selectDistrict" column="district_id" javaType="com.dhht.model.District"></association>-->
+        <association property="role"  resultMap="roleResultMap" javaType="com.dhht.model.Role"></association>
+        <association property="district"  resultMap="districtResultMap" javaType="com.dhht.model.District"></association>
+        <!--<association property="makedepartment" select="selectMakeDepartment" column="user_name" javaType="MakeDepartment"></association>-->
+        <!--<collection property="district" ofType="com.dhht.model.District">-->
+        <!--<id column="id" property="id" jdbcType="INTEGER"/>-->
+        <!--<result column="province_id" property="provinceId" jdbcType="INTEGER" />-->
+        <!--<result column="province_name" property="provinceName" jdbcType="DOUBLE" />-->
+        <!--<result column="city_id" property="cityId" jdbcType="INTEGER" />-->
+        <!--<result column="city_name" property="cityName" jdbcType="VARCHAR" />-->
+        <!--<result column="district_id" property="districtId" jdbcType="INTEGER" />-->
+        <!--<result column="district_name" property="districtName" jdbcType="VARCHAR" />-->
+        <!--</collection>-->
+    </resultMap>
+
+    <!--<resultMap id="makedepartmentResultMap" type="Role">-->
+    <!--<result property="department_name" column="departmentName"/>-->
+    <!--</resultMap>-->
+    <resultMap id="roleResultMap" type="com.dhht.model.Role">
+        <!--<id property="id" column="id"/>-->
+        <result property="name" column="name"/>
+
+    </resultMap>
+    <resultMap id="districtResultMap" type="com.dhht.model.District">
+        <!--<id property="id" column="id"/>-->
+        <result property="provinceId" column="province_id"/>
+        <result property="provinceName" column="province_name"/>
+        <result property="cityId" column="city_id"/>
+        <result property="cityName" column="city_name"/>
+        <result property="districtId" column="district_id"/>
+        <result property="districtName" column="district_name"/>
+    </resultMap>
+
+    <!--<sql id="Base_Column_List" >-->
+    <!--user_name,  real_name, role_id, is_locked,-->
+    <!--`name`,  province_name, city_name,-->
+    <!--district_name-->
+    <!--</sql>-->
+
+    <select id="selectMakeDepartment"  resultType="com.dhht.model.Makedepartment">
+        select *
+        from make_department where makedepartment_code=#{userName}
+    </select>
+    <select id="selectDistrict"  resultType="com.dhht.model.District">
+        select *
+        from sys_district where district_id=#{district_id}
+    </select>
+    <select id="selectRole"  resultType="com.dhht.model.Role">
+        select *
+        from sys_role where id=#{role_id}
+    </select>
+    <insert id="addUser" parameterType="com.dhht.model.Users">
+        INSERT INTO sys_user(
+        `id`,
+        `user_name`,
+        `real_name`,
+        `password`,
+        `role_id`,
+        `object_id`,
+        `is_locked`,
+        `login_error_times`,
+        `is_changed_pwd`,
+        `is_deleted`,
+        `district_id`)
+        values (
+        #{id},
+        #{userName},
+        #{realName},
+        #{password},
+        #{roleId},
+        0,
+        0,
+        0,
+        0,
+        0,
+        #{regionId}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.dhht.model.Users">
+        UPDATE sys_user
+        <set>
+            <if test="userName != null and userName!=''"> `user_name` = #{userName}, </if>
+            <if test="realName != null and realName!=''"> `real_name` = #{realName}, </if>
+            <if test="roleId != null and roleId!=''"> `role_id` = #{roleId}, </if>
+            <if test="regionId != null and regionId!='' "> `district_id` = #{regionId}, </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        UPDATE sys_user
+        <set>
+            `is_deleted` = 1
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <!--<select id="findAllSuser" resultType="com.dhht.model.Users">-->
+    <select id="findAllSuser" resultMap="queryForListMap">
+        SELECT *
+        FROM sys_user u,sys_role r,sys_district d
+        WHERE
+        u.role_id = r.id AND u.district_id = d.district_id
+    </select>
+
+    <!--<select id="findRoleById" resultType="com.dhht.model.Users">-->
+    <!--SELECT-->
+    <!--</select>-->
+    <select id="findByNo" resultType="com.dhht.model.Users">
+        SELECT * FROM sys_user
+        WHERE
+        `id` = #{id}
+    </select>
+
+    <update id="changePwd">
+        UPDATE sys_user
+        <set>
+            <if test="password != null and password!=''"> `password` = #{password}, </if>
+            `is_deleted` = 1
+        </set>
+        WHERE id = #{id}
+    </update>
 
 </mapper>

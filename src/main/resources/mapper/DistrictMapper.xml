@@ -240,4 +240,12 @@
       district_name = #{districtName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getByNo" resultType="com.dhht.model.District">
+    select province_name,city_name,district_name from sys_district WHERE district_id = #{regionId};
+  </select>
+
+  <select id="getById" resultType="com.dhht.model.District">
+    SELECT province_id,city_id FROM sys_district WHERE district_id = #{regionId};
+  </select>
 </mapper>
