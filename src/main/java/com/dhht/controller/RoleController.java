@@ -136,8 +136,10 @@ public class RoleController extends JsonObjectBO {
     public JsonObjectBO deleteRole(@RequestBody Role role) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
 
+        Role role1 = roleService.findRoleById(role.getId());
+
         try {
-            if (role.getIsSystem() == 1) {
+            if (role1.getIsSystem() == 1) {
                 jsonObjectBO.setMessage("内置角色不可删除");
                 jsonObjectBO.setCode(-1);
                 return jsonObjectBO;
@@ -154,7 +156,7 @@ public class RoleController extends JsonObjectBO {
             }
 
         } catch (Exception e) {
-            jsonObjectBO.setMessage("删除角色失败");
+            jsonObjectBO.setMessage(e.getCause().getMessage());
             jsonObjectBO.setCode(-1);
             return jsonObjectBO;
         }

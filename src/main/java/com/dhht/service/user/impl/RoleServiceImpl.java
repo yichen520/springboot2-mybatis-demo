@@ -99,9 +99,12 @@ public class RoleServiceImpl implements RoleService {
         roleResourceDao.deleteRole(id);
         //删除角色
         roleDao.deleteByPrimaryKey(id);
-
         return 1;
     }
 
+    @Override
+    public Role findRoleById(String id){
+       return roleDao.selectByPrimaryKey(id);
+    }
 
 }

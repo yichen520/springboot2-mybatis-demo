@@ -17,4 +17,6 @@ public interface RoleService {
     PageInfo<Role> getRoleList(int pageNum, int pageSize);
 
     int deleteRole(String id);
+
+    Role findRoleById(String id);
 }
