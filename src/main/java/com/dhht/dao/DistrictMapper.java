@@ -4,7 +4,9 @@ import com.dhht.model.District;
 import com.dhht.model.DistrictExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface DistrictMapper {
     int countByExample(DistrictExample example);
 

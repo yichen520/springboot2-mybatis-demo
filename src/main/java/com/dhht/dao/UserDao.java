@@ -28,4 +28,6 @@ public interface UserDao {
 
     int changePwd(@Param("id") String id ,@Param("password") String password);
 
+
+
 }

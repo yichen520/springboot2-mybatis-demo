@@ -303,6 +303,9 @@
       region_id = #{regionId,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
-
+  <select id="validate"  resultMap="BaseResultMap" parameterType="com.dhht.model.UserDomain" >
+  select * from sys_user where
+  user_name = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+</select>
 
 </mapper>

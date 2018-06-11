@@ -1,9 +1,11 @@
 package com.dhht.dao;
 
 import com.dhht.model.Makedepartment;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface MakedepartmentMapper {
     int deleteByPrimaryKey(String makedepartmentCode);
 

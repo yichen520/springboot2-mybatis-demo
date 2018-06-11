@@ -1,14 +1,12 @@
 package com.dhht.service.user.impl;
 
-import com.dhht.dao.DistrictMapper;
-import com.dhht.dao.MakedepartmentMapper;
-import com.dhht.dao.RoleDao;
+import com.dhht.dao.*;
 import com.dhht.model.Users;
 import com.dhht.util.MD5Util;
+import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.dhht.dao.UserDao;
 import com.dhht.model.UserDomain;
 import com.dhht.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +27,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleDao roleDao;
+
+    @Autowired
+    private UsersMapper usersMapper;
 
     @Autowired
     private MakedepartmentMapper makedepartmentMapper;
@@ -120,6 +121,14 @@ public class UserServiceImpl implements UserService {
     public int validateUserLoginThree(UserDomain userDomain){
         return userDao.validateUserLoginThree(userDomain);
 
+    }
+
+    @Override
+    public Users validate(Users users){
+        String userAccount = StringUtil.stringNullHandle(users.getUserName());
+        String password = StringUtil.stringNullHandle(MD5Util.toMd5(users.getPassword()));
+        Users user = usersMapper.validate(new UserDomain(userAccount,password));
+        return user;
     }
 
 }

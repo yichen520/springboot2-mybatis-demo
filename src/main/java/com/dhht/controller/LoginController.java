@@ -36,7 +36,7 @@ public class LoginController {
                jsonObjectBO.setMessage("角色选择有误或账号密码错误");
                return jsonObjectBO;
            }
-           if (user.getIsLocked()){
+           if (user.getLocked()){
                jsonObjectBO.setCode(-1);
                jsonObjectBO.setMessage("该用户已被锁定，请联系管理员！");
                return jsonObjectBO;
