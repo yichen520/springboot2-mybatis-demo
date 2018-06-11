@@ -14,7 +14,7 @@ public interface ResourceService {
     List<Resource> selectAllResource();
 
     //分页查询所有资源
-    PageInfo<Resource> findAllResourceBySize(int pageNum, int pageSize);
+    List<Resource> findAllResourceBySize();
 
     //增加资源
     int insertResource(Resource resource);

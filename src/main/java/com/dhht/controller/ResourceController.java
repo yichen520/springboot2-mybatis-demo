@@ -24,7 +24,7 @@ public class ResourceController {
 
 
    //根据ID查找资源
-   @RequestMapping(value = "/selcect")
+   @RequestMapping(value = "/selcect",method = RequestMethod.POST)
     public JsonObjectBO selectresouer(@RequestBody Map map){
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -41,15 +41,15 @@ public class ResourceController {
    }
 
     //查询所有资源
-    @RequestMapping(value = "/info")
-    public JsonObjectBO selectAllResource(@RequestBody Map map){
-        int pageNum =(Integer) map.get("current");
-        int pageSize =(Integer)map.get("pageSize");
+    @RequestMapping(value = "/info",method = RequestMethod.GET)
+    public JsonObjectBO selectAllResource(){
+        //int pageNum =(Integer) map.get("current");
+        //int pageSize =(Integer)map.get("pageSize");
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        PageInfo<Resource> resource = resourceService.findAllResourceBySize(pageNum,pageSize);
+        List<Resource> resource = resourceService.findAllResourceBySize();
         jsonObject.put("Resource",resource);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
@@ -58,7 +58,7 @@ public class ResourceController {
     }
 
     //根据Id删除资源
-    @RequestMapping(value = "/delete")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     public JsonObjectBO deleteResource(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
@@ -81,7 +81,7 @@ public class ResourceController {
     }
 
    //添加资源
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "/add",method = RequestMethod.POST)
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         //为资源添加一个UUID
         resource.setId(UUIDUtil.generate());
@@ -101,7 +101,7 @@ public class ResourceController {
     }
 
     //修改资源
-    @RequestMapping(value = "/update")
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     public JsonObjectBO updateResource(@RequestBody Resource resource){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
@@ -118,7 +118,7 @@ public class ResourceController {
     }
 
     //查找权限下的资源
-    @RequestMapping(value = "/RoleResource")
+    @RequestMapping(value = "/RoleResource",method = RequestMethod.POST)
     public JsonObjectBO selectRoleResource(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();

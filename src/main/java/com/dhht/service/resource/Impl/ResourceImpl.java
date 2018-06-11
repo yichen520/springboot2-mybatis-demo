@@ -32,10 +32,8 @@ public class ResourceImpl  implements ResourceService {
     }
 
     @Override
-    public PageInfo<Resource> findAllResourceBySize(int pageNum, int pageSize){
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo result = new PageInfo(selectAllResource());
-        return result;
+    public List<Resource> findAllResourceBySize(){
+       return selectAllResource();
     }
 
     @Override
