@@ -40,15 +40,15 @@ public class ResourceController {
    }
 
     //查询所有资源
-    @RequestMapping(value = "/info")
-    public JsonObjectBO selectAllResource(@RequestBody Map map){
-        int pageNum =(Integer) map.get("current");
-        int pageSize =(Integer)map.get("pageSize");
+    @RequestMapping(value = "/info",method = RequestMethod.GET)
+    public JsonObjectBO selectAllResource(){
+      //  int pageNum =(Integer) map.get("current");
+        //int pageSize =(Integer)map.get("pageSize");
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        PageInfo<Resource> resource = resourceService.findAllResourceBySize(pageNum,pageSize);
+       List<Resource> resource = resourceService.selectAllResource();
         jsonObject.put("Resource",resource);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);

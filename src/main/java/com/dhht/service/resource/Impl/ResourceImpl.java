@@ -31,10 +31,10 @@ public class ResourceImpl  implements ResourceService {
         return resources;
     }
 
-    @Override
-    public List<Resource> findAllResourceBySize(){
-       return selectAllResource();
-    }
+   // @Override
+   // public List<Resource> findAllResource(){
+    //   return selectAllResource();
+ //   }
 
     @Override
     public int insertResource(Resource resource) {

@@ -16,7 +16,7 @@ spring:
           filters: stat
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
-          url: jdbc:mysql://localhost:3306/dhht_seal?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          url: jdbc:mysql://localhost:3306/dev_seal_v1_0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: root
           password: root
           #配置初始化大小/最小/最大

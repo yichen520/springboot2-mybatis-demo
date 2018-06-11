@@ -14,6 +14,12 @@
   <sql id="Base_Column_List" >
     id, is_required, description, url, parent_id, icon, menu_sort, is_menu
   </sql>
+  <select id="selectByParentID" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM sys_resource
+    WHERE parent_id=#{parentId,jdbcType=VARCHAR}
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
