@@ -34,9 +34,11 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public AccessResult save(Role role){
         String resourcesIds = role.getResources();
-        role.setId(UUIDUtil.generate());
         if(StringUtils.isBlank(resourcesIds)){
             return new AccessResult(-1,"请选择对应的权限");
+        }
+        if (role.getId() == null){
+            return new AccessResult(-1,"角色代码不能为空");
         }
         //保存角色表
         roleDao.insert(role);

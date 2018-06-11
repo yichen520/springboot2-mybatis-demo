@@ -1,5 +1,8 @@
 package com.dhht.model;
 
+import lombok.Data;
+
+@Data
 public class Users {
     private String id;
 
@@ -23,12 +26,16 @@ public class Users {
 
     private String regionId;
 
+    private District district;
+
+    private Role role;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id;
     }
 
     public String getUserName() {
@@ -36,7 +43,7 @@ public class Users {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+        this.userName = userName;
     }
 
     public String getRealName() {
@@ -44,7 +51,7 @@ public class Users {
     }
 
     public void setRealName(String realName) {
-        this.realName = realName == null ? null : realName.trim();
+        this.realName = realName;
     }
 
     public String getPassword() {
@@ -52,7 +59,7 @@ public class Users {
     }
 
     public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+        this.password = password;
     }
 
     public String getRoleId() {
@@ -60,7 +67,7 @@ public class Users {
     }
 
     public void setRoleId(String roleId) {
-        this.roleId = roleId == null ? null : roleId.trim();
+        this.roleId = roleId;
     }
 
     public String getObjectId() {
@@ -68,15 +75,15 @@ public class Users {
     }
 
     public void setObjectId(String objectId) {
-        this.objectId = objectId == null ? null : objectId.trim();
+        this.objectId = objectId;
     }
 
-    public Boolean getIsLocked() {
+    public Boolean getLocked() {
         return isLocked;
     }
 
-    public void setIsLocked(Boolean isLocked) {
-        this.isLocked = isLocked;
+    public void setLocked(Boolean locked) {
+        isLocked = locked;
     }
 
     public Integer getLoginErrorTimes() {
@@ -87,20 +94,20 @@ public class Users {
         this.loginErrorTimes = loginErrorTimes;
     }
 
-    public Boolean getIsChangedPwd() {
+    public Boolean getChangedPwd() {
         return isChangedPwd;
     }
 
-    public void setIsChangedPwd(Boolean isChangedPwd) {
-        this.isChangedPwd = isChangedPwd;
+    public void setChangedPwd(Boolean changedPwd) {
+        isChangedPwd = changedPwd;
     }
 
-    public Boolean getIsDeleted() {
+    public Boolean getDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public String getRegionId() {
@@ -108,6 +115,22 @@ public class Users {
     }
 
     public void setRegionId(String regionId) {
-        this.regionId = regionId == null ? null : regionId.trim();
+        this.regionId = regionId;
+    }
+
+    public District getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(District district) {
+        this.district = district;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

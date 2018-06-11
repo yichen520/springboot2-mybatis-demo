@@ -6,6 +6,11 @@ public class UserDomain {
     private String  validateCode;
     private String  role;
 
+    public UserDomain(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }

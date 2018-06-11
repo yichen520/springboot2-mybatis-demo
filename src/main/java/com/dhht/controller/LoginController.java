@@ -1,21 +1,20 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.common.AccessResult;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.UserDomain;
+import com.dhht.model.Users;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.user.UserService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import com.google.code.kaptcha.Constants;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LoginController {
@@ -26,7 +25,42 @@ public class LoginController {
     public static final String admin_userAccount = "admin";
     public static final String admin_password = "111111";
 
-    @RequestMapping(value ="/login", method = RequestMethod.POST)
+   @RequestMapping(value ="/login", method = RequestMethod.POST)
+   public JsonObjectBO login(@RequestBody Users users){
+       JsonObjectBO jsonObjectBO = new JsonObjectBO();
+       JSONObject jsonObject = new JSONObject();
+       try {
+           Users user = userService.validate(users);
+           if(user==null){
+               jsonObjectBO.setCode(-1);
+               jsonObjectBO.setMessage("角色选择有误或账号密码错误");
+               return jsonObjectBO;
+           }
+           if (user.getLocked()){
+               jsonObjectBO.setCode(-1);
+               jsonObjectBO.setMessage("该用户已被锁定，请联系管理员！");
+               return jsonObjectBO;
+           }
+
+           jsonObject.put("user", user);
+           jsonObjectBO.setData(jsonObject);
+           jsonObjectBO.setMessage("登录成功");
+           jsonObjectBO.setCode(1);
+           return jsonObjectBO;
+
+       } catch (Exception e) {
+           jsonObjectBO.setMessage("登录失败");
+           jsonObjectBO.setCode(-1);
+           return jsonObjectBO;
+       }
+   }
+
+
+
+
+
+
+    @RequestMapping(value ="/checkLogin", method = RequestMethod.POST)
     public JsonObjectBO login(HttpServletRequest request,@ModelAttribute("user")UserDomain user){
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -77,7 +111,7 @@ public class LoginController {
         }
         else {
             //password = MD5Util.toMd5(password);
-            UserDomain user = new UserDomain();
+            UserDomain user = new UserDomain("1","2");
             user.setUsername(userAccount);
             user.setPassword(password);
             if (role.equals("2")){
