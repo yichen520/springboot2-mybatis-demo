@@ -1,10 +1,13 @@
 package com.dhht.dao;
 
+import com.dhht.model.UserDomain;
 import com.dhht.model.Users;
 import com.dhht.model.UsersExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UsersMapper {
     int countByExample(UsersExample example);
 
@@ -27,4 +30,6 @@ public interface UsersMapper {
     int updateByPrimaryKeySelective(Users record);
 
     int updateByPrimaryKey(Users record);
+
+    Users validate(UserDomain users);
 }

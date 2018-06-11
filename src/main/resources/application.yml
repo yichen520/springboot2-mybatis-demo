@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8086
 
 #超级管理员账号密码
 
@@ -53,3 +53,9 @@ pagehelper:
 #
 #thymeleaf:
 #       cache: false
+logging:
+  level:
+    com:
+      dhht:
+        dao: debug
+

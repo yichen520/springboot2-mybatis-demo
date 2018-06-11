@@ -1,5 +1,9 @@
 package com.dhht.service.user.impl;
 
+import com.dhht.dao.UsersMapper;
+import com.dhht.model.Users;
+import com.dhht.util.MD5Util;
+import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.dhht.dao.UserDao;
@@ -19,6 +23,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;//这里会报错，但是并不会影响
 
+    @Autowired
+    private UsersMapper usersMapper;//这里会报错，但是并不会影响
+
     @Override
     public int validateUserLoginOne(UserDomain userDomain){
         return userDao.validateUserLoginOne(userDomain);
@@ -30,6 +37,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public int validateUserLoginThree(UserDomain userDomain){
         return userDao.validateUserLoginThree(userDomain);
+    }
+
+    @Override
+    public Users validate(Users users){
+        String userAccount = StringUtil.stringNullHandle(users.getUserName());
+        String password = StringUtil.stringNullHandle(MD5Util.toMd5(users.getPassword()));
+        Users user = usersMapper.validate(new UserDomain(userAccount,password));
+        return user;
     }
 
 }

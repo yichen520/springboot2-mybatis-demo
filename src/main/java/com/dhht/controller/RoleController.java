@@ -62,7 +62,7 @@ public class RoleController extends JsonObjectBO {
     /**
      * 查询
      */
-    @RequestMapping("getList")
+    @RequestMapping("info")
     public JsonObjectBO getList(@RequestBody Map map) {
         int pageNum = (Integer) map.get("pageNum");
         int pageSize = (Integer) map.get("pageSize");
@@ -89,7 +89,7 @@ public class RoleController extends JsonObjectBO {
     /**
      * 新增
      */
-    @RequestMapping("save")
+    @RequestMapping("add")
     public JsonObjectBO save(@RequestBody Role role) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
@@ -110,7 +110,7 @@ public class RoleController extends JsonObjectBO {
     /**
      * 修改角色
      */
-    @RequestMapping("updataRole")
+    @RequestMapping("update")
     public JsonObjectBO updataRole(@RequestBody Role role) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
@@ -132,9 +132,10 @@ public class RoleController extends JsonObjectBO {
     /**
      * 删除角色
      */
-    @RequestMapping("deleteRole")
+    @RequestMapping("delete")
     public JsonObjectBO deleteRole(@RequestBody Role role) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+
         try {
             if (role.getIsSystem() == 1) {
                 jsonObjectBO.setMessage("内置角色不可删除");
