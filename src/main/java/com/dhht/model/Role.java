@@ -20,7 +20,7 @@ public class Role {
         this.resourceIds = resourceIds;
     }
 
-    private String resources;
+
 
 //    public Set<String> getResource() {
 //        return resource;
@@ -30,13 +30,15 @@ public class Role {
 //        this.resource = resource;
 //    }
 
-    public String getResources() {
-        return resources;
-    }
 
-    public void setResources(String resources) {
-        this.resources = resources;
-    }
+//private String resources;
+//    public String getResources() {
+//        return resources;
+//    }
+//
+//    public void setResources(String resources) {
+//        this.resources = resources;
+//    }
 
     public String getId() {
         return id;

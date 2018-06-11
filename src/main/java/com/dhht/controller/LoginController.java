@@ -26,7 +26,7 @@ public class LoginController {
     public static final String admin_password = "111111";
 
    @RequestMapping(value ="/login", method = RequestMethod.POST)
-   public JsonObjectBO login(@RequestBody Users users){
+   public JsonObjectBO login(HttpServletRequest request,@RequestBody Users users){
        JsonObjectBO jsonObjectBO = new JsonObjectBO();
        JSONObject jsonObject = new JSONObject();
        try {
@@ -46,6 +46,7 @@ public class LoginController {
            jsonObjectBO.setData(jsonObject);
            jsonObjectBO.setMessage("登录成功");
            jsonObjectBO.setCode(1);
+           request.getSession().setAttribute("user", user);
            return jsonObjectBO;
 
        } catch (Exception e) {
