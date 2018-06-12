@@ -5,7 +5,6 @@ import com.dhht.model.Makedepartment;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
 
-import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/sys/resource")
@@ -41,15 +40,15 @@ public class ResourceController {
    }
 
     //查询所有资源
-    @RequestMapping(value = "/info")
-    public JsonObjectBO selectAllResource(@RequestBody Map map){
-        int pageNum =(Integer) map.get("current");
-        int pageSize =(Integer)map.get("pageSize");
+    @RequestMapping(value = "/info",method = RequestMethod.GET)
+    public JsonObjectBO selectAllResource(){
+      //  int pageNum =(Integer) map.get("current");
+        //int pageSize =(Integer)map.get("pageSize");
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        PageInfo<Resource> resource = resourceService.findAllResourceBySize(pageNum,pageSize);
+       List<Resource> resource = resourceService.selectAllResource();
         jsonObject.put("Resource",resource);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
@@ -84,7 +83,7 @@ public class ResourceController {
     @RequestMapping(value = "/add")
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         //为资源添加一个UUID
-        resource.setId(UUIDUtil.generate());
+       // resource.setId(UUIDUtil.generate());
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
@@ -118,7 +117,7 @@ public class ResourceController {
     }
 
     //查找权限下的资源
-    @RequestMapping(value = "/RoleResource")
+    @RequestMapping(value = "/selectRoleResource")
     public JsonObjectBO selectRoleResource(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();

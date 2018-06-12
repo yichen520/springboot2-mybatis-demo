@@ -1,10 +1,12 @@
 package com.dhht.dao;
 
 import com.dhht.model.Resource;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-public interface ResourceMapper {
+@Component
+public interface   ResourceMapper {
 
     int deleteByPrimaryKey(String id);
 
@@ -19,6 +21,5 @@ public interface ResourceMapper {
     int updateByPrimaryKey(Resource record);
 
     List<Resource> selectByParentID(String parentId);
-
 
 }

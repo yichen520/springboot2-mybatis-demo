@@ -31,12 +31,10 @@ public class ResourceImpl  implements ResourceService {
         return resources;
     }
 
-    @Override
-    public PageInfo<Resource> findAllResourceBySize(int pageNum, int pageSize){
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo result = new PageInfo(selectAllResource());
-        return result;
-    }
+   // @Override
+   // public List<Resource> findAllResource(){
+    //   return selectAllResource();
+ //   }
 
     @Override
     public int insertResource(Resource resource) {
