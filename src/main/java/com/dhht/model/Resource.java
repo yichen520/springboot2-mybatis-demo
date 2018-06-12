@@ -2,7 +2,7 @@ package com.dhht.model;
 
 import java.util.List;
 
-public class Resource {
+public class  Resource {
     private String id;
 
     private Boolean isRequired;

@@ -33,18 +33,27 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public AccessResult save(Role role){
-        String resourcesIds = role.getResources();
-        if(StringUtils.isBlank(resourcesIds)){
+        List<String> resourcesIds = role.getResourceIds();
+        if (resourcesIds.isEmpty()){
             return new AccessResult(-1,"请选择对应的权限");
         }
         if (role.getId() == null){
             return new AccessResult(-1,"角色代码不能为空");
         }
+
+
+//        String resourcesIds = role.getResources();
+//        if(StringUtils.isBlank(resourcesIds)){
+//            return new AccessResult(-1,"请选择对应的权限");
+//        }
+//        if (role.getId() == null){
+//            return new AccessResult(-1,"角色代码不能为空");
+//        }
         //保存角色表
         roleDao.insert(role);
         //保存到角色资源关联表
-        List<String> rStrs = DaoUtil.parseJsonStrToList(resourcesIds);
-        for(String resourcesId:rStrs){
+//        List<String> rStrs = DaoUtil.parseJsonStrToList(resourcesIds);
+        for(String resourcesId:resourcesIds){
             RoleResourceKey sysRoleResource = new RoleResourceKey();
             sysRoleResource.setResourceId(resourcesId); //资源Id
             sysRoleResource.setRoleId(role.getId());
@@ -56,13 +65,14 @@ public class RoleServiceImpl implements RoleService {
     @Override
     //@Transactional
     public AccessResult updataRole(Role role){
-        String resourcesIds = role.getResources();
+        List<String> resourcesIds = role.getResourceIds();
+       // String resourcesIds = role.getResources();
        // List<RoleResourceKey> sysRoleResources = roleResourceDao.selectByRoleID(role.getId());
         //先删除角色资源关联表
         roleResourceDao.deleteRole(role.getId());
         //增加新的角色资源关联表
-        List<String> rStrs = DaoUtil.parseJsonStrToList(resourcesIds);
-        for(String resourcesId:rStrs){
+     //   List<String> rStrs = DaoUtil.parseJsonStrToList(resourcesIds);
+        for(String resourcesId:resourcesIds){
             RoleResourceKey sysRoleResource = new RoleResourceKey();
             sysRoleResource.setResourceId(resourcesId); //资源Id
             sysRoleResource.setRoleId(role.getId());
