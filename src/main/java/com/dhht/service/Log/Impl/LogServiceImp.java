@@ -30,7 +30,7 @@ public class LogServiceImp implements LogService {
     @Override
     public int insertLog(int operateType, Users users,boolean result,String content) {
         Log log = new Log();
-        log.setLogName(getNameByType(operateType));
+        log.setLogType(getNameByType(operateType));
         log.setLogUser(users.getRealName());
         if(result) {
             log.setLogResult("成功");
@@ -38,7 +38,7 @@ public class LogServiceImp implements LogService {
             log.setLogResult("失败");
         }
         log.setLogTime(simpleDateFormat.format(new Date()).toString());
-        log.setContent(content);
+        log.setLogContent(content);
         return logDao.saveLog(log);
     }
 

@@ -28,6 +28,9 @@ public interface UserDao {
 
     int changePwd(@Param("id") String id ,@Param("password") String password);
 
+    //根据Code查找用户，表中字段为user_name
+    Users findByUserName(String userName);
+
 
 
 }

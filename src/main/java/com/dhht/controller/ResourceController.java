@@ -5,6 +5,7 @@ import com.dhht.model.Makedepartment;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
 
+import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class ResourceController {
     @RequestMapping(value = "/add")
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         //为资源添加一个UUID
-       // resource.setId(UUIDUtil.generate());
+        resource.setId(UUIDUtil.generate());
         if(resource.getParentId()==""||resource.getParentId()==null){
             resource.setParentId("0");
         }

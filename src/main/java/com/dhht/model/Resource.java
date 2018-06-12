@@ -20,6 +20,20 @@ public class  Resource {
     private Boolean isMenu;
 
     private List<Resource> children;
+    public Resource(){
+
+    }
+
+    public Resource(String id, Boolean isRequired, String description, String url, String parentId, String icon, Integer menuSort, Boolean isMenu) {
+        this.id = id;
+        this.isRequired = isRequired;
+        this.description = description;
+        this.url = url;
+        this.parentId = parentId;
+        this.icon = icon;
+        this.menuSort = menuSort;
+        this.isMenu = isMenu;
+    }
 
     public String getId() {
         return id;
