@@ -9,7 +9,7 @@
     <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
     <result column="icon" property="icon" jdbcType="VARCHAR" />
     <result column="menu_sort" property="menuSort" jdbcType="INTEGER" />
-    <result column="is_menu" property="isMenu" jdbcType="TINYINT" />
+    <result column="is_menu" property="isMenu" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, is_required, description, url, parent_id, icon, menu_sort, is_menu

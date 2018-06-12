@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class Log {
     private int id;
-    private String LogName;
+    private String LogType;
     private String LogResult;
     private String LogUser;
-    private Date LogDate;
-    private String content;
+    private String LogTime;
+    private String LogContent;
 
     public int getId() {
         return id;
@@ -18,12 +18,12 @@ public class Log {
         this.id = id;
     }
 
-    public String getLogName() {
-        return LogName;
+    public String getLogType() {
+        return LogType;
     }
 
-    public void setLogName(String logName) {
-        LogName = logName;
+    public void setLogType(String logType) {
+        LogType = logType;
     }
 
     public String getLogResult() {
@@ -42,19 +42,31 @@ public class Log {
         LogUser = logUser;
     }
 
-    public Date getLogDate() {
-        return LogDate;
+    public String getLogTime() {
+        return LogTime;
     }
 
-    public void setLogDate(Date logDate) {
-        LogDate = logDate;
+    public void setLogTime(String logTime) {
+        LogTime = logTime;
     }
 
-    public String getContent() {
-        return content;
+    public String getLogContent() {
+        return LogContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setLogContent(String logContent) {
+        LogContent = logContent;
+    }
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                "id=" + id +
+                ", LogType='" + LogType + '\'' +
+                ", LogResult='" + LogResult + '\'' +
+                ", LogUser='" + LogUser + '\'' +
+                ", LogTime='" + LogTime + '\'' +
+                ", LogContent='" + LogContent + '\'' +
+                '}';
     }
 }

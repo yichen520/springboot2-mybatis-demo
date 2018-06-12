@@ -53,8 +53,7 @@
       #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR}, #{legalIdType,jdbcType=VARCHAR}, 
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR}, 
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR}, 
-      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{logoutTime,jdbcType=TIMESTAMP}
-)
+      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{logoutTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Makedepartment" >
     insert into make_department
