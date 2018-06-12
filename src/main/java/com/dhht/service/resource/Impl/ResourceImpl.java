@@ -2,6 +2,7 @@ package com.dhht.service.resource.Impl;
 
 import com.dhht.dao.ResourceMapper;
 import com.dhht.model.Makedepartment;
+import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
 import com.github.pagehelper.PageHelper;
@@ -56,6 +57,7 @@ public class ResourceImpl  implements ResourceService {
         return resourceMapper.selectByParentID(Id);
     }
 
+
     @Override
     public List<Resource> findResourceByRole(List<String> id) {
          List<Resource> list = new ArrayList<Resource>();
@@ -66,6 +68,8 @@ public class ResourceImpl  implements ResourceService {
          setAllChildren(resources,list);
          return resources;
     }
+
+
 
     //递归查找子节点,进入数据库查找
     public void setAllChildren(List<Resource> resources){

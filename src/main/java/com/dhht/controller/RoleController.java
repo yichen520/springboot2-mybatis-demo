@@ -97,7 +97,6 @@ public class RoleController extends JsonObjectBO {
             jsonObjectBO.setMessage(result.getResultMsg());
             jsonObjectBO.setCode(result.getIsSuccess());
             return jsonObjectBO;
-
         } catch (Exception e) {
             logger.error("新增角色失败", e);
             jsonObjectBO.setMessage("新增角色失败");
@@ -139,11 +138,11 @@ public class RoleController extends JsonObjectBO {
         Role role1 = roleService.findRoleById(role.getId());
 
         try {
-            if (role1.getIsSystem() == 1) {
-                jsonObjectBO.setMessage("内置角色不可删除");
-                jsonObjectBO.setCode(-1);
-                return jsonObjectBO;
-            }
+//            if (role1.getIsSystem() == 1) {
+//                jsonObjectBO.setMessage("内置角色不可删除");
+//                jsonObjectBO.setCode(-1);
+//                return jsonObjectBO;
+//            }
             int users = roleService.deleteRole(role.getId());
             if(users == 1){
                 jsonObjectBO.setMessage("删除角色成功");

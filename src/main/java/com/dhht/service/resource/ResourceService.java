@@ -1,5 +1,6 @@
 package com.dhht.service.resource;
 
+import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.github.pagehelper.PageInfo;
 
@@ -30,4 +31,6 @@ public interface ResourceService {
 
     //根据角色权限集合获取资源
     List<Resource> findResourceByRole(List<String> id);
+
+
 }

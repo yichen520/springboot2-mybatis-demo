@@ -40,15 +40,6 @@ public class RoleServiceImpl implements RoleService {
         if (role.getId() == null){
             return new AccessResult(-1,"角色代码不能为空");
         }
-
-
-//        String resourcesIds = role.getResources();
-//        if(StringUtils.isBlank(resourcesIds)){
-//            return new AccessResult(-1,"请选择对应的权限");
-//        }
-//        if (role.getId() == null){
-//            return new AccessResult(-1,"角色代码不能为空");
-//        }
         //保存角色表
         roleDao.insert(role);
         //保存到角色资源关联表

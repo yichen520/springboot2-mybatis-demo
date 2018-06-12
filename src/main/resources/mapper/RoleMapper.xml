@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.dhht.model.Role" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="is_system" property="isSystem" jdbcType="TINYINT" />
+    <result column="is_system" property="isSystem" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, is_system
@@ -22,7 +22,7 @@
   <insert id="insert" parameterType="com.dhht.model.Role" >
     insert into sys_role (id, name, is_system
       )
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{isSystem,jdbcType=TINYINT}
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{isSystem,jdbcType=BIT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Role" >

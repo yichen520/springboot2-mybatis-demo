@@ -1,5 +1,9 @@
 package com.dhht.model;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Repository
 public class RoleResourceKey {
     private String roleId;
 
