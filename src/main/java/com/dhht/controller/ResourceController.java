@@ -84,7 +84,9 @@ public class ResourceController {
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         //为资源添加一个UUID
        // resource.setId(UUIDUtil.generate());
-
+        if(resource.getParentId()==""||resource.getParentId()==null){
+            resource.setParentId("0");
+        }
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 

@@ -17,7 +17,7 @@ public class Resource {
 
     private Integer menuSort;
 
-    private Byte isMenu;
+    private Boolean isMenu;
 
     private List<Resource> children;
 
@@ -77,11 +77,11 @@ public class Resource {
         this.menuSort = menuSort;
     }
 
-    public Byte getIsMenu() {
+    public boolean getIsMenu() {
         return isMenu;
     }
 
-    public void setIsMenu(Byte isMenu) {
+    public void setIsMenu(boolean isMenu) {
         this.isMenu = isMenu;
     }
 
