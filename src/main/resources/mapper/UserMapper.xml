@@ -153,7 +153,7 @@
     <select id="findByUserName" resultMap="com.dhht.model.Users" parameterType="java.lang.String">
         SELECT * FROM sys_user
         WHERE
-        user_name = #{userName,jdbcType="VARCHAR"}
+        user_name = #{userName,jdbcType=VARCHAR}
     </select>
 
     <update id="changePwd">
