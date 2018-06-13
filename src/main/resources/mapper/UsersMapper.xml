@@ -308,4 +308,7 @@
   user_name = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
 </select>
 
+  <insert id="addUserDepartment" parameterType="com.dhht.model.Users">
+    INSERT INTO sys_user
+  </insert>
 </mapper>

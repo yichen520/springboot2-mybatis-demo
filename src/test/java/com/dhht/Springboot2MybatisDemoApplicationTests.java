@@ -1,11 +1,16 @@
 package com.dhht;
 
 import com.dhht.controller.UserController;
+import com.dhht.controller.UserDepartmentController;
 import com.dhht.dao.UserDao;
+import com.dhht.dao.UserDepartmentDao;
+import com.dhht.model.UserDepartment;
 import com.dhht.service.user.UserService;
+import com.dhht.service.userDepartment.UserDepartmentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
