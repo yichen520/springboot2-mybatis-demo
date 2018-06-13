@@ -23,6 +23,8 @@ public interface   ResourceMapper {
 
     List<Resource> selectByParentID(String parentId);
 
-    List<Menus> selectByParentsID(String parentId);
+   // List<Menus> selectByParentsID(String parentId);
+
+    Menus selectMenusByID(String Id);
 
 }

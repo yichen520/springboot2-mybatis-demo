@@ -69,6 +69,16 @@ public class ResourceImpl  implements ResourceService {
          return resources;
     }
 
+    @Override
+    public List<Menus> findMenusByRole(List<String> id) {
+        List<Menus> list = new ArrayList<Menus>();
+        for (String ID:id) {
+            list.add(resourceMapper.selectMenusByID(ID));
+        }
+        List<Menus> menus = findMenuParent(list);
+        setAllMenuChildren(menus,list);
+        return menus;
+    }
 
 
     //递归查找子节点,进入数据库查找
@@ -87,6 +97,9 @@ public class ResourceImpl  implements ResourceService {
         return resourceMapper.selectByParentID("0");
     }
 
+
+
+    //-----------------权限资源相关部分--------------------------//
     //查找权限父节点
     public List<Resource> findParent(List<Resource> list){
         List<Resource> resources = new ArrayList<Resource>();
@@ -120,8 +133,38 @@ public class ResourceImpl  implements ResourceService {
         return list;
     }
 
+    //---------------菜单资源相关部分-----------------------------//
+    public List<Menus> findMenuParent(List<Menus> list){
+        List<Menus> menus = new ArrayList<Menus>();
+        for (Menus m: list) {
+            if(m.getParentId().equals("0")){
+                menus.add(m);
+            }
+        }
+        return menus;
+    }
 
+    //查找权限子节点
+    public void setAllMenuChildren(List<Menus> parent,List<Menus> menus){
+        for (Menus menu:parent) {
+            List<Menus> list = findMenuInList(menus,menu.getId());
+            if(list.size()>0){
+                menu.setChildren(menus);
+            }
+            setAllMenuChildren(parent,menus);
+        }
+    }
 
+    //在给定集合中根据parentID查找数据
+    public List<Menus> findMenuInList(List<Menus> menus,String id){
+        List<Menus> list = new ArrayList<Menus>();
+        for(Menus menu:menus){
+            if(menu.getParentId().equals(id)){
+                list.add(menu);
+            }
+        }
+        return list;
+    }
 
 
 }

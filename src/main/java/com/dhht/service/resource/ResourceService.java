@@ -32,5 +32,8 @@ public interface ResourceService {
     //根据角色权限集合获取资源
     List<Resource> findResourceByRole(List<String> id);
 
+    //查找资源菜单
+    List<Menus> findMenusByRole(List<String> id);
+
 
 }

@@ -3,9 +3,11 @@ package com.dhht.model;
 import java.util.List;
 
 public class Menus {
+    private String id;
     private String name;
     private String  path;
     private String icon;
+    private String parentId;
     private List<Menus> children;
 
     public String getName() {
@@ -38,5 +40,21 @@ public class Menus {
 
     public void setChildren(List<Menus> children) {
         this.children = children;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
