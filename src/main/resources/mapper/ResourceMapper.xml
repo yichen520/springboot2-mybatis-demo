@@ -11,9 +11,25 @@
     <result column="menu_sort" property="menuSort" jdbcType="INTEGER" />
     <result column="is_menu" property="isMenu" jdbcType="BIT" />
   </resultMap>
+  <resultMap id="MenusResultMap" type="com.dhht.model.Menus">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="description" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="path" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Menus_Result_List">
+    id,description,url,icon,parent_id
+  </sql>
   <sql id="Base_Column_List" >
     id, is_required, description, url, parent_id, icon, menu_sort, is_menu
   </sql>
+  <select id="selectMenusByID" resultMap="MenusResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Menus_Result_List"/>
+    FROM sys_resource
+    WHERE id=#{Id,jdbcType=VARCHAR}
+  </select>
   <select id="selectByParentID" resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT
     <include refid="Base_Column_List"/>
