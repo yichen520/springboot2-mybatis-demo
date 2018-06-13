@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.UserDepartmentDao" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.UserDepartment" >
+    <id column="userdepartment_code" property="userdepartmentCode" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="department_nation_name" property="departmentNationName" jdbcType="VARCHAR" />
+    <result column="department_english_name" property="departmentEnglishName" jdbcType="VARCHAR" />
+    <result column="department_english_ahhr" property="departmentEnglishAhhr" jdbcType="VARCHAR" />
+    <result column="seal_userdepartment_status" property="sealUserdepartmentStatus" jdbcType="VARCHAR" />
+    <result column="query_password" property="queryPassword" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
+    <result column="legal_id_type" property="legalIdType" jdbcType="VARCHAR" />
+    <result column="legal_telphone" property="legalTelphone" jdbcType="VARCHAR" />
+    <result column="legal_country" property="legalCountry" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="VARCHAR" />
+    <result column="department_address_detail" property="departmentAddressDetail" jdbcType="VARCHAR" />
+    <result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
+    <result column="department_status" property="departmentStatus" jdbcType="VARCHAR" />
+    <result column="department_certificate" property="departmentCertificate" jdbcType="VARCHAR" />
+    <result column="department_certificate_type" property="departmentCertificateType" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    userdepartment_code, department_name, department_nation_name, department_english_name,
+    department_english_ahhr, seal_userdepartment_status, query_password, legal_name,
+    legal_id, legal_id_type, legal_telphone, legal_country, district_id, department_address_detail,
+    telphone, postal_code, department_status, department_certificate, department_certificate_type
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_department
+    where userdepartment_code = #{userdepartmentCode,jdbcType=VARCHAR}
+  </select>
+
+
+  <update id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    UPDATE user_department
+    SET is_delete = TRUE
+    where userdepartment_code = #{userdepartmentCode,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <insert id="insert" parameterType="com.dhht.model.UserDepartment" >
+    insert into user_department (userdepartment_code, department_name,
+    department_nation_name, department_english_name,
+    department_english_ahhr, seal_userdepartment_status,
+    query_password, legal_name, legal_id,
+    legal_id_type, legal_telphone, legal_country,
+    district_id, department_address_detail,
+    telphone, postal_code, department_status,
+    department_certificate, department_certificate_type,is_delete
+    )
+    values (#{userdepartmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},
+    #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR},
+    #{departmentEnglishAhhr,jdbcType=VARCHAR}, #{sealUserdepartmentStatus,jdbcType=VARCHAR},
+    #{queryPassword,jdbcType=VARCHAR}, #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR},
+    #{legalIdType,jdbcType=VARCHAR}, #{legalTelphone,jdbcType=VARCHAR}, #{legalCountry,jdbcType=VARCHAR},
+    #{districtd,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR},
+    #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=VARCHAR},
+    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},
+    #{isDelete}
+    )
+  </insert>
+
+
+  <!--<select id="countByExample" parameterType="com.dhht.model.UserDepartmentExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from user_department-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+
+
+  <!--<update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.UserDepartment" >-->
+    <!--update user_department-->
+    <!--<set >-->
+      <!--<if test="departmentName != null" >-->
+        <!--department_name = #{departmentName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentNationName != null" >-->
+        <!--department_nation_name = #{departmentNationName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentEnglishName != null" >-->
+        <!--department_english_name = #{departmentEnglishName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentEnglishAhhr != null" >-->
+        <!--department_english_ahhr = #{departmentEnglishAhhr,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="sealUserdepartmentStatus != null" >-->
+        <!--seal_userdepartment_status = #{sealUserdepartmentStatus,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="queryPassword != null" >-->
+        <!--query_password = #{queryPassword,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="legalName != null" >-->
+        <!--legal_name = #{legalName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="legalId != null" >-->
+        <!--legal_id = #{legalId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="legalIdType != null" >-->
+        <!--legal_id_type = #{legalIdType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="legalTelphone != null" >-->
+        <!--legal_telphone = #{legalTelphone,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="legalCountry != null" >-->
+        <!--legal_country = #{legalCountry,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentAddress != null" >-->
+        <!--department_address = #{departmentAddress,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentAddressDetail != null" >-->
+        <!--department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="telphone != null" >-->
+        <!--telphone = #{telphone,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="postalCode != null" >-->
+        <!--postal_code = #{postalCode,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentStatus != null" >-->
+        <!--department_status = #{departmentStatus,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentCertificate != null" >-->
+        <!--department_certificate = #{departmentCertificate,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="departmentCertificateType != null" >-->
+        <!--department_certificate_type = #{departmentCertificateType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--where userdepartment_code = #{userdepartmentCode,jdbcType=VARCHAR}-->
+  <!--</update>-->
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.UserDepartment" >
+    update user_department
+    set department_name = #{departmentName,jdbcType=VARCHAR},
+    department_nation_name = #{departmentNationName,jdbcType=VARCHAR},
+    department_english_name = #{departmentEnglishName,jdbcType=VARCHAR},
+    department_english_ahhr = #{departmentEnglishAhhr,jdbcType=VARCHAR},
+    seal_userdepartment_status = #{sealUserdepartmentStatus,jdbcType=VARCHAR},
+    query_password = #{queryPassword,jdbcType=VARCHAR},
+    legal_name = #{legalName,jdbcType=VARCHAR},
+    legal_id = #{legalId,jdbcType=VARCHAR},
+    legal_id_type = #{legalIdType,jdbcType=VARCHAR},
+    legal_telphone = #{legalTelphone,jdbcType=VARCHAR},
+    legal_country = #{legalCountry,jdbcType=VARCHAR},
+    district_id = #{districtId,jdbcType=VARCHAR},
+    department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},
+    telphone = #{telphone,jdbcType=VARCHAR},
+    postal_code = #{postalCode,jdbcType=VARCHAR},
+    department_status = #{departmentStatus,jdbcType=VARCHAR},
+    department_certificate = #{departmentCertificate,jdbcType=VARCHAR},
+    department_certificate_type = #{departmentCertificateType,jdbcType=VARCHAR},
+    is_delete = #{isDelete,jdbcType=BIT}
+    where userdepartment_code = #{userdepartmentCode,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findAllMake" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from user_department where is_delete = 0
+  </select>
+
+</mapper>
