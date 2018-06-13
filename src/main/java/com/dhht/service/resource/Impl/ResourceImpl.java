@@ -149,9 +149,9 @@ public class ResourceImpl  implements ResourceService {
         for (Menus menu:parent) {
             List<Menus> list = findMenuInList(menus,menu.getId());
             if(list.size()>0){
-                menu.setChildren(menus);
+                menu.setChildren(list);
             }
-            setAllMenuChildren(parent,menus);
+            setAllMenuChildren(list,menus);
         }
     }
 
