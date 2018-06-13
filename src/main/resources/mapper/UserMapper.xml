@@ -150,7 +150,7 @@
         `id` = #{id}
     </select>
     
-    <select id="findByUserName" resultMap="com.dhht.model.Users" parameterType="java.lang.String">
+    <select id="findByUserName" resultType="com.dhht.model.Users" parameterType="java.lang.String">
         SELECT * FROM sys_user
         WHERE
         user_name = #{userName,jdbcType=VARCHAR}
