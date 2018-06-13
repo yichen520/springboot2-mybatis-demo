@@ -20,6 +20,7 @@ public class  Resource {
     private Boolean isMenu;
 
     private List<Resource> children;
+
     public Resource(){
 
     }
