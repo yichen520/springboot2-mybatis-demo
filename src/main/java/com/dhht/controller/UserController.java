@@ -29,10 +29,15 @@ public class UserController {
      */
     @RequestMapping(value ="/menu")
     public JsonObjectBO menu(HttpSession session){
+        Object  obj = session.getAttribute("resources");
+        Resource account = (Resource) obj;
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-
-
-        return jsonObjectBO;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("resource",account);
+        jsonObjectBO.setData(jsonObject);
+        jsonObjectBO.setMessage("获取目录成功");
+        jsonObjectBO.setCode(1);
+        return  jsonObjectBO;
     }
 
     /***
