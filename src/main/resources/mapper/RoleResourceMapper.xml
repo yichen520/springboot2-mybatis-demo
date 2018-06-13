@@ -149,6 +149,14 @@
     role_id = #{roleId,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectResourceByID" parameterType="java.lang.String" resultType="java.lang.String" >
+    select
+    resource_id as resourceId
+    from sys_role_resources where
+    role_id = #{roleId,jdbcType=VARCHAR}
+  </select>
+
+
   <delete id="deleteRole" parameterType="java.lang.String" >
       delete from sys_role_resources
     where role_id = #{roleId,jdbcType=VARCHAR}

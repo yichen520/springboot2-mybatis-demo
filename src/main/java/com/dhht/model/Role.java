@@ -8,7 +8,15 @@ public class Role {
 
     private String name;
 
-    private Byte isSystem;
+    private boolean isSystem;
+
+    public boolean isSystem() {
+        return isSystem;
+    }
+
+    public void setSystem(boolean system) {
+        isSystem = system;
+    }
 
     private List<String> resourceIds;
 
@@ -56,11 +64,11 @@ public class Role {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getIsSystem() {
-        return isSystem;
-    }
-
-    public void setIsSystem(Byte isSystem) {
-        this.isSystem = isSystem;
-    }
+//    public int getIsSystem() {
+//        return isSystem;
+//    }
+//
+//    public void setIsSystem(int isSystem) {
+//        this.isSystem = isSystem;
+//    }
 }

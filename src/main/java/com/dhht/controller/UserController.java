@@ -2,6 +2,7 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.model.Resource;
 import com.dhht.model.UserDomain;
 import com.dhht.model.Users;
 import com.dhht.service.user.UserService;
@@ -9,6 +10,9 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/8/16.
@@ -19,6 +23,17 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    /**
+     * 获取目录
+     */
+    @RequestMapping(value ="/menu")
+    public JsonObjectBO menu(HttpSession session){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+
+
+        return jsonObjectBO;
+    }
 
     /***
      * 添加用户

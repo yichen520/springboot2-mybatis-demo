@@ -1,5 +1,6 @@
 package com.dhht.dao;
 
+import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import org.springframework.stereotype.Component;
 
@@ -21,5 +22,7 @@ public interface   ResourceMapper {
     int updateByPrimaryKey(Resource record);
 
     List<Resource> selectByParentID(String parentId);
+
+    List<Menus> selectByParentsID(String parentId);
 
 }
