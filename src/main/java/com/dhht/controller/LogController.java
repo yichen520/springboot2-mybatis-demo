@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/sys/Log")
+@RequestMapping(value = "/sys/log")
 public class LogController {
     @Autowired
     private LogService logService;
 
-    @RequestMapping(value = "/select")
+    @RequestMapping(value = "/info")
     public JsonObjectBO selectLog(@RequestBody Map map){
         int pageSum = (Integer) map.get("pageSum");
         int pageNum = (Integer) map.get("pageNum");
