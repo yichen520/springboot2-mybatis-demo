@@ -37,7 +37,6 @@ public class InterceptorConfig implements HandlerInterceptor {
         //获取session是否存在
         Object object = request.getSession().getAttribute("user");
         if(object==null){
-           response.sendRedirect(request.getContextPath()+"/login");
             response.setStatus(401);
             return false;
         }else {
