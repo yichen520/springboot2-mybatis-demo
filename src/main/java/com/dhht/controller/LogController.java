@@ -21,14 +21,14 @@ public class LogController {
 
     @RequestMapping(value = "/info")
     public JsonObjectBO selectLog(@RequestBody Map map){
-        int pageSum = (Integer) map.get("pageSum");
+        int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
 
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        PageInfo<Log> logs = logService.selectAllLog(pageSum,pageNum);
+        PageInfo<Log> logs = logService.selectAllLog(pageSize,pageNum);
         jsonObject.put("log",logs);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
