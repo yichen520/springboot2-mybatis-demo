@@ -79,6 +79,21 @@ public class LoginController {
            return map;
        }
    }
+    /**
+     * 获取目录
+     */
+    @RequestMapping(value ="menu")
+    public JsonObjectBO menu(HttpSession session){
+        Object  obj = session.getAttribute("menus");
+        Menus account = (Menus) obj;
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("menu",account);
+        jsonObjectBO.setData(jsonObject);
+        jsonObjectBO.setMessage("获取目录成功");
+        jsonObjectBO.setCode(1);
+        return  jsonObjectBO;
+    }
 
    @RequestMapping("currentUser")
    public JsonObjectBO currentUser(HttpSession session){

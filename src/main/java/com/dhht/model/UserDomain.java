@@ -10,6 +10,9 @@ public class UserDomain {
         this.username = username;
         this.password = password;
     }
+    public UserDomain() {
+
+    }
 
     public String getUsername() {
         return username;

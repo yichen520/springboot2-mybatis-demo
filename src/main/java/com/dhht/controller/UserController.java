@@ -2,6 +2,7 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.dhht.model.UserDomain;
 import com.dhht.model.Users;
@@ -17,28 +18,14 @@ import java.util.List;
 /**
  * Created by Administrator on 2017/8/16.
  */
-@Controller
+@RestController
 @RequestMapping(value = "/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    /**
-     * 获取目录
-     */
-    @RequestMapping(value ="/menu")
-    public JsonObjectBO menu(HttpSession session){
-        Object  obj = session.getAttribute("resources");
-        Resource account = (Resource) obj;
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("resource",account);
-        jsonObjectBO.setData(jsonObject);
-        jsonObjectBO.setMessage("获取目录成功");
-        jsonObjectBO.setCode(1);
-        return  jsonObjectBO;
-    }
+
 
     /***
      * 添加用户
