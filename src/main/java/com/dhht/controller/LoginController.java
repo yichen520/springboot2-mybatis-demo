@@ -85,7 +85,7 @@ public class LoginController {
     @RequestMapping(value ="menu")
     public JsonObjectBO menu(HttpSession session){
         Object  obj = session.getAttribute("menus");
-        Menus account = (Menus) obj;
+        List<Menus> account = (List<Menus>) obj;
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("menu",account);

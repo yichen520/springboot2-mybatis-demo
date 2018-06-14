@@ -28,22 +28,22 @@ public class InterceptorConfig implements HandlerInterceptor {
 
     }
 
-//    @Override
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        //登录不做要求
-//        if(request.getRequestURI().equals("/login")){
-//            return true;
-//        }
-//        //获取session是否存在
-//        Object object = request.getSession().getAttribute("User");
-//        if(object==null){
-////            response.sendRedirect(request.getContextPath()+"/login");
-//            response.setStatus(401);
-//            return false;
-//        }else {
-//            return true;
-//        }
-//    }
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //登录不做要求
+        if(request.getRequestURI().equals("/login")){
+            return true;
+        }
+        //获取session是否存在
+        Object object = request.getSession().getAttribute("user");
+        if(object==null){
+           response.sendRedirect(request.getContextPath()+"/login");
+            response.setStatus(401);
+            return false;
+        }else {
+            return true;
+        }
+    }
 
     /**
      * 记录登录成功
