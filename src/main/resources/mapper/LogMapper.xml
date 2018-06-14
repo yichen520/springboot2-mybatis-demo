@@ -8,9 +8,10 @@
     <result column="log_user" property="LogUser" jdbcType="VARCHAR" />
     <result column="log_time" property="LogTime" jdbcType="VARCHAR" />
     <result column="Log_content" property="LogContent" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
-    id,log_type,log_result,log_user,log_time,Log_content
+    id,log_type,log_result,log_user,log_time,Log_content,ip
   </sql>
   <select id="selectAllLog" resultMap="BaseResultMap" >
     SELECT
@@ -18,7 +19,7 @@
     FROM sys_log
   </select>
   <insert id="saveLog" parameterType="com.dhht.model.Log">
-     insert into sys_log (id,log_type,log_result,log_user,log_time,Log_content) values(#{id,jdbcType=VARCHAR},#{LogType,jdbcType=VARCHAR},#{LogResult,jdbcType=VARCHAR},
-     #{LogUser,jdbcType=VARCHAR},#{LogTime,jdbcType=VARCHAR},#{LogContent,jdbcType=VARCHAR})
+     insert into sys_log (id,log_type,log_result,log_user,log_time,Log_content,ip) values(#{id,jdbcType=VARCHAR},#{LogType,jdbcType=VARCHAR},#{LogResult,jdbcType=VARCHAR},
+     #{LogUser,jdbcType=VARCHAR},#{LogTime,jdbcType=VARCHAR},#{LogContent,jdbcType=VARCHAR},#{ip,jdbcType=VARCHAR})
   </insert>
 </mapper>

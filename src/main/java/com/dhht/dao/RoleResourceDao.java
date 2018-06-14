@@ -26,6 +26,8 @@ RoleResourceDao {
 
     List<String> selectResourceByID(@Param("roleId")String roleId);
 
+    List<String> selectMenuResourceByID(@Param("roleId")String roleId);
+
     List<Menus> selectResourcesByID(@Param("roleId")String roleId);
 
     int updateByExampleSelective(@Param("record") RoleResourceKey record, @Param("example") RoleResourceExample example);

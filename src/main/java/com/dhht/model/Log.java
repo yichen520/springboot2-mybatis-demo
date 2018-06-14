@@ -9,6 +9,15 @@ public class Log {
     private String LogUser;
     private String LogTime;
     private String LogContent;
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public int getId() {
         return id;
