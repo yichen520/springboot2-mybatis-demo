@@ -24,6 +24,9 @@ import com.google.code.kaptcha.Constants;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.dhht.util.MenuUtil.genMenu;
+
 @RestController
 public class LoginController {
 
@@ -88,9 +91,10 @@ public class LoginController {
     public JsonObjectBO menu(HttpSession session){
         Object  obj = session.getAttribute("menus");
         List<Menus> account = (List<Menus>) obj;
+        List<Map> menu = genMenu(account);
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("menu",account);
+        jsonObject.put("menu",menu);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setMessage("获取目录成功");
         jsonObjectBO.setCode(1);
