@@ -7,11 +7,10 @@
     <result column="log_result" property="LogResult" jdbcType="VARCHAR" />
     <result column="log_user" property="LogUser" jdbcType="VARCHAR" />
     <result column="log_time" property="LogTime" jdbcType="VARCHAR" />
-    <result column="Log_content" property="LogContent" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
-    id,log_type,log_result,log_user,log_time,Log_content,ip
+    id,log_type,log_result,log_user,log_time,ip
   </sql>
   <select id="selectAllLog" resultMap="BaseResultMap" >
     SELECT

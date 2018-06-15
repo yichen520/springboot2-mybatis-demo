@@ -27,20 +27,6 @@ public class LogServiceImp implements LogService {
         return result;
     }
 
-    @Override
-    public int insertLog(int operateType, Users users,boolean result,String content) {
-        SysLog log = new SysLog();
-        log.setLogType(getNameByType(operateType));
-        log.setLogUser(users.getRealName());
-        if(result) {
-            log.setLogResult("成功");
-        }else {
-            log.setLogResult("失败");
-        }
-        log.setLogTime(simpleDateFormat.format(new Date()).toString());
-        log.setLogContent(content);
-        return logDao.saveLog(log);
-    }
 
 
     //根据操作类型获取操作名称

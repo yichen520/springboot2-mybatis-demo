@@ -6,5 +6,4 @@ import com.github.pagehelper.PageInfo;
 
 public interface LogService {
     PageInfo<SysLog> selectAllLog(int pageNum, int pageSize);
-    int insertLog(int logName, Users users,boolean result, String content);
 }

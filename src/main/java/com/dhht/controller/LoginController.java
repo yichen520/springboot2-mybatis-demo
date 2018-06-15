@@ -69,8 +69,9 @@ public class LoginController {
            map.put("message","登录成功");
 
            List<String> id = roleResourceDao.selectMenuResourceByID(user.getRoleId());
-           List<Resource> resources = resourceService.findResourceByRole(id);
+           List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
            List<Menus> menus = resourceService.findMenusByRole(id);
+           List<Resource> resources = resourceService.findResourceByRole(resourceId);
            request.getSession().setAttribute("user", user);
            request.getSession().setAttribute("menus", menus);
            request.getSession().setAttribute("resources", resources);

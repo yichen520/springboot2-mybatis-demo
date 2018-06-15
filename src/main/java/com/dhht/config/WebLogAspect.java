@@ -39,6 +39,7 @@ public class WebLogAspect {
     @Pointcut("@annotation(com.dhht.annotation.Log)")
     public void webLog(){}
 
+
     public boolean validateResource(List<Resource> resources,String path){
         if (resources == null) return false;
         for (Resource resource : resources) {
