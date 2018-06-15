@@ -21,9 +21,9 @@ public class LogServiceImp implements LogService {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
     @Override
     public PageInfo<SysLog> selectAllLog(int pageNum, int pageSize) {
-        List<SysLog> logs = logDao.selectAllLog();
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<SysLog> result = new PageInfo(logs);
+        List<SysLog> logs = logDao.selectAllLog();
+        PageInfo result = new PageInfo(logs);
         return result;
     }
 

@@ -18,7 +18,7 @@ public class LogController {
     @Autowired
     private LogService logService;
 
-    @RequestMapping(value = "/info")
+    @RequestMapping(value = "info")
     public JsonObjectBO selectLog(@RequestBody Map map){
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
@@ -27,7 +27,7 @@ public class LogController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        PageInfo<SysLog> logs = logService.selectAllLog(pageSize,pageNum);
+        PageInfo<SysLog> logs = logService.selectAllLog(pageNum,pageSize);
         jsonObject.put("log",logs);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
