@@ -3,15 +3,15 @@ package com.dhht.config;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.LogDao;
+import com.dhht.model.Menus;
+import com.dhht.model.Resource;
 import com.dhht.model.SysLog;
 import com.dhht.model.Users;
 import com.dhht.util.IPUtil;
@@ -33,31 +33,55 @@ public class WebLogAspect {
     @Autowired
     private LogDao sysLogDao;
 
-   // @Pointcut("execution(public * com.dhht.controller..*.*(..))")
+    @Pointcut("execution(public * com.dhht.controller..*.*(..))")
+    public void log(){}
+
     @Pointcut("@annotation(com.dhht.annotation.Log)")
     public void webLog(){}
 
-//    @Around("webLog()")
-//    public void   doBefore(ProceedingJoinPoint point)  {
-//        // 接收到请求，记录请求内容
-//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//        HttpServletRequest request = attributes.getRequest();
-//        // 记录下请求内容
-//        logger.info("URL : " + request.getRequestURL().toString());
-//        logger.info("IP : " + request.getRemoteAddr());
-//        long beginTime = System.currentTimeMillis();
-//        try {
-//            // 执行方法
-//             point.proceed();
-//        } catch (Throwable e) {
-//            e.printStackTrace();
-//        }
-//        // 执行时长(毫秒)
-//        long time = System.currentTimeMillis() - beginTime;
-//        // 保存日志
-//        saveLog(point, time);
-//
-//    }
+    public boolean validateResource(List<Resource> resources,String path){
+        if (resources == null) return false;
+        for (Resource resource : resources) {
+            if (resource.getUrl().equals(path)){
+                return true;
+            }
+           if (resource.getChildren() !=null){
+               return  validateResource(resource.getChildren(),path);
+           }
+        }
+        return false;
+    }
+
+
+
+    @Before("log()")
+    public Map<String,Object>   doBefore(JoinPoint point) throws Throwable {
+        // 接收到请求，记录请求内容
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        List<Resource> resources = (List<Resource>)request.getSession().getAttribute("resources");
+        Map<String,Object> map=new HashMap<>();
+       String path = request.getServletPath();
+        if (path.equals("/login")||path.equals("/menu")||path.equals("/currentUser")){
+            map.put("status","ok");
+            return map;
+        }
+        if (validateResource(resources,path)){
+                try {
+                    // 执行方法
+                    map.put("code",1);
+                  //  point.proceed();
+                    return map;
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+        }else {
+            map.put("code",-1);
+            map.put("message","没有权限操作");
+            return map;
+        }
+        return map;
+    }
 
 //    private void saveLog(ProceedingJoinPoint joinPoint, long time) {
 //        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -83,13 +107,29 @@ public class WebLogAspect {
 //        sysLogDao.saveLog(sysLog);
 //    }
 
-    @AfterThrowing(value = "webLog()",throwing = "exception")
+    @AfterThrowing(value = "log()",throwing = "exception")
     public void doAfterThrowingAdvice(JoinPoint joinPoint,Throwable exception){
-        //目标方法名：
-        System.out.println(joinPoint.getSignature().getName());
-        if(exception instanceof NullPointerException){
-            System.out.println("发生了空指针异常!!!!!");
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        SysLog sysLog = new SysLog();
+        Log logAnnotation = method.getAnnotation(Log.class);
+        if (logAnnotation != null) {
+            // 注解上的描述
+            sysLog.setLogType(logAnnotation.value());
         }
+        // 获取request
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+
+        // 设置IP地址
+        sysLog.setIp(IPUtil.getIpAddr(request));
+        Users users = (Users)request.getSession(true).getAttribute("user");
+        String user = users.getRealName();
+        sysLog.setLogUser(user);
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+        sysLog.setLogTime(dateStr);
+        sysLog.setLogResult("发生异常");
+        sysLogDao.saveLog(sysLog);
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
@@ -112,7 +152,6 @@ public class WebLogAspect {
         sysLog.setLogUser(user);
         String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
         sysLog.setLogTime(dateStr);
-//        Map<String, Object> map = (Map<String, Object>)ret;
         if (ret instanceof Map ){
             Map<String, String> ret1 = (Map<String, String>)ret;
             String status = ret1.get("status");

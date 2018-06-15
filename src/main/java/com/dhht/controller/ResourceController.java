@@ -23,21 +23,21 @@ public class ResourceController {
     private ResourceService resourceService;
 
    //根据ID查找资源
-   @RequestMapping(value = "/selcect")
-    public JsonObjectBO selectresouer(@RequestBody Map map){
-
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-
-        String Id = map.get("key").toString();
-        Resource resource = resourceService.selectByPrimaryKey(Id);
-
-       jsonObject.put("Resource",resource);
-       jsonObjectBO.setData(jsonObject);
-       jsonObjectBO.setCode(1);
-       return jsonObjectBO;
-
-   }
+//   @RequestMapping(value = "/selcect")
+//    public JsonObjectBO selectresouer(@RequestBody Map map){
+//
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        JSONObject jsonObject = new JSONObject();
+//
+//        String Id = map.get("key").toString();
+//        Resource resource = resourceService.selectByPrimaryKey(Id);
+//
+//       jsonObject.put("Resource",resource);
+//       jsonObjectBO.setData(jsonObject);
+//       jsonObjectBO.setCode(1);
+//       return jsonObjectBO;
+//
+//   }
 
     @Log("查询所有资源")
     @RequestMapping(value = "/info",method = RequestMethod.GET)

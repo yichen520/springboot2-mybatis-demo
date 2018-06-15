@@ -45,7 +45,6 @@ public class LoginController {
    @RequestMapping(value ="login", method = RequestMethod.POST)
    public Map<String,Object> login(HttpServletRequest request,@RequestBody UserDomain userDomain){
        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-       JSONObject jsonObject = new JSONObject();
        Map<String,Object> map=new HashMap<>();
 
        try {
@@ -70,9 +69,11 @@ public class LoginController {
            map.put("message","登录成功");
 
            List<String> id = roleResourceDao.selectMenuResourceByID(user.getRoleId());
+           List<Resource> resources = resourceService.findResourceByRole(id);
            List<Menus> menus = resourceService.findMenusByRole(id);
            request.getSession().setAttribute("user", user);
            request.getSession().setAttribute("menus", menus);
+           request.getSession().setAttribute("resources", resources);
            return map;
 
        } catch (Exception e) {
@@ -115,46 +116,6 @@ public class LoginController {
        return  jsonObjectBO;
 
    }
-
-
-
-
-
-//    @RequestMapping(value ="/checkLogin", method = RequestMethod.POST)
-//    public JsonObjectBO login(HttpServletRequest request,@ModelAttribute("user")UserDomain user){
-//
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        JSONObject jsonObject = new JSONObject();
-//
-//        String userAccount = StringUtil.stringNullHandle(user.getUsername());
-//        String password = StringUtil.stringNullHandle(user.getPassword());
-//
-//        String validateCode = StringUtil.stringNullHandle(user.getValidateCode());
-//        String role = StringUtil.stringNullHandle(user.getRole());
-//
-//        String sessionCode = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-//        if(!StringUtil.isNotNull(validateCode) || !StringUtil.isNotNull(sessionCode)){
-//            jsonObjectBO.setCode(-1);
-//            jsonObjectBO.setMessage("验证码错误");
-//            return jsonObjectBO;
-//        }
-//
-//        validateCode = validateCode.toLowerCase();
-//        sessionCode = sessionCode.toLowerCase();
-//        if(!validateCode.equals(sessionCode)){
-//            jsonObjectBO.setCode(-1);
-//            jsonObjectBO.setMessage("验证码错误");
-//            return jsonObjectBO;
-//        }
-//
-//        if(!StringUtil.isNotNull(userAccount) || !StringUtil.isNotNull(password)){
-//            jsonObjectBO.setCode(-1);
-//            jsonObjectBO.setMessage("验证码错误");
-//            return jsonObjectBO;
-//        }
-//
-//        return validate(userAccount,password,role,jsonObjectBO);
-//    }
 
     //判断各角色是否登陆
     public JsonObjectBO validate(String userAccount,String password,String role,JsonObjectBO jsonObjectBO){
