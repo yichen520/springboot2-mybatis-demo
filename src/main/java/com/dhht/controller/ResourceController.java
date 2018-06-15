@@ -1,5 +1,6 @@
 package com.dhht.controller;
 
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Makedepartment;
 import com.dhht.model.Resource;
@@ -21,8 +22,6 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-
-
    //根据ID查找资源
    @RequestMapping(value = "/selcect")
     public JsonObjectBO selectresouer(@RequestBody Map map){
@@ -40,7 +39,7 @@ public class ResourceController {
 
    }
 
-    //查询所有资源
+    @Log("查询所有资源")
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     public JsonObjectBO selectAllResource(){
       //  int pageNum =(Integer) map.get("current");
@@ -57,7 +56,7 @@ public class ResourceController {
 
     }
 
-    //根据Id删除资源
+    @Log("删除资源")
     @RequestMapping(value = "/delete")
     public JsonObjectBO deleteResource(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -80,7 +79,7 @@ public class ResourceController {
         return jsonObjectBO;
     }
 
-   //添加资源
+   @Log("添加资源")
     @RequestMapping(value = "/add")
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         //为资源添加一个UUID
@@ -102,7 +101,7 @@ public class ResourceController {
         return jsonObjectBO;
     }
 
-    //修改资源
+    @Log("修改资源")
     @RequestMapping(value = "/update")
     public JsonObjectBO updateResource(@RequestBody Resource resource){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();

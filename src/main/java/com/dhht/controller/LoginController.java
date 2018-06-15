@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.AccessResult;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.RoleResourceDao;
@@ -37,6 +38,7 @@ public class LoginController {
     public static final String admin_userAccount = "admin";
     public static final String admin_password = "111111";
 
+    @Log("登录")
    @RequestMapping(value ="login", method = RequestMethod.POST)
    public Map<String,Object> login(HttpServletRequest request,@RequestBody UserDomain userDomain){
        JsonObjectBO jsonObjectBO = new JsonObjectBO();

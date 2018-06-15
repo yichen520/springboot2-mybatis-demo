@@ -26,7 +26,7 @@ public class AdminController {
     @Autowired
    private MakeDepartmentService makeDepartmentService;
 
-    //@Log("查看所有的制作单位")
+    //@SysLog("查看所有的制作单位")
     @RequestMapping(value="/findallmake",produces="application/json;charset=UTF-8")
     public JsonObjectBO index(@RequestBody Map map) {
         int pageNum =(Integer) map.get("pageNum");

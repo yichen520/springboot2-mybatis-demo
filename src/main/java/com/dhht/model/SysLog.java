@@ -2,7 +2,7 @@ package com.dhht.model;
 
 import java.util.Date;
 
-public class Log {
+public class SysLog {
     private int id;
     private String LogType;
     private String LogResult;
@@ -10,6 +10,15 @@ public class Log {
     private String LogTime;
     private String LogContent;
     private String ip;
+    private int time;
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
 
     public String getIp() {
         return ip;
@@ -69,7 +78,7 @@ public class Log {
 
     @Override
     public String toString() {
-        return "Log{" +
+        return "SysLog{" +
                 "id=" + id +
                 ", LogType='" + LogType + '\'' +
                 ", LogResult='" + LogResult + '\'' +
