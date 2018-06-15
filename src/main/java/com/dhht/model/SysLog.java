@@ -8,17 +8,7 @@ public class SysLog {
     private String LogResult;
     private String LogUser;
     private String LogTime;
-    private String LogContent;
     private String ip;
-    private int time;
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
 
     public String getIp() {
         return ip;
@@ -68,13 +58,6 @@ public class SysLog {
         LogTime = logTime;
     }
 
-    public String getLogContent() {
-        return LogContent;
-    }
-
-    public void setLogContent(String logContent) {
-        LogContent = logContent;
-    }
 
     @Override
     public String toString() {
@@ -84,7 +67,7 @@ public class SysLog {
                 ", LogResult='" + LogResult + '\'' +
                 ", LogUser='" + LogUser + '\'' +
                 ", LogTime='" + LogTime + '\'' +
-                ", LogContent='" + LogContent + '\'' +
+                ", ip='" + ip + '\'' +
                 '}';
     }
 }
