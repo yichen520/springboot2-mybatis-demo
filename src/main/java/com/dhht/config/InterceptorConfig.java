@@ -33,14 +33,14 @@ public class InterceptorConfig implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 
     }
-    public boolean validateResource(List<Resource> resources,String path){
+    public boolean validateResource(List<Resource> resources, String path) {
         if (resources == null) return false;
         for (Resource resource : resources) {
-            if (resource.getUrl().equals(path)){
+            if (resource.getUrl().equals(path)) {
                 return true;
             }
-            if (resource.getChildren() !=null){
-                return  validateResource(resource.getChildren(),path);
+            if (validateResource(resource.getChildren(), path)) {
+                return true;
             }
         }
         return false;
