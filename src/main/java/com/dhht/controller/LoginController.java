@@ -118,6 +118,24 @@ public class LoginController {
 
    }
 
+    @Log("退出登录")
+    @RequestMapping(value ="logout")
+    public Map<String,Object> login(HttpServletRequest request){
+        Map<String,Object> map=new HashMap<>();
+        try {
+            request.getSession().invalidate();
+            map.put("status", "ok");
+            map.put("message","退出登录成功");
+            return map;
+
+        } catch (Exception e) {
+
+            map.put("status", "error");
+            map.put("message","登录失败！");
+            return map;
+        }
+    }
+
     //判断各角色是否登陆
     public JsonObjectBO validate(String userAccount,String password,String role,JsonObjectBO jsonObjectBO){
         if (role.equals("1")){

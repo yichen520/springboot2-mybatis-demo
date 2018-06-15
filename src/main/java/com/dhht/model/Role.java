@@ -8,13 +8,14 @@ public class Role {
 
     private String name;
 
-    private boolean isSystem;
+    private Boolean isSystem;
 
-    public boolean isSystem() {
+
+    public Boolean getIsSystem() {
         return isSystem;
     }
 
-    public void setSystem(boolean system) {
+    public void setIsSystem(Boolean system) {
         isSystem = system;
     }
 
