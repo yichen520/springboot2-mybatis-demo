@@ -55,34 +55,34 @@ public class WebLogAspect {
 
 
 
-    @Before("log()")
-    public Map<String,Object>   doBefore(JoinPoint point) throws Throwable {
-        // 接收到请求，记录请求内容
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        List<Resource> resources = (List<Resource>)request.getSession().getAttribute("resources");
-        Map<String,Object> map=new HashMap<>();
-       String path = request.getServletPath();
-        if (path.equals("/login")||path.equals("/menu")||path.equals("/currentUser")){
-            map.put("status","ok");
-            return map;
-        }
-        if (validateResource(resources,path)){
-                try {
-                    // 执行方法
-                    map.put("code",1);
-                  //  point.proceed();
-                    return map;
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-        }else {
-            map.put("code",-1);
-            map.put("message","没有权限操作");
-            return map;
-        }
-        return map;
-    }
+//    @Before("log()")
+//    public Map<String,Object>   doBefore(JoinPoint point) throws Throwable {
+//        // 接收到请求，记录请求内容
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        HttpServletRequest request = attributes.getRequest();
+//        List<Resource> resources = (List<Resource>)request.getSession().getAttribute("resources");
+//        Map<String,Object> map=new HashMap<>();
+//       String path = request.getServletPath();
+//        if (path.equals("/login")||path.equals("/menu")||path.equals("/currentUser")){
+//            map.put("status","ok");
+//            return map;
+//        }
+//        if (validateResource(resources,path)){
+//                try {
+//                    // 执行方法
+//                    map.put("code",1);
+//                  //  point.proceed();
+//                    return map;
+//                } catch (Throwable e) {
+//                    e.printStackTrace();
+//                }
+//        }else {
+//            map.put("code",-1);
+//            map.put("message","没有权限操作");
+//            return map;
+//        }
+//        return map;
+//    }
 
 //    private void saveLog(ProceedingJoinPoint joinPoint, long time) {
 //        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
