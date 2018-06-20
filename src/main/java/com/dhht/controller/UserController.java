@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/8/16.
@@ -112,6 +113,23 @@ public class UserController {
         jsonObjectBO.setMessage("查询成功");
         return jsonObjectBO;
 
+    }
+
+    @RequestMapping(value = "/findByDistrict")
+    public JsonObjectBO findByDistrict(@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+
+        int pageSum =(Integer) map.get("pageSum");
+        int pageNum =(Integer) map.get("pageNum");
+        int id = (Integer) map.get("id");
+
+        PageInfo<Users> user = userService.selectByDistrict(id,pageSum,pageNum);
+        jsonObject.put("user",user);
+        jsonObjectBO.setData(jsonObject);
+        jsonObjectBO.setCode(1);
+        jsonObjectBO.setMessage("查询成功");
+        return jsonObjectBO;
     }
 
 }

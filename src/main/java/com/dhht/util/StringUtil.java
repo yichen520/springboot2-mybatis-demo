@@ -192,4 +192,19 @@ public class StringUtil {
         }
         return buffer.toString();
     }
+
+    /**
+     * 处理区域ID
+     * @param ID 区域ID
+     * @return 返回一个字符串数组
+     * 数组第一个对应省ID，第二个对应市ID，第三个对应区ID
+     */
+    public static String[] DistrictUtil(Integer ID){
+        String DistrictID[] = new String[3];
+        String id = ID.toString();
+        DistrictID[0] = id.substring(0,2);
+        DistrictID[1] = id.substring(2,4);
+        DistrictID[2] = id.substring(4,6);
+        return DistrictID;
+    }
 }

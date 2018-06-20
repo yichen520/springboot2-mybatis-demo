@@ -32,7 +32,7 @@ public interface UserDao {
     Users findByUserName(String userName);
 
     int updateUserDepartment(Users users);
-
-
+    //根据区域ID查询用户
+    List<Users> selectByDistrict(@Param("id") String ID);
 
 }
