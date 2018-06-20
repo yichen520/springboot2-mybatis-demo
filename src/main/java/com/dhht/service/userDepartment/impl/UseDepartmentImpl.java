@@ -24,6 +24,9 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Autowired
     private UseDepartmentDao useDepartmentDao;
 
+
+
+
     /**
      * 查询全部
      * @param pageNum

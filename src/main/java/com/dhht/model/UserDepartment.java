@@ -7,6 +7,7 @@ import lombok.Data;
  */
 @Data
 public class UserDepartment {
+    private String id;
     private String userdepartmentCode;   //印章使用单位编码
     private String departmentName;//单位名称
     private String departmentNationName;//单位少数名族文字名称

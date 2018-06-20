@@ -10,5 +10,8 @@ import com.github.pagehelper.PageInfo;
 public interface UseDepartmentService {
 
 
+    int insert(UseDepartment useDepartment);
+    int update(UseDepartment useDepartment);
     PageInfo<UseDepartment> findAllMakeBySize(int pageNum, int pageSize);
+    int delete(UseDepartment useDepartment);
 }

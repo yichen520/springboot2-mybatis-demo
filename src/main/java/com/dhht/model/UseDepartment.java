@@ -7,7 +7,7 @@ public class UseDepartment {
     private String id;
     private String code;   //印章使用单位编码
     private String name;//单位名称e
-    private String ationName;//单位少数名族文字名称
+    private String nationName;//单位少数名族文字名称
     private String englishName;//单位英语名称
     private String englishAhhr;//单位英语缩写
     private Integer status;//单位使用单位类型代码

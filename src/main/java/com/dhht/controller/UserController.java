@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Administrator on 2017/8/16.
  */
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/sys/user")
 public class UserController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class UserController {
      * @param
      * @return
      */
-    @RequestMapping(value ="/addSuser", method = RequestMethod.POST)
+    @RequestMapping(value ="/add", method = RequestMethod.POST)
     public JsonObjectBO addSuser(@RequestBody Users users){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         int addSuser = userService.addUser(users);
@@ -52,7 +52,7 @@ public class UserController {
      * @param
      * @return
      */
-    @RequestMapping(value ="/updateSuser",method = RequestMethod.POST)
+    @RequestMapping(value ="/update",method = RequestMethod.POST)
     public JsonObjectBO updateSuser(@RequestBody Users users){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         int update = userService.Update(users);
@@ -71,7 +71,7 @@ public class UserController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/deleteSuser" , method = RequestMethod.GET)
+    @RequestMapping(value = "/delete" , method = RequestMethod.GET)
     public JsonObjectBO deleteSuser(@RequestParam String id){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         int delete = userService.deleteSuser(id);
@@ -101,7 +101,7 @@ public class UserController {
     /**
      * 查询全部用户
      */
-    @RequestMapping(value = "/findAllSuser" , method = RequestMethod.GET)
+    @RequestMapping(value = "/info" , method = RequestMethod.GET)
     public JsonObjectBO findAllSuser(@RequestParam Integer pageNum, Integer pageSize){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
