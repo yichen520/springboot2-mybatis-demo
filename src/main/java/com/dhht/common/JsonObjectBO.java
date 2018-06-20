@@ -9,6 +9,49 @@ public class JsonObjectBO {
     private String message;  //反馈信息
     private JSONObject data;  //业务数据
 
+    // 成功
+    private static final Integer SUCCESS = 1;
+    // 成功
+    private static final Integer EXCEPTION = 0;
+    // 异常 失败
+    private static final Integer FAIL = -1;
+
+
+    public JsonObjectBO(int code, String message, JSONObject data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+    public JsonObjectBO() {
+    }
+
+    public static JsonObjectBO error(String msg) {
+        JsonObjectBO ResponseBo = new JsonObjectBO();
+        ResponseBo.setCode(FAIL);
+        ResponseBo.setMessage(msg);
+        return ResponseBo;
+    }
+
+    public static JsonObjectBO ok(String msg) {
+        JsonObjectBO ResponseBo = new JsonObjectBO();
+        ResponseBo.setCode(SUCCESS);
+        ResponseBo.setMessage(msg);
+        return ResponseBo;
+    }
+    public static JsonObjectBO success(String msg,JSONObject data) {
+        JsonObjectBO ResponseBo = new JsonObjectBO();
+        ResponseBo.setCode(SUCCESS);
+        ResponseBo.setData(data);
+        ResponseBo.setMessage(msg);
+        return ResponseBo;
+    }
+    public static JsonObjectBO exception(String msg) {
+        JsonObjectBO ResponseBo = new JsonObjectBO();
+        ResponseBo.setCode(EXCEPTION);
+        ResponseBo.setMessage(msg);
+        return ResponseBo;
+    }
+
     /**
      * 业务状态（编码）
      * @return the code

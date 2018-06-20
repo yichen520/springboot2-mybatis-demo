@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.SealImageMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.SealImage" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="seal_id" property="sealId" jdbcType="VARCHAR" />
+    <result column="seal_image_width" property="sealImageWidth" jdbcType="DOUBLE" />
+    <result column="seal_image_height" property="sealImageHeight" jdbcType="DOUBLE" />
+    <result column="seal_image_compress_status" property="sealImageCompressStatus" jdbcType="TINYINT" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.dhht.model.SealImage" extends="BaseResultMap" >
+    <result column="seal_image_data" property="sealImageData" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, seal_id, seal_image_width, seal_image_height, seal_image_compress_status, url
+  </sql>
+  <sql id="Blob_Column_List" >
+    seal_image_data
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.dhht.model.SealImageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from seal_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dhht.model.SealImageExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from seal_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from seal_image
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from seal_image
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dhht.model.SealImageExample" >
+    delete from seal_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.SealImage" >
+    insert into seal_image (id, seal_id, seal_image_width, 
+      seal_image_height, seal_image_compress_status, 
+      url, seal_image_data)
+    values (#{id,jdbcType=CHAR}, #{sealId,jdbcType=VARCHAR}, #{sealImageWidth,jdbcType=DOUBLE}, 
+      #{sealImageHeight,jdbcType=DOUBLE}, #{sealImageCompressStatus,jdbcType=TINYINT}, 
+      #{url,jdbcType=VARCHAR}, #{sealImageData,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.SealImage" >
+    insert into seal_image
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sealId != null" >
+        seal_id,
+      </if>
+      <if test="sealImageWidth != null" >
+        seal_image_width,
+      </if>
+      <if test="sealImageHeight != null" >
+        seal_image_height,
+      </if>
+      <if test="sealImageCompressStatus != null" >
+        seal_image_compress_status,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="sealImageData != null" >
+        seal_image_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="sealId != null" >
+        #{sealId,jdbcType=VARCHAR},
+      </if>
+      <if test="sealImageWidth != null" >
+        #{sealImageWidth,jdbcType=DOUBLE},
+      </if>
+      <if test="sealImageHeight != null" >
+        #{sealImageHeight,jdbcType=DOUBLE},
+      </if>
+      <if test="sealImageCompressStatus != null" >
+        #{sealImageCompressStatus,jdbcType=TINYINT},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="sealImageData != null" >
+        #{sealImageData,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dhht.model.SealImageExample" resultType="java.lang.Integer" >
+    select count(*) from seal_image
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update seal_image
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=CHAR},
+      </if>
+      <if test="record.sealId != null" >
+        seal_id = #{record.sealId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealImageWidth != null" >
+        seal_image_width = #{record.sealImageWidth,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sealImageHeight != null" >
+        seal_image_height = #{record.sealImageHeight,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sealImageCompressStatus != null" >
+        seal_image_compress_status = #{record.sealImageCompressStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.url != null" >
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealImageData != null" >
+        seal_image_data = #{record.sealImageData,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update seal_image
+    set id = #{record.id,jdbcType=CHAR},
+      seal_id = #{record.sealId,jdbcType=VARCHAR},
+      seal_image_width = #{record.sealImageWidth,jdbcType=DOUBLE},
+      seal_image_height = #{record.sealImageHeight,jdbcType=DOUBLE},
+      seal_image_compress_status = #{record.sealImageCompressStatus,jdbcType=TINYINT},
+      url = #{record.url,jdbcType=VARCHAR},
+      seal_image_data = #{record.sealImageData,jdbcType=LONGVARBINARY}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update seal_image
+    set id = #{record.id,jdbcType=CHAR},
+      seal_id = #{record.sealId,jdbcType=VARCHAR},
+      seal_image_width = #{record.sealImageWidth,jdbcType=DOUBLE},
+      seal_image_height = #{record.sealImageHeight,jdbcType=DOUBLE},
+      seal_image_compress_status = #{record.sealImageCompressStatus,jdbcType=TINYINT},
+      url = #{record.url,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.SealImage" >
+    update seal_image
+    <set >
+      <if test="sealId != null" >
+        seal_id = #{sealId,jdbcType=VARCHAR},
+      </if>
+      <if test="sealImageWidth != null" >
+        seal_image_width = #{sealImageWidth,jdbcType=DOUBLE},
+      </if>
+      <if test="sealImageHeight != null" >
+        seal_image_height = #{sealImageHeight,jdbcType=DOUBLE},
+      </if>
+      <if test="sealImageCompressStatus != null" >
+        seal_image_compress_status = #{sealImageCompressStatus,jdbcType=TINYINT},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="sealImageData != null" >
+        seal_image_data = #{sealImageData,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dhht.model.SealImage" >
+    update seal_image
+    set seal_id = #{sealId,jdbcType=VARCHAR},
+      seal_image_width = #{sealImageWidth,jdbcType=DOUBLE},
+      seal_image_height = #{sealImageHeight,jdbcType=DOUBLE},
+      seal_image_compress_status = #{sealImageCompressStatus,jdbcType=TINYINT},
+      url = #{url,jdbcType=VARCHAR},
+      seal_image_data = #{sealImageData,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.SealImage" >
+    update seal_image
+    set seal_id = #{sealId,jdbcType=VARCHAR},
+      seal_image_width = #{sealImageWidth,jdbcType=DOUBLE},
+      seal_image_height = #{sealImageHeight,jdbcType=DOUBLE},
+      seal_image_compress_status = #{sealImageCompressStatus,jdbcType=TINYINT},
+      url = #{url,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

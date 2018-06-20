@@ -27,10 +27,4 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     }
 
 
-
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//
-//        super.addViewControllers(registry);
-//    }
 }

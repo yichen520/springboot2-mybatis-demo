@@ -31,7 +31,7 @@ public class WebLogAspect {
 
     private Logger logger = Logger.getLogger(getClass());
     @Autowired
-    private LogDao sysLogDao;
+    private LogDao logDao;
 
     @Pointcut("execution(public * com.dhht.controller..*.*(..))")
     public void log(){}
@@ -130,7 +130,7 @@ public class WebLogAspect {
         String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
         sysLog.setLogTime(dateStr);
         sysLog.setLogResult("发生异常");
-        sysLogDao.saveLog(sysLog);
+        logDao.saveLog(sysLog);
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
@@ -169,6 +169,6 @@ public class WebLogAspect {
            }
         }
         // 保存系统日志
-        sysLogDao.saveLog(sysLog);
+        logDao.saveLog(sysLog);
     }
 }
