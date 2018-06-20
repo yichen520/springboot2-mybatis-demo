@@ -3,14 +3,16 @@ package com.dhht;
 import com.dhht.controller.UserController;
 import com.dhht.controller.UserDepartmentController;
 import com.dhht.dao.UserDao;
-import com.dhht.dao.UserDepartmentDao;
+
+import com.dhht.model.UseDepartment;
 import com.dhht.model.UserDepartment;
 import com.dhht.service.user.UserService;
-import com.dhht.service.userDepartment.UserDepartmentService;
+import com.dhht.service.userDepartment.UseDepartmentService;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.origin.SystemEnvironmentOrigin;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -28,28 +30,34 @@ public class Springboot2MybatisDemoApplicationTests {
 	@Autowired
 	private UserController suserController;
 
+	@Autowired
+	private UseDepartmentService useDepartmentService;
+
+
+
 	@Test
 	public void contextLoads() {
-//		Users users = new Users();
-//		users.setId("123");
-//		users.setUserName("123412");
-//		users.setRealName("test032");
-//		users.setRoleId("CJYH");
-//		users.setRegionId("120102");
-//		suserService.addUser(users);
-//		suserController.addSuser(users);
-//		suserDao.delete("00265c419a8347ee80b346b7d545f183");
-//		List<Users> users = suserDao.findAllSuser();
-//		System.out.print(users.toString());
-//		JsonObjectBO jsonObjectBO = suserController.findAllSuser(1,2);
-//		System.out.println(jsonObjectBO);
-//        suserController.updateSuser(users);
-//		suserController.deleteSuser("314e7ebeeca44c33a926b53bd19af2bd");
-//		suserService.Update(users);
-//		suserDao.update(users);
-//        List rs = suserDao.findAllSuser();
-//		System.out.println(rs.toString());
-		suserController.changePwd("08a1f9788b984f8a9e234e206dd0df75","messi");
+
+//		UseDepartment useDepartment = new UseDepartment();
+//		useDepartment.setId("91e79dfa737e4715a900939be80ec849");
+//		useDepartment.setAddress("中国山东");
+//		useDepartment.setCode("234");
+//		useDepartment.setDepartmentCertificate("111");
+//		useDepartment.setDepartmentCertificateType("11");
+//		useDepartment.setDepartmentStatus("123");
+//		useDepartment.setDistrictId("123");
+//		useDepartment.setEnglishAhhr("123");
+//		useDepartment.setEnglishName("dhht");
+//		useDepartment.setLegalCountry("123");
+//		useDepartment.setName("dhht");
+//		useDepartment.setStatus(2);
+//		useDepartment.setLegalName("cy123");
+//		useDepartment.setLegalId("123123");
+//		useDepartment.setLegalIdType("123123");
+//		useDepartment.setTelphone("1231231231");
+//		useDepartment.setStatus(1);
+//		useDepartment.setIsDelete(false);
+		System.out.println(useDepartmentService.findAllMakeBySize(1,2).toString());
 	}
 
 }

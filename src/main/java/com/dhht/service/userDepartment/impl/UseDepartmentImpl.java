@@ -4,6 +4,7 @@ import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.UseDepartment;
 import com.dhht.service.userDepartment.UseDepartmentService;
+import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by imac_dhht on 2018/6/12.
@@ -27,12 +29,20 @@ public class UseDepartmentImpl implements UseDepartmentService {
 
     @Override
     public int insert(UseDepartment useDepartment) {
-        return 0;
+
+        useDepartment.setId(UUIDUtil.generate());
+        return useDepartmentDao.insert(useDepartment);
+
+
+
     }
 
     @Override
     public int update(UseDepartment useDepartment) {
-        return 0;
+
+        return useDepartmentDao.updateByPrimaryKey(useDepartment);
+
+
     }
 
     /**
@@ -51,7 +61,11 @@ public class UseDepartmentImpl implements UseDepartmentService {
 
     @Override
     public int delete(UseDepartment useDepartment) {
-        return 0;
+
+        return useDepartmentDao.deleteByPrimaryKey(useDepartment.getId());
+
+
+
     }
 
 
