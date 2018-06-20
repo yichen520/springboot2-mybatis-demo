@@ -21,6 +21,19 @@
         employee_code = #{0} and password = #{1}
   </select>
 
+    <sql id="simple_User_List" >
+        id, user_name, real_name, role_id, is_locked, is_deleted, district_id
+    </sql>
+
+    <resultMap id="simpleResultMap" type="com.dhht.model.UserSimple">
+        <id column="id" property="Id" jdbcType="VARCHAR"/>
+        <result column="user_name" property="UserName" jdbcType="VARCHAR" />
+        <result column="real_name" property="RealName" jdbcType="VARCHAR"/>
+        <result column="role_id" property="RoleId" jdbcType="VARCHAR" />
+        <result column="is_locked" property="IsLock" jdbcType="BIT"/>
+        <result column="district_id" property="RegionId" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <resultMap id="queryForListMap" type="com.dhht.model.Users">
         <id column="id" property="id" jdbcType="CHAR"/>
         <result column="user_name" property="userName" jdbcType="CHAR" />
@@ -166,8 +179,8 @@
         WHERE id = #{id}
     </update>
     
-    <select id="selectByDistrict" resultMap="queryForListMap" parameterType="java.lang.String">
-        SELECT * FROM sys_user WHERE district_id like '${id}%'
+    <select id="selectByDistrict" resultMap="simpleResultMap" parameterType="java.lang.String">
+        SELECT <include refid="simple_User_List"></include> FROM sys_user WHERE district_id like '${id}%'
     </select>
 
 
