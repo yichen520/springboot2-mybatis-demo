@@ -120,7 +120,7 @@ public class UserController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        int pageSum =(Integer) map.get("pageSum");
+        int pageSum =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
         int id = (Integer) map.get("id");
 
