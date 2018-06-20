@@ -2,6 +2,7 @@ package com.dhht.dao;
 
 
 import com.dhht.model.UseDepartment;
+import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by imac_dhht on 2018/6/12.
  */
+@Repository
 public interface UseDepartmentDao {
 
     int deleteByPrimaryKey(String code);
