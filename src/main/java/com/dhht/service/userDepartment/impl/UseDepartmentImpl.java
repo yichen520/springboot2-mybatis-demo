@@ -25,7 +25,15 @@ public class UseDepartmentImpl implements UseDepartmentService {
     private UseDepartmentDao useDepartmentDao;
 
 
+    @Override
+    public int insert(UseDepartment useDepartment) {
+        return 0;
+    }
 
+    @Override
+    public int update(UseDepartment useDepartment) {
+        return 0;
+    }
 
     /**
      * 查询全部
@@ -39,6 +47,11 @@ public class UseDepartmentImpl implements UseDepartmentService {
         List<UseDepartment> useDepartments = useDepartmentDao.findAllMake();
         PageInfo result = new PageInfo(useDepartments);
         return result;
+    }
+
+    @Override
+    public int delete(UseDepartment useDepartment) {
+        return 0;
     }
 
 

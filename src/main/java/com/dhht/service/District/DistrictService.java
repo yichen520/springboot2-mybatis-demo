@@ -10,5 +10,5 @@ public interface DistrictService {
     List<DistrictMenus> selectAllDistrict();
 
     //查询指定区域
-    List<DistrictMenus> selectOneDistrict(Integer id);
+    List<DistrictMenus> selectOneDistrict(String id);
 }
