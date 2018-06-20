@@ -21,6 +21,19 @@
         employee_code = #{0} and password = #{1}
   </select>
 
+    <sql id="simple_User_List" >
+        id, user_name, real_name, role_id, is_locked, is_deleted, district_id
+    </sql>
+
+    <resultMap id="simpleResultMap" type="com.dhht.model.UserSimple">
+        <id column="id" property="Id" jdbcType="VARCHAR"/>
+        <result column="user_name" property="UserName" jdbcType="VARCHAR" />
+        <result column="real_name" property="RealName" jdbcType="VARCHAR"/>
+        <result column="role_id" property="RoleId" jdbcType="VARCHAR" />
+        <result column="is_locked" property="IsLock" jdbcType="BIT"/>
+        <result column="district_id" property="RegionId" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <resultMap id="queryForListMap" type="com.dhht.model.Users">
         <id column="id" property="id" jdbcType="CHAR"/>
         <result column="user_name" property="userName" jdbcType="CHAR" />
@@ -29,6 +42,7 @@
         <result column="role_id" property="roleId" jdbcType="CHAR" />
         <result column="object_id" property="objectId" jdbcType="CHAR"/>
         <result column="is_locked" property="isLocked" jdbcType="BIT"/>
+        <result column="telphone" property="telphone" jdbcType="VARCHAR"/>
         <result column="login_error_times" property="loginErrorTimes" jdbcType="INTEGER"/>
         <result column="is_changed_pwd" property="isChangedPwd" jdbcType="BIT"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
@@ -94,6 +108,7 @@
         `role_id`,
         `object_id`,
         `is_locked`,
+        `telphone`,
         `login_error_times`,
         `is_changed_pwd`,
         `is_deleted`,
@@ -106,6 +121,7 @@
         #{roleId},
         0,
         0,
+        #{telphone},
         0,
         0,
         0,
@@ -135,7 +151,7 @@
 
     <!--<select id="findAllSuser" resultType="com.dhht.model.Users">-->
     <select id="findAllSuser" resultMap="queryForListMap">
-        SELECT *
+        SELECT u.user_name,u.real_name,u.telphone,u.role_id,u.district_id,r.*,d.*
         FROM sys_user u,sys_role r,sys_district d
         WHERE
         u.role_id = r.id AND u.district_id = d.district_id
@@ -165,8 +181,8 @@
         WHERE id = #{id}
     </update>
     
-    <select id="selectByDistrict" resultMap="queryForListMap" parameterType="java.lang.String">
-        SELECT * FROM sys_user WHERE district_id like '${id}%'
+    <select id="selectByDistrict" resultMap="simpleResultMap" parameterType="java.lang.String">
+        SELECT <include refid="simple_User_List"></include> FROM sys_user WHERE district_id like '${id}%'
     </select>
 
 

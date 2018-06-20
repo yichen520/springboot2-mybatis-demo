@@ -26,6 +26,8 @@ public class Users {
 
     private String regionId;
 
+    private String telphone;
+
     private District district;
 
     private Role role;
@@ -134,22 +136,22 @@ public class Users {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "id='" + id + '\'' +
-                ", userName='" + userName + '\'' +
-                ", realName='" + realName + '\'' +
-                ", password='" + password + '\'' +
-                ", roleId='" + roleId + '\'' +
-                ", objectId='" + objectId + '\'' +
-                ", isLocked=" + isLocked +
-                ", loginErrorTimes=" + loginErrorTimes +
-                ", isChangedPwd=" + isChangedPwd +
-                ", isDeleted=" + isDeleted +
-                ", regionId='" + regionId + '\'' +
-                ", district=" + district +
-                ", role=" + role +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Users{" +
+//                "id='" + id + '\'' +
+//                ", userName='" + userName + '\'' +
+//                ", realName='" + realName + '\'' +
+//                ", password='" + password + '\'' +
+//                ", roleId='" + roleId + '\'' +
+//                ", objectId='" + objectId + '\'' +
+//                ", isLocked=" + isLocked +
+//                ", loginErrorTimes=" + loginErrorTimes +
+//                ", isChangedPwd=" + isChangedPwd +
+//                ", isDeleted=" + isDeleted +
+//                ", regionId='" + regionId + '\'' +
+//                ", district=" + district +
+//                ", role=" + role +
+//                '}';
+//    }
 }

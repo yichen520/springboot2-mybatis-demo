@@ -1,8 +1,11 @@
 package com.dhht.model;
 
+import lombok.Data;
+
 /**
  * Created by imac_dhht on 2018/6/13.
  */
+@Data
 public class UseDepartment {
     private String id;
     private String code;   //印章使用单位编码

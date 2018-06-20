@@ -72,9 +72,10 @@ public class UserController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/delete" , method = RequestMethod.GET)
-    public JsonObjectBO deleteSuser(@RequestParam String id){
+    @RequestMapping(value = "/delete" , method = RequestMethod.POST)
+    public JsonObjectBO deleteSuser(@RequestBody Users users){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String id = users.getId();
         int delete = userService.deleteSuser(id);
         if (delete>0){
             jsonObjectBO.setCode(1);
@@ -86,9 +87,11 @@ public class UserController {
         return jsonObjectBO;
     }
 
-    @RequestMapping(value = "/changePwd" , method = RequestMethod.GET)
-    public JsonObjectBO changePwd(@RequestParam String id,String password){
+    @RequestMapping(value = "/changePwd" , method = RequestMethod.POST)
+    public JsonObjectBO changePwd(@RequestBody Users users){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String id = users.getId();
+        String password = users.getPassword();
         Integer changepwd = userService.changePwd(id,password);
         if(changepwd>0){
             jsonObjectBO.setCode(1);
@@ -102,12 +105,16 @@ public class UserController {
     /**
      * 查询全部用户
      */
-    @RequestMapping(value = "/info" , method = RequestMethod.GET)
-    public JsonObjectBO findAllSuser(@RequestParam Integer pageNum, Integer pageSize){
+    @RequestMapping(value = "/info")
+    public JsonObjectBO findAllSuser(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        PageInfo<Users> suser = userService.findAllSuser(pageNum,pageSize);
-        jsonObject.put("Suser",suser);
+
+        int pageSize =(Integer) map.get("pageSize");
+        int pageNum =(Integer) map.get("pageNum");
+
+        PageInfo<Users> user = userService.findAllSuser(pageNum,pageSize);
+        jsonObject.put("user",user);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
         jsonObjectBO.setMessage("查询成功");
@@ -120,11 +127,11 @@ public class UserController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        int pageSum =(Integer) map.get("pageSum");
+        int pageSize =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
         int id = (Integer) map.get("id");
 
-        PageInfo<Users> user = userService.selectByDistrict(id,pageSum,pageNum);
+        PageInfo<Users> user = userService.selectByDistrict(id,pageSize,pageNum);
         jsonObject.put("user",user);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
