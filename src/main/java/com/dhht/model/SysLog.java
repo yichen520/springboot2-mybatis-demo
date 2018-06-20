@@ -2,13 +2,21 @@ package com.dhht.model;
 
 import java.util.Date;
 
-public class Log {
+public class SysLog {
     private int id;
     private String LogType;
     private String LogResult;
     private String LogUser;
     private String LogTime;
-    private String LogContent;
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public int getId() {
         return id;
@@ -50,23 +58,16 @@ public class Log {
         LogTime = logTime;
     }
 
-    public String getLogContent() {
-        return LogContent;
-    }
-
-    public void setLogContent(String logContent) {
-        LogContent = logContent;
-    }
 
     @Override
     public String toString() {
-        return "Log{" +
+        return "SysLog{" +
                 "id=" + id +
                 ", LogType='" + LogType + '\'' +
                 ", LogResult='" + LogResult + '\'' +
                 ", LogUser='" + LogUser + '\'' +
                 ", LogTime='" + LogTime + '\'' +
-                ", LogContent='" + LogContent + '\'' +
+                ", ip='" + ip + '\'' +
                 '}';
     }
 }

@@ -2,7 +2,7 @@ package com.dhht.service.Log.Impl;
 
 import com.dhht.dao.LogDao;
 import com.dhht.model.Dictionary;
-import com.dhht.model.Log;
+import com.dhht.model.SysLog;
 import com.dhht.model.Users;
 import com.dhht.service.Log.LogService;
 import com.github.pagehelper.PageHelper;
@@ -20,27 +20,13 @@ public class LogServiceImp implements LogService {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
     @Override
-    public PageInfo<Log> selectAllLog(int pageNum,int pageSize) {
-        List<Log> logs = logDao.selectAllLog();
+    public PageInfo<SysLog> selectAllLog(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<Log> result = new PageInfo(logs);
+        List<SysLog> logs = logDao.selectAllLog();
+        PageInfo result = new PageInfo(logs);
         return result;
     }
 
-    @Override
-    public int insertLog(int operateType, Users users,boolean result,String content) {
-        Log log = new Log();
-        log.setLogType(getNameByType(operateType));
-        log.setLogUser(users.getRealName());
-        if(result) {
-            log.setLogResult("成功");
-        }else {
-            log.setLogResult("失败");
-        }
-        log.setLogTime(simpleDateFormat.format(new Date()).toString());
-        log.setLogContent(content);
-        return logDao.saveLog(log);
-    }
 
 
     //根据操作类型获取操作名称
