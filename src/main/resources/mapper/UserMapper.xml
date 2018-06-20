@@ -165,4 +165,14 @@
         WHERE id = #{id}
     </update>
 
+
+    <update id="updateUserDepartment" parameterType="com.dhht.model.Users">
+        UPDATE sys_user
+          <set>
+              `real_name` = #{realName},
+              `is_deleted` = #{isDeleted},
+              `district_id`= #{districtId}
+          </set>
+        WHERE `user_name` = #{userName}
+    </update>
 </mapper>

@@ -31,6 +31,8 @@ public interface UserDao {
     //根据Code查找用户，表中字段为user_name
     Users findByUserName(String userName);
 
+    int updateUserDepartment(Users users);
+
 
 
 }
