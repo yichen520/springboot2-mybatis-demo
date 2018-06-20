@@ -29,13 +29,20 @@ public class UseDepartmentImpl implements UseDepartmentService {
 
     @Override
     public int insert(UseDepartment useDepartment) {
+
         useDepartment.setId(UUIDUtil.generate());
         return useDepartmentDao.insert(useDepartment);
+
+
+
     }
 
     @Override
     public int update(UseDepartment useDepartment) {
+
         return useDepartmentDao.updateByPrimaryKey(useDepartment);
+
+
     }
 
     /**
@@ -54,7 +61,11 @@ public class UseDepartmentImpl implements UseDepartmentService {
 
     @Override
     public int delete(UseDepartment useDepartment) {
+
         return useDepartmentDao.deleteByPrimaryKey(useDepartment.getId());
+
+
+
     }
 
 
