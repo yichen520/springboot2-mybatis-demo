@@ -57,7 +57,8 @@ public class Springboot2MybatisDemoApplicationTests {
 //		useDepartment.setTelphone("1231231231");
 //		useDepartment.setStatus(1);
 //		useDepartment.setIsDelete(false);
-		System.out.println(useDepartmentService.findAllMakeBySize(1,2).toString());
+//		System.out.println(useDepartmentService.findAllMakeBySize(1,2).toString());
+		System.out.println(suserService.findAllSuser(1,2).toString());
 	}
 
 }
