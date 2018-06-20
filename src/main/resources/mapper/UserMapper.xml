@@ -29,6 +29,7 @@
         <result column="role_id" property="roleId" jdbcType="CHAR" />
         <result column="object_id" property="objectId" jdbcType="CHAR"/>
         <result column="is_locked" property="isLocked" jdbcType="BIT"/>
+        <result column="telphone" property="telphone" jdbcType="VARCHAR"/>
         <result column="login_error_times" property="loginErrorTimes" jdbcType="INTEGER"/>
         <result column="is_changed_pwd" property="isChangedPwd" jdbcType="BIT"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
@@ -135,7 +136,7 @@
 
     <!--<select id="findAllSuser" resultType="com.dhht.model.Users">-->
     <select id="findAllSuser" resultMap="queryForListMap">
-        SELECT *
+        SELECT u.user_name,u.real_name,u.telphone,u.role_id,u.district_id,r.*,d.*
         FROM sys_user u,sys_role r,sys_district d
         WHERE
         u.role_id = r.id AND u.district_id = d.district_id
