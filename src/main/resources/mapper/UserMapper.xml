@@ -164,5 +164,9 @@
         </set>
         WHERE id = #{id}
     </update>
+    
+    <select id="selectByDistrict" resultMap="queryForListMap" parameterType="java.lang.String">
+        SELECT * FROM sys_user WHERE district_id like '${id}%'
+    </select>
 
 </mapper>

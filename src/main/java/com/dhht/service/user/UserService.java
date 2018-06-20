@@ -24,5 +24,8 @@ public interface UserService {
 
     Users validate(Users users);
 
+    PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum);
+    }
+
    // List<District> getRegionsTrees(String regionId);
-}
+

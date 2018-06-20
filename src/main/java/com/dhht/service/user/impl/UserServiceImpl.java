@@ -12,6 +12,7 @@ import com.dhht.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -129,6 +130,22 @@ public class UserServiceImpl implements UserService {
         String password = StringUtil.stringNullHandle(MD5Util.toMd5(users.getPassword()));
         Users user = usersMapper.validate(new UserDomain(userAccount,password));
         return user;
+    }
+
+    @Override
+    public PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum) {
+        List<Users> list = new ArrayList<Users>();
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            list = userDao.selectByDistrict(districtIds[0]);
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            list = userDao.selectByDistrict(districtIds[0]+districtIds[1]);
+        }else {
+            list = userDao.selectByDistrict(id.toString());
+        }
+        PageHelper.startPage(pageSum,pageNum);
+        PageInfo<Users> result = new PageInfo(list);
+        return result;
     }
 
 }

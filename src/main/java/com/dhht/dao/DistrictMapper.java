@@ -31,5 +31,10 @@ public interface DistrictMapper {
     int updateByPrimaryKey(District record);
 
     District getByNo(String regionId);
+
     District getById(String regionId);
+
+    //查询所有的地区信息
+    List<District> selectAllDistrict();
+
 }

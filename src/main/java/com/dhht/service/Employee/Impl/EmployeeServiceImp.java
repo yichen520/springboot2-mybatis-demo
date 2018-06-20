@@ -66,6 +66,11 @@ public class EmployeeServiceImp implements EmployeeService {
         return false;
     }
 
+    @Override
+    public Employee selectEmployeeByID(String employeeCode) {
+        return employeeDao.selectByPrimaryKey(employeeCode);
+    }
+
     public Users setUserByType(Employee employee,int type){
         Users users = new Users();
         switch (type){

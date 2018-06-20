@@ -31,6 +31,10 @@ public interface UserDao {
     //根据Code查找用户，表中字段为user_name
     Users findByUserName(String userName);
 
+    //根据区域ID查询用户
+    List<Users> selectByDistrict(@Param("id") String ID);
+
+
 
 
 }

@@ -57,4 +57,16 @@ public class Menus {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Menus{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", icon='" + icon + '\'' +
+                ", parentId='" + parentId + '\'' +
+                ", children=" + children +
+                '}';
+    }
 }

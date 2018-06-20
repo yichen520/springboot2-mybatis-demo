@@ -1,5 +1,7 @@
 package com.dhht.model;
 
+import java.util.List;
+
 public class District {
     private Integer id;
 
@@ -14,6 +16,9 @@ public class District {
     private Integer districtId;
 
     private String districtName;
+
+    //子节点
+    //private List<District> child;
 
     public Integer getId() {
         return id;
@@ -70,4 +75,12 @@ public class District {
     public void setDistrictName(String districtName) {
         this.districtName = districtName == null ? null : districtName.trim();
     }
+
+   /* public List<District> getChild() {
+        return child;
+    }
+
+    public void setChild(List<District> child) {
+        this.child = child;
+    }*/
 }

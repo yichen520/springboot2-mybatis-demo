@@ -133,4 +133,23 @@ public class Users {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", realName='" + realName + '\'' +
+                ", password='" + password + '\'' +
+                ", roleId='" + roleId + '\'' +
+                ", objectId='" + objectId + '\'' +
+                ", isLocked=" + isLocked +
+                ", loginErrorTimes=" + loginErrorTimes +
+                ", isChangedPwd=" + isChangedPwd +
+                ", isDeleted=" + isDeleted +
+                ", regionId='" + regionId + '\'' +
+                ", district=" + district +
+                ", role=" + role +
+                '}';
+    }
 }
