@@ -4,6 +4,7 @@ import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.UseDepartment;
 import com.dhht.service.userDepartment.UseDepartmentService;
+import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +30,14 @@ public class UseDepartmentImpl implements UseDepartmentService {
     public int insert(UseDepartment useDepartment) {
 
         useDepartment.setId(UUIDUtil.generate());
+           useDepartment.setId(UUIDUtil.generate());
         return useDepartmentDao.insert(useDepartment);
-
-
     }
 
     @Override
     public int update(UseDepartment useDepartment) {
-
         return useDepartmentDao.updateByPrimaryKey(useDepartment);
-
-
     }
-
 
     /**
      * 查询全部
@@ -59,16 +55,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
 
     @Override
     public int delete(UseDepartment useDepartment) {
-
         return useDepartmentDao.deleteByPrimaryKey(useDepartment.getId());
 
-
-
-    }
-
-    @Override
-    public int delete(UseDepartment useDepartment) {
-        return 0;
     }
 
 
