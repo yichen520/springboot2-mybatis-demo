@@ -55,7 +55,7 @@ public class DistrictMenus {
                 "DistrictId=" + DistrictId +
                 ", DistrictName='" + DistrictName + '\'' +
                 ", ParentId='" + ParentId + '\'' +
-                ", child=" + children +
+                ", children=" + children +
                 '}';
     }
 }
