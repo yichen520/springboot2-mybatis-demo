@@ -5,6 +5,8 @@ import com.dhht.model.Makedepartment;
 import com.dhht.model.Role;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/4/19.
  */
@@ -19,4 +21,6 @@ public interface RoleService {
     int deleteRole(String id);
 
     Role findRoleById(String id);
+
+   List<Role> getRoleListNopage();
 }
