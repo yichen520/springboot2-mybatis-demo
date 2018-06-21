@@ -78,17 +78,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public PageInfo<Role> getRoleList(int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
-        List<Role> roles = roleDao.findAllRole();
-        for(Role sysRole:roles){
-            List<String> resourceIds = new ArrayList<String>();
-
-            List<RoleResourceKey> sysRoleResources = roleResourceDao.selectByRoleID(sysRole.getId());
-            for(RoleResourceKey sysRoleResource:sysRoleResources){
-                resourceIds.add(sysRoleResource.getResourceId());
-            }
-            sysRole.setResourceIds(resourceIds);
-        }
-        PageInfo result = new PageInfo(roles);
+        PageInfo result = new PageInfo(getRoles());
         return result;
     }
 
@@ -106,6 +96,25 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role findRoleById(String id){
        return roleDao.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Role> getRoleListNopage() {
+       return getRoles();
+    }
+   //获取所有资源方法
+     public List<Role> getRoles(){
+        List<Role> roles = roleDao.findAllRole();
+        for(Role sysRole:roles){
+            List<String> resourceIds = new ArrayList<String>();
+
+            List<RoleResourceKey> sysRoleResources = roleResourceDao.selectByRoleID(sysRole.getId());
+            for(RoleResourceKey sysRoleResource:sysRoleResources){
+                resourceIds.add(sysRoleResource.getResourceId());
+            }
+            sysRole.setResourceIds(resourceIds);
+        }
+        return roles;
     }
 
 }

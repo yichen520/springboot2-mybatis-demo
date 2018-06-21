@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.xml.ws.Action;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,15 +63,35 @@ public class RoleController extends JsonObjectBO {
     /**
      * 查询
      */
-    @RequestMapping("info")
-    public JsonObjectBO getList(@RequestBody Map map) {
-        int pageNum = (Integer) map.get("pageNum");
-        int pageSize = (Integer) map.get("pageSize");
+//    @RequestMapping("info")
+//    public JsonObjectBO getList(@RequestBody Map map) {
+//        int pageNum = (Integer) map.get("pageNum");
+//        int pageSize = (Integer) map.get("pageSize");
+//
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        JSONObject jsonObject = new JSONObject();
+//        try {
+//            PageInfo<Role> roles = roleService.getRoleList(pageNum, pageSize);
+//            jsonObject.put("roles", roles);
+//            jsonObjectBO.setData(jsonObject);
+//            jsonObjectBO.setMessage("查询角色成功");
+//            jsonObjectBO.setCode(1);
+//            return jsonObjectBO;
+//
+//        } catch (Exception e) {
+//            jsonObjectBO.setMessage("查询角色失败");
+//            jsonObjectBO.setCode(-1);
+//            return jsonObjectBO;
+//        }
+//
+//    }
 
+    @RequestMapping("info")
+    public JsonObjectBO getList() {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         try {
-            PageInfo<Role> roles = roleService.getRoleList(pageNum, pageSize);
+            List<Role> roles = roleService.getRoleListNopage();
             jsonObject.put("roles", roles);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setMessage("查询角色成功");
@@ -84,6 +105,7 @@ public class RoleController extends JsonObjectBO {
         }
 
     }
+
 
 
     /**
