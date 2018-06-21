@@ -56,7 +56,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public int delete(UseDepartment useDepartment) {
         return useDepartmentDao.deleteByPrimaryKey(useDepartment.getId());
-
     }
 
 
