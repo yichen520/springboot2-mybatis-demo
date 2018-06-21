@@ -8,7 +8,7 @@
     <result column="nation_name" property="nationName" jdbcType="VARCHAR" />
     <result column="english_name" property="englishName" jdbcType="VARCHAR" />
     <result column="english_ahhr" property="englishAhhr" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="CHAR" />
     <result column="query_password" property="queryPassword" jdbcType="VARCHAR" />
     <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
     <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
@@ -19,7 +19,7 @@
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="telphone" property="telphone" jdbcType="VARCHAR" />
     <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
-    <result column="department_status" property="departmentStatus" jdbcType="VARCHAR" />
+    <result column="department_status" property="departmentStatus" jdbcType="CHAR" />
     <result column="department_certificate" property="departmentCertificate" jdbcType="VARCHAR" />
     <result column="department_certificate_type" property="departmentCertificateType" jdbcType="VARCHAR" />
     <result column="is_delete" property="isDelete" jdbcType="BIT" />
@@ -60,11 +60,11 @@
     )
     values (#{id,jdbcType=CHAR},#{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},
     #{nationName,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR},
-    #{englishAhhr,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT},
+    #{englishAhhr,jdbcType=VARCHAR}, #{status,jdbcType=CHAR},
     #{queryPassword,jdbcType=VARCHAR}, #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR},
     #{legalIdType,jdbcType=VARCHAR}, #{legalTelphone,jdbcType=VARCHAR}, #{legalCountry,jdbcType=VARCHAR},
     #{districtId,jdbcType=CHAR}, #{address,jdbcType=VARCHAR},
-    #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=VARCHAR},
+    #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
     #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},
     #{isDelete}
     )
@@ -89,7 +89,7 @@
     address = #{address,jdbcType=VARCHAR},
     telphone = #{telphone,jdbcType=VARCHAR},
     postal_code = #{postalCode,jdbcType=VARCHAR},
-    department_status = #{departmentStatus,jdbcType=VARCHAR},
+    department_status = #{departmentStatus,jdbcType=CHAR},
     department_certificate = #{departmentCertificate,jdbcType=VARCHAR},
     department_certificate_type = #{departmentCertificateType,jdbcType=VARCHAR},
     is_delete = #{isDelete,jdbcType=BIT}

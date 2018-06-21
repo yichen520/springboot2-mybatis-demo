@@ -11,6 +11,8 @@ public class Employee {
 
     private String employeeJob;
 
+    private String employeeDepartmentCode;
+
     private String employeeNation;
 
     private String familyAddress;
@@ -44,6 +46,17 @@ public class Employee {
     private String logoutName;
 
     private Date logoutTime;
+
+    public Employee() {
+    }
+
+    public String getEmployeeDepartmentCode() {
+        return employeeDepartmentCode;
+    }
+
+    public void setEmployeeDepartmentCode(String employeeDepartmentCode) {
+        this.employeeDepartmentCode = employeeDepartmentCode;
+    }
 
     public String getEmployeeCode() {
         return employeeCode;

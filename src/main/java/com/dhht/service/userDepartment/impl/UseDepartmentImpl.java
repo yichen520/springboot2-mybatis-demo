@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by imac_dhht on 2018/6/12.
@@ -29,7 +28,9 @@ public class UseDepartmentImpl implements UseDepartmentService {
 
     @Override
     public int insert(UseDepartment useDepartment) {
+
         useDepartment.setId(UUIDUtil.generate());
+           useDepartment.setId(UUIDUtil.generate());
         return useDepartmentDao.insert(useDepartment);
     }
 

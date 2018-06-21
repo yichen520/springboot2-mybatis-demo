@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.SealMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Seal" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <id column="seal_code" property="sealCode" jdbcType="VARCHAR" />
+    <result column="seal_name" property="sealName" jdbcType="VARCHAR" />
+    <result column="seal_status_code" property="sealStatusCode" jdbcType="CHAR" />
+    <result column="use_department_code" property="useDepartmentCode" jdbcType="CHAR" />
+    <result column="use_department_name" property="useDepartmentName" jdbcType="VARCHAR" />
+    <result column="record_department_code" property="recordDepartmentCode" jdbcType="CHAR" />
+    <result column="record_department_name" property="recordDepartmentName" jdbcType="VARCHAR" />
+    <result column="make_department_code" property="makeDepartmentCode" jdbcType="CHAR" />
+    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+    <result column="seal_type_code" property="sealTypeCode" jdbcType="CHAR" />
+    <result column="materials_code" property="materialsCode" jdbcType="CHAR" />
+    <result column="mimeograph_description" property="mimeographDescription" jdbcType="VARCHAR" />
+    <result column="seal_shape_code" property="sealShapeCode" jdbcType="VARCHAR" />
+    <result column="seal_size" property="sealSize" jdbcType="DOUBLE" />
+    <result column="seal_center_image" property="sealCenterImage" jdbcType="VARCHAR" />
+    <result column="seal_specification" property="sealSpecification" jdbcType="VARCHAR" />
+    <result column="seal_make_type_code" property="sealMakeTypeCode" jdbcType="VARCHAR" />
+    <result column="seal_record_type_code" property="sealRecordTypeCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, seal_code, seal_name, seal_status_code, use_department_code, use_department_name, 
+    record_department_code, record_department_name, make_department_code, make_department_name, 
+    seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
+    seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.dhht.model.SealKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from seal
+    where id = #{id,jdbcType=CHAR}
+      and seal_code = #{sealCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.dhht.model.SealKey" >
+    delete from seal
+    where id = #{id,jdbcType=CHAR}
+      and seal_code = #{sealCode,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.dhht.model.Seal" >
+    insert into seal (id, seal_code, seal_name, 
+      seal_status_code, use_department_code, use_department_name, 
+      record_department_code, record_department_name, 
+      make_department_code, make_department_name, seal_type_code,
+      materials_code, mimeograph_description, seal_shape_code, 
+      seal_size, seal_center_image, seal_specification, 
+      seal_make_type_code, seal_record_type_code)
+    values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR}, 
+      #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR}, 
+      #{recordDepartmentCode,jdbcType=CHAR}, #{recordDepartmentName,jdbcType=VARCHAR}, 
+      #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, #{sealTypeCode,jdbcType=CHAR},
+      #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
+      #{sealSize,jdbcType=DOUBLE}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR}, 
+      #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.Seal" >
+    insert into seal
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sealCode != null" >
+        seal_code,
+      </if>
+      <if test="sealName != null" >
+        seal_name,
+      </if>
+      <if test="sealStatusCode != null" >
+        seal_status_code,
+      </if>
+      <if test="useDepartmentCode != null" >
+        use_department_code,
+      </if>
+      <if test="useDepartmentName != null" >
+        use_department_name,
+      </if>
+      <if test="recordDepartmentCode != null" >
+        record_department_code,
+      </if>
+      <if test="recordDepartmentName != null" >
+        record_department_name,
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code,
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name,
+      </if>
+      <if test="sealTypeCode != null" >
+        seal_type_code,
+      </if>
+      <if test="materialsCode != null" >
+        materials_code,
+      </if>
+      <if test="mimeographDescription != null" >
+        mimeograph_description,
+      </if>
+      <if test="sealShapeCode != null" >
+        seal_shape_code,
+      </if>
+      <if test="sealSize != null" >
+        seal_size,
+      </if>
+      <if test="sealCenterImage != null" >
+        seal_center_image,
+      </if>
+      <if test="sealSpecification != null" >
+        seal_specification,
+      </if>
+      <if test="sealMakeTypeCode != null" >
+        seal_make_type_code,
+      </if>
+      <if test="sealRecordTypeCode != null" >
+        seal_record_type_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="sealCode != null" >
+        #{sealCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sealName != null" >
+        #{sealName,jdbcType=VARCHAR},
+      </if>
+      <if test="sealStatusCode != null" >
+        #{sealStatusCode,jdbcType=CHAR},
+      </if>
+      <if test="useDepartmentCode != null" >
+        #{useDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="useDepartmentName != null" >
+        #{useDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentCode != null" >
+        #{recordDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="recordDepartmentName != null" >
+        #{recordDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        #{makeDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="sealTypeCode != null" >
+        #{sealTypeCode,jdbcType=CHAR},
+      </if>
+      <if test="materialsCode != null" >
+        #{materialsCode,jdbcType=CHAR},
+      </if>
+      <if test="mimeographDescription != null" >
+        #{mimeographDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="sealShapeCode != null" >
+        #{sealShapeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sealSize != null" >
+        #{sealSize,jdbcType=DOUBLE},
+      </if>
+      <if test="sealCenterImage != null" >
+        #{sealCenterImage,jdbcType=VARCHAR},
+      </if>
+      <if test="sealSpecification != null" >
+        #{sealSpecification,jdbcType=VARCHAR},
+      </if>
+      <if test="sealMakeTypeCode != null" >
+        #{sealMakeTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sealRecordTypeCode != null" >
+        #{sealRecordTypeCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map" >
+    update seal
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=CHAR},
+      </if>
+      <if test="record.sealCode != null" >
+        seal_code = #{record.sealCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealName != null" >
+        seal_name = #{record.sealName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealStatusCode != null" >
+        seal_status_code = #{record.sealStatusCode,jdbcType=CHAR},
+      </if>
+      <if test="record.useDepartmentCode != null" >
+        use_department_code = #{record.useDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="record.useDepartmentName != null" >
+        use_department_name = #{record.useDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recordDepartmentCode != null" >
+        record_department_code = #{record.recordDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="record.recordDepartmentName != null" >
+        record_department_name = #{record.recordDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.makeDepartmentCode != null" >
+        make_department_code = #{record.makeDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="record.makeDepartmentName != null" >
+        make_department_name = #{record.makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealTypeCode != null" >
+        seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
+      </if>
+      <if test="record.materialsCode != null" >
+        materials_code = #{record.materialsCode,jdbcType=CHAR},
+      </if>
+      <if test="record.mimeographDescription != null" >
+        mimeograph_description = #{record.mimeographDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealShapeCode != null" >
+        seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealSize != null" >
+        seal_size = #{record.sealSize,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sealCenterImage != null" >
+        seal_center_image = #{record.sealCenterImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealSpecification != null" >
+        seal_specification = #{record.sealSpecification,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealMakeTypeCode != null" >
+        seal_make_type_code = #{record.sealMakeTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sealRecordTypeCode != null" >
+        seal_record_type_code = #{record.sealRecordTypeCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update seal
+    set id = #{record.id,jdbcType=CHAR},
+      seal_code = #{record.sealCode,jdbcType=VARCHAR},
+      seal_name = #{record.sealName,jdbcType=VARCHAR},
+      seal_status_code = #{record.sealStatusCode,jdbcType=CHAR},
+      use_department_code = #{record.useDepartmentCode,jdbcType=CHAR},
+      use_department_name = #{record.useDepartmentName,jdbcType=VARCHAR},
+      record_department_code = #{record.recordDepartmentCode,jdbcType=CHAR},
+      record_department_name = #{record.recordDepartmentName,jdbcType=VARCHAR},
+      make_department_code = #{record.makeDepartmentCode,jdbcType=CHAR},
+      make_department_name = #{record.makeDepartmentName,jdbcType=VARCHAR},
+      seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
+      materials_code = #{record.materialsCode,jdbcType=CHAR},
+      mimeograph_description = #{record.mimeographDescription,jdbcType=VARCHAR},
+      seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
+      seal_size = #{record.sealSize,jdbcType=DOUBLE},
+      seal_center_image = #{record.sealCenterImage,jdbcType=VARCHAR},
+      seal_specification = #{record.sealSpecification,jdbcType=VARCHAR},
+      seal_make_type_code = #{record.sealMakeTypeCode,jdbcType=VARCHAR},
+      seal_record_type_code = #{record.sealRecordTypeCode,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Seal" >
+    update seal
+    <set >
+      <if test="sealName != null" >
+        seal_name = #{sealName,jdbcType=VARCHAR},
+      </if>
+      <if test="sealStatusCode != null" >
+        seal_status_code = #{sealStatusCode,jdbcType=CHAR},
+      </if>
+      <if test="useDepartmentCode != null" >
+        use_department_code = #{useDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="useDepartmentName != null" >
+        use_department_name = #{useDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentCode != null" >
+        record_department_code = #{recordDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="recordDepartmentName != null" >
+        record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="sealTypeCode != null" >
+        seal_type_code = #{sealTypeCode,jdbcType=CHAR},
+      </if>
+      <if test="materialsCode != null" >
+        materials_code = #{materialsCode,jdbcType=CHAR},
+      </if>
+      <if test="mimeographDescription != null" >
+        mimeograph_description = #{mimeographDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="sealShapeCode != null" >
+        seal_shape_code = #{sealShapeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sealSize != null" >
+        seal_size = #{sealSize,jdbcType=DOUBLE},
+      </if>
+      <if test="sealCenterImage != null" >
+        seal_center_image = #{sealCenterImage,jdbcType=VARCHAR},
+      </if>
+      <if test="sealSpecification != null" >
+        seal_specification = #{sealSpecification,jdbcType=VARCHAR},
+      </if>
+      <if test="sealMakeTypeCode != null" >
+        seal_make_type_code = #{sealMakeTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sealRecordTypeCode != null" >
+        seal_record_type_code = #{sealRecordTypeCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+      and seal_code = #{sealCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Seal" >
+    update seal
+    set seal_name = #{sealName,jdbcType=VARCHAR},
+      seal_status_code = #{sealStatusCode,jdbcType=CHAR},
+      use_department_code = #{useDepartmentCode,jdbcType=CHAR},
+      use_department_name = #{useDepartmentName,jdbcType=VARCHAR},
+      record_department_code = #{recordDepartmentCode,jdbcType=CHAR},
+      record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
+      make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
+      make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      seal_type_code = #{sealTypeCode,jdbcType=CHAR},
+      materials_code = #{materialsCode,jdbcType=CHAR},
+      mimeograph_description = #{mimeographDescription,jdbcType=VARCHAR},
+      seal_shape_code = #{sealShapeCode,jdbcType=VARCHAR},
+      seal_size = #{sealSize,jdbcType=DOUBLE},
+      seal_center_image = #{sealCenterImage,jdbcType=VARCHAR},
+      seal_specification = #{sealSpecification,jdbcType=VARCHAR},
+      seal_make_type_code = #{sealMakeTypeCode,jdbcType=VARCHAR},
+      seal_record_type_code = #{sealRecordTypeCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+      and seal_code = #{sealCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

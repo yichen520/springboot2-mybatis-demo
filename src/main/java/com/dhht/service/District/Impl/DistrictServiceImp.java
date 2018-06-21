@@ -29,7 +29,7 @@ public class DistrictServiceImp implements DistrictService{
     }
 
     @Override
-    public List<DistrictMenus> selectOneDistrict(Integer id) {
+    public List<DistrictMenus> selectOneDistrict(String id) {
         List<DistrictMenus> list = findDistrictList(districtMapper.selectAllDistrict());
         List<DistrictMenus> districtMenus = findOneParent(list,id);
         setAllChildren(districtMenus,list);
@@ -73,10 +73,10 @@ public class DistrictServiceImp implements DistrictService{
     }
 
     //查找指定父节点
-    public List<DistrictMenus> findOneParent(List<DistrictMenus> list,Integer id){
+    public List<DistrictMenus> findOneParent(List<DistrictMenus> list,String id){
         List<DistrictMenus> districtMenus = new ArrayList<DistrictMenus>();
         for(DistrictMenus districtMenu:list){
-            if (districtMenu.getDistrictId()==id){
+            if (districtMenu.getDistrictId().toString().equals(id)){
                 districtMenus.add(districtMenu);
             }
         }
@@ -88,7 +88,7 @@ public class DistrictServiceImp implements DistrictService{
         for (DistrictMenus districtMenu:parent) {
             List<DistrictMenus> list = findInList(districtMenus,districtMenu.getDistrictId().toString());
             if(list.size()>0){
-                districtMenu.setChild(list);
+                districtMenu.setChildren(list);
             }
             setAllChildren(list,districtMenus);
         }
