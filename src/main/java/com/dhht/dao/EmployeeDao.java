@@ -32,4 +32,7 @@ public interface EmployeeDao {
 
     //查询所有的从业人员
     List<Employee> selectAllEmployee();
+
+    //查询某个制作单位下的从业人员
+    List<Employee> selectByDepartmentCode(String employeeDepartmentCode);
 }

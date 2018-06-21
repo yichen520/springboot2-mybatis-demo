@@ -18,19 +18,38 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    private JSONObject jsonObject = new JSONObject();
+
     @RequestMapping(value = "/selectAll")
     public JsonObjectBO SelectAllEmployee(@RequestBody Map map){
-        int pageSum = (Integer) map.get("pageSum");
+        int pageSum = (Integer) map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
 
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
 
-        PageInfo<Employee> pageInfo = employeeService.selectAllEmployee(pageSum,pageNum);
-        jsonObject.put("Eemployee",pageInfo);
-        jsonObjectBO.setCode(1);
-        jsonObjectBO.setData(jsonObject);
-        return jsonObjectBO;
+        PageInfo<Employee> pageInfo = new PageInfo<Employee>();
+        try {
+            pageInfo = employeeService.selectAllEmployee(pageSum,pageNum);
+            jsonObject.put("Eemployee",pageInfo);
+        }catch (Exception e){
+            return JsonObjectBO.error(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+    @RequestMapping(value = "/selectByDepartmentCode")
+    public JsonObjectBO SelectByDepartmentCode(@RequestBody Map map){
+        int pageSum = (Integer) map.get("pageSize");
+        int pageNum = (Integer) map.get("pageNum");
+        String DepartmentCode = (String) map.get("Code");
+
+        PageInfo<Employee> pageInfo = new PageInfo<Employee>();
+        try {
+             pageInfo = employeeService.selectByDepartmentCode(pageSum, pageNum, DepartmentCode);
+            jsonObject.put("Eemployee",pageInfo);
+        }catch (Exception e){
+            return JsonObjectBO.error(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
     }
 
 }
