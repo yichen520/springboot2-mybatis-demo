@@ -28,23 +28,18 @@ public class UserController {
 
 
 
+
     /***
      * 添加用户
      * @param
      * @return
      */
     @RequestMapping(value ="/add", method = RequestMethod.POST)
-    public JsonObjectBO addSuser(@RequestBody Users users){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        int addSuser = userService.addUser(users);
-        if(addSuser>0){
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("添加成功");
-        }else {
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("添加失败");
-        }
+    public JsonObjectBO adduser(@RequestBody Users users){
+        JsonObjectBO jsonObjectBO = userService.addUser(users);
         return jsonObjectBO;
+
+
     }
 
 
@@ -54,17 +49,10 @@ public class UserController {
      * @return
      */
     @RequestMapping(value ="/update",method = RequestMethod.POST)
-    public JsonObjectBO updateSuser(@RequestBody Users users){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        int update = userService.Update(users);
-        if(update>0){
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("修改成功");
-        }else{
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("修改失败");
-        }
+    public JsonObjectBO updateuser(@RequestBody Users users){
+        JsonObjectBO jsonObjectBO = userService.Update(users);
         return jsonObjectBO;
+
     }
 
     /**
@@ -74,17 +62,10 @@ public class UserController {
      */
     @RequestMapping(value = "/delete" , method = RequestMethod.POST)
     public JsonObjectBO deleteSuser(@RequestBody Users users){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String id = users.getId();
-        int delete = userService.deleteSuser(id);
-        if (delete>0){
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("删除成功");
-        }else{
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("删除失败");
-        }
-        return jsonObjectBO;
+        JsonObjectBO jsonObjectBO = userService.deleteuser(id);
+        return  jsonObjectBO;
+
     }
 
     @RequestMapping(value = "/changePwd" , method = RequestMethod.POST)
@@ -107,17 +88,12 @@ public class UserController {
      */
     @RequestMapping(value = "/info")
     public JsonObjectBO findAllSuser(@RequestBody Map map){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
+
 
         int pageSize =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
 
-        PageInfo<Users> user = userService.findAllSuser(pageNum,pageSize);
-        jsonObject.put("user",user);
-        jsonObjectBO.setData(jsonObject);
-        jsonObjectBO.setCode(1);
-        jsonObjectBO.setMessage("查询成功");
+        JsonObjectBO jsonObjectBO = userService.findAlluser(pageNum,pageSize);
         return jsonObjectBO;
 
     }

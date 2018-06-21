@@ -35,4 +35,8 @@ public interface UserDao {
     //根据区域ID查询用户
     List<Users> selectByDistrict(@Param("id") String ID);
 
+    Users findByTelphone(@Param("telphone") String telphone);
+
+    Users findById(@Param("id") String id);
+
 }

@@ -1,5 +1,6 @@
 package com.dhht.service.user;
 
+import com.dhht.common.JsonObjectBO;
 import com.dhht.model.District;
 import com.dhht.model.Users;
 import com.github.pagehelper.PageInfo;
@@ -16,10 +17,10 @@ public interface UserService {
     int validateUserLoginTwo(UserDomain userDomain);
     int validateUserLoginThree(UserDomain userDomain);
 
-    int addUser(Users users);
-    int Update(Users users);
-    int deleteSuser(String id);
-    PageInfo<Users> findAllSuser(int pageNum, int pageSize);
+    JsonObjectBO addUser(Users users);
+    JsonObjectBO Update(Users users);
+    JsonObjectBO deleteuser(String id);
+    JsonObjectBO findAlluser(int pageNum, int pageSize);
     int changePwd(String id , String password);
 
     Users validate(Users users);
