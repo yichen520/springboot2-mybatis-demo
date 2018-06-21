@@ -86,10 +86,12 @@ public class UserDepartmentController {
     /**
      * 查询全部用户
      */
-    @RequestMapping(value = "/findAll" , method = RequestMethod.GET)
-    public JsonObjectBO findAll(@RequestParam Integer pageNum, Integer pageSize){
+    @RequestMapping(value = "/findAll" , method = RequestMethod.POST)
+    public JsonObjectBO findAll(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
+        int pageSize =(Integer) map.get("pageSize");
+        int pageNum =(Integer) map.get("pageNum");
         PageInfo<UseDepartment> useDepartmentPageInfo = useDepartmentService.findAllMakeBySize(pageNum,pageSize);
         jsonObject.put("UserDepartment",useDepartmentPageInfo);
         jsonObjectBO.setData(jsonObject);
