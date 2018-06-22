@@ -1,13 +1,14 @@
 package com.dhht;
 
+
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
 @MapperScan("com.dhht.dao")
-public class Springboot2MybatisDemoApplication {
+public class Springboot2MybatisDemoApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Springboot2MybatisDemoApplication.class, args);
