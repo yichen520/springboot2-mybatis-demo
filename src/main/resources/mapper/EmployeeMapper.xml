@@ -6,6 +6,7 @@
     <result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
     <result column="employee_id" property="employeeId" jdbcType="VARCHAR" />
     <result column="employee_job" property="employeeJob" jdbcType="VARCHAR" />
+    <result column="employee_department_code" property="employeeDepartmentCode" jdbcType="VARCHAR"/>
     <result column="employee_nation" property="employeeNation" jdbcType="VARCHAR" />
     <result column="family_address" property="familyAddress" jdbcType="VARCHAR" />
     <result column="family_address_detail" property="familyAddressDetail" jdbcType="VARCHAR" />
@@ -83,11 +84,14 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    employee_code, employee_name, employee_id, employee_job, employee_nation, family_address, 
+    employee_code, employee_name, employee_id, employee_job,employee_department_code, employee_nation, family_address,
     family_address_detail, now_address, now_address_detail, employee_image, telphone, 
-    contact_name, contact_telphone, office_code, office_name, register_name, register_time, 
+    contact_name, contact_telphone, office_code, office_name, register_name, register_time,
     logout_office_code, logout_office_name, logout_name, logout_time
   </sql>
+  <select id="selectByDepartmentCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List"></include> FROM employee WHERE employee_department_code=#{employeeDepartmentCode}
+  </select>
   <select id="selectAllEmployee" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List"></include>
