@@ -143,6 +143,12 @@
         WHERE
         `id` = #{id}
     </select>
+    <select id="findByPhone" resultType="java.lang.Integer">
+        SELECT count(1) FROM sys_user
+        WHERE
+        telphone = #{phone}
+    </select>
+
     
     <select id="findByUserName" resultType="com.dhht.model.Users" parameterType="java.lang.String">
         SELECT * FROM sys_user
@@ -189,7 +195,7 @@
         SELECT * from sys_user WHERE id = #{id}
     </select>
 
-    <select id="find" parameterType="com.dhht.model.Users" resultType="com.dhht.model.Users">
+    <select id="find"  resultType="com.dhht.model.Users">
         SELECT id,user_name ,real_name,is_locked FROM sys_user
         <where>
             <if test="regionId !=null and regionId !=''">

@@ -3,6 +3,7 @@ package com.dhht.service.user.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
+import com.dhht.model.SMSCode;
 import com.dhht.model.Users;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +41,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MakedepartmentMapper makedepartmentMapper;
 
+    @Autowired
+    private SMSCodeDao smsCodeDao;
 
 
     /**
@@ -147,36 +151,17 @@ public class UserServiceImpl implements UserService {
         if (a!=1){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("删除失败");
-            return jsonObjectBO;
+
         }else{
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("删除成功");
-            return jsonObjectBO;
+
         }
 
-
-    }
-
-
-    /**
-     * 查询全部用户
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    @Override
-    public JsonObjectBO findAlluser(int pageNum, int pageSize) {
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-        PageHelper.startPage(pageNum,pageSize);
-        List<Users> suserList = userDao.findAllSuser();
-        PageInfo<Users> result = new PageInfo<>(suserList);
-        jsonObject.put("user",result);
-        jsonObjectBO.setData(jsonObject);
-        jsonObjectBO.setCode(1);
-        jsonObjectBO.setMessage("查询成功");
         return jsonObjectBO;
     }
+
+
 
 
     /**
@@ -194,17 +179,16 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 查询列表 模糊查询
-     * @param users
      * @param pageNum
      * @param pageSize
      * @return
      */
     @Override
-    public JsonObjectBO find(Users users,int pageNum, int pageSize) {
+    public JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum,pageSize);
-        if(users.getRegionId()==null&&users.getUserName()==null&&users.getRoleId()==null){
+        if(realName==null&&regionId==null&&roleId==null){
             List<Users> userList = userDao.findAllSuser();
             PageInfo<Users> result = new PageInfo<>(userList);
             jsonObject.put("user",result);
@@ -212,7 +196,7 @@ public class UserServiceImpl implements UserService {
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("查询成功");
         }else{
-            List<Users> list = userDao.find(users);
+            List<Users> list = userDao.find(realName,regionId,roleId);
             PageInfo<Users> result = new PageInfo<>(list);
             jsonObject.put("user",result);
             jsonObjectBO.setData(jsonObject);
@@ -222,20 +206,13 @@ public class UserServiceImpl implements UserService {
         return jsonObjectBO;
     }
 
+    @Override
+    public JsonObjectBO activeLocking(String loginTime) {
+        return null;
+    }
 
-    @Override
-    public int validateUserLoginOne(UserDomain userDomain){
-        return userDao.validateUserLoginOne(userDomain);
-    }
-    @Override
-    public int validateUserLoginTwo(UserDomain userDomain){
-        return userDao.validateUserLoginTwo(userDomain);
-    }
-    @Override
-    public int validateUserLoginThree(UserDomain userDomain){
-        return userDao.validateUserLoginThree(userDomain);
 
-    }
+
 
     @Override
     public Users validate(Users users){
@@ -259,6 +236,29 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(pageSum,pageNum);
         PageInfo<Users> result = new PageInfo(list);
         return result;
+    }
+
+
+    @Override
+    public JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode) {
+        Long nowtime = new Date().getTime();
+
+        int count = userDao.findByPhone(smsCode.getPhone());
+        if(count>0){
+            return JsonObjectBO.error("手机号或身份证已被注册");
+        }
+        SMSCode sms = smsCodeDao.getSms(smsCode.getPhone());
+        if (sms ==null){
+            return JsonObjectBO.error("请点击发送验证码");
+        }
+        if(!sms.getSmscode().equals(smsCode.getSmscode())){
+            return JsonObjectBO.error("验证码错误");
+        }
+        if(nowtime-sms.getLastTime()>300000){
+            return JsonObjectBO.error("验证码超时，请重新发送");
+        }
+        return JsonObjectBO.ok("效验通过");
+
     }
 
 }

@@ -2,6 +2,7 @@ package com.dhht.service.user;
 
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.District;
+import com.dhht.model.SMSCode;
 import com.dhht.model.Users;
 import com.github.pagehelper.PageInfo;
 import com.dhht.model.UserDomain;
@@ -13,21 +14,20 @@ import java.util.List;
  */
 public interface UserService {
 
-    int validateUserLoginOne(UserDomain userDomain);
-    int validateUserLoginTwo(UserDomain userDomain);
-    int validateUserLoginThree(UserDomain userDomain);
+
 
     JsonObjectBO addUser(Users users);
     JsonObjectBO Update(Users users);
     JsonObjectBO deleteuser(String id);
-    JsonObjectBO findAlluser(int pageNum, int pageSize);
     int changePwd(String id , String password);
-    JsonObjectBO find(Users users,int pageNum, int pageSize);
+    JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize);
+    JsonObjectBO activeLocking(String loginTime);
 
     Users validate(Users users);
 
     PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum);
+
+    JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
     }
 
-   // List<District> getRegionsTrees(String regionId);
 

@@ -7,6 +7,9 @@ admin:
 
 
 spring:
+    boot:
+        admin:
+          url: http://localhost:8082
     datasource:
         name: mysql_test
         type: com.alibaba.druid.pool.DruidDataSource
