@@ -99,7 +99,7 @@
         #{userName},
         #{realName},
         #{password},
-        "GLY",
+        "#{roleId}",
         0,
         0,
         #{telphone},
