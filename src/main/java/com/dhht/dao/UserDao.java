@@ -22,6 +22,8 @@ public interface UserDao {
 
     List<Users> findAllSuser();
 
+    List<Users> find(Users users);
+
     Users findByNo(@Param("id") String id);
 
     List<Users> findUserByRegionId(String regionId);

@@ -188,4 +188,19 @@
     <select id="findById" resultType="com.dhht.model.Users">
         SELECT * from sys_user WHERE id = #{id}
     </select>
+
+    <select id="find" parameterType="com.dhht.model.Users" resultType="com.dhht.model.Users">
+        SELECT id,user_name ,real_name,is_locked FROM sys_user
+        <where>
+            <if test="regionId !=null and regionId !=''">
+                district_id LIKE '%${regionId}%'
+            </if>
+            <if test="roleId !=null and roleId !=''">
+                AND role_id LIKE '%${roleId}%'
+            </if>
+            <if test="realName !=null and realName !=''">
+                AND real_name LIKE '%${realName}%'
+            </if>
+        </where>
+    </select>
 </mapper>

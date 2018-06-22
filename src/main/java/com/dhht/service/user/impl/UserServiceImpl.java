@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
         users.setUserName(users.getTelphone());
         String password = MD5Util.toMd5(createRandomVcode());
         users.setPassword(password);
+        users.setRoleId("GLY");
         Integer a = userDao.addUser(users);
         if (a!=1){
             jsonObjectBO.setCode(-1);
@@ -188,6 +189,37 @@ public class UserServiceImpl implements UserService {
     public int changePwd(String id, String password) {
         String password1 = MD5Util.toMd5(password);
         return userDao.changePwd(id,password1);
+    }
+
+
+    /**
+     * 查询列表 模糊查询
+     * @param users
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public JsonObjectBO find(Users users,int pageNum, int pageSize) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        PageHelper.startPage(pageNum,pageSize);
+        if(users.getRegionId()==null&&users.getUserName()==null&&users.getRoleId()==null){
+            List<Users> userList = userDao.findAllSuser();
+            PageInfo<Users> result = new PageInfo<>(userList);
+            jsonObject.put("user",result);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("查询成功");
+        }else{
+            List<Users> list = userDao.find(users);
+            PageInfo<Users> result = new PageInfo<>(list);
+            jsonObject.put("user",result);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("查询成功");
+        }
+        return jsonObjectBO;
     }
 
 

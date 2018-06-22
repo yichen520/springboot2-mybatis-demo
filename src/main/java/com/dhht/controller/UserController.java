@@ -83,17 +83,20 @@ public class UserController {
         }
         return jsonObjectBO;
     }
+
     /**
-     * 查询全部用户
+     * 迷糊查询列表
+     * @param map
+     * @return
      */
     @RequestMapping(value = "/info")
-    public JsonObjectBO findAllSuser(@RequestBody Map map){
+    public JsonObjectBO find(@RequestBody Map map){
 
-
+        Users users = (Users) map.get("user");
         int pageSize =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
 
-        JsonObjectBO jsonObjectBO = userService.findAlluser(pageNum,pageSize);
+        JsonObjectBO jsonObjectBO = userService.find(users,pageNum,pageSize);
         return jsonObjectBO;
 
     }

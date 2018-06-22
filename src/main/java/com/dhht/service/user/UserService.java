@@ -22,6 +22,7 @@ public interface UserService {
     JsonObjectBO deleteuser(String id);
     JsonObjectBO findAlluser(int pageNum, int pageSize);
     int changePwd(String id , String password);
+    JsonObjectBO find(Users users,int pageNum, int pageSize);
 
     Users validate(Users users);
 
