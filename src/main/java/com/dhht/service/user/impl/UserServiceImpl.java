@@ -200,11 +200,11 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public JsonObjectBO find(Users users,int pageNum, int pageSize) {
+    public JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum,pageSize);
-        if(users.getRegionId()==null&&users.getUserName()==null&&users.getRoleId()==null){
+        if(realName==null&&regionId==null&&roleId==null){
             List<Users> userList = userDao.findAllSuser();
             PageInfo<Users> result = new PageInfo<>(userList);
             jsonObject.put("user",result);
@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService {
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("查询成功");
         }else{
-            List<Users> list = userDao.find(users);
+            List<Users> list = userDao.find(realName,regionId,roleId);
             PageInfo<Users> result = new PageInfo<>(list);
             jsonObject.put("user",result);
             jsonObjectBO.setData(jsonObject);
