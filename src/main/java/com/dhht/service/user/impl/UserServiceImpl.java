@@ -147,14 +147,14 @@ public class UserServiceImpl implements UserService {
         if (a!=1){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("删除失败");
-            return jsonObjectBO;
+
         }else{
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("删除成功");
-            return jsonObjectBO;
+
         }
 
-
+        return jsonObjectBO;
     }
 
 
@@ -222,20 +222,13 @@ public class UserServiceImpl implements UserService {
         return jsonObjectBO;
     }
 
+    @Override
+    public JsonObjectBO activeLocking(String loginTime) {
+        return null;
+    }
 
-    @Override
-    public int validateUserLoginOne(UserDomain userDomain){
-        return userDao.validateUserLoginOne(userDomain);
-    }
-    @Override
-    public int validateUserLoginTwo(UserDomain userDomain){
-        return userDao.validateUserLoginTwo(userDomain);
-    }
-    @Override
-    public int validateUserLoginThree(UserDomain userDomain){
-        return userDao.validateUserLoginThree(userDomain);
 
-    }
+
 
     @Override
     public Users validate(Users users){

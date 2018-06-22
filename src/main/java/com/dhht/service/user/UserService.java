@@ -13,9 +13,7 @@ import java.util.List;
  */
 public interface UserService {
 
-    int validateUserLoginOne(UserDomain userDomain);
-    int validateUserLoginTwo(UserDomain userDomain);
-    int validateUserLoginThree(UserDomain userDomain);
+
 
     JsonObjectBO addUser(Users users);
     JsonObjectBO Update(Users users);
@@ -23,6 +21,7 @@ public interface UserService {
     JsonObjectBO findAlluser(int pageNum, int pageSize);
     int changePwd(String id , String password);
     JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize);
+    JsonObjectBO activeLocking(String loginTime);
 
     Users validate(Users users);
 

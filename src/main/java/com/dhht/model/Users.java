@@ -2,6 +2,8 @@ package com.dhht.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class Users {
     private String id;
@@ -27,6 +29,8 @@ public class Users {
     private String regionId;
 
     private String telphone;
+
+    private Date loginTime;
 
     private District district;
 
