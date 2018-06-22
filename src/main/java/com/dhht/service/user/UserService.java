@@ -18,11 +18,12 @@ public interface UserService {
     int validateUserLoginTwo(UserDomain userDomain);
     int validateUserLoginThree(UserDomain userDomain);
 
-    int addUser(Users users);
-    int Update(Users users);
-    int deleteSuser(String id);
-    PageInfo<Users> findAllSuser(int pageNum, int pageSize);
+    JsonObjectBO addUser(Users users);
+    JsonObjectBO Update(Users users);
+    JsonObjectBO deleteuser(String id);
+    JsonObjectBO findAlluser(int pageNum, int pageSize);
     int changePwd(String id , String password);
+    JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize);
 
     Users validate(Users users);
 

@@ -22,6 +22,8 @@ public interface UserDao {
 
     List<Users> findAllSuser();
 
+    List<Users> find(@Param("realName")String realName,@Param("roleId")String roleId,@Param("regionId")String regionId);
+
     Users findByNo(@Param("id") String id);
 
     int findByPhone(@Param("phone") String phone);
@@ -36,5 +38,9 @@ public interface UserDao {
     int updateUserDepartment(Users users);
     //根据区域ID查询用户
     List<Users> selectByDistrict(@Param("id") String ID);
+
+    Users findByTelphone(@Param("telphone") String telphone);
+
+    Users findById(@Param("id") String id);
 
 }

@@ -7,6 +7,8 @@ public interface EmployeeService {
 
     PageInfo<Employee> selectAllEmployee(int pageSum, int pageNum);
 
+    PageInfo<Employee> selectByDepartmentCode(int pageSum,int pageNum,String employeeDepartmentCode);
+
     boolean insertEmployee(Employee employee);
 
     boolean updateEmployee(Employee employee);

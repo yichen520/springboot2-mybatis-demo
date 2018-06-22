@@ -47,25 +47,11 @@
         <result column="is_changed_pwd" property="isChangedPwd" jdbcType="BIT"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
         <result column="district_id" property="regionId" jdbcType="CHAR"/>
-        <!--<association property="role" select="selectRole" column="role_id" javaType="com.dhht.model.Role"></association>-->
-        <!--<association property="district" select="selectDistrict" column="district_id" javaType="com.dhht.model.District"></association>-->
         <association property="role"  resultMap="roleResultMap" javaType="com.dhht.model.Role"></association>
         <association property="district"  resultMap="districtResultMap" javaType="com.dhht.model.District"></association>
-        <!--<association property="makedepartment" select="selectMakeDepartment" column="user_name" javaType="MakeDepartment"></association>-->
-        <!--<collection property="district" ofType="com.dhht.model.District">-->
-        <!--<id column="id" property="id" jdbcType="INTEGER"/>-->
-        <!--<result column="province_id" property="provinceId" jdbcType="INTEGER" />-->
-        <!--<result column="province_name" property="provinceName" jdbcType="DOUBLE" />-->
-        <!--<result column="city_id" property="cityId" jdbcType="INTEGER" />-->
-        <!--<result column="city_name" property="cityName" jdbcType="VARCHAR" />-->
-        <!--<result column="district_id" property="districtId" jdbcType="INTEGER" />-->
-        <!--<result column="district_name" property="districtName" jdbcType="VARCHAR" />-->
-        <!--</collection>-->
     </resultMap>
 
-    <!--<resultMap id="makedepartmentResultMap" type="Role">-->
-    <!--<result property="department_name" column="departmentName"/>-->
-    <!--</resultMap>-->
+
     <resultMap id="roleResultMap" type="com.dhht.model.Role">
         <!--<id property="id" column="id"/>-->
         <result property="name" column="name"/>
@@ -81,11 +67,6 @@
         <result property="districtName" column="district_name"/>
     </resultMap>
 
-    <!--<sql id="Base_Column_List" >-->
-    <!--user_name,  real_name, role_id, is_locked,-->
-    <!--`name`,  province_name, city_name,-->
-    <!--district_name-->
-    <!--</sql>-->
 
     <select id="selectMakeDepartment"  resultType="com.dhht.model.Makedepartment">
         select *
@@ -118,7 +99,7 @@
         #{userName},
         #{realName},
         #{password},
-        #{roleId},
+        "#{roleId}",
         0,
         0,
         #{telphone},
@@ -134,19 +115,16 @@
         <set>
             <if test="userName != null and userName!=''"> `user_name` = #{userName}, </if>
             <if test="realName != null and realName!=''"> `real_name` = #{realName}, </if>
+            <if test="telphone != null and telphone!=''">`telphone` =#{telphone},</if>
             <if test="roleId != null and roleId!=''"> `role_id` = #{roleId}, </if>
             <if test="regionId != null and regionId!='' "> `district_id` = #{regionId}, </if>
         </set>
         WHERE id = #{id}
     </update>
 
-    <update id="delete">
-        UPDATE sys_user
-        <set>
-            `is_deleted` = 1
-        </set>
-        WHERE id = #{id}
-    </update>
+   <delete id="delete">
+       DELETE  FROM sys_user WHERE id = #{id}
+   </delete>
 
 
     <!--<select id="findAllSuser" resultType="com.dhht.model.Users">-->
@@ -201,4 +179,34 @@
           </set>
         WHERE `user_name` = #{userName}
     </update>
+    
+    <select id="findByTelphone" resultType="com.dhht.model.Users">
+        SELECT * FROM sys_user
+        <where>
+            <if test="telphone !=null and telphone !=''">
+                telphone = #{telphone}
+            </if>
+        </where>
+
+    </select>
+
+
+    <select id="findById" resultType="com.dhht.model.Users">
+        SELECT * from sys_user WHERE id = #{id}
+    </select>
+
+    <select id="find"  resultType="com.dhht.model.Users">
+        SELECT id,user_name ,real_name,is_locked FROM sys_user
+        <where>
+            <if test="regionId !=null and regionId !=''">
+                district_id LIKE '%${regionId}%'
+            </if>
+            <if test="roleId !=null and roleId !=''">
+                AND role_id LIKE '%${roleId}%'
+            </if>
+            <if test="realName !=null and realName !=''">
+                AND real_name LIKE '%${realName}%'
+            </if>
+        </where>
+    </select>
 </mapper>

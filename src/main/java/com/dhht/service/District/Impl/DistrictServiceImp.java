@@ -88,7 +88,7 @@ public class DistrictServiceImp implements DistrictService{
         for (DistrictMenus districtMenu:parent) {
             List<DistrictMenus> list = findInList(districtMenus,districtMenu.getDistrictId().toString());
             if(list.size()>0){
-                districtMenu.setChild(list);
+                districtMenu.setChildren(list);
             }
             setAllChildren(list,districtMenus);
         }

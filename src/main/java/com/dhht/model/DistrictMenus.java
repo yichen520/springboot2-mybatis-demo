@@ -6,7 +6,7 @@ public class DistrictMenus {
     private Integer DistrictId;
     private String DistrictName;
     private String ParentId;
-    private List<DistrictMenus> child;
+    private List<DistrictMenus> children;
 
     public DistrictMenus(Integer districtId, String districtName, String parentId) {
         DistrictId = districtId;
@@ -41,12 +41,12 @@ public class DistrictMenus {
         ParentId = parentId;
     }
 
-    public List<DistrictMenus> getChild() {
-        return child;
+    public List<DistrictMenus> getChildren() {
+        return children;
     }
 
-    public void setChild(List<DistrictMenus> child) {
-        this.child = child;
+    public void setChildren(List<DistrictMenus> children) {
+        this.children = children;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class DistrictMenus {
                 "DistrictId=" + DistrictId +
                 ", DistrictName='" + DistrictName + '\'' +
                 ", ParentId='" + ParentId + '\'' +
-                ", child=" + child +
+                ", children=" + children +
                 '}';
     }
 }

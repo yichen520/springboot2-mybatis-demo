@@ -44,11 +44,25 @@ public class ResourceImpl  implements ResourceService {
 
     @Override
     public int deleteByPrimaryKey(String id) {
-        return  resourceMapper.deleteByPrimaryKey(id);
+        int result = 0;
+        try {
+            List<Resource> list = resourceMapper.selectByParentID(id);
+            for (Resource r:list) {
+               result = resourceMapper.deleteByPrimaryKey(r.getId());
+            }
+            result = resourceMapper.deleteByPrimaryKey(id);
+        }catch (Exception e){
+            return 0;
+           // e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public int updateByPrimaryKey(Resource record) {
+        if(record.getParentId()==null||record.getParentId()==""){
+            record.setParentId("0");
+        }
         return  resourceMapper.updateByPrimaryKey(record);
     }
 
