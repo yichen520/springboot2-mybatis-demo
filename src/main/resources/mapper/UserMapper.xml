@@ -165,6 +165,12 @@
         WHERE
         `id` = #{id}
     </select>
+    <select id="findByPhone" resultType="java.lang.Integer">
+        SELECT count(1) FROM sys_user
+        WHERE
+        telphone = #{phone}
+    </select>
+
     
     <select id="findByUserName" resultType="com.dhht.model.Users" parameterType="java.lang.String">
         SELECT * FROM sys_user

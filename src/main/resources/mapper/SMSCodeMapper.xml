@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.SMSCodeDao" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.SMSCode" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="smscode" property="smscode" jdbcType="VARCHAR" />
+    <result column="lastTime" property="lastTime" jdbcType="BIGINT" />
+  </resultMap>
+
+  <select id="getSMSCodeByPhone" parameterType="java.lang.String"  resultType="com.dhht.model.SMSCode">
+        select *
+        from smscode where phone= #{phone,jdbcType=VARCHAR}
+    </select>
+
+  <select id="getSms" parameterType="java.lang.String"  resultType="com.dhht.model.SMSCode">
+        select *
+        from smscode where phone = #{phone,jdbcType=VARCHAR}order by lastTime deSC LIMIT 1
+    </select>
+
+  <update id="update" parameterType="com.dhht.model.SMSCode">
+    UPDATE smscode
+    <set>
+      <if test="phone != null and phone!=''"> phone = #{phone,jdbcType=VARCHAR}, </if>
+      <if test="smscode != null and smscode!=''"> smscode = #{smscode,jdbcType=VARCHAR}, </if>
+      <if test="lastTime != null and lastTime!=''"> lastTime = #{lastTime,jdbcType=BIGINT}, </if>
+    </set>
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="save" parameterType="com.dhht.model.SMSCode" >
+    insert into smscode (id, phone, smscode,
+      lastTime)
+    values (#{id,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR}, #{smscode,jdbcType=VARCHAR}, #{lastTime,jdbcType=BIGINT})
+  </insert>
+
+</mapper>

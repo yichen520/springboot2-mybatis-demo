@@ -1,6 +1,8 @@
 package com.dhht.service.user;
 
+import com.dhht.common.JsonObjectBO;
 import com.dhht.model.District;
+import com.dhht.model.SMSCode;
 import com.dhht.model.Users;
 import com.github.pagehelper.PageInfo;
 import com.dhht.model.UserDomain;
@@ -25,7 +27,8 @@ public interface UserService {
     Users validate(Users users);
 
     PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum);
+
+    JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
     }
 
-   // List<District> getRegionsTrees(String regionId);
 

@@ -24,6 +24,8 @@ public interface UserDao {
 
     Users findByNo(@Param("id") String id);
 
+    int findByPhone(@Param("phone") String phone);
+
     List<Users> findUserByRegionId(String regionId);
 
     int changePwd(@Param("id") String id ,@Param("password") String password);
