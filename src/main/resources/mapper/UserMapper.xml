@@ -189,7 +189,7 @@
         SELECT * from sys_user WHERE id = #{id}
     </select>
 
-    <select id="find" parameterType="com.dhht.model.Users" resultType="com.dhht.model.Users">
+    <select id="find"  resultType="com.dhht.model.Users">
         SELECT id,user_name ,real_name,is_locked FROM sys_user
         <where>
             <if test="regionId !=null and regionId !=''">

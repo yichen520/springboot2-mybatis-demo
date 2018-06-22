@@ -22,7 +22,7 @@ public interface UserDao {
 
     List<Users> findAllSuser();
 
-    List<Users> find(Users users);
+    List<Users> find(@Param("realName")String realName,@Param("roleId")String roleId,@Param("regionId")String regionId);
 
     Users findByNo(@Param("id") String id);
 

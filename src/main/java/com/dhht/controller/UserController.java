@@ -92,11 +92,14 @@ public class UserController {
     @RequestMapping(value = "/info")
     public JsonObjectBO find(@RequestBody Map map){
 
-        Users users = (Users) map.get("user");
+        String realName = (String)map.get("realName");
+        String roleId = (String) map.get("roleId");
+        String regionId = (String) map.get("regionId");
+
         int pageSize =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
 
-        JsonObjectBO jsonObjectBO = userService.find(users,pageNum,pageSize);
+        JsonObjectBO jsonObjectBO = userService.find(realName,roleId,regionId,pageNum,pageSize);
         return jsonObjectBO;
 
     }
