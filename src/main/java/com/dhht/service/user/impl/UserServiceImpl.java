@@ -93,7 +93,6 @@ public class UserServiceImpl implements UserService {
             jsonObjectBO.setMessage("添加成功");
             return jsonObjectBO;
         }
-
     }
     /**
      * 修改用户
@@ -139,35 +138,14 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
-    /**
-     * 删除用户
-     * @param id
-     * @return
-     */
     @Override
-    public int deleteSuser(String id){
-
-        Integer delete = userDao.delete(id);
-        return delete;
-
+    public JsonObjectBO deleteuser(String id) {
+        return null;
     }
 
-
-    /**
-     * 查询全部用户
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
     @Override
     public JsonObjectBO findAlluser(int pageNum, int pageSize) {
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-        PageHelper.startPage(pageNum,pageSize);
-        List<Users> suserList = userDao.findAllSuser();
-        PageInfo<Users> result = new PageInfo<>(suserList);
-        return result;
+        return null;
     }
 
 
@@ -186,7 +164,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 查询列表 模糊查询
-     * @param users
      * @param pageNum
      * @param pageSize
      * @return
@@ -214,20 +191,6 @@ public class UserServiceImpl implements UserService {
         return jsonObjectBO;
     }
 
-
-    @Override
-    public int validateUserLoginOne(UserDomain userDomain){
-        return userDao.validateUserLoginOne(userDomain);
-    }
-    @Override
-    public int validateUserLoginTwo(UserDomain userDomain){
-        return userDao.validateUserLoginTwo(userDomain);
-    }
-    @Override
-    public int validateUserLoginThree(UserDomain userDomain){
-        return userDao.validateUserLoginThree(userDomain);
-
-    }
 
     @Override
     public Users validate(Users users){
