@@ -39,7 +39,10 @@ public class ResourceImpl  implements ResourceService {
 
     @Override
     public int insertResource(Resource resource) {
-       return resourceMapper.insert(resource);
+        if(resource.getParentId()==""||resource.getParentId()==null){
+            resource.setParentId("0");
+        }
+        return resourceMapper.insert(resource);
     }
 
     @Override
