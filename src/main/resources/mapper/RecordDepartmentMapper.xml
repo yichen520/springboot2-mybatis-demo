@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhht.dao.RecordDepartmentMapper">
+  <resultMap id="BaseResultMap" type="com.dhht.model.RecordDepartment">
+    <id column="department_code" jdbcType="VARCHAR" property="departmentCode" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="principal_name" jdbcType="VARCHAR" property="principalName" />
+    <result column="principal_id" jdbcType="VARCHAR" property="principalId" />
+    <result column="department_address" jdbcType="VARCHAR" property="departmentAddress" />
+    <result column="department_address_detail" jdbcType="VARCHAR" property="departmentAddressDetail" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="postal_code" jdbcType="VARCHAR" property="postalCode" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    department_code, department_name, principal_name, principal_id, department_address, 
+    department_address_detail, telphone, postal_code
+  </sql>
+   
+  <select id="selectByDistrictId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address = #{id}
+  </select>
+
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.RecordDepartment">
+    update record_department
+    set department_name = #{departmentName,jdbcType=VARCHAR},
+      principal_name = #{principalName,jdbcType=VARCHAR},
+      principal_id = #{principalId,jdbcType=VARCHAR},
+      department_address = #{departmentAddress,jdbcType=VARCHAR},
+      department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},
+      telphone = #{telphone,jdbcType=VARCHAR},
+      postal_code = #{postalCode,jdbcType=VARCHAR}
+    where department_code = #{departmentCode,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
+    INSERT INTO record_department (department_code,department_name,department_name,principal_id,department_address,department_address_detail,telphone,postal_code)
+    VALUE 
+  </insert>
+
+</mapper>

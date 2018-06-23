@@ -1,4 +1,4 @@
-package com.dhht.service.Employee;
+package com.dhht.service.employee;
 
 import com.dhht.model.Employee;
 import com.github.pagehelper.PageInfo;

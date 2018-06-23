@@ -24,6 +24,10 @@
   <sql id="Base_Column_List" >
     id, is_required, description, url, parent_id, icon, menu_sort, is_menu
   </sql>
+  <select id="selectRequiredResource" resultMap="MenusResultMap">
+    SELECT <include refid="Menus_Result_List"></include> FROM sys_resource
+    WHERE is_required = 0
+  </select>
   <select id="selectMenusByID" resultMap="MenusResultMap" parameterType="java.lang.String">
     SELECT
     <include refid="Menus_Result_List"/>

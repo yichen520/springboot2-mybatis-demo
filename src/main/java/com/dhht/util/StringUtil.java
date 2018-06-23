@@ -199,7 +199,7 @@ public class StringUtil {
      * @return 返回一个字符串数组
      * 数组第一个对应省ID，第二个对应市ID，第三个对应区ID
      */
-    public static String[] DistrictUtil(Integer ID){
+    public static String[] DistrictUtil(String ID){
         String DistrictID[] = new String[3];
         String id = ID.toString();
         DistrictID[0] = id.substring(0,2);

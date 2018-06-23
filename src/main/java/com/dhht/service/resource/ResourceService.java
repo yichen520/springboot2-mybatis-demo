@@ -4,7 +4,9 @@ import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.github.pagehelper.PageInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface ResourceService {
 
@@ -34,6 +36,9 @@ public interface ResourceService {
 
     //查找资源菜单
     List<Menus> findMenusByRole(List<String> id);
+
+    //获取所有非倚赖资源
+    List<Map> selectRequiredResource();
 
 
 }

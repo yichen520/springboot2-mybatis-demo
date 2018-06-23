@@ -27,7 +27,7 @@ public interface UserService {
 
     Users validate(Users users);
 
-    PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum);
+    PageInfo<Users> selectByDistrict(String id,int pageSum,int pageNum);
 
     JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
     Map<String,Object> validateUser(HttpServletRequest request,UserDomain userDomain);

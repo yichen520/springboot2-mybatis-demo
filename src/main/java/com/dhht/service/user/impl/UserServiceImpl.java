@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum) {
+    public PageInfo<Users> selectByDistrict(String id,int pageSum,int pageNum) {
         List<Users> list = new ArrayList<Users>();
         String districtIds[] = StringUtil.DistrictUtil(id);
         if(districtIds[1].equals("00")&&districtIds[2].equals("00")){

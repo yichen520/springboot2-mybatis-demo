@@ -3,7 +3,7 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Employee;
-import com.dhht.service.Employee.EmployeeService;
+import com.dhht.service.employee.EmployeeService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +31,7 @@ public class EmployeeController {
             pageInfo = employeeService.selectAllEmployee(pageSum,pageNum);
             jsonObject.put("Eemployee",pageInfo);
         }catch (Exception e){
-            return JsonObjectBO.error(e.getMessage());
+            return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
@@ -47,7 +47,7 @@ public class EmployeeController {
              pageInfo = employeeService.selectByDepartmentCode(pageSum, pageNum, DepartmentCode);
             jsonObject.put("Eemployee",pageInfo);
         }catch (Exception e){
-            return JsonObjectBO.error(e.getMessage());
+            return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }

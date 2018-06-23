@@ -1,10 +1,10 @@
-package com.dhht.service.Employee.Impl;
+package com.dhht.service.employee.Impl;
 
 import com.dhht.dao.EmployeeDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.Employee;
 import com.dhht.model.Users;
-import com.dhht.service.Employee.EmployeeService;
+import com.dhht.service.employee.EmployeeService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.MD5Util;
 import com.dhht.util.UUIDUtil;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Service(value = "EmployeeService")
