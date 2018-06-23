@@ -32,4 +32,5 @@ public interface UsersMapper {
     int updateByPrimaryKey(Users record);
 
     Users validate(UserDomain users);
+    Users validateCurrentuser(@Param("username") String username);
 }

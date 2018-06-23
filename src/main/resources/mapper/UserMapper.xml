@@ -121,6 +121,17 @@
         </set>
         WHERE id = #{id}
     </update>
+    <update id="updateErrorTimes" parameterType="java.lang.String">
+        UPDATE sys_user set login_error_times = login_error_times+1
+        WHERE user_name = #{username}
+    </update>
+
+    <update id="updateErrorTimesZero" parameterType="java.lang.String">
+        UPDATE sys_user set login_error_times = 0
+        WHERE user_name = #{username}
+    </update>
+
+
 
    <delete id="delete">
        DELETE  FROM sys_user WHERE id = #{id}
