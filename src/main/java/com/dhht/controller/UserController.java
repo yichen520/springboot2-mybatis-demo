@@ -3,8 +3,10 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.DistrictMenus;
+import com.dhht.model.Role;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
+import com.dhht.service.user.RoleService;
 import com.dhht.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
     @Autowired
     private DistrictService districtService;
 
@@ -153,5 +158,45 @@ public class UserController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
+
+    @RequestMapping("role/info")
+    public JsonObjectBO getList(@RequestBody(required = false) Map map) {
+
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        if (map == null){
+            try {
+                List<Role> roles = roleService.getRoleListNopage();
+                jsonObject.put("roles", roles);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setMessage("查询角色成功");
+                jsonObjectBO.setCode(1);
+                return jsonObjectBO;
+
+            } catch (Exception e) {
+                jsonObjectBO.setMessage("查询角色失败");
+                jsonObjectBO.setCode(-1);
+                return jsonObjectBO;
+            }
+        }else {
+            int pageNum = (Integer) map.get("pageNum");
+            int pageSize = (Integer) map.get("pageSize");
+            try {
+                PageInfo<Role> roles = roleService.getRoleList(pageNum, pageSize);
+                jsonObject.put("roles", roles);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setMessage("查询角色成功");
+                jsonObjectBO.setCode(1);
+                return jsonObjectBO;
+
+            } catch (Exception e) {
+                jsonObjectBO.setMessage("查询角色失败");
+                jsonObjectBO.setCode(-1);
+                return jsonObjectBO;
+            }
+        }
+
+    }
+
 
 }
