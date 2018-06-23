@@ -1,17 +1,16 @@
 package com.dhht.service.resource.Impl;
 
 import com.dhht.dao.ResourceMapper;
-import com.dhht.model.Makedepartment;
 import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.dhht.util.MenuUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service("ResourceService")
 public class ResourceImpl  implements ResourceService {
@@ -95,6 +94,15 @@ public class ResourceImpl  implements ResourceService {
         List<Menus> menus = findMenuParent(list);
         setAllMenuChildren(menus,list);
         return menus;
+    }
+
+    @Override
+    public List<Map> selectRequiredResource() {
+        List<Map<String,Object>> result = new ArrayList<>();
+        List<Menus> list = resourceMapper.selectRequiredResource();
+        List<Menus> menus = findMenuParent(list);
+        setAllMenuChildren(menus,list);
+        return MenuUtil.getSimpeResource(menus);
     }
 
 
@@ -182,6 +190,8 @@ public class ResourceImpl  implements ResourceService {
         }
         return list;
     }
+
+
 
 
 }

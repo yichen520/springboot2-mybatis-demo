@@ -46,7 +46,7 @@ public class DistrictController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        List<DistrictMenus> district = districtService.selectOneDistrict(users.getDistrict().getDistrictId().toString());
+        List<DistrictMenus> district = districtService.selectOneDistrict(users.getDistrict().getDistrictId());
         // System.out.println(district.size());
         for (DistrictMenus districts:district) {
             System.out.println(districts.toString());

@@ -111,7 +111,7 @@ public class UserController {
 
         int pageSize =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
-        int id = (Integer) map.get("id");
+        String id = (String) map.get("id");
 
         PageInfo<Users> user = userService.selectByDistrict(id,pageSize,pageNum);
         jsonObject.put("user",user);
