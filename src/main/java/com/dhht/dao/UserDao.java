@@ -50,7 +50,7 @@ public interface UserDao {
     int updateErrorTimes(@Param("username") String username);
     int updateErrorTimesZero(@Param("username") String username);
 
-   int updateUser(Users users);
+   int updateUser(User users);
 
 
 }

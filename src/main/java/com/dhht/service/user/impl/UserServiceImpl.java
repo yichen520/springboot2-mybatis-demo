@@ -392,7 +392,7 @@ public class UserServiceImpl implements UserService {
                     return map;
                 }
             }
-            Users user2 =new Users();
+            User user2 =new User();
             user2.setLoginTime(new Date());
             user2.setUserName(userDomain.getUsername());
             user2.setLoginErrorTimes(0);
