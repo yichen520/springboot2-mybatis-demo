@@ -2,12 +2,17 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.model.DistrictMenus;
 import com.dhht.model.User;
+import com.dhht.service.District.DistrictService;
 import com.dhht.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,8 +24,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private DistrictService districtService;
 
-
+    private JSONObject jsonObject = new JSONObject();
 
 
     /***
@@ -132,6 +139,19 @@ public class UserController {
         jsonObjectBO.setCode(1);
         jsonObjectBO.setMessage("查询成功");
         return jsonObjectBO;
+    }
+
+    @RequestMapping(value = "/UserDistrict")
+    public JsonObjectBO selectDistrictByUser(HttpServletRequest httpServletRequest){
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
+        List<DistrictMenus> district = new ArrayList<>();
+        try {
+            district = districtService.selectOneDistrict(user.getDistrict().getDistrictId());
+            jsonObject.put("District",district);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
     }
 
 }
