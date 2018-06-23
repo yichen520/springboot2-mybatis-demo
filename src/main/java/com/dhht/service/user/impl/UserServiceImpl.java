@@ -285,8 +285,12 @@ public class UserServiceImpl implements UserService {
 
             if(user==null && currentUser!=null ){
                 //更新登录错误次数
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                long m = sdf.parse(new Date().toString()).getTime() - sdf.parse(currentUser.getLoginTime().toString()).getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                long  a = sdf.parse(sdf.format(new Date())).getTime();
+                Date c= currentUser.getLoginTime();
+
+                long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
+                long m = a - b;
                 if (( m / (1000 * 60  )>loginErrorDate)){
                     userDao.updateErrorTimesZero(userDomain.getUsername());
                 }else {
@@ -294,7 +298,7 @@ public class UserServiceImpl implements UserService {
                 }
 
                 map.put("status", "error");
-                map.put("currentAuthority", user.getRoleId());
+                map.put("currentAuthority","guest");
                 map.put("message","账号密码错误");
                 return map;
             }
@@ -304,12 +308,18 @@ public class UserServiceImpl implements UserService {
                 map.put("message","该用户已被锁定，请联系管理员！");
                 return map;
             }else {
-                if (currentUser.getLoginErrorTimes()>loginErrorTime){
+                if (currentUser.getLoginErrorTimes()>=loginErrorTime){
                     map.put("status", "error");
                     map.put("currentAuthority", "guest");
                     map.put("message","该用户登录错误超过5次，请稍后重试！");
+                    return map;
                 }
             }
+            Users user2 =new Users();
+            user2.setLoginTime(new Date());
+            user2.setUserName(userDomain.getUsername());
+            user2.setLoginErrorTimes(0);
+            userDao.updateUser(user2);
             map.put("status", "ok");
             map.put("currentAuthority", user.getRoleId());
             map.put("message","登录成功");
