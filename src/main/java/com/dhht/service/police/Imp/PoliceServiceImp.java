@@ -3,7 +3,7 @@ package com.dhht.service.police.Imp;
 import com.dhht.dao.RecordPoliceMapper;
 import com.dhht.dao.UserDao;
 import com.dhht.model.RecordPolice;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.service.police.PoliceService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -62,8 +62,8 @@ public class PoliceServiceImp implements PoliceService{
         return 0;
     }
 
-    public Users setUserByType(RecordPolice recordPolice,int type){
-        Users users = new Users();
+    public User setUserByType(RecordPolice recordPolice, int type){
+        User user = new User();
         switch (type){
             //添加用户
             case 1:
@@ -71,6 +71,6 @@ public class PoliceServiceImp implements PoliceService{
             case 2:
 
         }
-        return users;
+        return user;
     }
 }

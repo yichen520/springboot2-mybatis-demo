@@ -2,7 +2,7 @@ package com.dhht.dao;
 
 
 import com.dhht.model.UserDomain;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,33 +14,33 @@ public interface UserDao {
     int validateUserLoginTwo(UserDomain userDomain);
     int validateUserLoginThree(UserDomain userDomain);
 
-    int addUser(Users users);
+    int addUser(User user);
 
-    int update(Users users);
+    int update(User user);
 
     int delete(@Param("id") String id);
 
-    List<Users> findAllSuser();
+    List<User> findAllSuser();
 
-    List<Users> find(@Param("realName")String realName,@Param("roleId")String roleId,@Param("regionId")String regionId);
+    List<User> find(@Param("realName")String realName, @Param("roleId")String roleId, @Param("regionId")String regionId);
 
-    Users findByNo(@Param("id") String id);
+    User findByNo(@Param("id") String id);
 
     int findByPhone(@Param("phone") String phone);
 
-    List<Users> findUserByRegionId(String regionId);
+    List<User> findUserByRegionId(String regionId);
 
     int changePwd(@Param("id") String id ,@Param("password") String password);
 
     //根据Code查找用户，表中字段为user_name
-    Users findByUserName(String userName);
+    User findByUserName(String userName);
 
-    int updateUserDepartment(Users users);
+    int updateUserDepartment(User user);
     //根据区域ID查询用户
-    List<Users> selectByDistrict(@Param("id") String ID);
+    List<User> selectByDistrict(@Param("id") String ID);
 
-    Users findByTelphone(@Param("telphone") String telphone);
+    User findByTelphone(@Param("telphone") String telphone);
 
-    Users findById(@Param("id") String id);
+    User findById(@Param("id") String id);
 
 }

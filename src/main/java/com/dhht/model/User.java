@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class Users {
+public class User {
     private String id;
 
     private String userName;
@@ -26,7 +26,7 @@ public class Users {
 
     private Boolean isDeleted;
 
-    private String regionId;
+    private String distriId;
 
     private String telphone;
 
@@ -124,13 +124,6 @@ public class Users {
         isDeleted = deleted;
     }
 
-    public String getRegionId() {
-        return regionId;
-    }
-
-    public void setRegionId(String regionId) {
-        this.regionId = regionId;
-    }
 
     public District getDistrict() {
         return district;

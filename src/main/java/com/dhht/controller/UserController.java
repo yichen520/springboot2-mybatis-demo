@@ -2,18 +2,12 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.Menus;
-import com.dhht.model.Resource;
-import com.dhht.model.UserDomain;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,8 +29,8 @@ public class UserController {
      * @return
      */
     @RequestMapping(value ="/add", method = RequestMethod.POST)
-    public JsonObjectBO adduser(@RequestBody Users users){
-        JsonObjectBO jsonObjectBO = userService.addUser(users);
+    public JsonObjectBO adduser(@RequestBody User user){
+        JsonObjectBO jsonObjectBO = userService.addUser(user);
         return jsonObjectBO;
 
 
@@ -49,8 +43,8 @@ public class UserController {
      * @return
      */
     @RequestMapping(value ="/update",method = RequestMethod.POST)
-    public JsonObjectBO updateuser(@RequestBody Users users){
-        JsonObjectBO jsonObjectBO = userService.Update(users);
+    public JsonObjectBO updateuser(@RequestBody User user){
+        JsonObjectBO jsonObjectBO = userService.Update(user);
         return jsonObjectBO;
 
     }
@@ -61,18 +55,18 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/delete" , method = RequestMethod.POST)
-    public JsonObjectBO deleteSuser(@RequestBody Users users){
-        String id = users.getId();
+    public JsonObjectBO deleteSuser(@RequestBody User user){
+        String id = user.getId();
         JsonObjectBO jsonObjectBO = userService.deleteuser(id);
         return  jsonObjectBO;
 
     }
 
     @RequestMapping(value = "/changePwd" , method = RequestMethod.POST)
-    public JsonObjectBO changePwd(@RequestBody Users users){
+    public JsonObjectBO changePwd(@RequestBody User user){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String id = users.getId();
-        String password = users.getPassword();
+        String id = user.getId();
+        String password = user.getPassword();
         Integer changepwd = userService.changePwd(id,password);
         if(changepwd>0){
             jsonObjectBO.setCode(1);
@@ -113,7 +107,7 @@ public class UserController {
         int pageNum =(Integer) map.get("pageNum");
         int id = (Integer) map.get("id");
 
-        PageInfo<Users> user = userService.selectByDistrict(id,pageSize,pageNum);
+        PageInfo<User> user = userService.selectByDistrict(id,pageSize,pageNum);
         jsonObject.put("user",user);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);

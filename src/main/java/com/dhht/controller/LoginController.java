@@ -2,24 +2,16 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
-import com.dhht.common.AccessResult;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.RoleResourceDao;
 import com.dhht.model.*;
-import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.UserService;
-import com.dhht.util.MD5Util;
-import com.dhht.util.StringUtil;
-import org.apache.shiro.authc.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import com.google.code.kaptcha.Constants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,10 +40,10 @@ public class LoginController {
        Map<String,Object> map=new HashMap<>();
 
        try {
-           Users user1= new Users();
+           User user1= new User();
            user1.setPassword(userDomain.getPassword());
            user1.setUserName(userDomain.getUsername());
-           Users user = userService.validate(user1);
+           User user = userService.validate(user1);
            if(user==null){
                map.put("status", "error");
                map.put("currentAuthority", user.getRoleId());
@@ -106,7 +98,7 @@ public class LoginController {
    @RequestMapping("currentUser")
    public JsonObjectBO currentUser(HttpSession session){
        Object  obj = session.getAttribute("user");
-       Users account = (Users) obj;
+       User account = (User) obj;
        account.setPassword(null);
        JsonObjectBO jsonObjectBO = new JsonObjectBO();
        JSONObject jsonObject = new JSONObject();

@@ -3,7 +3,6 @@ package com.dhht.service.Log.Impl;
 import com.dhht.dao.LogDao;
 import com.dhht.model.Dictionary;
 import com.dhht.model.SysLog;
-import com.dhht.model.Users;
 import com.dhht.service.Log.LogService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 @Service(value = "LogService")
 public class LogServiceImp implements LogService {

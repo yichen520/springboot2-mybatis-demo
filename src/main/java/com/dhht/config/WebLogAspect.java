@@ -10,16 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.LogDao;
-import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.dhht.model.SysLog;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.util.IPUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.apache.log4j.Logger;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -124,7 +122,7 @@ public class WebLogAspect {
 
         // 设置IP地址
         sysLog.setIp(IPUtil.getIpAddr(request));
-        Users users = (Users)request.getSession(true).getAttribute("user");
+        User users = (User)request.getSession(true).getAttribute("user");
         String user = users.getRealName();
         sysLog.setLogUser(user);
         String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
@@ -148,7 +146,7 @@ public class WebLogAspect {
         HttpServletRequest request = attributes.getRequest();
         // 设置IP地址
         sysLog.setIp(IPUtil.getIpAddr(request));
-        Users users = (Users)request.getSession(true).getAttribute("user");
+        User users = (User)request.getSession(true).getAttribute("user");
         String user = users.getRealName();
         sysLog.setLogUser(user);
         String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());

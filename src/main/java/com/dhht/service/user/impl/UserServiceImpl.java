@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
 import com.dhht.model.SMSCode;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
@@ -60,29 +60,29 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 添加用户
-     * @param users
+     * @param user
      * @return
      */
 
-    public JsonObjectBO addUser(Users users){
+    public JsonObjectBO addUser(User user){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        if (users.getTelphone()==null){
+        if (user.getTelphone()==null){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("请输入手机号");
             return jsonObjectBO;
         }
-        Users users1 = userDao.findByTelphone(users.getTelphone());
-        if (users1!=null){
+        User user1 = userDao.findByTelphone(user.getTelphone());
+        if (user1 !=null){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("该用户已经存在");
             return jsonObjectBO;
         }
-        users.setId(UUIDUtil.generate());
-        users.setUserName(users.getTelphone());
+        user.setId(UUIDUtil.generate());
+        user.setUserName(user.getTelphone());
         String password = MD5Util.toMd5(createRandomVcode());
-        users.setPassword(password);
-        users.setRoleId("GLY");
-        Integer a = userDao.addUser(users);
+        user.setPassword(password);
+        user.setRoleId("GLY");
+        Integer a = userDao.addUser(user);
         if (a!=1){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("添加失败");
@@ -96,22 +96,22 @@ public class UserServiceImpl implements UserService {
     }
     /**
      * 修改用户
-     * @param users
+     * @param user
      * @return
      */
     @Override
-    public JsonObjectBO Update(Users users) {
+    public JsonObjectBO Update(User user) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        Users users2 = userDao.findById(users.getId());
-        if (!users2.getTelphone().equals(users.getTelphone())) {
-            Users users1 = userDao.findByTelphone(users.getTelphone());
-            if (users1 != null) {
+        User user2 = userDao.findById(user.getId());
+        if (!user2.getTelphone().equals(user.getTelphone())) {
+            User user1 = userDao.findByTelphone(user.getTelphone());
+            if (user1 != null) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("该用户已经存在");
                 return jsonObjectBO;
             }
-            users.setUserName(users.getTelphone());
-            Integer a = userDao.update(users);
+            user.setUserName(user.getTelphone());
+            Integer a = userDao.update(user);
             if (a != 1) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("修改失败");
@@ -122,8 +122,8 @@ public class UserServiceImpl implements UserService {
                 return jsonObjectBO;
             }
         }else{
-            users.setUserName(users.getTelphone());
-            Integer a = userDao.update(users);
+            user.setUserName(user.getTelphone());
+            Integer a = userDao.update(user);
             if (a != 1) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("修改失败");
@@ -189,15 +189,15 @@ public class UserServiceImpl implements UserService {
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum,pageSize);
         if(realName==null&&regionId==null&&roleId==null){
-            List<Users> userList = userDao.findAllSuser();
-            PageInfo<Users> result = new PageInfo<>(userList);
+            List<User> userList = userDao.findAllSuser();
+            PageInfo<User> result = new PageInfo<>(userList);
             jsonObject.put("user",result);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("查询成功");
         }else{
-            List<Users> list = userDao.find(realName,regionId,roleId);
-            PageInfo<Users> result = new PageInfo<>(list);
+            List<User> list = userDao.find(realName,regionId,roleId);
+            PageInfo<User> result = new PageInfo<>(list);
             jsonObject.put("user",result);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
@@ -206,25 +206,57 @@ public class UserServiceImpl implements UserService {
         return jsonObjectBO;
     }
 
+    /**
+     *祖东加锁
+     * @param id
+     * @return
+     */
     @Override
-    public JsonObjectBO activeLocking(String loginTime) {
-        return null;
+    public JsonObjectBO activeLocking(String id) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user = userDao.findById(id);
+        if (!user.getIsLocked()) {
+            Integer a = userDao.updateLock(id);
+            if (a == 1) {
+                return jsonObjectBO.ok("锁定成功");
+            } else {
+                return jsonObjectBO.error("锁定失败");
+            }
+        } else {
+            return jsonObjectBO.error("该用户已经锁定,不能重复锁定");
+        }
     }
 
+    /**
+     * 主动解锁
+     *
+     * @param
+     * @return
+     */
+    @Override
+    public JsonObjectBO activeUnlocking(String id) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user = userDao.findById(id);
+        if (user.getIsLocked()) {
+            return jsonObjectBO.error("该账号未加锁");
+        } else {
+            userDao.updateUnLock(id);
+            return jsonObjectBO.ok("解锁成功");
+        }
 
 
+//
+//    @Override
+//    public User validate(User user){
+//        String userAccount = StringUtil.stringNullHandle(user.getUserName());
+//        String password = StringUtil.stringNullHandle(MD5Util.toMd5(user.getPassword()));
+//        User user1 = usersMapper.validate(new UserDomain(userAccount,password));
+//        return user1;
+//    }
 
     @Override
-    public Users validate(Users users){
-        String userAccount = StringUtil.stringNullHandle(users.getUserName());
-        String password = StringUtil.stringNullHandle(MD5Util.toMd5(users.getPassword()));
-        Users user = usersMapper.validate(new UserDomain(userAccount,password));
-        return user;
-    }
-
-    @Override
-    public PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum) {
-        List<Users> list = new ArrayList<Users>();
+    public PageInfo<User> selectByDistrict(Integer id, int pageSum, int pageNum) {
+        List<User> list = new ArrayList<User>();
         String districtIds[] = StringUtil.DistrictUtil(id);
         if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
             list = userDao.selectByDistrict(districtIds[0]);
@@ -234,7 +266,7 @@ public class UserServiceImpl implements UserService {
             list = userDao.selectByDistrict(id.toString());
         }
         PageHelper.startPage(pageSum,pageNum);
-        PageInfo<Users> result = new PageInfo(list);
+        PageInfo<User> result = new PageInfo(list);
         return result;
     }
 

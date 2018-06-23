@@ -1,13 +1,9 @@
 package com.dhht.service.user;
 
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.District;
 import com.dhht.model.SMSCode;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.github.pagehelper.PageInfo;
-import com.dhht.model.UserDomain;
-
-import java.util.List;
 
 /**
  * Created by Administrator on 2018/4/19.
@@ -16,16 +12,17 @@ public interface UserService {
 
 
 
-    JsonObjectBO addUser(Users users);
-    JsonObjectBO Update(Users users);
+    JsonObjectBO addUser(User user);
+    JsonObjectBO Update(User user);
     JsonObjectBO deleteuser(String id);
     int changePwd(String id , String password);
     JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize);
     JsonObjectBO activeLocking(String loginTime);
+    JsonObjectBO activeUnlocking(String id);
 
-    Users validate(Users users);
+//    User validate(User user);
 
-    PageInfo<Users> selectByDistrict(Integer id,int pageSum,int pageNum);
+    PageInfo<User> selectByDistrict(Integer id, int pageSum, int pageNum);
 
     JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
     }

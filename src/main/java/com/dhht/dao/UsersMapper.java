@@ -1,7 +1,7 @@
 package com.dhht.dao;
 
 import com.dhht.model.UserDomain;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.model.UsersExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -15,21 +15,21 @@ public interface UsersMapper {
 
     int deleteByPrimaryKey(String id);
 
-    int insert(Users record);
+    int insert(User record);
 
-    int insertSelective(Users record);
+    int insertSelective(User record);
 
-    List<Users> selectByExample(UsersExample example);
+    List<User> selectByExample(UsersExample example);
 
-    Users selectByPrimaryKey(String id);
+    User selectByPrimaryKey(String id);
 
-    int updateByExampleSelective(@Param("record") Users record, @Param("example") UsersExample example);
+    int updateByExampleSelective(@Param("record") User record, @Param("example") UsersExample example);
 
-    int updateByExample(@Param("record") Users record, @Param("example") UsersExample example);
+    int updateByExample(@Param("record") User record, @Param("example") UsersExample example);
 
-    int updateByPrimaryKeySelective(Users record);
+    int updateByPrimaryKeySelective(User record);
 
-    int updateByPrimaryKey(Users record);
+    int updateByPrimaryKey(User record);
 
-    Users validate(UserDomain users);
+    User validate(UserDomain users);
 }

@@ -6,7 +6,7 @@
 //import com.alibaba.fastjson.JSON;
 //import com.alibaba.fastjson.serializer.PropertyFilter;
 //import com.alibaba.fastjson.serializer.SerializerFeature;
-//import com.dhht.model.Users;
+
 //
 //
 //import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@
 ////
 //    private static PropertyFilter propertiesFilter = new PropertyFilter() {
 //        public boolean apply(Object source, String name, Object value) {
-//            if(source.getClass().equals(Users.class) && "password".equals(name)) {// 过滤不需要的字段
+//            if(source.getClass().equals(User.class) && "password".equals(name)) {// 过滤不需要的字段
 //                return false;
 //            }
 //            return true;
