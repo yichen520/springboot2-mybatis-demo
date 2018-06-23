@@ -3,8 +3,10 @@ package com.dhht.service.employee.Impl;
 import com.dhht.dao.EmployeeDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.Employee;
-import com.dhht.model.Users;
-import com.dhht.service.employee.EmployeeService;
+import com.dhht.model.User;
+
+import com.dhht.service.Employee.EmployeeService;
+
 import com.dhht.util.DateUtil;
 import com.dhht.util.MD5Util;
 import com.dhht.util.UUIDUtil;
@@ -80,32 +82,32 @@ public class EmployeeServiceImp implements EmployeeService {
         return employeeDao.selectByPrimaryKey(employeeCode);
     }
 
-    public Users setUserByType(Employee employee,int type){
-        Users users = new Users();
+    public User setUserByType(Employee employee, int type){
+        User user = new User();
         switch (type){
             //新增用户
             case 1:
-                users.setId(UUIDUtil.generate());
-                users.setUserName(employee.getEmployeeCode());
-                users.setRealName(employee.getEmployeeName());
-                users.setPassword(MD5Util.toMd5("123456"));
-                users.setTelphone(employee.getTelphone());
-                users.setRegionId(employee.getFamilyAddress());
-                users.setRoleId("CYRY");
+                user.setId(UUIDUtil.generate());
+                user.setUserName(employee.getEmployeeCode());
+                user.setRealName(employee.getEmployeeName());
+                user.setPassword(MD5Util.toMd5("123456"));
+                user.setTelphone(employee.getTelphone());
+                user.setDistrictId(employee.getFamilyAddress());
+                user.setRoleId("CYRY");
                 break;
             //修改用户
             case 2:
-                users = userDao.findByUserName(employee.getEmployeeCode());
-                users.setRealName(employee.getEmployeeName());
-                users.setTelphone(employee.getTelphone());
-                users.setRegionId(employee.getFamilyAddress());
+                user = userDao.findByUserName(employee.getEmployeeCode());
+                user.setRealName(employee.getEmployeeName());
+                user.setTelphone(employee.getTelphone());
+                user.setDistrictId(employee.getFamilyAddress());
                 break;
             //删除用户
             case 3:
-               users = userDao.findByUserName(employee.getEmployeeCode());
-               users.setDeleted(true);
+               user = userDao.findByUserName(employee.getEmployeeCode());
+               user.setDeleted(true);
                break;
         }
-        return users;
+        return user;
     }
 }

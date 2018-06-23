@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dhht.dao.UsersMapper" >
-  <resultMap id="BaseResultMap" type="com.dhht.model.Users" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.User" >
     <id column="id" property="id" jdbcType="CHAR" />
     <result column="user_name" property="userName" jdbcType="CHAR" />
     <result column="real_name" property="realName" jdbcType="VARCHAR" />
@@ -107,7 +107,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.dhht.model.Users" >
+  <insert id="insert" parameterType="com.dhht.model.User" >
     insert into sys_user (id, user_name, real_name,
       password, role_id, object_id,
       is_locked, login_error_times, is_changed_pwd,
@@ -117,7 +117,7 @@
       #{isLocked,jdbcType=BIT}, #{loginErrorTimes,jdbcType=INTEGER}, #{isChangedPwd,jdbcType=BIT},
       #{isDeleted,jdbcType=BIT}, #{regionId,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.dhht.model.Users" >
+  <insert id="insertSelective" parameterType="com.dhht.model.User" >
     insert into sys_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -254,7 +254,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Users" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.User" >
     update sys_user
     <set >
       <if test="userName != null" >
@@ -290,7 +290,7 @@
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Users" >
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.User" >
     update sys_user
     set user_name = #{userName,jdbcType=CHAR},
       real_name = #{realName,jdbcType=VARCHAR},
@@ -314,7 +314,7 @@
 </select>
 
 
-  <insert id="addUserDepartment" parameterType="com.dhht.model.Users">
+  <insert id="addUserDepartment" parameterType="com.dhht.model.User">
     INSERT INTO sys_user
   </insert>
 </mapper>

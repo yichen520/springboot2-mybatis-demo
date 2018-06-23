@@ -5,7 +5,7 @@ import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Seal;
 import com.dhht.model.UseDepartment;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value="/seal")
@@ -52,10 +51,10 @@ public class SealController  {
         try {
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
-            Users users = (Users)request.getSession(true).getAttribute("user");
+            User user = (User)request.getSession(true).getAttribute("user");
             seal.setId(UUIDUtil.generate());
-            seal.setRecordDepartmentCode(users.getUserName());
-            seal.setRecordDepartmentName(users.getRealName());
+            seal.setRecordDepartmentCode(user.getUserName());
+            seal.setRecordDepartmentName(user.getRealName());
             //从从业人员查找制作单位   稍后做
 
             sealService.insert(seal);

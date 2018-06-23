@@ -3,10 +3,9 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.DistrictMenus;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,12 +40,15 @@ public class DistrictController {
 
     @RequestMapping(value = "/select")
     public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest){
-       Users users = (Users) httpServletRequest.getSession().getAttribute("user");
+       User user = (User) httpServletRequest.getSession().getAttribute("user");
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 
-        List<DistrictMenus> district = districtService.selectOneDistrict(users.getDistrict().getDistrictId());
+
+        List<DistrictMenus> district = districtService.selectOneDistrict(user.getDistrict().getDistrictId().toString());
+
+
         // System.out.println(district.size());
         for (DistrictMenus districts:district) {
             System.out.println(districts.toString());

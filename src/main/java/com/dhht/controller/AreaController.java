@@ -1,19 +1,11 @@
 package com.dhht.controller;
 
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.District;
-import com.dhht.model.Users;
+import com.dhht.model.User;
 import com.dhht.service.user.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2017/8/16.
@@ -30,7 +22,7 @@ public class AreaController {
     @RequestMapping("/getTree")
     public JsonObjectBO getTrees(){
         //获取当前登录用户
-        Users users = new Users();
+        User user = new User();
 
 //        List<District> userRegions = new ArrayList<District>();
 //        List<District> regions= userService.getRegionsTrees(users.getRegionId());

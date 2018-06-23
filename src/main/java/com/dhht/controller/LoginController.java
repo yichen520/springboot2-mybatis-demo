@@ -2,24 +2,16 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
-import com.dhht.common.AccessResult;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.RoleResourceDao;
 import com.dhht.model.*;
-import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.UserService;
-import com.dhht.util.MD5Util;
-import com.dhht.util.StringUtil;
-import org.apache.shiro.authc.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import com.google.code.kaptcha.Constants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +37,47 @@ public class LoginController {
    @RequestMapping(value ="login", method = RequestMethod.POST)
    public Map<String,Object> login(HttpServletRequest request,@RequestBody UserDomain userDomain){
 
-        return userService.validateUser(request,userDomain);
+       JsonObjectBO jsonObjectBO = new JsonObjectBO();
+       Map<String,Object> map=new HashMap<>();
+
+       try {
+           User user1= new User();
+           user1.setPassword(userDomain.getPassword());
+           user1.setUserName(userDomain.getUsername());
+           User user = userService.validate(user1);
+           if(user==null){
+               map.put("status", "error");
+               map.put("currentAuthority", user.getRoleId());
+               map.put("message","账号密码错误");
+               return map;
+           }
+           if (user.getLocked()){
+               map.put("status", "error");
+               map.put("currentAuthority", "guest");
+               map.put("message","该用户已被锁定，请联系管理员！");
+               return map;
+           }
+           map.put("status", "ok");
+           map.put("currentAuthority", user.getRoleId());
+           map.put("message","登录成功");
+
+           List<String> id = roleResourceDao.selectMenuResourceByID(user.getRoleId());
+           List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
+           List<Menus> menus = resourceService.findMenusByRole(id);
+           List<Resource> resources = resourceService.findResourceByRole(resourceId);
+           request.getSession().setAttribute("user", user);
+           request.getSession().setAttribute("menus", menus);
+           request.getSession().setAttribute("resources", resources);
+           return map;
+
+       } catch (Exception e) {
+           jsonObjectBO.setMessage("登录失败");
+           jsonObjectBO.setCode(-1);
+           map.put("status", "error");
+           map.put("currentAuthority", "guest");
+           map.put("message","登录失败！");
+           return map;
+       }
 
    }
     /**
@@ -68,7 +100,7 @@ public class LoginController {
    @RequestMapping("currentUser")
    public JsonObjectBO currentUser(HttpSession session){
        Object  obj = session.getAttribute("user");
-       Users account = (Users) obj;
+       User account = (User) obj;
        account.setPassword(null);
        JsonObjectBO jsonObjectBO = new JsonObjectBO();
        JSONObject jsonObject = new JSONObject();

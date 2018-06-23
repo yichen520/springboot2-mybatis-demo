@@ -3,13 +3,8 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.Makedepartment;
 import com.dhht.model.UseDepartment;
-import com.dhht.model.UserDepartment;
-import com.dhht.model.Users;
-import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.userDepartment.UseDepartmentService;
-import com.dhht.util.MD5Util;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
