@@ -43,4 +43,8 @@ public interface UserDao {
 
     Users findById(@Param("id") String id);
 
+    int updateErrorTimes(@Param("username") String username);
+    int updateErrorTimesZero(@Param("username") String username);
+
+
 }
