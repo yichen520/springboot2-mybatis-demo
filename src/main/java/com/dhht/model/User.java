@@ -26,7 +26,7 @@ public class User {
 
     private Boolean isDeleted;
 
-    private String distriId;
+    private String districtId;
 
     private String telphone;
 

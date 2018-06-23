@@ -64,18 +64,10 @@ public class UserController {
 
     @RequestMapping(value = "/changePwd" , method = RequestMethod.POST)
     public JsonObjectBO changePwd(@RequestBody User user){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String id = user.getId();
-        String password = user.getPassword();
-        Integer changepwd = userService.changePwd(id,password);
-        if(changepwd>0){
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("修改成功");
-        }else{
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("修改失败");
-        }
+        JsonObjectBO jsonObjectBO = userService.changePwd(id);
         return jsonObjectBO;
+
     }
 
     /**
@@ -97,6 +89,33 @@ public class UserController {
         return jsonObjectBO;
 
     }
+
+
+    /**
+     * 主动加锁
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/activeLocking")
+    public JsonObjectBO activeLocking(@RequestBody Map map){
+        String id = (String)map.get("id");
+        JsonObjectBO jsonObjectBO = userService.activeLocking(id);
+        return  jsonObjectBO;
+    }
+
+
+    /**
+     * 主动解锁
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/activeUnlocking")
+    public JsonObjectBO activeUnlocking(@RequestBody Map map){
+        String id = (String)map.get("id");
+        JsonObjectBO jsonObjectBO = userService.activeUnlocking(id);
+        return  jsonObjectBO;
+    }
+
 
     @RequestMapping(value = "/findByDistrict")
     public JsonObjectBO findByDistrict(@RequestBody Map map){

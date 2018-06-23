@@ -90,7 +90,7 @@ public class EmployeeServiceImp implements EmployeeService {
                 user.setRealName(employee.getEmployeeName());
                 user.setPassword(MD5Util.toMd5("123456"));
                 user.setTelphone(employee.getTelphone());
-                user.setRegionId(employee.getFamilyAddress());
+                user.setDistrictId(employee.getFamilyAddress());
                 user.setRoleId("CYRY");
                 break;
             //修改用户
@@ -98,7 +98,7 @@ public class EmployeeServiceImp implements EmployeeService {
                 user = userDao.findByUserName(employee.getEmployeeCode());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
-                user.setRegionId(employee.getFamilyAddress());
+                user.setDistrictId(employee.getFamilyAddress());
                 break;
             //删除用户
             case 3:

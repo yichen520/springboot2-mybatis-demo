@@ -15,12 +15,12 @@ public interface UserService {
     JsonObjectBO addUser(User user);
     JsonObjectBO Update(User user);
     JsonObjectBO deleteuser(String id);
-    int changePwd(String id , String password);
+    JsonObjectBO changePwd(String id);
     JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize);
     JsonObjectBO activeLocking(String loginTime);
     JsonObjectBO activeUnlocking(String id);
 
-//    User validate(User user);
+    User validate(User user);
 
     PageInfo<User> selectByDistrict(Integer id, int pageSum, int pageNum);
 

@@ -31,10 +31,11 @@
         <result column="real_name" property="RealName" jdbcType="VARCHAR"/>
         <result column="role_id" property="RoleId" jdbcType="VARCHAR" />
         <result column="is_locked" property="IsLock" jdbcType="BIT"/>
-        <result column="district_id" property="RegionId" jdbcType="VARCHAR"/>
+        <result column="district_id" property="districtId" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <resultMap id="queryForListMap" type="com.dhht.model.Users">
+
+    <resultMap id="queryForListMap" type="com.dhht.model.User">
         <id column="id" property="id" jdbcType="CHAR"/>
         <result column="user_name" property="userName" jdbcType="CHAR" />
         <result column="real_name" property="realName"/>
@@ -46,7 +47,7 @@
         <result column="login_error_times" property="loginErrorTimes" jdbcType="INTEGER"/>
         <result column="is_changed_pwd" property="isChangedPwd" jdbcType="BIT"/>
         <result column="is_deleted" property="isDeleted" jdbcType="BIT"/>
-        <result column="district_id" property="regionId" jdbcType="CHAR"/>
+        <result column="district_id" property="districtId" jdbcType="CHAR"/>
         <association property="role"  resultMap="roleResultMap" javaType="com.dhht.model.Role"></association>
         <association property="district"  resultMap="districtResultMap" javaType="com.dhht.model.District"></association>
     </resultMap>
@@ -80,7 +81,7 @@
         select *
         from sys_role where id=#{role_id}
     </select>
-    <insert id="addUser" parameterType="com.dhht.model.Users">
+    <insert id="addUser" parameterType="com.dhht.model.User">
         INSERT INTO sys_user(
         `id`,
         `user_name`,
@@ -93,31 +94,32 @@
         `login_error_times`,
         `is_changed_pwd`,
         `is_deleted`,
-        `district_id`)
+        `district_id`
+        )
         values (
         #{id},
         #{userName},
         #{realName},
         #{password},
-        "#{roleId}",
+        #{roleId},
         0,
         0,
         #{telphone},
         0,
         0,
         0,
-        #{regionId}
+        #{districtId}
         )
     </insert>
 
-    <update id="update" parameterType="com.dhht.model.Users">
+    <update id="update" parameterType="com.dhht.model.User">
         UPDATE sys_user
         <set>
             <if test="userName != null and userName!=''"> `user_name` = #{userName}, </if>
             <if test="realName != null and realName!=''"> `real_name` = #{realName}, </if>
             <if test="telphone != null and telphone!=''">`telphone` =#{telphone},</if>
             <if test="roleId != null and roleId!=''"> `role_id` = #{roleId}, </if>
-            <if test="regionId != null and regionId!='' "> `district_id` = #{regionId}, </if>
+            <if test="districtId != null and districtId!='' "> `district_id` = #{districtId}, </if>
         </set>
         WHERE id = #{id}
     </update>
@@ -127,7 +129,7 @@
    </delete>
 
 
-    <!--<select id="findAllSuser" resultType="com.dhht.model.Users">-->
+
     <select id="findAllSuser" resultMap="queryForListMap">
         SELECT u.user_name,u.real_name,u.telphone,u.role_id,u.district_id,r.*,d.*
         FROM sys_user u,sys_role r,sys_district d
@@ -135,10 +137,10 @@
         u.role_id = r.id AND u.district_id = d.district_id
     </select>
 
-    <!--<select id="findRoleById" resultType="com.dhht.model.Users">-->
+
     <!--SELECT-->
     <!--</select>-->
-    <select id="findByNo" resultType="com.dhht.model.Users">
+    <select id="findByNo" resultType="com.dhht.model.User">
         SELECT * FROM sys_user
         WHERE
         `id` = #{id}
@@ -150,7 +152,7 @@
     </select>
 
     
-    <select id="findByUserName" resultType="com.dhht.model.Users" parameterType="java.lang.String">
+    <select id="findByUserName" resultType="com.dhht.model.User" parameterType="java.lang.String">
         SELECT * FROM sys_user
         WHERE
         user_name = #{userName,jdbcType=VARCHAR}
@@ -170,7 +172,7 @@
     </select>
 
 
-    <update id="updateUserDepartment" parameterType="com.dhht.model.Users">
+    <update id="updateUserDepartment" parameterType="com.dhht.model.User">
         UPDATE sys_user
           <set>
               `real_name` = #{realName},
@@ -180,7 +182,7 @@
         WHERE `user_name` = #{userName}
     </update>
     
-    <select id="findByTelphone" resultType="com.dhht.model.Users">
+    <select id="findByTelphone" resultType="com.dhht.model.User">
         SELECT * FROM sys_user
         <where>
             <if test="telphone !=null and telphone !=''">
@@ -191,15 +193,19 @@
     </select>
 
 
-    <select id="findById" resultType="com.dhht.model.Users">
-        SELECT * from sys_user WHERE id = #{id}
+    <select id="findById" resultType="com.dhht.model.User">
+        SELECT
+        `id` AS id,user_name AS userName,real_name AS realName,password AS password,role_id AS roleId,object_id AS objectId,
+        telphone AS telphone,is_locked AS isLocked,login_error_times AS loginErrorTimes,is_changed_pwd AS isChangedPwd,is_deleted AS  isDeleted,
+        district_id AS districtId,login_time AS loginTime
+        from sys_user WHERE id = #{id}
     </select>
 
-    <select id="find"  resultType="com.dhht.model.Users">
+    <select id="find"  resultType="com.dhht.model.User">
         SELECT id,user_name ,real_name,is_locked FROM sys_user
         <where>
-            <if test="regionId !=null and regionId !=''">
-                district_id LIKE '%${regionId}%'
+            <if test="districtId !=null and districtId !=''">
+                district_id LIKE '%${districtId}%'
             </if>
             <if test="roleId !=null and roleId !=''">
                 AND role_id LIKE '%${roleId}%'
@@ -209,4 +215,20 @@
             </if>
         </where>
     </select>
+
+    <update id="updateUnLock">
+        UPDATE sys_user
+        <set>
+            is_locked = 0
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="updateLock">
+        UPDATE sys_user
+        <set>
+            is_locked = 1
+        </set>
+        WHERE `id` = #{id}
+    </update>
 </mapper>

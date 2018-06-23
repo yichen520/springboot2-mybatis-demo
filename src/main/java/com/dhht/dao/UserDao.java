@@ -43,4 +43,8 @@ public interface UserDao {
 
     User findById(@Param("id") String id);
 
+    int updateLock(@Param("id") String id);
+
+    int updateUnLock(@Param("id") String id);
+
 }
