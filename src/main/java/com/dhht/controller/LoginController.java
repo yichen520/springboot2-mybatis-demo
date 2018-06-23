@@ -128,67 +128,6 @@ public class LoginController {
         }
     }
 
-    //判断各角色是否登陆
-    public JsonObjectBO validate(String userAccount,String password,String role,JsonObjectBO jsonObjectBO){
-        if (role.equals("1")){
-            if (userAccount.equals(admin_userAccount)&&password.equals(admin_password)){
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("管理员登陆成功");
-                return jsonObjectBO;
-            }else {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("角色选择有误或账号密码错误");
-                return jsonObjectBO;
-            }
-        }
-        else {
-            //password = MD5Util.toMd5(password);
-            UserDomain user = new UserDomain("1","2");
-            user.setUsername(userAccount);
-            user.setPassword(password);
-            if (role.equals("2")){
-                int num = userService.validateUserLoginOne(user);
-                if (num>0){
-                    jsonObjectBO.setCode(2);
-                    jsonObjectBO.setMessage("制作单位登陆成功");
-                    return jsonObjectBO;
-                }else {
-                    jsonObjectBO.setCode(-1);
-                    jsonObjectBO.setMessage("角色选择有误或账号密码错误");
-                    return jsonObjectBO;
-                }
-            }else if (role.equals("3")){
-                int num = userService.validateUserLoginTwo(user);
-                if (num>0){
-                    jsonObjectBO.setCode(3);
-                    jsonObjectBO.setMessage("门店管理人员登陆成功");
-                    return jsonObjectBO;
-                }else {
-                    jsonObjectBO.setCode(-1);
-                    jsonObjectBO.setMessage("角色选择有误或账号密码错误");
-                    return jsonObjectBO;
-                }
-            }else if (role.equals("4")){
-                int num = userService.validateUserLoginThree(user);
-                if (num>0){
-                    jsonObjectBO.setCode(4);
-                    jsonObjectBO.setMessage("从业人员登陆成功");
-                    return jsonObjectBO;
-                }else {
-                    jsonObjectBO.setCode(-1);
-                    jsonObjectBO.setMessage("角色选择有误或账号密码错误");
-                    return jsonObjectBO;
-                }
-            }
-            else {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("角色选择有误或账号密码错误");
-                return jsonObjectBO;
-            }
-        }
-    }
-
-
 
 
 }
