@@ -3,36 +3,36 @@ package com.dhht.model;
 import java.util.List;
 
 public class District {
-    private Integer id;
+    private String id;
 
-    private Integer provinceId;
+    private String provinceId;
 
     private String provinceName;
 
-    private Integer cityId;
+    private String cityId;
 
     private String cityName;
 
-    private Integer districtId;
+    private String districtId;
 
     private String districtName;
 
     //子节点
     //private List<District> child;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getProvinceId() {
+    public String getProvinceId() {
         return provinceId;
     }
 
-    public void setProvinceId(Integer provinceId) {
+    public void setProvinceId(String provinceId) {
         this.provinceId = provinceId;
     }
 
@@ -41,14 +41,14 @@ public class District {
     }
 
     public void setProvinceName(String provinceName) {
-        this.provinceName = provinceName == null ? null : provinceName.trim();
+        this.provinceName = provinceName;
     }
 
-    public Integer getCityId() {
+    public String getCityId() {
         return cityId;
     }
 
-    public void setCityId(Integer cityId) {
+    public void setCityId(String cityId) {
         this.cityId = cityId;
     }
 
@@ -57,14 +57,14 @@ public class District {
     }
 
     public void setCityName(String cityName) {
-        this.cityName = cityName == null ? null : cityName.trim();
+        this.cityName = cityName;
     }
 
-    public Integer getDistrictId() {
+    public String getDistrictId() {
         return districtId;
     }
 
-    public void setDistrictId(Integer districtId) {
+    public void setDistrictId(String districtId) {
         this.districtId = districtId;
     }
 
@@ -73,8 +73,10 @@ public class District {
     }
 
     public void setDistrictName(String districtName) {
-        this.districtName = districtName == null ? null : districtName.trim();
+        this.districtName = districtName;
     }
+
+
 
    /* public List<District> getChild() {
         return child;

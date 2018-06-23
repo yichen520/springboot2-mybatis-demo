@@ -6,20 +6,22 @@ import com.dhht.controller.SmsController;
 import com.dhht.dao.*;
 import com.dhht.model.SMSCode;
 import com.dhht.model.User;
+import com.dhht.model.*;
+import com.dhht.service.resource.ResourceService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.dhht.model.UserDomain;
 import com.dhht.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/8/16.
@@ -45,10 +47,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SMSCodeDao smsCodeDao;
 
+    private RoleResourceDao roleResourceDao;
+
+    @Autowired
+    private ResourceService resourceService;
+
     @Autowired
     private SmsController smsController;
 
 
+//    @Value("${loginError.Time}")
+    private long loginErrorTime = 5;
+//
+//    @Value("${loginError.Date}")
+   private long loginErrorDate = 60;
     /**
      * 6位简单密码
      *
@@ -299,7 +311,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public PageInfo<User> selectByDistrict(Integer id, int pageSum, int pageNum) {
+    public PageInfo<User> selectByDistrict(String id, int pageSum, int pageNum) {
         List<User> list = new ArrayList<User>();
         String districtIds[] = StringUtil.DistrictUtil(id);
         if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
@@ -334,5 +346,67 @@ public class UserServiceImpl implements UserService {
         }
         return JsonObjectBO.ok("效验通过");
 
+    }
+
+
+    @Override
+    public Map<String, Object> validateUser(HttpServletRequest request, UserDomain userDomain) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        Map<String,Object> map=new HashMap<>();
+        try {
+            User user1= new User();
+            user1.setPassword(userDomain.getPassword());
+            user1.setUserName(userDomain.getUsername());
+            User user = validate(user1);
+            User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
+
+            if(user==null && currentUser!=null ){
+                //更新登录错误次数
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                long m = sdf.parse(new Date().toString()).getTime() - sdf.parse(currentUser.getLoginTime().toString()).getTime();
+                if (( m / (1000 * 60  )>loginErrorDate)){
+                    userDao.updateErrorTimesZero(userDomain.getUsername());
+                }else {
+                    userDao.updateErrorTimes(userDomain.getUsername());
+                }
+
+                map.put("status", "error");
+                map.put("currentAuthority", user.getRoleId());
+                map.put("message","账号密码错误");
+                return map;
+            }
+            if (user.getLocked()){
+                map.put("status", "error");
+                map.put("currentAuthority", "guest");
+                map.put("message","该用户已被锁定，请联系管理员！");
+                return map;
+            }else {
+                if (currentUser.getLoginErrorTimes()>loginErrorTime){
+                    map.put("status", "error");
+                    map.put("currentAuthority", "guest");
+                    map.put("message","该用户登录错误超过5次，请稍后重试！");
+                }
+            }
+            map.put("status", "ok");
+            map.put("currentAuthority", user.getRoleId());
+            map.put("message","登录成功");
+
+            List<String> id = roleResourceDao.selectMenuResourceByID(user.getRoleId());
+            List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
+            List<Menus> menus = resourceService.findMenusByRole(id);
+            List<Resource> resources = resourceService.findResourceByRole(resourceId);
+            request.getSession().setAttribute("user", user);
+            request.getSession().setAttribute("menus", menus);
+            request.getSession().setAttribute("resources", resources);
+            return map;
+
+        } catch (Exception e) {
+            jsonObjectBO.setMessage("登录失败");
+            jsonObjectBO.setCode(-1);
+            map.put("status", "error");
+            map.put("currentAuthority", "guest");
+            map.put("message","登录失败！");
+            return map;
+        }
     }
 }

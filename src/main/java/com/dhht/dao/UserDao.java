@@ -47,4 +47,8 @@ public interface UserDao {
 
     int updateUnLock(@Param("id") String id);
 
+    int updateErrorTimes(@Param("username") String username);
+    int updateErrorTimesZero(@Param("username") String username);
+
+
 }

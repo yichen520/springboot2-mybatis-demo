@@ -46,6 +46,9 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.dhht.model
 
+loginError:
+  Time:5
+  Date:60
 
 
 #pagehelper

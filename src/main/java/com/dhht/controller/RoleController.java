@@ -6,6 +6,7 @@ import com.dhht.common.AccessResult;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Role;
 //import com.dhht.service.user.RoleService;
+import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.RoleService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,12 @@ import java.util.Set;
 public class RoleController extends JsonObjectBO {
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ResourceService resourceService;
+
     private Role role = new Role();
+
+    private JSONObject jsonObject = new JSONObject();
 
     // 资源IDs，用于接收设置角色资源设置时的资源id
     private Set<String> resourceIds;
@@ -170,5 +176,19 @@ public class RoleController extends JsonObjectBO {
             jsonObjectBO.setCode(-1);
             return jsonObjectBO;
         }
+    }
+
+    /**
+     * 角色管理获取所有非倚赖项
+     */
+    @RequestMapping(value = "requiredResourceInfo")
+    public JsonObjectBO RoleRequiredResource(){
+        try {
+            jsonObject.put("resource",resourceService.selectRequiredResource());
+        }catch (Exception e){
+            JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+
     }
 }

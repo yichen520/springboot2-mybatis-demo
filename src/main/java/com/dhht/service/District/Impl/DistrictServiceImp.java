@@ -86,7 +86,7 @@ public class DistrictServiceImp implements DistrictService{
     //查找地区子节点
     public void setAllChildren(List<DistrictMenus> parent,List<DistrictMenus> districtMenus){
         for (DistrictMenus districtMenu:parent) {
-            List<DistrictMenus> list = findInList(districtMenus,districtMenu.getDistrictId().toString());
+            List<DistrictMenus> list = findInList(districtMenus,districtMenu.getDistrictId());
             if(list.size()>0){
                 districtMenu.setChildren(list);
             }
@@ -108,12 +108,12 @@ public class DistrictServiceImp implements DistrictService{
 
 
     //在往地区菜单列表添加时判断是否重复
-    public boolean isAdd(int id, List<DistrictMenus> list){
+    public boolean isAdd(String id, List<DistrictMenus> list){
         if(list.isEmpty()){
             return true;
         }
         for(DistrictMenus districtMenus:list){
-            if(districtMenus.getDistrictId()==id){
+            if(districtMenus.getDistrictId().equals(id)){
                 return false;
             }
         }

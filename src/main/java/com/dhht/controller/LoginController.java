@@ -36,6 +36,7 @@ public class LoginController {
     @Log("登录")
    @RequestMapping(value ="login", method = RequestMethod.POST)
    public Map<String,Object> login(HttpServletRequest request,@RequestBody UserDomain userDomain){
+
        JsonObjectBO jsonObjectBO = new JsonObjectBO();
        Map<String,Object> map=new HashMap<>();
 
@@ -77,6 +78,7 @@ public class LoginController {
            map.put("message","登录失败！");
            return map;
        }
+
    }
     /**
      * 获取目录

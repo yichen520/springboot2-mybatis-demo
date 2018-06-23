@@ -31,7 +31,7 @@ public class SmsController {
 
 
     @RequestMapping(value ="sendMessage", method = RequestMethod.POST)
-    public JsonObjectBO index(@RequestBody Map map) {
+    public JsonObjectBO sendMessage(@RequestBody Map map) {
         try {
             if (map == null){
                 return JsonObjectBO.error("没有填写手机号");
@@ -69,13 +69,13 @@ public class SmsController {
 
     //@Log("验证手机号")
     @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
-    public JsonObjectBO index(@RequestBody SMSCode smsCode){
+    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
         try {
             return userService.checkPhoneAndIDCard(smsCode);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return JsonObjectBO.exception("发生异常");
+            return JsonObjectBO.exception("发送短信发生异常");
         }
     }
 

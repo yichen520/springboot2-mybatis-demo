@@ -3,6 +3,7 @@ package com.dhht.controller;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Makedepartment;
+import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
 
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class ResourceController {
     @Autowired
     private ResourceService resourceService;
+
+    private JSONObject jsonObject = new JSONObject();
 
    //根据ID查找资源
 //   @RequestMapping(value = "/selcect")
@@ -59,9 +62,23 @@ public class ResourceController {
     @Log("删除资源")
     @RequestMapping(value = "/delete")
     public JsonObjectBO deleteResource(@RequestBody Map map){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+       // JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        String Id = map.get("key").toString();
+        String Id = (String) map.get("id");
+
+        int result = 0;
+        try {
+           result =  resourceService.deleteByPrimaryKey(Id);
+        }catch (Exception e){
+            return JsonObjectBO.error(e.getMessage());
+        }
+        if(result==0){
+            return JsonObjectBO.error("删除失败");
+        }
+        return JsonObjectBO.ok("删除成功");
+
+
+        /* 有子节点不能删除父节点，方法暂时废除
         int flag = resourceService.findChild(Id).size();
         if(flag>0) {
             jsonObjectBO.setCode(-1);
@@ -75,8 +92,8 @@ public class ResourceController {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("删除资源失败");
             }
-        }
-        return jsonObjectBO;
+        }*/
+
     }
 
    @Log("添加资源")
@@ -102,7 +119,7 @@ public class ResourceController {
     }
 
     @Log("修改资源")
-    @RequestMapping(value = "/update")
+    @RequestMapping(value = "/update",method = RequestMethod.GET)
     public JsonObjectBO updateResource(@RequestBody Resource resource){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
@@ -131,6 +148,18 @@ public class ResourceController {
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
         return jsonObjectBO;
+    }
+
+    //查找所有非倚赖资源
+    @RequestMapping(value = "requiredResourceInfo")
+    public JsonObjectBO selectRequiredResource(){
+        try {
+            List<Map> menus = resourceService.selectRequiredResource();
+            jsonObject.put("resource",menus);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
     }
 
 }

@@ -3,25 +3,26 @@ package com.dhht.model;
 import java.util.List;
 
 public class DistrictMenus {
-    private Integer DistrictId;
+    private String DistrictId;
     private String DistrictName;
     private String ParentId;
     private List<DistrictMenus> children;
 
-    public DistrictMenus(Integer districtId, String districtName, String parentId) {
+
+    public DistrictMenus() {
+    }
+
+    public DistrictMenus(String districtId, String districtName, String parentId) {
         DistrictId = districtId;
         DistrictName = districtName;
         ParentId = parentId;
     }
 
-    public DistrictMenus() {
-    }
-
-    public Integer getDistrictId() {
+    public String getDistrictId() {
         return DistrictId;
     }
 
-    public void setDistrictId(Integer districtId) {
+    public void setDistrictId(String districtId) {
         DistrictId = districtId;
     }
 

@@ -4,6 +4,12 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.SMSCode;
 import com.dhht.model.User;
 import com.github.pagehelper.PageInfo;
+import com.dhht.model.UserDomain;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Created by Administrator on 2018/4/19.
@@ -22,9 +28,11 @@ public interface UserService {
 
     User validate(User user);
 
-    PageInfo<User> selectByDistrict(Integer id, int pageSum, int pageNum);
+    PageInfo<User> selectByDistrict(String id,int pageSum,int pageNum);
+
 
     JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
+    Map<String,Object> validateUser(HttpServletRequest request,UserDomain userDomain);
     }
 
 

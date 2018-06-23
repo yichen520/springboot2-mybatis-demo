@@ -27,4 +27,6 @@ public interface   ResourceMapper {
 
     Menus selectMenusByID(String Id);
 
+    List<Menus> selectRequiredResource();
+
 }

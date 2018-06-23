@@ -27,4 +27,19 @@ public class MenuUtil {
         }
         return r;
     }
+
+    public static List<Map> getSimpeResource(List<Menus> menus) {
+        if (menus == null) return null;
+        List<Map> r = new ArrayList<>();
+        for (Menus menu : menus) {
+            Map m = new HashMap();
+            m.put("id",menu.getId());
+            m.put("name", menu.getName());
+            m.put("children", getSimpeResource(menu.getChildren()));
+            r.add(m);
+        }
+        return r;
+    }
+
+
 }

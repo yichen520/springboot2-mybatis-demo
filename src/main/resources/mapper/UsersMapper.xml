@@ -307,6 +307,11 @@
   select * from sys_user where
   user_name = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
 </select>
+  <select id="validateCurrentuser"  resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select * from sys_user where
+  user_name = #{username,jdbcType=VARCHAR}
+</select>
+
 
   <insert id="addUserDepartment" parameterType="com.dhht.model.User">
     INSERT INTO sys_user
