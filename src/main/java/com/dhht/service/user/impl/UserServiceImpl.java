@@ -210,12 +210,12 @@ public class UserServiceImpl implements UserService {
     /**
      * 根据区域查找用户
      * @param id
-     * @param pageSum
+     * @param pageSize
      * @param pageNum
      * @return
      */
     @Override
-    public PageInfo<User> selectByDistrict(String id, int pageSum, int pageNum) {
+    public PageInfo<User> selectByDistrict(String id, int pageSize, int pageNum) {
         List<User> list = new ArrayList<User>();
         String districtIds[] = StringUtil.DistrictUtil(id);
         if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
         }else {
             list = userDao.selectByDistrict(id.toString());
         }
-        PageHelper.startPage(pageSum,pageNum);
+        PageHelper.startPage(pageSize,pageNum);
         PageInfo<User> result = new PageInfo(list);
         return result;
     }
