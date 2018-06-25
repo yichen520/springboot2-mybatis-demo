@@ -34,7 +34,7 @@ public class MenuUtil {
         for (Menus menu : menus) {
             Map m = new HashMap();
             m.put("id",menu.getId());
-            m.put("name", menu.getName());
+            m.put("description", menu.getName());
             m.put("children", getSimpeResource(menu.getChildren()));
             r.add(m);
         }
