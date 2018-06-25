@@ -20,7 +20,7 @@
   </select>
 
     <sql id="simple_User_List" >
-        id, user_name, real_name, role_id, is_locked, is_deleted, district_id
+        id, user_name, real_name, role_id, is_locked, is_deleted, district_id,telphone
     </sql>
 
     <resultMap id="simpleResultMap" type="com.dhht.model.UserSimple">
@@ -30,6 +30,7 @@
         <result column="role_id" property="RoleId" jdbcType="VARCHAR" />
         <result column="is_locked" property="IsLocked" jdbcType="BIT"/>
         <result column="district_id" property="districtId" jdbcType="VARCHAR"/>
+        <result column="telphone" property="telphone" jdbcType="VARCHAR"/>
     </resultMap>
 
 
