@@ -1,5 +1,6 @@
 package com.dhht.service.resource.Impl;
 
+import com.dhht.annotation.Sync;
 import com.dhht.dao.ResourceMapper;
 import com.dhht.model.Menus;
 import com.dhht.model.Resource;
