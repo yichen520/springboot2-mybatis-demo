@@ -43,19 +43,19 @@ public class DistrictServiceImp implements DistrictService{
         for (District district:districtList) {
             String DistrictIds[] = StringUtil.DistrictUtil(district.getProvinceId());
             if(isAdd(district.getProvinceId(),districtMenus)&&DistrictIds[1].equals("00")&&DistrictIds[2].equals("00")){
-                districtMenus.add(new DistrictMenus(district.getProvinceId(),district.getProvinceName(),"00"));
+                districtMenus.add(new DistrictMenus(district.getProvinceId(),district.getProvinceName(),0,"00"));
             }
         }
         for (District district:districtList) {
             String DistrictIds[] = StringUtil.DistrictUtil(district.getCityId());
             if(isAdd(district.getCityId(),districtMenus)&&!DistrictIds[1].equals("00")&&DistrictIds[2].equals("00")){
-                districtMenus.add(new DistrictMenus(district.getCityId(),district.getCityName(),DistrictIds[0]+"0000"));
+                districtMenus.add(new DistrictMenus(district.getCityId(),district.getCityName(),1,DistrictIds[0]+"0000"));
             }
         }
         for (District district:districtList) {
             String DistrictIds[] = StringUtil.DistrictUtil(district.getDistrictId());
             if(!DistrictIds[1].equals("00")&&!DistrictIds[2].equals("00")){
-                districtMenus.add(new DistrictMenus(district.getDistrictId(),district.getDistrictName(),DistrictIds[0]+DistrictIds[1]+"00"));
+                districtMenus.add(new DistrictMenus(district.getDistrictId(),district.getDistrictName(),2,DistrictIds[0]+DistrictIds[1]+"00"));
             }
         }
         return districtMenus;
