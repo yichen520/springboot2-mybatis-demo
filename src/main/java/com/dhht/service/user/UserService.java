@@ -23,7 +23,7 @@ public interface UserService  {
 
     JsonObjectBO changePwd(String id);
 
-    JsonObjectBO find(User user,String realName,String roleId,String regionId,int pageNum, int pageSize);
+    JsonObjectBO find(User user,String realName,String roleId,String districtId,int pageNum, int pageSize);
 
     PageInfo<User> selectByDistrict(String id,int pageSum,int pageNum);
 
