@@ -7,6 +7,8 @@ import com.dhht.model.Role;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.user.RoleService;
+import com.dhht.service.user.UserLockingService;
+import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,15 @@ public class UserController {
 
     @Autowired
     private RoleService roleService;
+
     @Autowired
     private DistrictService districtService;
+
+    @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
+    private UserLockingService userLockingService;
 
     private JSONObject jsonObject = new JSONObject();
 
@@ -40,9 +49,9 @@ public class UserController {
      * @param
      * @return
      */
-    @RequestMapping(value ="/add", method = RequestMethod.POST)
+    @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO adduser(@RequestBody User user){
-        JsonObjectBO jsonObjectBO = userService.addUser(user);
+        JsonObjectBO jsonObjectBO = userService.insert(user);
         return jsonObjectBO;
 
 
@@ -56,7 +65,7 @@ public class UserController {
      */
     @RequestMapping(value ="/update",method = RequestMethod.POST)
     public JsonObjectBO updateuser(@RequestBody User user){
-        JsonObjectBO jsonObjectBO = userService.Update(user);
+        JsonObjectBO jsonObjectBO = userService.update(user);
         return jsonObjectBO;
 
     }
@@ -69,7 +78,7 @@ public class UserController {
     @RequestMapping(value = "/delete" , method = RequestMethod.POST)
     public JsonObjectBO deleteSuser(@RequestBody User user){
         String id = user.getId();
-        JsonObjectBO jsonObjectBO = userService.deleteuser(id);
+        JsonObjectBO jsonObjectBO = userService.delete(id);
         return  jsonObjectBO;
 
     }
@@ -79,10 +88,10 @@ public class UserController {
      * @param user
      * @return
      */
-    @RequestMapping(value = "/changePwd" , method = RequestMethod.POST)
+    @RequestMapping(value = "/resetPwd" , method = RequestMethod.POST)
     public JsonObjectBO changePwd(@RequestBody User user){
         String id = user.getId();
-        JsonObjectBO jsonObjectBO = userService.changePwd(id);
+        JsonObjectBO jsonObjectBO = userLoginService.resetPwd(id);
         return jsonObjectBO;
 
     }
@@ -116,7 +125,7 @@ public class UserController {
     @RequestMapping(value = "/activeLocking")
     public JsonObjectBO activeLocking(@RequestBody Map map){
         String id = (String)map.get("id");
-        JsonObjectBO jsonObjectBO = userService.activeLocking(id);
+        JsonObjectBO jsonObjectBO = userLockingService.activeLocking(id);
         return  jsonObjectBO;
     }
 
@@ -129,11 +138,16 @@ public class UserController {
     @RequestMapping(value = "/activeUnlocking")
     public JsonObjectBO activeUnlocking(@RequestBody Map map){
         String id = (String)map.get("id");
-        JsonObjectBO jsonObjectBO = userService.activeUnlocking(id);
+        JsonObjectBO jsonObjectBO = userLockingService.activeUnlocking(id);
         return  jsonObjectBO;
     }
 
 
+    /**
+     * 根据区域查找用户
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/findByDistrict")
     public JsonObjectBO findByDistrict(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
