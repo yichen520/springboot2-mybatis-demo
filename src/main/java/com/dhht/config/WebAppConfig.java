@@ -20,11 +20,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
                 .maxAge(3600);
     }
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new InterceptorConfig()).addPathPatterns("/**");
-//        super.addInterceptors(registry);
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new InterceptorConfig()).addPathPatterns("/**");
+        super.addInterceptors(registry);
+    }
 
 
 }
