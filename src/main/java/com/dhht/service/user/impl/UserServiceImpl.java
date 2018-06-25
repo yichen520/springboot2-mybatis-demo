@@ -233,19 +233,19 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public JsonObjectBO find(String realName, String roleId, String regionId, int pageNum, int pageSize) {
+    public JsonObjectBO find(User user,String realName, String roleId, String districtId, int pageNum, int pageSize) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum, pageSize);
-        if (realName == null && regionId == null && roleId == null) {
-            List<User> userList = userDao.findAllSuser();
-            PageInfo<User> result = new PageInfo<>(userList);
+        String localdistrictId = user.getDistrictId();
+        if (realName == null && districtId == null && roleId == null) {
+            PageInfo<User> result = selectByDistrict(localdistrictId,pageSize,pageNum);
             jsonObject.put("user", result);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("查询成功");
         } else {
-            List<User> list = userDao.find(realName, regionId, roleId);
+            List<User> list = userDao.find(realName, districtId, roleId);
             PageInfo<User> result = new PageInfo<>(list);
             jsonObject.put("user", result);
             jsonObjectBO.setData(jsonObject);
@@ -256,7 +256,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 祖东加锁
+     * 主动加锁
      *
      * @param id
      * @return
@@ -379,7 +379,7 @@ public class UserServiceImpl implements UserService {
                 map.put("message","账号密码错误");
                 return map;
             }
-            if (user.getLocked()){
+            if (user.getIsLocked()){
                 map.put("status", "error");
                 map.put("currentAuthority", "guest");
                 map.put("message","该用户已被锁定，请联系管理员！");
@@ -392,7 +392,7 @@ public class UserServiceImpl implements UserService {
                     return map;
                 }
             }
-            Users user2 =new Users();
+            User user2 =new User();
             user2.setLoginTime(new Date());
             user2.setUserName(userDomain.getUsername());
             user2.setLoginErrorTimes(0);

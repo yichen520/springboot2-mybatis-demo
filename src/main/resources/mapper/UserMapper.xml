@@ -130,7 +130,7 @@
         UPDATE sys_user set login_error_times = 0
         WHERE user_name = #{username}
     </update>
-    <update id="updateUser" parameterType="com.dhht.model.Users">
+    <update id="updateUser" parameterType="com.dhht.model.User">
         UPDATE sys_user set login_error_times = 0,login_time = #{loginTime}
         WHERE user_name = #{userName}
     </update>
