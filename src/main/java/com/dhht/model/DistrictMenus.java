@@ -5,6 +5,7 @@ import java.util.List;
 public class DistrictMenus {
     private String DistrictId;
     private String DistrictName;
+    private int type;
     private String ParentId;
     private List<DistrictMenus> children;
 
@@ -12,9 +13,10 @@ public class DistrictMenus {
     public DistrictMenus() {
     }
 
-    public DistrictMenus(String districtId, String districtName, String parentId) {
+    public DistrictMenus(String districtId, String districtName, int type, String parentId) {
         DistrictId = districtId;
         DistrictName = districtName;
+        this.type = type;
         ParentId = parentId;
     }
 
@@ -50,11 +52,20 @@ public class DistrictMenus {
         this.children = children;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "DistrictMenus{" +
-                "DistrictId=" + DistrictId +
+                "DistrictId='" + DistrictId + '\'' +
                 ", DistrictName='" + DistrictName + '\'' +
+                ", type=" + type +
                 ", ParentId='" + ParentId + '\'' +
                 ", children=" + children +
                 '}';
