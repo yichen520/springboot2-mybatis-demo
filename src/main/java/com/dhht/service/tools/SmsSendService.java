@@ -1,5 +1,7 @@
 package com.dhht.service.tools;
 
+import com.dhht.common.JsonObjectBO;
+
 import java.util.ArrayList;
 
 /**
@@ -28,4 +30,8 @@ public interface SmsSendService {
      * @return true：发送成功、false：发送失败
      */
     boolean sendSingleMsgByTemplate(String phoneNumber, int templateId, ArrayList<String> params);
+
+    void  sendPhoneMessage(String phone,ArrayList<String> params);
+
+    JsonObjectBO sendMessage(String phone,String code);
 }

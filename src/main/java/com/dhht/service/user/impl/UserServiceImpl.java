@@ -8,6 +8,7 @@ import com.dhht.model.SMSCode;
 import com.dhht.model.User;
 import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
+import com.dhht.service.tools.SmsSendService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
@@ -55,7 +56,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SmsController smsController;
 
-
+    @Autowired
+    private SmsSendService smsSendService;
 //    @Value("${loginError.Time}")
     private long loginErrorTime = 5;
 //
@@ -97,10 +99,12 @@ public class UserServiceImpl implements UserService {
         }
         user.setId(UUIDUtil.generate());
         user.setUserName(user.getTelphone());
-        String password = MD5Util.toMd5(createRandomVcode());
+        String code = createRandomVcode();
+        String password = MD5Util.toMd5(code);
         user.setPassword(password);
         user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
+        smsSendService.sendMessage(user.getTelphone(),code);
         if (a != 1) {
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("添加失败");
@@ -196,32 +200,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findById(id);
         user.setPassword(MD5Util.toMd5(code));
         String phone = user.getTelphone();
-        try {
-            if (phone == null) {
-                return jsonObjectBO.error("没有该手机号");
-            } else {
-                ArrayList<String> params = new ArrayList<String>();
-                params.add(code);
-                SMSCode smscode = smsCodeDao.getSms(phone);
-                if (smscode == null) {
-                    smscode = new SMSCode();
-                    smscode.setId(UUIDUtil.generate());
-                    smscode.setLastTime(new Date().getTime());
-                    smscode.setPhone(phone);
-                    smscode.setSmscode(code);
-                    smsCodeDao.save(smscode);
-                } else {
-                    smscode.setLastTime(new Date().getTime());
-                    smscode.setSmscode(code);
-                    smsCodeDao.update(smscode);
-                }
-                smsController.sendPhoneMessage(phone, params);
-                return jsonObjectBO.ok("短信发送成功");
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-            return jsonObjectBO.exception("发生异常");
-        }
+        return smsSendService.sendMessage(phone,code);
     }
 
 
