@@ -28,7 +28,7 @@
         <result column="user_name" property="UserName" jdbcType="VARCHAR" />
         <result column="real_name" property="RealName" jdbcType="VARCHAR"/>
         <result column="role_id" property="RoleId" jdbcType="VARCHAR" />
-        <result column="is_locked" property="IsLock" jdbcType="BIT"/>
+        <result column="is_locked" property="IsLocked" jdbcType="BIT"/>
         <result column="district_id" property="districtId" jdbcType="VARCHAR"/>
     </resultMap>
 
