@@ -12,27 +12,23 @@ import java.util.Map;
 
 
 /**
- * Created by Administrator on 2018/4/19.
+ * Created by 崔杨 on 2018/4/19.
  */
-public interface UserService {
+public interface UserService  {
+    JsonObjectBO insert(User user);
 
+    JsonObjectBO update(User user);
 
+    JsonObjectBO delete(String id);
 
-    JsonObjectBO addUser(User user);
-    JsonObjectBO Update(User user);
-    JsonObjectBO deleteuser(String id);
     JsonObjectBO changePwd(String id);
-    JsonObjectBO find(User user,String realName,String roleId,String regionId,int pageNum, int pageSize);
-    JsonObjectBO activeLocking(String loginTime);
-    JsonObjectBO activeUnlocking(String id);
 
-    User validate(User user);
+    JsonObjectBO find(User user,String realName,String roleId,String regionId,int pageNum, int pageSize);
 
     PageInfo<User> selectByDistrict(String id,int pageSum,int pageNum);
 
 
-    JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
-    Map<String,Object> validateUser(HttpServletRequest request,UserDomain userDomain);
+
     }
 
 
