@@ -22,7 +22,7 @@ public interface UserService {
     JsonObjectBO Update(User user);
     JsonObjectBO deleteuser(String id);
     JsonObjectBO changePwd(String id);
-    JsonObjectBO find(String realName,String roleId,String regionId,int pageNum, int pageSize);
+    JsonObjectBO find(User user,String realName,String roleId,String regionId,int pageNum, int pageSize);
     JsonObjectBO activeLocking(String loginTime);
     JsonObjectBO activeUnlocking(String id);
 

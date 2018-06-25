@@ -3,9 +3,10 @@ package com.dhht.service.employee.Impl;
 import com.dhht.dao.EmployeeDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.Employee;
+
 import com.dhht.model.User;
 
-import com.dhht.service.Employee.EmployeeService;
+import com.dhht.service.employee.EmployeeService;
 
 import com.dhht.util.DateUtil;
 import com.dhht.util.MD5Util;
@@ -105,7 +106,7 @@ public class EmployeeServiceImp implements EmployeeService {
             //删除用户
             case 3:
                user = userDao.findByUserName(employee.getEmployeeCode());
-               user.setDeleted(true);
+               user.setIsDeleted(true);
                break;
         }
         return user;

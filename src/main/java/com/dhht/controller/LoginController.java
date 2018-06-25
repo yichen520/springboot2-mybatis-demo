@@ -51,7 +51,7 @@ public class LoginController {
                map.put("message","账号密码错误");
                return map;
            }
-           if (user.getLocked()){
+           if (user.getIsLocked()){
                map.put("status", "error");
                map.put("currentAuthority", "guest");
                map.put("message","该用户已被锁定，请联系管理员！");

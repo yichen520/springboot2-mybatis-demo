@@ -74,6 +74,11 @@ public class UserController {
 
     }
 
+    /**
+     * 重置密码
+     * @param user
+     * @return
+     */
     @RequestMapping(value = "/changePwd" , method = RequestMethod.POST)
     public JsonObjectBO changePwd(@RequestBody User user){
         String id = user.getId();
@@ -88,16 +93,16 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/info")
-    public JsonObjectBO find(@RequestBody Map map){
+    public JsonObjectBO find(HttpServletRequest httpServletRequest, @RequestBody Map map){
 
         String realName = (String)map.get("realName");
         String roleId = (String) map.get("roleId");
-        String regionId = (String) map.get("regionId");
-
+        String districtId = (String) map.get("districtId");
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageSize =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
 
-        JsonObjectBO jsonObjectBO = userService.find(realName,roleId,regionId,pageNum,pageSize);
+        JsonObjectBO jsonObjectBO = userService.find(user,realName,roleId,districtId,pageNum,pageSize);
         return jsonObjectBO;
 
     }
