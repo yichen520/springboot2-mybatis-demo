@@ -170,7 +170,7 @@ public class UserController {
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         List<DistrictMenus> district = new ArrayList<>();
         try {
-            district = districtService.selectOneDistrict(user.getDistrict().getDistrictId());
+            district = districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("District",district);
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
