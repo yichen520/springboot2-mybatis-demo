@@ -6,6 +6,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.RoleResourceDao;
 import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
+import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,9 @@ public class LoginController {
     private ResourceService resourceService;
 
     @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
     private RoleResourceDao roleResourceDao;
     public static final String admin_userAccount = "admin";
     public static final String admin_password = "111111";
@@ -44,7 +48,7 @@ public class LoginController {
            User user1= new User();
            user1.setPassword(userDomain.getPassword());
            user1.setUserName(userDomain.getUsername());
-           User user = userService.validate(user1);
+           User user = userLoginService.validate(user1);
            if(user==null){
                map.put("status", "error");
                map.put("currentAuthority", user.getRoleId());

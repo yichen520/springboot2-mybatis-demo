@@ -4,6 +4,7 @@ import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.SMSCodeDao;
 import com.dhht.model.SMSCode;
+import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
 import com.dhht.sms.SmsSingleSender;
 import com.dhht.sms.SmsSingleSenderResult;
@@ -27,7 +28,8 @@ public class SmsController {
     @Autowired
     private UserService userService;
 
-
+    @Autowired
+    private UserLoginService userLoginService;
 
 
     @RequestMapping(value ="sendMessage", method = RequestMethod.POST)
@@ -71,7 +73,7 @@ public class SmsController {
     @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
     public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
         try {
-            return userService.checkPhoneAndIDCard(smsCode);
+            return userLoginService.checkPhoneAndIDCard(smsCode);
         }
         catch (Exception e) {
             e.printStackTrace();
