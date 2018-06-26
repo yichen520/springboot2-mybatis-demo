@@ -12,10 +12,34 @@ public class RecordPolice {
 
     private String officeCode;
 
+    private String officeDistrict;
+
     private String officeName;
 
     private Boolean isDelete;
 
+    public RecordPolice() {
+    }
+
+    /*public RecordPolice(String policeCode, String policeName, String telphone, String officeCode, String officeDistrict, String officeName) {
+        this.policeCode = policeCode;
+        this.policeName = policeName;
+        this.telphone = telphone;
+        this.officeCode = officeCode;
+        this.officeDistrict = officeDistrict;
+        this.officeName = officeName;
+    }
+
+    public RecordPolice(String id, String policeCode, String policeName, String telphone, String officeCode, String officeDistrict, String officeName) {
+        this.id = id;
+        this.policeCode = policeCode;
+        this.policeName = policeName;
+        this.telphone = telphone;
+        this.officeCode = officeCode;
+        this.officeDistrict = officeDistrict;
+        this.officeName = officeName;
+    }
+*/
     public String getPoliceName() {
         return policeName;
     }
@@ -71,5 +95,27 @@ public class RecordPolice {
 
     public void setPoliceCode(String policeCode) {
         this.policeCode = policeCode;
+    }
+
+    public String getOfficeDistrict() {
+        return officeDistrict;
+    }
+
+    public void setOfficeDistrict(String officeDistrict) {
+        this.officeDistrict = officeDistrict;
+    }
+
+    @Override
+    public String toString() {
+        return "RecordPolice{" +
+                "id='" + id + '\'' +
+                ", policeCode='" + policeCode + '\'' +
+                ", policeName='" + policeName + '\'' +
+                ", telphone='" + telphone + '\'' +
+                ", officeCode='" + officeCode + '\'' +
+                ", officeDistrict='" + officeDistrict + '\'' +
+                ", officeName='" + officeName + '\'' +
+                ", isDelete=" + isDelete +
+                '}';
     }
 }

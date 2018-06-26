@@ -223,11 +223,21 @@ public class UserServiceImpl implements UserService {
         }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
             list = userDao.selectByDistrict(districtIds[0]+districtIds[1]);
         }else {
-            list = userDao.selectByDistrict(id.toString());
+            list = userDao.selectByDistrict(id);
         }
         PageHelper.startPage(pageSum,pageNum);
         PageInfo<User> result = new PageInfo(list);
         return result;
+    }
+
+    /**
+     *根据电话删除用户
+     * @param phone
+     * @return
+     */
+    @Override
+    public int deleteByTelphone(String phone) {
+        return userDao.deleteByTelphone(phone);
     }
 
 

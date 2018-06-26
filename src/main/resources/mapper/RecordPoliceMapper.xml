@@ -7,12 +7,13 @@
     <result column="police_name" property="policeName" jdbcType="VARCHAR" />
     <result column="telphone" property="telphone" jdbcType="VARCHAR" />
     <result column="office_code" property="officeCode" jdbcType="VARCHAR" />
+    <result column="office_District" property="officeDistrict" jdbcType="VARCHAR"/>
     <result column="office_name" property="officeName" jdbcType="VARCHAR" />
     <result column="is_delete" property="isDelete" jdbcType="BIT"/>
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, police_code, police_name, telphone, office_code, office_name,is_delete
+    id, police_code, police_name, telphone, office_code, office_district,office_name,is_delete
   </sql>
   <select id="selectAllPolice" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"></include>
@@ -21,39 +22,46 @@
 
   <select id="selectByOfficeCode" resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT <include refid="Base_Column_List"></include>
-    FROM record_police WHERE office_code = #{officeCode,jdbcType=VARCHAR}
+    FROM record_police WHERE office_code = #{officeCode,jdbcType=VARCHAR} AND  is_delete = 0;
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.dhht.model.RecordPolice" >
+  <select id="selectByPoliceCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from organ_police
-    where id = #{id,jdbcType=CHAR}
-      and police_code = #{policeCode,jdbcType=CHAR}
+    from record_police
+    where  police_code = #{policeCode,jdbcType=CHAR}
+     AND  is_delete = 0;
   </select>
-  <update id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from record_police
+    where  id = #{id,jdbcType=CHAR} AND  is_delete = 0;
+  </select>
+  <update id="deleteByTelphone" parameterType="java.lang.String" >
     UPDATE  record_police
     set is_delete = 1
-    where id = #{id,jdbcType=CHAR}
+    where telphone = #{telphone,jdbcType=VARCHAR}and isdelete = 0;
   </update>
 
   <insert id="insert" parameterType="com.dhht.model.RecordPolice" >
     insert into record_police (id, police_code, police_name,
       telphone, office_district, office_code, 
-      office_name)
-    values (#{id,jdbcType=CHAR}, #{policeCode,jdbcType=CHAR}, #{policeName,jdbcType=VARCHAR}, 
+      office_name,is_delete)
+    values (#{id,jdbcType=CHAR}, #{policeCode,jdbcType=VARCHAR}, #{policeName,jdbcType=VARCHAR},
       #{telphone,jdbcType=VARCHAR}, #{officeDistrict,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, 
-      #{officeName,jdbcType=VARCHAR})
+      #{officeName,jdbcType=VARCHAR},0)
   </insert>
 
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.RecordPolice" >
     update record_police
-    set police_name = #{policeName,jdbcType=VARCHAR},
+    set
+      police_code = #{policeCode,jdbcType=CHAR},
+      police_name = #{policeName,jdbcType=VARCHAR},
       telphone = #{telphone,jdbcType=VARCHAR},
       office_district = #{officeDistrict,jdbcType=VARCHAR},
       office_code = #{officeCode,jdbcType=VARCHAR},
       office_name = #{officeName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
-      and police_code = #{policeCode,jdbcType=CHAR}
   </update>
 </mapper>

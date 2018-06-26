@@ -9,11 +9,13 @@ public interface PoliceService {
 
     PageInfo<RecordPolice> selectByOfficeCode(String code, int Sum, int Num);
 
-    boolean deleteByPrimaryKey(String key);
+    boolean deleteByTelphone(String phone);
 
-    int insert(RecordPolice record);
+    boolean insert(RecordPolice record);
 
-    RecordPolice selectByPrimaryKey(String key);
+    RecordPolice selectByPoliceCode(String code);
 
-    int updateByPrimaryKey(RecordPolice record);
+    boolean updateByPrimaryKey(RecordPolice record);
+
+    RecordPolice selectById(String id);
 }

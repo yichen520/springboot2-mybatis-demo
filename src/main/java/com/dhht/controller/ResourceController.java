@@ -119,7 +119,7 @@ public class ResourceController {
     }
 
     @Log("修改资源")
-    @RequestMapping(value = "/update",method = RequestMethod.GET)
+    @RequestMapping(value = "/update")
     public JsonObjectBO updateResource(@RequestBody Resource resource){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();

@@ -9,15 +9,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecordPoliceMapper {
 
-    int deleteByPrimaryKey(String id);
+    int deleteByTelphone(String telphone);
 
     int insert(RecordPolice record);
 
-    RecordPolice selectByPrimaryKey(String key);
+    RecordPolice selectByPoliceCode(String policeCode);
 
     int updateByPrimaryKey(RecordPolice record);
 
     List<RecordPolice> selectByOfficeCode(String officeCode);
 
     List<RecordPolice> selectAllPolice();
+
+    RecordPolice selectById(String id);
 }
