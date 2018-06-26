@@ -17,7 +17,7 @@
   </sql>
   <select id="selectAllPolice" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"></include>
-    FROM record_police AND is_delete = 0;
+    FROM record_police WHERE is_delete = 0
   </select>
 
   <select id="selectByOfficeCode" resultMap="BaseResultMap" parameterType="java.lang.String">
