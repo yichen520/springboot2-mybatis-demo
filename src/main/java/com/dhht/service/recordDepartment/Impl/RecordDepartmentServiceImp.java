@@ -5,6 +5,7 @@ import com.dhht.model.RecordDepartment;
 import com.dhht.model.User;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,9 +45,23 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         return pageInfo;
     }
 
+    /**
+     * 不带分页的查询区域下的备案单位
+     * @param id
+     * @return
+     */
     @Override
     public List<RecordDepartment> selectByDistrictId(String id) {
-        return recordDepartmentMapper.selectByDistrictId(id);
+        List<RecordDepartment> list = new ArrayList<>();
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            list = recordDepartmentMapper.selectByDistrictId(districtIds[0]);
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            list = recordDepartmentMapper.selectByDistrictId(districtIds[0]+districtIds[1]);
+        }else {
+            list = recordDepartmentMapper.selectByDistrictId(id);
+        }
+        return list;
     }
 
     /**

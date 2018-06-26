@@ -31,13 +31,13 @@ public class PoliceController {
     @Autowired
     private RecordDepartmentService recordDepartmentService;
 
-    private JSONObject jsonObject = new JSONObject();
+    //private JSONObject jsonObject = new JSONObject();
 
     @RequestMapping(value = "/info")
     public JsonObjectBO selectAllPolice(@RequestBody Map map){
         int pageSum = (Integer)map.get("pageSize");
         int pageNum = (Integer)map.get("pageNum");
-
+        JSONObject jsonObject = new JSONObject();
         PageInfo<RecordPolice> pageInfo = new PageInfo<RecordPolice>();
         try{
             pageInfo = policeService.selectAllPolice(pageSum,pageNum);
@@ -53,6 +53,7 @@ public class PoliceController {
         int pageSum = (Integer) map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
         String Code = (String) map.get("code");
+        JSONObject jsonObject = new JSONObject();
 
         PageInfo<RecordPolice> recordPolice = new PageInfo<RecordPolice>();
         try {
@@ -102,6 +103,8 @@ public class PoliceController {
     public JsonObjectBO selectByPoliceCode(@RequestBody Map map){
         String code = (String)map.get("code");
         RecordPolice recordPolice = new RecordPolice();
+        JSONObject jsonObject = new JSONObject();
+
         try {
             recordPolice = policeService.selectByPoliceCode(code);
             jsonObject.put("police",recordPolice);
@@ -131,6 +134,7 @@ public class PoliceController {
     public JsonObjectBO selectById(@RequestBody Map map){
         String id = (String)map.get("id");
         RecordPolice recordPolice = new RecordPolice();
+        JSONObject jsonObject = new JSONObject();
 
         try{
             recordPolice = policeService.selectById(id);
@@ -144,6 +148,7 @@ public class PoliceController {
     @RequestMapping(value = "/selectDepartment")
     public JsonObjectBO selectDepartment(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
+        JSONObject jsonObject = new JSONObject();
         List<RecordDepartment> recordDepartments =  new ArrayList<>();
         try {
             recordDepartments = recordDepartmentService.selectByDistrictId(user.getDistrictId());
@@ -153,5 +158,4 @@ public class PoliceController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
-
 }

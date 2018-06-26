@@ -187,7 +187,7 @@
     </update>
     
     <select id="selectByDistrict" resultMap="simpleResultMap" parameterType="java.lang.String">
-        SELECT <include refid="simple_User_List"></include> FROM sys_user WHERE district_id like '%${id}%'
+        SELECT <include refid="simple_User_List"></include> FROM sys_user WHERE district_id like '${id}%'
     </select>
 
 

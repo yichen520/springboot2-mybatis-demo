@@ -24,7 +24,7 @@
   </select>
    
   <select id="selectByDistrictId" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address = #{id} and is_delete = 0
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address = '${id}%' and is_delete = 0
   </select>
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.RecordDepartment">
