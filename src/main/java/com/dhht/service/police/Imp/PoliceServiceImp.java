@@ -5,11 +5,14 @@ import com.dhht.dao.UserDao;
 import com.dhht.model.RecordPolice;
 import com.dhht.model.User;
 import com.dhht.service.police.PoliceService;
+import com.dhht.service.user.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import com.dhht.util.*;
 
 import java.util.List;
 
@@ -19,8 +22,11 @@ public class PoliceServiceImp implements PoliceService{
 
     @Autowired
     private RecordPoliceMapper recordPoliceMapper;
+   @Autowired
+    private UserService userService;
     @Autowired
     private UserDao userDao;
+
     @Override
     public PageInfo<RecordPolice> selectAllPolice(int pageSum, int pageNum) {
         List<RecordPolice> recordPolice = recordPoliceMapper.selectAllPolice();
@@ -38,38 +44,81 @@ public class PoliceServiceImp implements PoliceService{
     }
 
     @Override
-    public boolean deleteByPrimaryKey(String id) {
-       int p =  recordPoliceMapper.deleteByPrimaryKey(id);
-       int u =  userDao.delete(id);
+    public boolean deleteByTelphone(String phone) {
+       int p =  recordPoliceMapper.deleteByTelphone(phone);
+       int u =  userDao.deleteByTelphone(phone);
        if(p+u==2){
            return true;
        }
-       return false;
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
+    }
+
+
+    @Override
+    public boolean insert(RecordPolice record) {
+         record.setId(UUIDUtil.generate());
+         int r = recordPoliceMapper.insert(record);
+         int u = userService.insert(setUser(record,1)).getCode();
+        if(r+u==2){
+            return true;
+        }
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
+
     }
 
     @Override
-    public int insert(RecordPolice record) {
-       return recordPoliceMapper.insert(record);
+    public RecordPolice selectByPoliceCode(String code) {
+        RecordPolice recordPolice = recordPoliceMapper.selectByPoliceCode(code);
+        return recordPolice;
     }
 
     @Override
-    public RecordPolice selectByPrimaryKey(String key) {
-        return null;
+    public boolean updateByPrimaryKey(RecordPolice record) {
+        int u = userDao.update(setUser(record,2));
+        int r = recordPoliceMapper.updateByPrimaryKey(record);
+
+        if(r+u==2){
+            return true;
+        }
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
     }
 
     @Override
-    public int updateByPrimaryKey(RecordPolice record) {
-        return 0;
+    public RecordPolice selectById(String id) {
+        RecordPolice recordPolice = recordPoliceMapper.selectById(id);
+        return recordPolice;
     }
 
-    public User setUserByType(RecordPolice recordPolice, int type){
+    public User setUser(RecordPolice recordPolice,int type) {
         User user = new User();
-        switch (type){
-            //添加用户
+        switch (type) {
             case 1:
+                System.out.println(1);
+                user.setId(UUIDUtil.generate());
+                //user.setPassword(MD5Util.toMd5("123456"));
+                user.setUserName(recordPolice.getTelphone());
+                user.setRealName(recordPolice.getPoliceName());
+                user.setTelphone(recordPolice.getTelphone());
+                user.setRoleId("MJ");
+                user.setDistrictId(recordPolice.getOfficeDistrict());
+                break;
 
             case 2:
+                String id = recordPolice.getId();
+                RecordPolice oldDate = recordPoliceMapper.selectById(id);
+                System.out.println(oldDate.toString());
+                user = userDao.findByTelphone(oldDate.getTelphone());
+                user.setUserName(recordPolice.getTelphone());
+                user.setRealName(recordPolice.getPoliceName());
+                user.setTelphone(recordPolice.getTelphone());
+                user.setDistrictId(recordPolice.getOfficeDistrict());
+                break;
 
+            default:
+                break;
         }
         return user;
     }

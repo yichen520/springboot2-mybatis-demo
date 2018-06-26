@@ -30,9 +30,9 @@ public interface DistrictMapper {
 
     int updateByPrimaryKey(District record);
 
-    District getByNo(String regionId);
+    District getByNo(String districtId);
 
-    District getById(String regionId);
+    District getById(String districtId);
 
     //查询所有的地区信息
     List<District> selectAllDistrict();

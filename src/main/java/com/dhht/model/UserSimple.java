@@ -10,6 +10,7 @@ public class UserSimple {
     private String RoleId;
     private boolean IsLocked;
     private String districtId;
+    private String telphone;
 
 
 }

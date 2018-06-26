@@ -71,6 +71,9 @@ public class SmsSendServiceImpl implements SmsSendService, InitializingBean {
         sender = new SmsSingleSender(smsAppConfigInfo.getAppId(), smsAppConfigInfo.getAppKey());
     }
 
+
+
+
     public void sendPhoneMessage(String phone,ArrayList<String> params){
         try {
             int appid = 1400047268;
@@ -90,6 +93,12 @@ public class SmsSendServiceImpl implements SmsSendService, InitializingBean {
 
     }
 
+    /**
+     * 自定义密码 短信发送
+     * @param phone
+     * @param code
+     * @return
+     */
     @Override
     public JsonObjectBO sendMessage(String phone,String code) {
         try {

@@ -20,7 +20,7 @@
   </select>
 
     <sql id="simple_User_List" >
-        id, user_name, real_name, role_id, is_locked, is_deleted, district_id
+        id, user_name, real_name, role_id, is_locked, is_deleted, district_id,telphone
     </sql>
 
     <resultMap id="simpleResultMap" type="com.dhht.model.UserSimple">
@@ -30,6 +30,7 @@
         <result column="role_id" property="RoleId" jdbcType="VARCHAR" />
         <result column="is_locked" property="IsLocked" jdbcType="BIT"/>
         <result column="district_id" property="districtId" jdbcType="VARCHAR"/>
+        <result column="telphone" property="telphone" jdbcType="VARCHAR"/>
     </resultMap>
 
 
@@ -143,6 +144,9 @@
        DELETE  FROM sys_user WHERE id = #{id}
    </delete>
 
+    <delete id="deleteByTelphone" parameterType="java.lang.String">
+        DELETE FROM sys_user WHERE telphone = #{telphone}
+    </delete>
 
 
     <select id="findAllSuser" resultMap="queryForListMap">
@@ -217,7 +221,7 @@
     </select>
 
     <select id="find"  resultType="com.dhht.model.User">
-        SELECT id,user_name ,real_name,is_locked,telphone FROM sys_user
+        SELECT id,user_name as userName,real_name as realName,is_locked as isLocked,telphone as telphone,district_id as districtId FROM sys_user
         <where>
             <if test="districtId !=null and districtId !=''">
                 district_id LIKE '%${districtId}%'
