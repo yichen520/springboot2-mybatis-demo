@@ -5,16 +5,17 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 public class JsonObjectBO {
+
     private int code;  //业务状态（编码）
     private String message;  //反馈信息
     private JSONObject data;  //业务数据
 
     // 成功
-    private static final Integer SUCCESS = 1;
+    public static final int SUCCESS = 1;
     // 成功
-    private static final Integer EXCEPTION = 0;
+    public static final int EXCEPTION = 0;
     // 异常 失败
-    private static final Integer FAIL = -1;
+    public static final int FAIL = -1;
 
 
     public JsonObjectBO(int code, String message, JSONObject data) {

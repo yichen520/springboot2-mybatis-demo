@@ -7,7 +7,7 @@ import com.dhht.common.JsonObjectBO;
  * 主动上锁和主动解锁
  */
 public interface UserLockingService {
-    JsonObjectBO activeLocking(String loginTime);
+    JsonObjectBO activeLocking(String id);
 
     JsonObjectBO activeUnlocking(String id);
 }

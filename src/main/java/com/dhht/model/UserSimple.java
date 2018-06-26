@@ -8,8 +8,9 @@ public class UserSimple {
     private String UserName;
     private String RealName;
     private String RoleId;
-    private boolean IsLock;
+    private boolean IsLocked;
     private String districtId;
+    private String telphone;
 
 
 }

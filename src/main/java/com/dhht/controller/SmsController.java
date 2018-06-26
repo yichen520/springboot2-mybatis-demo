@@ -26,9 +26,6 @@ public class SmsController {
     private SMSCodeDao smsCodeDao;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserLoginService userLoginService;
 
 

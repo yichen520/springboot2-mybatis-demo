@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 import com.dhht.annotation.Log;
+import com.dhht.annotation.Sync;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Makedepartment;
 import com.dhht.model.Menus;
@@ -97,6 +98,7 @@ public class ResourceController {
     }
 
    @Log("添加资源")
+   @Sync
     @RequestMapping(value = "/add")
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         //为资源添加一个UUID
@@ -106,11 +108,12 @@ public class ResourceController {
         }
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-
+       jsonObject.put("resource",resource);
         int result = resourceService.insertResource(resource);
         if(result>0){
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("添加资源成功");
+            jsonObjectBO.setData(jsonObject);
         }else {
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("添加资源失败");
