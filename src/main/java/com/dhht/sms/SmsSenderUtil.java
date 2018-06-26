@@ -127,13 +127,7 @@ class SmsSenderUtil {
     public SmsSingleSenderResult jsonToSmsSingleSenderResult(JSONObject json) throws JSONException{
     	SmsSingleSenderResult result = new SmsSingleSenderResult();
 
-    	result.result = json.getInt("result");
-    	result.errMsg = json.getString("errmsg");
-    	if (0 == result.result) {
-	    	result.ext = json.getString("ext");
-	    	result.sid = json.getString("sid");
-	    	result.fee = json.getInt("fee");
-    	}
+
     	return result;
     }
 

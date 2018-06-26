@@ -39,7 +39,7 @@ public class AutoUploadTempFileToFtp implements InitializingBean{
                     } catch (InterruptedException e) {
 	                    e.printStackTrace();
                     }
-					System.out.println("执行文件上传");
+
 					try {
 		                File[] files = tempDir.listFiles();
 		                if(files == null || files.length == 0) {

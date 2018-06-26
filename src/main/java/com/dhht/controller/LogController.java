@@ -18,20 +18,37 @@ public class LogController {
     @Autowired
     private LogService logService;
 
+//    @RequestMapping(value = "info")
+//    public JsonObjectBO selectLog(@RequestBody Map map){
+//        int pageSize = (Integer) map.get("pageSize");
+//        int pageNum = (Integer) map.get("pageNum");
+//
+//
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        JSONObject jsonObject = new JSONObject();
+//
+//        PageInfo<SysLog> logs = logService.selectAllLog(pageNum,pageSize);
+//        jsonObject.put("log",logs);
+//        jsonObjectBO.setData(jsonObject);
+//        jsonObjectBO.setCode(1);
+//        return jsonObjectBO;
+
+//    }
+
     @RequestMapping(value = "info")
-    public JsonObjectBO selectLog(@RequestBody Map map){
+    public JsonObjectBO findLog(@RequestBody Map map){
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
-
+        String start = (String) map.get("start");
+        String end = (String) map.get("end");
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-
-        PageInfo<SysLog> logs = logService.selectAllLog(pageNum,pageSize);
+        PageInfo<SysLog> logs = logService.findLog(start,end,pageNum,pageSize);
         jsonObject.put("log",logs);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
+        jsonObjectBO.setMessage("查询成功");
         return jsonObjectBO;
-
     }
 }
