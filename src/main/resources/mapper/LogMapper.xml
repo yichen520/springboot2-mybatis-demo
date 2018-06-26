@@ -21,4 +21,18 @@
      insert into sys_log (log_type,log_result,log_user,log_time,ip) values(#{LogType,jdbcType=VARCHAR},#{LogResult,jdbcType=VARCHAR},
      #{LogUser,jdbcType=VARCHAR},#{LogTime,jdbcType=VARCHAR},#{ip,jdbcType=VARCHAR})
   </insert>
+
+  <select id="find" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM sys_log
+    WHERE log_time
+    BETWEEN
+    <if test="start != null and start!=''">
+     #{start}
+    </if>
+    <if test="end !=null and end!=''">
+    AND #{end}
+    </if>
+  </select>
 </mapper>
