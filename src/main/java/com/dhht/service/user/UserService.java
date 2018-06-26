@@ -27,7 +27,7 @@ public interface UserService  {
 
     PageInfo<User> selectByDistrict(String id,int pageSum,int pageNum);
 
-
+    int deleteByTelphone(String phone);
 
     }
 

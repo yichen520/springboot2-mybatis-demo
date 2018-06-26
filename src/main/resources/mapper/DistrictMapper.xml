@@ -92,7 +92,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectAllDistrict" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List" /> FROM sys_district;
+    SELECT <include refid="Base_Column_List" /> FROM sys_district
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from sys_district

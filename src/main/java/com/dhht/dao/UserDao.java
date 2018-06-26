@@ -52,5 +52,8 @@ public interface UserDao {
 
    int updateUser(User users);
 
+   //根据电话删除用户
+    int deleteByTelphone(String telphone);
+
 
 }
