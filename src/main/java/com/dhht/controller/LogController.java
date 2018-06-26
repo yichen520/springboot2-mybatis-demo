@@ -18,24 +18,24 @@ public class LogController {
     @Autowired
     private LogService logService;
 
+//    @RequestMapping(value = "info")
+//    public JsonObjectBO selectLog(@RequestBody Map map){
+//        int pageSize = (Integer) map.get("pageSize");
+//        int pageNum = (Integer) map.get("pageNum");
+//
+//
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        JSONObject jsonObject = new JSONObject();
+//
+//        PageInfo<SysLog> logs = logService.selectAllLog(pageNum,pageSize);
+//        jsonObject.put("log",logs);
+//        jsonObjectBO.setData(jsonObject);
+//        jsonObjectBO.setCode(1);
+//        return jsonObjectBO;
+
+//    }
+
     @RequestMapping(value = "info")
-    public JsonObjectBO selectLog(@RequestBody Map map){
-        int pageSize = (Integer) map.get("pageSize");
-        int pageNum = (Integer) map.get("pageNum");
-
-
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-
-        PageInfo<SysLog> logs = logService.selectAllLog(pageNum,pageSize);
-        jsonObject.put("log",logs);
-        jsonObjectBO.setData(jsonObject);
-        jsonObjectBO.setCode(1);
-        return jsonObjectBO;
-
-    }
-
-    @RequestMapping(value = "find")
     public JsonObjectBO findLog(@RequestBody Map map){
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
