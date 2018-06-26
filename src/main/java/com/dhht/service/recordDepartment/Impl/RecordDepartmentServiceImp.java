@@ -2,18 +2,112 @@ package com.dhht.service.recordDepartment.Impl;
 
 import com.dhht.dao.RecordDepartmentMapper;
 import com.dhht.model.RecordDepartment;
+import com.dhht.model.User;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.user.UserService;
+import com.dhht.util.UUIDUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
+import java.util.UUID;
+
+/**
+ * 2018/6/26 create by fyc
+ */
 
 @Service(value = "RecordDepartmentService")
+@Transactional
 public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
+    @Autowired
+    private UserService userService;
+
+    /**
+     * 带分页的查询区域下的备案单位
+     * @param id
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
     @Override
-    public List<RecordDepartment> selectByDistrictId(String Id) {
-        return recordDepartmentMapper.selectByDistrictId(Id);
+    public PageInfo<RecordDepartment> selectByDistrictId(String id,int pageSize,int pageNum ) {
+        List<RecordDepartment> recordDepartments = recordDepartmentMapper.selectByDistrictId(id);
+        PageHelper.startPage(pageSize,pageNum);
+        PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
+        return pageInfo;
     }
+
+    @Override
+    public List<RecordDepartment> selectByDistrictId(String id) {
+        return recordDepartmentMapper.selectByDistrictId(id);
+    }
+
+    /**
+     * 带分页查询所有的备案单位
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    @Override
+    public PageInfo<RecordDepartment> selectAllRecordDepartMent(int pageSize, int pageNum) {
+        List<RecordDepartment> recordDepartments= recordDepartmentMapper.selectAllRecordDepartment();
+        PageHelper.startPage(pageSize,pageNum);
+        PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
+        return pageInfo;
+    }
+
+
+
+    /**
+     * 添加备案单位
+     * @param recordDepartment
+     * @return
+     */
+    @Override
+    public Boolean insert(RecordDepartment recordDepartment) {
+        recordDepartment.setId(UUIDUtil.generate());
+        int r = recordDepartmentMapper.insert(recordDepartment);
+        int u = userService.insert(setUserByType(recordDepartment,1)).getCode();
+        if(r+u==2){
+            return true;
+        }
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
+    }
+
+    @Override
+    public RecordDepartment selectByCode(String code) {
+        RecordDepartment recordDepartment = recordDepartmentMapper.selectByCode(code);
+        return recordDepartment;
+    }
+
+    /**
+     * 设置User
+     * @param recordDepartment
+     * @param type
+     * @return
+     */
+    public User setUserByType(RecordDepartment recordDepartment,int type){
+        User user = new User();
+        switch (type){
+            case 1:
+                user.setUserName(recordDepartment.getTelphone());
+                user.setRealName(recordDepartment.getDepartmentName());
+                user.setRoleId("BADW");
+                user.setTelphone(recordDepartment.getTelphone());
+                user.setDistrictId(recordDepartment.getDepartmentAddress());
+                break;
+            default:
+                break;
+        }
+        return user;
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package com.dhht.service.police.Imp;
 
+import com.dhht.dao.RecordDepartmentMapper;
 import com.dhht.dao.RecordPoliceMapper;
 import com.dhht.dao.UserDao;
+import com.dhht.model.RecordDepartment;
 import com.dhht.model.RecordPolice;
 import com.dhht.model.User;
 import com.dhht.service.police.PoliceService;
@@ -26,6 +28,8 @@ public class PoliceServiceImp implements PoliceService{
     private UserService userService;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private RecordDepartmentMapper recordDepartmentMapper;
 
     @Override
     public PageInfo<RecordPolice> selectAllPolice(int pageSum, int pageNum) {
@@ -58,6 +62,9 @@ public class PoliceServiceImp implements PoliceService{
     @Override
     public boolean insert(RecordPolice record) {
          record.setId(UUIDUtil.generate());
+        RecordDepartment recordDepartment = getRecordDepartment(record.getOfficeCode());
+        record.setOfficeName(recordDepartment.getDepartmentName());
+        record.setOfficeDistrict(recordDepartment.getDepartmentAddress());
          int r = recordPoliceMapper.insert(record);
          int u = userService.insert(setUser(record,1)).getCode();
         if(r+u==2){
@@ -77,6 +84,9 @@ public class PoliceServiceImp implements PoliceService{
     @Override
     public boolean updateByPrimaryKey(RecordPolice record) {
         int u = userDao.update(setUser(record,2));
+        RecordDepartment recordDepartment = getRecordDepartment(record.getOfficeCode());
+        record.setOfficeName(recordDepartment.getDepartmentName());
+        record.setOfficeDistrict(recordDepartment.getDepartmentAddress());
         int r = recordPoliceMapper.updateByPrimaryKey(record);
 
         if(r+u==2){
@@ -92,6 +102,12 @@ public class PoliceServiceImp implements PoliceService{
         return recordPolice;
     }
 
+    /**
+     * 去设置User
+     * @param recordPolice
+     * @param type
+     * @return
+     */
     public User setUser(RecordPolice recordPolice,int type) {
         User user = new User();
         switch (type) {
@@ -121,5 +137,14 @@ public class PoliceServiceImp implements PoliceService{
                 break;
         }
         return user;
+    }
+
+    /**
+     * 获取备案单位信息
+     * @param code
+     * @return
+     */
+    public RecordDepartment getRecordDepartment(String code){
+        return recordDepartmentMapper.selectByCode(code);
     }
 }

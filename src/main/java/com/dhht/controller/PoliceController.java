@@ -2,8 +2,12 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.model.RecordDepartment;
 import com.dhht.model.RecordPolice;
+import com.dhht.model.User;
 import com.dhht.service.police.PoliceService;
+import com.dhht.service.recordDepartment.Impl.RecordDepartmentServiceImp;
+import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -11,14 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/record/police")
+@RequestMapping(value = "/sys/police")
+
 public class PoliceController {
 
     @Autowired
     private PoliceService policeService;
+
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
 
     private JSONObject jsonObject = new JSONObject();
 
@@ -126,6 +137,19 @@ public class PoliceController {
             jsonObject.put("police",recordPolice);
         }catch (Exception e ){
             JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+    @RequestMapping(value = "/selectDepartment")
+    public JsonObjectBO selectDepartment(HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        List<RecordDepartment> recordDepartments =  new ArrayList<>();
+        try {
+            recordDepartments = recordDepartmentService.selectByDistrictId(user.getDistrictId());
+            jsonObject.put("department",recordDepartments);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
