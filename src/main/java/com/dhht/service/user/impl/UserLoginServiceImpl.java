@@ -10,6 +10,7 @@ import com.dhht.service.user.UserLoginService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,11 +42,10 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Autowired
     private RoleResourceDao roleResourceDao;
-//    @Value("${loginError.Time}")
-    private long loginErrorTime = 5;
-//
-//    @Value("${loginError.Date}")
-   private long loginErrorDate = 60;
+    @Value("${loginError.Time}")
+    private long loginErrorTime ;
+    @Value("${loginError.Date}")
+   private long loginErrorDate;
 
     /**
      * 6位简单密码
@@ -189,8 +189,6 @@ public class UserLoginServiceImpl implements UserLoginService {
             return map;
 
         } catch (Exception e) {
-            jsonObjectBO.setMessage("登录失败");
-            jsonObjectBO.setCode(-1);
             map.put("status", "error");
             map.put("currentAuthority", "guest");
             map.put("message","登录失败！");
