@@ -245,10 +245,10 @@
   </update>
 
   <select id="getByNo" resultType="com.dhht.model.District">
-    select province_name,city_name,district_name from sys_district WHERE district_id = #{regionId};
+    select province_name,city_name,district_name from sys_district WHERE district_id = #{districtId}
   </select>
 
   <select id="getById" resultType="com.dhht.model.District">
-    SELECT province_id,city_id FROM sys_district WHERE district_id = #{regionId};
+    SELECT province_id,city_id FROM sys_district WHERE district_id = #{districtId}
   </select>
 </mapper>
