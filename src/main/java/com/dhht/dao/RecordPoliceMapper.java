@@ -21,5 +21,8 @@ public interface RecordPoliceMapper {
 
     List<RecordPolice> selectAllPolice();
 
+    List<RecordPolice> selectByRole(String officeDistrict);
+
     RecordPolice selectById(String id);
+
 }

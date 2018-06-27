@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dhht.dao.RecordDepartmentMapper">
   <resultMap id="BaseResultMap" type="com.dhht.model.RecordDepartment">
+    <id column="id" jdbcType="VARCHAR"  property="id"/>
     <id column="department_code" jdbcType="VARCHAR" property="departmentCode" />
     <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
     <result column="principal_name" jdbcType="VARCHAR" property="principalName" />
@@ -10,15 +11,20 @@
     <result column="department_address_detail" jdbcType="VARCHAR" property="departmentAddressDetail" />
     <result column="telphone" jdbcType="VARCHAR" property="telphone" />
     <result column="postal_code" jdbcType="VARCHAR" property="postalCode" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete"/>
   </resultMap>
 
   <sql id="Base_Column_List">
-    department_code, department_name, principal_name, principal_id, department_address, 
-    department_address_detail, telphone, postal_code
+    id,department_code, department_name, principal_name, principal_id, department_address,
+    department_address_detail, telphone, postal_code,is_delete
   </sql>
+
+  <select id="selectAllRecordDepartment" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include> FROM record_department
+  </select>
    
   <select id="selectByDistrictId" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address = #{id}
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address = '${id}%' and is_delete = 0
   </select>
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.RecordDepartment">
@@ -34,8 +40,13 @@
   </update>
 
   <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
-    INSERT INTO record_department (department_code,department_name,department_name,principal_id,department_address,department_address_detail,telphone,postal_code)
-    VALUE 
+    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete)
+    VALUES (#{id,jdbcType=CHAR},#{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},#{principalName,jdbcType=VARCHAR},#{principalId,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR},
+     #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0)
   </insert>
+  
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_code = #{departmentCode,jdbcType=VARCHAR}
+  </select>
 
 </mapper>

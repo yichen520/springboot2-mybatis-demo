@@ -1,6 +1,9 @@
 package com.dhht.model;
 
 public class RecordDepartment {
+
+    private String id;
+
     private String departmentCode;
 
     private String departmentName;
@@ -17,9 +20,12 @@ public class RecordDepartment {
 
     private String postalCode;
 
+    private Boolean isDelete;
+
     public String getDepartmentCode() {
         return departmentCode;
     }
+
 
     public void setDepartmentCode(String departmentCode) {
         this.departmentCode = departmentCode == null ? null : departmentCode.trim();
@@ -79,5 +85,21 @@ public class RecordDepartment {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode == null ? null : postalCode.trim();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Boolean getDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(Boolean delete) {
+        isDelete = delete;
     }
 }
