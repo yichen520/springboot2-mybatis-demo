@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.dhht.util.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service(value = "PoliceService")
@@ -32,9 +33,9 @@ public class PoliceServiceImp implements PoliceService{
     private RecordDepartmentMapper recordDepartmentMapper;
 
     @Override
-    public PageInfo<RecordPolice> selectAllPolice(int pageSum, int pageNum) {
+    public PageInfo<RecordPolice> selectAllPolice(int pageSize, int pageNum) {
         List<RecordPolice> recordPolice = recordPoliceMapper.selectAllPolice();
-        PageHelper.startPage(pageSum,pageNum);
+        PageHelper.startPage(pageNum,pageSize);
         PageInfo<RecordPolice> pageInfo = new PageInfo(recordPolice);
         return pageInfo;
     }
@@ -48,9 +49,17 @@ public class PoliceServiceImp implements PoliceService{
     }
 
     @Override
-    public PageInfo<RecordPolice> selectByRole(String officeDistrictId, int pageSum, int pageNum) {
-        List<RecordPolice> recordPolice = recordPoliceMapper.selectByRole(officeDistrictId);
-        PageHelper.startPage(pageSum,pageNum);
+    public PageInfo<RecordPolice> selectByRole(String officeDistrictId, int pageSize, int pageNum) {
+        List<RecordPolice> recordPolice = new ArrayList<>();
+        String districtIds[] = StringUtil.DistrictUtil(officeDistrictId);
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            recordPolice = recordPoliceMapper.selectByRole(districtIds[0]);
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            recordPolice = recordPoliceMapper.selectByRole(districtIds[0]+districtIds[1]);
+        }else {
+            recordPolice = recordPoliceMapper.selectByRole(officeDistrictId);
+        }
+        PageHelper.startPage(pageNum,pageSize);
         PageInfo<RecordPolice> pageInfo = new PageInfo(recordPolice);
         return pageInfo;
     }
@@ -69,7 +78,7 @@ public class PoliceServiceImp implements PoliceService{
 
     @Override
     public boolean insert(RecordPolice record) {
-         record.setId(UUIDUtil.generate());
+        record.setId(UUIDUtil.generate());
         RecordDepartment recordDepartment = getRecordDepartment(record.getOfficeCode());
         record.setOfficeName(recordDepartment.getDepartmentName());
         record.setOfficeDistrict(recordDepartment.getDepartmentAddress());
@@ -91,10 +100,10 @@ public class PoliceServiceImp implements PoliceService{
 
     @Override
     public boolean updateByPrimaryKey(RecordPolice record) {
-        int u = userDao.update(setUser(record,2));
         RecordDepartment recordDepartment = getRecordDepartment(record.getOfficeCode());
         record.setOfficeName(recordDepartment.getDepartmentName());
         record.setOfficeDistrict(recordDepartment.getDepartmentAddress());
+        int u = userDao.update(setUser(record,2));
         int r = recordPoliceMapper.updateByPrimaryKey(record);
 
         if(r+u==2){

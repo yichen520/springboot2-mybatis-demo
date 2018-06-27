@@ -48,7 +48,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         }else {
             recordDepartments = recordDepartmentMapper.selectByDistrictId(id);
         }
-        PageHelper.startPage(pageSize,pageNum);
+        PageHelper.startPage(pageNum,pageSize);
         PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
         return pageInfo;
     }
@@ -81,7 +81,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public PageInfo<RecordDepartment> selectAllRecordDepartMent(int pageSize, int pageNum) {
         List<RecordDepartment> recordDepartments= recordDepartmentMapper.selectAllRecordDepartment();
-        PageHelper.startPage(pageSize,pageNum);
+        PageHelper.startPage(pageNum,pageSize);
         PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
         return pageInfo;
     }
