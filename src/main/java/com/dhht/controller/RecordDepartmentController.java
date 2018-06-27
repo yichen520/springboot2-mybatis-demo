@@ -23,14 +23,14 @@ public class RecordDepartmentController {
     @Autowired
     private RecordDepartmentService recordDepartmentService;
 
-    private JSONObject jsonObject = new JSONObject();
+    //private JSONObject jsonObject = new JSONObject();
 
     @RequestMapping(value = "/selectByRole")
     public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest,@RequestBody Map map){
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer)map.get("pageNum");
-
+        JSONObject jsonObject = new JSONObject();
         PageInfo<RecordDepartment> pageInfo = new PageInfo<>();
         try {
             pageInfo = recordDepartmentService.selectByDistrictId(user.getDistrictId(),pageSize,pageNum);
@@ -46,6 +46,7 @@ public class RecordDepartmentController {
         String id = (String) map.get("id");
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer)map.get("pageNum");
+        JSONObject jsonObject = new JSONObject();
 
         PageInfo<RecordDepartment> pageInfo = new PageInfo<>();
         try {
@@ -61,6 +62,7 @@ public class RecordDepartmentController {
     public JsonObjectBO selectAllRecordDepartment(@RequestBody Map map){
         int pageSize = (Integer)map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
+        JSONObject jsonObject = new JSONObject();
 
         PageInfo<RecordDepartment> pageInfo = new PageInfo<>();
         try{
@@ -73,7 +75,7 @@ public class RecordDepartmentController {
     }
 
     @RequestMapping(value = "/insert")
-    public JsonObjectBO insrt(@RequestBody RecordDepartment recordDepartment){
+    public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment){
         boolean result = false;
         try {
             result = recordDepartmentService.insert(recordDepartment);
