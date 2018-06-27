@@ -19,6 +19,9 @@ import com.dhht.util.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 2018/6/22 create by fyc
+ */
 @Service(value = "PoliceService")
 @Transactional
 public class PoliceServiceImp implements PoliceService{
@@ -32,6 +35,12 @@ public class PoliceServiceImp implements PoliceService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
 
+    /**
+     * 分页查找所有民警
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
     @Override
     public PageInfo<RecordPolice> selectAllPolice(int pageSize, int pageNum) {
         List<RecordPolice> recordPolice = recordPoliceMapper.selectAllPolice();
@@ -40,6 +49,13 @@ public class PoliceServiceImp implements PoliceService{
         return pageInfo;
     }
 
+    /**
+     * 分页根据备案单位编号查找民警
+     * @param code
+     * @param pageSum
+     * @param pageNum
+     * @return
+     */
     @Override
     public PageInfo<RecordPolice> selectByOfficeCode(String code, int pageSum, int pageNum) {
         List<RecordPolice> recordPolice = recordPoliceMapper.selectByOfficeCode(code);
@@ -48,6 +64,14 @@ public class PoliceServiceImp implements PoliceService{
         return pageInfo;
     }
 
+
+    /**
+     * 根据权限分页查找备案单位
+     * @param officeDistrictId
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
     @Override
     public PageInfo<RecordPolice> selectByRole(String officeDistrictId, int pageSize, int pageNum) {
         List<RecordPolice> recordPolice = new ArrayList<>();
@@ -64,6 +88,11 @@ public class PoliceServiceImp implements PoliceService{
         return pageInfo;
     }
 
+    /**
+     * 根据电话删除民警
+     * @param phone
+     * @return
+     */
     @Override
     public boolean deleteByTelphone(String phone) {
        int p =  recordPoliceMapper.deleteByTelphone(phone);
@@ -75,7 +104,11 @@ public class PoliceServiceImp implements PoliceService{
         return false;
     }
 
-
+    /**
+     * 新增民警
+     * @param record
+     * @return
+     */
     @Override
     public boolean insert(RecordPolice record) {
         record.setId(UUIDUtil.generate());
@@ -92,12 +125,22 @@ public class PoliceServiceImp implements PoliceService{
 
     }
 
+    /**
+     * 根据警号查找民警
+     * @param code
+     * @return
+     */
     @Override
     public RecordPolice selectByPoliceCode(String code) {
         RecordPolice recordPolice = recordPoliceMapper.selectByPoliceCode(code);
         return recordPolice;
     }
 
+    /**
+     * 修改民警
+     * @param record
+     * @return
+     */
     @Override
     public boolean updateByPrimaryKey(RecordPolice record) {
         RecordDepartment recordDepartment = getRecordDepartment(record.getOfficeCode());
@@ -113,6 +156,11 @@ public class PoliceServiceImp implements PoliceService{
         return false;
     }
 
+    /**
+     * 根据Id查找民警
+     * @param id
+     * @return
+     */
     @Override
     public RecordPolice selectById(String id) {
         RecordPolice recordPolice = recordPoliceMapper.selectById(id);
@@ -142,7 +190,7 @@ public class PoliceServiceImp implements PoliceService{
             case 2:
                 String id = recordPolice.getId();
                 RecordPolice oldDate = recordPoliceMapper.selectById(id);
-                System.out.println(oldDate.toString());
+                //System.out.println(oldDate.toString());
                 user = userDao.findByTelphone(oldDate.getTelphone());
                 user.setUserName(recordPolice.getTelphone());
                 user.setRealName(recordPolice.getPoliceName());

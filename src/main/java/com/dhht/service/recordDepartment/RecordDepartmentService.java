@@ -18,6 +18,8 @@ public interface RecordDepartmentService {
 
     boolean deleteById(String id);
 
+    boolean updateById(RecordDepartment recordDepartment);
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.dhht.service.recordDepartment.Impl;
 
 import com.dhht.dao.RecordDepartmentMapper;
+import com.dhht.dao.UserDao;
 import com.dhht.model.RecordDepartment;
 import com.dhht.model.User;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
@@ -29,6 +30,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     private RecordDepartmentMapper recordDepartmentMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserDao userDao;
 
     /**
      * 带分页的查询区域下的备案单位
@@ -116,6 +119,11 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         return recordDepartment;
     }
 
+    /**
+     * 根据Id删除备案单位
+     * @param id
+     * @return
+     */
     @Override
     public boolean deleteById(String id) {
         RecordDepartment recordDepartment = recordDepartmentMapper.selectById(id);
@@ -129,26 +137,52 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     }
 
     /**
-     * 设置User
+     * 根据id修改备案单位
      * @param recordDepartment
-     * @param type
      * @return
      */
-    public User setUserByType(RecordDepartment recordDepartment,int type){
-        User user = new User();
-        switch (type){
-            case 1:
-                user.setUserName(recordDepartment.getTelphone());
-                user.setRealName(recordDepartment.getDepartmentName());
-                user.setRoleId("BADW");
-                user.setTelphone(recordDepartment.getTelphone());
-                user.setDistrictId(recordDepartment.getDepartmentAddress());
-                break;
-            default:
-                break;
+    @Override
+    public boolean updateById(RecordDepartment recordDepartment) {
+        int u = userDao.update(setUserByType(recordDepartment, 2));
+        int r = recordDepartmentMapper.updateById(recordDepartment);
+        if (r + u == 2) {
+            return true;
         }
-        return user;
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
     }
+
+
+        /**
+         * 设置User
+         * @param recordDepartment
+         * @param type
+         * @return
+         */
+        public User setUserByType (RecordDepartment recordDepartment,int type){
+            User user = new User();
+            switch (type) {
+                case 1:
+                    user.setUserName(recordDepartment.getTelphone());
+                    user.setRealName(recordDepartment.getDepartmentName());
+                    user.setRoleId("BADW");
+                    user.setTelphone(recordDepartment.getTelphone());
+                    user.setDistrictId(recordDepartment.getDepartmentAddress());
+                    break;
+                case 2:
+                    RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
+                    user = userDao.findByTelphone(oldDate.getTelphone());
+                    user.setUserName(recordDepartment.getTelphone());
+                    user.setRealName(recordDepartment.getDepartmentName());
+                    //user.setRoleId("BADW");
+                    user.setTelphone(recordDepartment.getTelphone());
+                    user.setDistrictId(recordDepartment.getDepartmentAddress());
+                    break;
+                default:
+                    break;
+            }
+            return user;
+        }
 
 
 }

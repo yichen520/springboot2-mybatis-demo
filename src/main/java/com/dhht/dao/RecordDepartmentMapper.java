@@ -22,7 +22,8 @@ public interface RecordDepartmentMapper {
 
    // int updateByPrimaryKeySelective(RecordDepartment record);
 
-    int updateByPrimaryKey(RecordDepartment record);
+    //修改备案单位
+    int updateById(RecordDepartment record);
 
     //根据区域id查询下面的备案单位
     List<RecordDepartment> selectByDistrictId(@Param("id") String id);

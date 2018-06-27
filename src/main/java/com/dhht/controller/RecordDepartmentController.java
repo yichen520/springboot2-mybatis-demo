@@ -156,4 +156,21 @@ public class RecordDepartmentController {
         }
     }
 
+    @RequestMapping(value = "/update")
+    public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment){
+        boolean result = false;
+
+        try{
+            result = recordDepartmentService.updateById(recordDepartment);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        if(result){
+            return JsonObjectBO.ok("修改成功");
+        }else {
+            return JsonObjectBO.error("修改失败");
+        }
+
+    }
+
 }

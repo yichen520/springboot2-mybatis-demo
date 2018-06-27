@@ -33,16 +33,18 @@
     #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0)
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.RecordDepartment">
+  <update id="updateById" parameterType="com.dhht.model.RecordDepartment">
     update record_department
-    set department_name = #{departmentName,jdbcType=VARCHAR},
+    set
+      department_code = #{departmentCode,jdbcType=VARCHAR}
+      department_name = #{departmentName,jdbcType=VARCHAR},
       principal_name = #{principalName,jdbcType=VARCHAR},
       principal_id = #{principalId,jdbcType=VARCHAR},
       department_address = #{departmentAddress,jdbcType=VARCHAR},
       department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},
       telphone = #{telphone,jdbcType=VARCHAR},
       postal_code = #{postalCode,jdbcType=VARCHAR}
-    where department_code = #{departmentCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 
 
