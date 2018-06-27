@@ -34,13 +34,15 @@ public class PoliceController {
     //private JSONObject jsonObject = new JSONObject();
 
     @RequestMapping(value = "/info")
-    public JsonObjectBO selectAllPolice(@RequestBody Map map){
+    public JsonObjectBO selectByRole(@RequestBody Map map,HttpServletRequest httpServletRequest){
         int pageSum = (Integer)map.get("pageSize");
         int pageNum = (Integer)map.get("pageNum");
+       // User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
+
         PageInfo<RecordPolice> pageInfo = new PageInfo<RecordPolice>();
         try{
-            pageInfo = policeService.selectAllPolice(pageSum,pageNum);
+            pageInfo = policeService.selectByRole("330100",pageSum,pageNum);
             jsonObject.put("Police",pageInfo);
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
@@ -63,6 +65,21 @@ public class PoliceController {
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功", jsonObject);
+    }
+
+    @RequestMapping(value = "/selectAllPolice")
+    public JsonObjectBO selectAllPolice(@RequestBody Map map){
+        int pageSum = (Integer)map.get("pageSize");
+        int pageNum = (Integer)map.get("pageNum");
+        JSONObject jsonObject = new JSONObject();
+        PageInfo<RecordPolice> pageInfo = new PageInfo<RecordPolice>();
+        try{
+            pageInfo = policeService.selectAllPolice(pageSum,pageNum);
+            jsonObject.put("Police",pageInfo);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
     }
 
     @RequestMapping(value = "/delete")
@@ -158,4 +175,5 @@ public class PoliceController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
+
 }

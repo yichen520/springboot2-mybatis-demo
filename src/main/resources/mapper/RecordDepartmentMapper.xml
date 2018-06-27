@@ -27,6 +27,12 @@
     SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address LIKE '${id}%' and is_delete = 0
   </select>
 
+  <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
+    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete)
+    VALUES (#{id,jdbcType=CHAR},#{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},#{principalName,jdbcType=VARCHAR},#{principalId,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR},
+    #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0)
+  </insert>
+
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.RecordDepartment">
     update record_department
     set department_name = #{departmentName,jdbcType=VARCHAR},
@@ -39,11 +45,7 @@
     where department_code = #{departmentCode,jdbcType=VARCHAR}
   </update>
 
-  <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
-    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete)
-    VALUES (#{id,jdbcType=CHAR},#{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},#{principalName,jdbcType=VARCHAR},#{principalId,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR},
-     #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0)
-  </insert>
+
   
   <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_code = #{departmentCode,jdbcType=VARCHAR}

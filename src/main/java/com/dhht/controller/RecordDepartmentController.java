@@ -2,8 +2,11 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.model.District;
+import com.dhht.model.DistrictMenus;
 import com.dhht.model.RecordDepartment;
 import com.dhht.model.User;
+import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +25,17 @@ public class RecordDepartmentController {
 
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+    @Autowired
+    private DistrictService districtService;
 
     //private JSONObject jsonObject = new JSONObject();
 
+    /**
+     * 根据角色获取备案单位
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/selectByRole")
     public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest,@RequestBody Map map){
         User user = (User) httpServletRequest.getSession().getAttribute("user");
@@ -41,6 +52,11 @@ public class RecordDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 根据区域查询下属备案单位
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/selectByDistrict")
     public JsonObjectBO selectByDistrict(@RequestBody Map map){
         String id = (String) map.get("id");
@@ -58,6 +74,11 @@ public class RecordDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 查询所有备案单位
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/info")
     public JsonObjectBO selectAllRecordDepartment(@RequestBody Map map){
         int pageSize = (Integer)map.get("pageSize");
@@ -74,6 +95,11 @@ public class RecordDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 添加备案单位
+     * @param recordDepartment
+     * @return
+     */
     @RequestMapping(value = "/insert")
     public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment){
         boolean result = false;
@@ -89,4 +115,21 @@ public class RecordDepartmentController {
             return JsonObjectBO.error("添加失败");
         }
     }
+
+    @RequestMapping(value = "/selectDistrict")
+    public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
+        //User user = (User)httpServletRequest.getSession().getAttribute("user");
+        JSONObject jsonObject = new JSONObject();
+        List<DistrictMenus> districtMenus = new ArrayList<>();
+
+        try {
+            districtMenus = districtService.selectOneDistrict("330100");
+            jsonObject.put("districtMenus",districtMenus);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+
 }

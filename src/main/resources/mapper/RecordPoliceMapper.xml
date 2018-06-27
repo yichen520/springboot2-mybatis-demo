@@ -22,7 +22,7 @@
 
   <select id="selectByRole" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"></include>
-    FROM record_police WHERE is_delete = 0 AND office_district LIKE '${id}%'
+    FROM record_police WHERE is_delete = 0 AND office_district LIKE '${officeDistrict}%'
   </select>
 
   <select id="selectByOfficeCode" resultMap="BaseResultMap" parameterType="java.lang.String">
