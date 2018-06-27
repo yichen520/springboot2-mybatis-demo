@@ -28,7 +28,7 @@ public class SmsController {
     @Autowired
     private UserLoginService userLoginService;
 
-
+    @Log("发送短信验证码")
     @RequestMapping(value ="sendMessage", method = RequestMethod.POST)
     public JsonObjectBO sendMessage(@RequestBody Map map) {
         try {
