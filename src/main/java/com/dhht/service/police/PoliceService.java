@@ -5,9 +5,11 @@ import com.github.pagehelper.PageInfo;
 
 public interface PoliceService {
 
-    PageInfo<RecordPolice> selectAllPolice(int Sum, int Num);
+    PageInfo<RecordPolice> selectAllPolice(int pageSize, int pageNum);
 
-    PageInfo<RecordPolice> selectByOfficeCode(String code, int Sum, int Num);
+    PageInfo<RecordPolice> selectByOfficeCode(String code, int pageSize, int pageNum);
+
+    PageInfo<RecordPolice> selectByRole(String officeDistrictId,int pageSize,int pageNum);
 
     boolean deleteByTelphone(String phone);
 

@@ -4,6 +4,7 @@ import com.dhht.model.RecordPolice;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,7 +22,7 @@ public interface RecordPoliceMapper {
 
     List<RecordPolice> selectAllPolice();
 
-    List<RecordPolice> selectByRole(String officeDistrict);
+    List<RecordPolice> selectByRole(@Param("officeDistrict") String officeDistrict);
 
     RecordPolice selectById(String id);
 

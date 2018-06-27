@@ -48,6 +48,14 @@ public class PoliceServiceImp implements PoliceService{
     }
 
     @Override
+    public PageInfo<RecordPolice> selectByRole(String officeDistrictId, int pageSum, int pageNum) {
+        List<RecordPolice> recordPolice = recordPoliceMapper.selectByRole(officeDistrictId);
+        PageHelper.startPage(pageSum,pageNum);
+        PageInfo<RecordPolice> pageInfo = new PageInfo(recordPolice);
+        return pageInfo;
+    }
+
+    @Override
     public boolean deleteByTelphone(String phone) {
        int p =  recordPoliceMapper.deleteByTelphone(phone);
        int u =  userDao.deleteByTelphone(phone);

@@ -20,7 +20,7 @@ public interface RecordDepartmentMapper {
     int updateByPrimaryKey(RecordDepartment record);
 
     //根据区域id查询下面的备案单位
-    List<RecordDepartment> selectByDistrictId(String id);
+    List<RecordDepartment> selectByDistrictId(@Param("id") String id);
 
     //查询所有的的备案单位
     List<RecordDepartment> selectAllRecordDepartment();

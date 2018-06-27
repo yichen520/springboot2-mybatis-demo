@@ -39,7 +39,15 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      */
     @Override
     public PageInfo<RecordDepartment> selectByDistrictId(String id,int pageSize,int pageNum ) {
-        List<RecordDepartment> recordDepartments = recordDepartmentMapper.selectByDistrictId(id);
+        List<RecordDepartment> recordDepartments = new ArrayList<>();
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            recordDepartments = recordDepartmentMapper.selectByDistrictId(districtIds[0]);
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            recordDepartments = recordDepartmentMapper.selectByDistrictId(districtIds[0]+districtIds[1]);
+        }else {
+            recordDepartments = recordDepartmentMapper.selectByDistrictId(id);
+        }
         PageHelper.startPage(pageSize,pageNum);
         PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
         return pageInfo;
