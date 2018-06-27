@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.Role;
@@ -49,6 +50,7 @@ public class UserController {
      * @param
      * @return
      */
+    @Log("添加用户")
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO adduser(@RequestBody User user){
         JsonObjectBO jsonObjectBO = userService.insert(user);

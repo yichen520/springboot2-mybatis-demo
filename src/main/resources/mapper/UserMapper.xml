@@ -128,7 +128,7 @@
     </update>
 
     <update id="updateErrorTimesZero" parameterType="java.lang.String">
-        UPDATE sys_user set login_error_times = 0
+        UPDATE sys_user set login_error_times = 1,login_time = now()
         WHERE user_name = #{username}
     </update>
     <update id="updateUser" parameterType="com.dhht.model.User">
