@@ -16,6 +16,8 @@ public interface RecordDepartmentService {
 
     RecordDepartment selectByCode(String code);
 
+    boolean deleteById(String id);
+
 
 
 }

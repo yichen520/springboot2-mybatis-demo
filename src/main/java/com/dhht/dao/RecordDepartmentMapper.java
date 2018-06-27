@@ -12,10 +12,15 @@ public interface RecordDepartmentMapper {
 
     int deleteByPrimaryKey(String departmentCode);
 
+    //根据Id查找备案单位
+    RecordDepartment selectById(@Param("id") String id);
     //添加备案单位
     int insert(RecordDepartment record);
 
-    int updateByPrimaryKeySelective(RecordDepartment record);
+    //删除备案单位
+    int deleteById(@Param("id") String id);
+
+   // int updateByPrimaryKeySelective(RecordDepartment record);
 
     int updateByPrimaryKey(RecordDepartment record);
 

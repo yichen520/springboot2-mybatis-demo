@@ -20,7 +20,7 @@
   </sql>
 
   <select id="selectAllRecordDepartment" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"></include> FROM record_department
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE is_delete = 0;
   </select>
    
   <select id="selectByDistrictId" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -51,4 +51,11 @@
     SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_code = #{departmentCode,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE id = #{id,jdbcType=CHAR}
+  </select>
+
+  <update id="deleteById" parameterType="java.lang.String">
+    UPDATE record_department SET is_delete = 1 WHERE id = #{id,jdbcType=CHAR}
+  </update>
 </mapper>

@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 2018/6/25 create by fyc
+ */
 @RestController
 @RequestMapping(value = "/sys/department")
 public class RecordDepartmentController {
@@ -116,6 +119,11 @@ public class RecordDepartmentController {
         }
     }
 
+    /**
+     * 添加备案单位时查找区域
+     * @param httpServletRequest
+     * @return
+     */
     @RequestMapping(value = "/selectDistrict")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         //User user = (User)httpServletRequest.getSession().getAttribute("user");
@@ -131,5 +139,21 @@ public class RecordDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    @RequestMapping(value = "/delete")
+    public JsonObjectBO delete(@RequestBody Map map){
+        String id = (String)map.get("id");
+        boolean result = false;
+
+        try{
+            result = recordDepartmentService.deleteById(id);
+        }catch (Exception e ){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        if(result){
+            return JsonObjectBO.ok("删除成功");
+        }else {
+            return JsonObjectBO.error("删除失败");
+        }
+    }
 
 }

@@ -105,10 +105,27 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         return false;
     }
 
+    /**
+     * 根据备案单位的编号查询备案单位
+     * @param code
+     * @return
+     */
     @Override
     public RecordDepartment selectByCode(String code) {
         RecordDepartment recordDepartment = recordDepartmentMapper.selectByCode(code);
         return recordDepartment;
+    }
+
+    @Override
+    public boolean deleteById(String id) {
+        RecordDepartment recordDepartment = recordDepartmentMapper.selectById(id);
+        int r = recordDepartmentMapper.deleteById(id);
+        int u = userService.deleteByTelphone(recordDepartment.getTelphone());
+        if(r+u==2){
+            return true;
+        }
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return false;
     }
 
     /**
