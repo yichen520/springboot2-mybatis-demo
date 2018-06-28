@@ -86,7 +86,7 @@ public class RecordDepartmentController {
     public JsonObjectBO selectAllRecordDepartment(@RequestBody Map map,HttpServletRequest httpServletRequest){
         int pageSize = (Integer)map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
-        String districtId = (String)map.get("district");
+        String districtId = (String)map.get("districtId");
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
 
