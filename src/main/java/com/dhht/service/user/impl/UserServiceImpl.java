@@ -191,12 +191,12 @@ public class UserServiceImpl implements UserService {
     public JsonObjectBO find(User user,String realName, String roleId, String districtId, int pageNum, int pageSize) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        PageHelper.startPage(pageNum, pageSize,false);
+        PageHelper.startPage(pageNum, pageSize);
         String localdistrictId = user.getDistrictId();
         if (realName == null && districtId == null && roleId == null) {
             PageInfo<User> result = selectByDistrict(localdistrictId,pageSize,pageNum);
             jsonObject.put("user", result);
-            jsonObjectBO.setData(jsonObject);;
+            jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(SUCCESS);
             jsonObjectBO.setMessage("查询成功");
         } else {
@@ -246,7 +246,7 @@ public class UserServiceImpl implements UserService {
         }else {
             list = userDao.selectByDistrict(id);
         }
-        PageHelper.startPage(pageSize,pageNum,false);
+        PageHelper.startPage(pageSize,pageNum);
         PageInfo<User> result = new PageInfo(list);
         return result;
     }
