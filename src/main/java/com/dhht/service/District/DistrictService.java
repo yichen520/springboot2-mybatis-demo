@@ -1,5 +1,6 @@
 package com.dhht.service.District;
 
+import com.dhht.common.JsonObjectBO;
 import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
 
@@ -11,4 +12,10 @@ public interface DistrictService {
 
     //查询指定区域
     List<DistrictMenus> selectOneDistrict(String id);
+
+    //增加区域
+    JsonObjectBO insert(String districtId, String parentId, String districtName);
+
+    //删除
+    JsonObjectBO delete(String districtId);
 }

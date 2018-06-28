@@ -16,7 +16,7 @@ public interface DistrictMapper {
 
     int insert(District record);
 
-    int insertSelective(District record);
+    int insertSelective(District district);
 
     List<District> selectByExample(DistrictExample example);
 
@@ -36,5 +36,17 @@ public interface DistrictMapper {
 
     //查询所有的地区信息
     List<District> selectAllDistrict();
+
+    //查询全部Id
+    List<District> selectAllById(@Param("districtId") String districtId);
+
+    //添加
+    int insertCity(@Param("districtId") String districtId,@Param("districtName") String districtName);
+
+    //查找区域下所有的省市
+    List<District> findByDistrictId(District district);
+
+    //删除
+    int delete(District district);
 
 }

@@ -1,17 +1,21 @@
 package com.dhht.service.District.Impl;
 
+import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.DistrictMapper;
 import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.Resource;
 import com.dhht.service.District.DistrictService;
 import com.dhht.util.StringUtil;
+import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "DistrictService")
 @Transactional
@@ -36,7 +40,115 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
+    /**
+     * 增加区域
+     * @param districtId
+     * @param parentId
+     * @param districtName
+     * @return
+     */
+    @Override
+    public JsonObjectBO insert(String districtId, String parentId, String districtName) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        District district = new District();
+        District district1 = new District();
+        List<String> name = new ArrayList<>();
+        if (districtMapper.selectAllById(districtId).size()!=0){
+            return jsonObjectBO.error("该区域已经存在,请重新输入");
+        }else {
+            if (!"".equals(parentId)) {
+                String DistrictIds[] = StringUtil.DistrictUtil(parentId);
+                if (DistrictIds[1].equals("00") && DistrictIds[2].equals("00")) {
+                    district1.setProvinceId(parentId);
+                    Map<String, String> map = new HashMap<>();
+                    List<District> list = districtMapper.findByDistrictId(district1);
+                    for (District l : list) {
+                        map.put("provinceName", l.getProvinceName());
 
+                    }
+                    district.setProvinceId(parentId);
+                    district.setProvinceName(map.get("provinceName"));
+                    district.setCityId(districtId);
+                    district.setCityName(districtName);
+                    int a = districtMapper.insertSelective(district);
+                    if (a == 1) {
+                        return jsonObjectBO.success("插入区域成功", null);
+                    } else {
+                        return jsonObjectBO.error("插入失败");
+                    }
+
+                } else if (!DistrictIds[1].equals("00") && DistrictIds[2].equals("00")) {
+                    district1.setCityId(parentId);
+                    Map<String, String> map = new HashMap<>();
+                    List<District> list = districtMapper.findByDistrictId(district1);
+                    for (District l : list) {
+                        map.put("provinceName", l.getProvinceName());
+                        map.put("cityName", l.getCityName());
+                        map.put("provinceId", l.getProvinceId());
+                    }
+                    district.setProvinceId(map.get("provinceId"));
+                    district.setCityName(map.get("cityName"));
+                    district.setProvinceName(map.get("provinceName"));
+                    district.setCityId(parentId);
+                    district.setDistrictId(districtId);
+                    district.setDistrictName(districtName);
+                    int a = districtMapper.insertSelective(district);
+                    if (a == 1) {
+                        return jsonObjectBO.success("插入区域成功", null);
+                    } else {
+                        return jsonObjectBO.error("插入失败");
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                district.setProvinceId(districtId);
+                district.setProvinceName(districtName);
+                districtMapper.insertSelective(district);
+                return jsonObjectBO.success("插入成功", null);
+            }
+        }
+    }
+
+    /**
+     * 删除
+     * 有问题代码!!!!!!!!!!!!!!!!!!!!!!!
+     * 删除区域没有问题
+     * 删除市和省会出去lock timeout
+     * @param districtId
+     * @return
+     */
+    @Override
+    public JsonObjectBO delete(String districtId){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        District district = new District();
+        String DistrictIds[] = StringUtil.DistrictUtil(districtId);
+        if(DistrictIds[1].equals("00")&&DistrictIds[2].equals("00")){
+            district.setProvinceId(districtId);
+            int a =districtMapper.delete(district);
+            if (a==1) {
+                return jsonObjectBO.success("删除成功",null);
+            }else{
+                return jsonObjectBO.error("删除失败");
+            }
+        }else if(!DistrictIds[1].equals("00")&&DistrictIds[2].equals("00")){
+            district.setCityId(districtId);
+            int a =districtMapper.delete(district);
+            if (a==1) {
+                return jsonObjectBO.success("删除成功",null);
+            }else{
+                return jsonObjectBO.error("删除失败");
+            }
+        }else{
+            district.setDistrictId(districtId);
+            int a =districtMapper.delete(district);
+            if (a==1) {
+                return jsonObjectBO.success("删除成功",null);
+            }else{
+                return jsonObjectBO.error("删除失败");
+            }
+        }
+    }
     //生成菜单列表
     public List<DistrictMenus> findDistrictList(List<District> districtList){
         List<DistrictMenus> districtMenus = new ArrayList<DistrictMenus>();

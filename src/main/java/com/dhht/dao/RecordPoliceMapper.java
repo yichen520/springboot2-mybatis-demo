@@ -22,4 +22,6 @@ public interface RecordPoliceMapper {
     List<RecordPolice> selectAllPolice();
 
     RecordPolice selectById(String id);
+
+    RecordPolice selectByTelphone(String telphone);
 }

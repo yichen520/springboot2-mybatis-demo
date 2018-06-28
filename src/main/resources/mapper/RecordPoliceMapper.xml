@@ -40,7 +40,7 @@
   <update id="deleteByTelphone" parameterType="java.lang.String" >
     UPDATE  record_police
     set is_delete = 1
-    where telphone = #{telphone,jdbcType=VARCHAR}and isdelete = 0;
+    where telphone = #{telphone,jdbcType=VARCHAR}and is_delete = 0;
   </update>
 
   <insert id="insert" parameterType="com.dhht.model.RecordPolice" >
@@ -64,4 +64,10 @@
       office_name = #{officeName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+
+  <select id="selectByTelphone" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" />
+    FROM record_police where  telphone = #{telphone,jdbcType=VARCHAR}
+  </select>
 </mapper>
