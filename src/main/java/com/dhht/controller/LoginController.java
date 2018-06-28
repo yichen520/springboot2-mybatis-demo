@@ -24,22 +24,12 @@ import static com.dhht.util.MenuUtil.genMenu;
 public class LoginController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ResourceService resourceService;
-
-    @Autowired
     private UserLoginService userLoginService;
-
-    @Autowired
-    private RoleResourceDao roleResourceDao;
-    public static final String admin_userAccount = "admin";
-    public static final String admin_password = "111111";
 
     @Log("登录")
    @RequestMapping(value ="login", method = RequestMethod.POST)
    public Map<String,Object> login(HttpServletRequest request,@RequestBody UserDomain userDomain){
+
            return userLoginService.validateUser(request, userDomain);
    }
     /**
@@ -59,6 +49,11 @@ public class LoginController {
         return  jsonObjectBO;
     }
 
+    /**
+     * 获取当前用户
+     * @param session
+     * @return
+     */
    @RequestMapping("currentUser")
    public JsonObjectBO currentUser(HttpSession session){
        Object  obj = session.getAttribute("user");
@@ -71,7 +66,6 @@ public class LoginController {
        jsonObjectBO.setMessage("获取user成功");
        jsonObjectBO.setCode(1);
        return  jsonObjectBO;
-
    }
 
     @Log("退出登录")
@@ -83,15 +77,11 @@ public class LoginController {
             map.put("status", "ok");
             map.put("message","退出登录成功");
             return map;
-
         } catch (Exception e) {
-
             map.put("status", "error");
             map.put("message","登录失败！");
             return map;
         }
     }
-
-
 
 }

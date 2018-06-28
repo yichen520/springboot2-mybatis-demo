@@ -15,19 +15,19 @@ import java.util.ArrayList;
  * @author 赵兴龙
  * @date 2018.6.23
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class TestSmsSendService {
-    @Autowired
-    SmsSendService smsSendService;
-
-    private String phoneNumber = "18605786801";
-
-    @Test
-    public void testSendSingleMsgByTemplate() {
-        ArrayList<String> params = new ArrayList<>();
-        params.add("598457");
-        boolean result = smsSendService.sendSingleMsgByTemplate(phoneNumber, SmsSendService.TEMPLATE_CODE_RESET_PASSWORD, params);
-        Assert.assertTrue(result);
-    }
+//    @Autowired
+//    SmsSendService smsSendService;
+//
+//    private String phoneNumber = "18605786801";
+//
+//    @Test
+//    public void testSendSingleMsgByTemplate() {
+//        ArrayList<String> params = new ArrayList<>();
+//        params.add("598457");
+//        boolean result = smsSendService.sendSingleMsgByTemplate(phoneNumber, SmsSendService.TEMPLATE_CODE_RESET_PASSWORD, params);
+//        Assert.assertTrue(result);
+//    }
 }

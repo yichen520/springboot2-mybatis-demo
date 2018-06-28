@@ -40,46 +40,6 @@ public class RecordPolice {
         this.officeName = officeName;
     }
 */
-    public String getPoliceName() {
-        return policeName;
-    }
-
-    public void setPoliceName(String policeName) {
-        this.policeName = policeName == null ? null : policeName.trim();
-    }
-
-    public String getTelphone() {
-        return telphone;
-    }
-
-    public void setTelphone(String telphone) {
-        this.telphone = telphone == null ? null : telphone.trim();
-    }
-
-
-    public String getOfficeCode() {
-        return officeCode;
-    }
-
-    public void setOfficeCode(String officeCode) {
-        this.officeCode = officeCode == null ? null : officeCode.trim();
-    }
-
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName == null ? null : officeName.trim();
-    }
-
-    public Boolean getDelete() {
-        return isDelete;
-    }
-
-    public void setDelete(Boolean delete) {
-        isDelete = delete;
-    }
 
     public String getId() {
         return id;
@@ -97,12 +57,52 @@ public class RecordPolice {
         this.policeCode = policeCode;
     }
 
+    public String getPoliceName() {
+        return policeName;
+    }
+
+    public void setPoliceName(String policeName) {
+        this.policeName = policeName;
+    }
+
+    public String getTelphone() {
+        return telphone;
+    }
+
+    public void setTelphone(String telphone) {
+        this.telphone = telphone;
+    }
+
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(String officeCode) {
+        this.officeCode = officeCode;
+    }
+
     public String getOfficeDistrict() {
         return officeDistrict;
     }
 
     public void setOfficeDistrict(String officeDistrict) {
         this.officeDistrict = officeDistrict;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public Boolean getDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(Boolean delete) {
+        isDelete = delete;
     }
 
     @Override

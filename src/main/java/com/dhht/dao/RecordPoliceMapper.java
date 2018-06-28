@@ -21,7 +21,11 @@ public interface RecordPoliceMapper {
 
     List<RecordPolice> selectAllPolice();
 
+    List<RecordPolice> selectByRole(@Param("officeDistrict") String officeDistrict);
+
+
     RecordPolice selectById(String id);
 
     RecordPolice selectByTelphone(String telphone);
+
 }

@@ -86,5 +86,5 @@ logging:
 
 #短信发送接口
 sms:
-    appId:1400047268
-    appKey:5e0e87a6bc2f28ddc221b7de8386ffe1
+    appId: 1400047268
+    appKey: 5e0e87a6bc2f28ddc221b7de8386ffe1

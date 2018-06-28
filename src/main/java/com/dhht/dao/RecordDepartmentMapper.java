@@ -8,28 +8,29 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecordDepartmentMapper {
-    int countByExample(RecordDepartment example);
 
-    int deleteByExample(RecordDepartment example);
 
     int deleteByPrimaryKey(String departmentCode);
 
+    //根据Id查找备案单位
+    RecordDepartment selectById(@Param("id") String id);
+    //添加备案单位
     int insert(RecordDepartment record);
 
-    int insertSelective(RecordDepartment record);
+    //删除备案单位
+    int deleteById(@Param("id") String id);
 
-    List<RecordDepartment> selectByExample(RecordDepartment example);
+   // int updateByPrimaryKeySelective(RecordDepartment record);
 
-    RecordDepartment selectByPrimaryKey(String departmentCode);
+    //修改备案单位
+    int updateById(RecordDepartment record);
 
-    int updateByExampleSelective(@Param("record") RecordDepartment record, @Param("example") RecordDepartment example);
+    //根据区域id查询下面的备案单位
+    List<RecordDepartment> selectByDistrictId(@Param("id") String id);
 
-    int updateByExample(@Param("record") RecordDepartment record, @Param("example") RecordDepartment example);
+    //查询所有的的备案单位
+    List<RecordDepartment> selectAllRecordDepartment();
 
-    int updateByPrimaryKeySelective(RecordDepartment record);
-
-    int updateByPrimaryKey(RecordDepartment record);
-
-    //根据区域id查询下面的制作单位
-    List<RecordDepartment> selectByDistrictId(String id);
+    //根据备案单位编号查询备案单位
+    RecordDepartment selectByCode(String code);
 }
