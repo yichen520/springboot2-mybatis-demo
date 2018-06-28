@@ -69,4 +69,10 @@
       office_name = #{officeName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+
+  <select id="selectByTelphone" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" />
+    FROM record_police where  telphone = #{telphone,jdbcType=VARCHAR}
+  </select>
 </mapper>

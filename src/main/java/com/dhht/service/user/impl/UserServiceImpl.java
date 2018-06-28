@@ -3,6 +3,7 @@ package com.dhht.service.user.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
+import com.dhht.model.RecordPolice;
 import com.dhht.model.User;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.util.MD5Util;
@@ -34,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SmsSendService smsSendService;
+
+    @Autowired
+    private RecordPoliceMapper recordPoliceMapper;
 
     /**
      * 6位简单密码
@@ -134,28 +138,28 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /**
-     * 删除用户
-     *
-     * @param id
-     * @return
-     */
-    @Override
-    public JsonObjectBO delete(String id) {
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        Integer a = userDao.delete(id);
-        if (a != 1) {
-            jsonObjectBO.setCode(ERROR);
-            jsonObjectBO.setMessage("删除失败");
-
-        } else {
-            jsonObjectBO.setCode(SUCCESS);
-            jsonObjectBO.setMessage("删除成功");
-
-        }
-
-        return jsonObjectBO;
-    }
+//    /**
+//     * 删除用户
+//     *
+//     * @param id
+//     * @return
+//     */
+//    @Override
+//    public JsonObjectBO delete(String id) {
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        Integer a = userDao.delete(id);
+//        if (a != 1) {
+//            jsonObjectBO.setCode(ERROR);
+//            jsonObjectBO.setMessage("删除失败");
+//
+//        } else {
+//            jsonObjectBO.setCode(SUCCESS);
+//            jsonObjectBO.setMessage("删除成功");
+//
+//        }
+//
+//        return jsonObjectBO;
+//    }
 
 
     /**
@@ -238,6 +242,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public int deleteByTelphone(String phone) {
         return userDao.deleteByTelphone(phone);
+    }
+
+
+    @Override
+    public JsonObjectBO delete(String id) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user = userDao.findById(id);
+        String telphone = user.getTelphone();
+        RecordPolice police = recordPoliceMapper.selectByTelphone(telphone);
+        if (police==null){
+            int a = userDao.delete(id);
+            return jsonObjectBO.success("删除成功",null);
+        }else{
+            int a = userDao.delete(id);
+            int b =recordPoliceMapper.deleteByTelphone(telphone);
+            if (a==1&&b==1){
+                return jsonObjectBO.success("删除成功",null);
+            }else{
+                return jsonObjectBO.error("删除失败");
+            }
+        }
+
     }
 
 

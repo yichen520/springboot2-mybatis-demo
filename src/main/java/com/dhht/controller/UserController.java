@@ -99,7 +99,7 @@ public class UserController {
     }
 
     /**
-     * 迷糊查询列表
+     * 模糊查询列表
      * @param map
      * @return
      */

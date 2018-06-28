@@ -251,4 +251,44 @@
   <select id="getById" resultType="com.dhht.model.District">
     SELECT province_id,city_id FROM sys_district WHERE district_id = #{districtId}
   </select>
+
+  <select id="selectAllById" resultMap="BaseResultMap" parameterType="com.dhht.model.District">
+    SELECT  <include refid="Base_Column_List" />
+    FROM sys_district
+    WHERE
+    province_id = #{districtId} OR city_id = #{districtId} OR district_id = #{districtId}
+  </select>
+
+  
+  <select id="findByDistrictId" resultMap="BaseResultMap" parameterType="com.dhht.model.District">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM sys_district
+    <where>
+      <if test="provinceId != null and provinceId !=''">
+        province_id = #{provinceId}
+      </if>
+      <if test="cityId != null and cityId !=''">
+        or city_id = #{cityId}
+      </if>
+    </where>
+  </select>
+  <!--<insert id="insertCity">-->
+    <!--INSERT INTO sys_district()-->
+  <!--</insert>-->
+
+  <delete id="delete" >
+    DELETE FROM sys_district
+    <where>
+      <if test="provinceId != null and provinceId !=''">
+        province_id = #{provinceId}
+      </if>
+      <if test="cityId != null and cityId !=''">
+        or city_id = #{cityId}
+      </if>
+      <if test="districtId != null and districtId !=''">
+        or district_id = #{districtId}
+      </if>
+    </where>
+  </delete>
 </mapper>
