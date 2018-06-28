@@ -4,6 +4,7 @@ import com.dhht.model.RecordPolice;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository

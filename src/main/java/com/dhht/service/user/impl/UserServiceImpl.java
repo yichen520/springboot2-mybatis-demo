@@ -234,7 +234,15 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-
+    /**
+     *根据电话删除用户
+     * @param phone
+     * @return
+     */
+    @Override
+    public int deleteByTelphone(String phone) {
+        return userDao.deleteByTelphone(phone);
+    }
 
 
     @Override
