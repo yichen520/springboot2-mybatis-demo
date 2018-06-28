@@ -191,21 +191,38 @@ public class UserServiceImpl implements UserService {
     public JsonObjectBO find(User user,String realName, String roleId, String districtId, int pageNum, int pageSize) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageNum, pageSize,false);
         String localdistrictId = user.getDistrictId();
         if (realName == null && districtId == null && roleId == null) {
             PageInfo<User> result = selectByDistrict(localdistrictId,pageSize,pageNum);
             jsonObject.put("user", result);
-            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setData(jsonObject);;
             jsonObjectBO.setCode(SUCCESS);
             jsonObjectBO.setMessage("查询成功");
         } else {
-            List<User> list = userDao.find(realName, districtId, roleId);
-            PageInfo<User> result = new PageInfo<>(list);
-            jsonObject.put("user", result);
-            jsonObjectBO.setData(jsonObject);
-            jsonObjectBO.setCode(SUCCESS);
-            jsonObjectBO.setMessage("查询成功");
+            String districtIds[] = StringUtil.DistrictUtil(districtId);
+            if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+                List<User> list = userDao.find(realName,districtIds[0],roleId);
+                PageInfo<User> result = new PageInfo<>(list);
+                jsonObject.put("user", result);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(SUCCESS);
+                jsonObjectBO.setMessage("查询成功");
+            }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+                List<User> list = userDao.find(realName,districtIds[0]+districtIds[1],roleId);
+                PageInfo<User> result = new PageInfo<>(list);
+                jsonObject.put("user", result);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(SUCCESS);
+                jsonObjectBO.setMessage("查询成功");
+            }else if (!districtIds[1].equals("00")&&!districtIds[2].equals("00")){
+                List<User> list = userDao.find(realName,districtId,roleId);
+                PageInfo<User> result = new PageInfo<>(list);
+                jsonObject.put("user", result);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(SUCCESS);
+                jsonObjectBO.setMessage("查询成功");
+            }
         }
         return jsonObjectBO;
     }
@@ -229,7 +246,7 @@ public class UserServiceImpl implements UserService {
         }else {
             list = userDao.selectByDistrict(id);
         }
-        PageHelper.startPage(pageSize,pageNum);
+        PageHelper.startPage(pageSize,pageNum,false);
         PageInfo<User> result = new PageInfo(list);
         return result;
     }
