@@ -78,20 +78,27 @@ public class RecordDepartmentController {
     }
 
     /**
-     * 查询所有备案单位
+     * 展示备案单位的列表
      * @param map
      * @return
      */
     @RequestMapping(value = "/info")
-    public JsonObjectBO selectAllRecordDepartment(@RequestBody Map map){
+    public JsonObjectBO selectAllRecordDepartment(@RequestBody Map map,HttpServletRequest httpServletRequest){
         int pageSize = (Integer)map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
+        String districtId = (String)map.get("districtId");
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
 
         PageInfo<RecordDepartment> pageInfo = new PageInfo<>();
         try{
-            pageInfo = recordDepartmentService.selectAllRecordDepartMent(pageSize,pageNum);
-            jsonObject.put("recordDepartment",pageInfo);
+            if(districtId==""||districtId==null){
+                pageInfo = recordDepartmentService.selectByDistrictId(user.getDistrictId(),pageSize,pageNum);
+                jsonObject.put("recordDepartment",pageInfo);
+            }else {
+                pageInfo = recordDepartmentService.selectByDistrictId(districtId,pageSize,pageNum);
+                jsonObject.put("recordDepartment",pageInfo);
+            }
         }catch (Exception e ){
             return JsonObjectBO.exception(e.getMessage());
         }
@@ -108,7 +115,6 @@ public class RecordDepartmentController {
         boolean result = false;
         try {
             result = recordDepartmentService.insert(recordDepartment);
-
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }
@@ -120,18 +126,18 @@ public class RecordDepartmentController {
     }
 
     /**
-     * 添加备案单位时查找区域
+     * 区域
      * @param httpServletRequest
      * @return
      */
     @RequestMapping(value = "/selectDistrict")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
-        //User user = (User)httpServletRequest.getSession().getAttribute("user");
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
         List<DistrictMenus> districtMenus = new ArrayList<>();
 
         try {
-            districtMenus = districtService.selectOneDistrict("330100");
+            districtMenus = districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("districtMenus",districtMenus);
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
@@ -139,6 +145,11 @@ public class RecordDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 删除备案单位
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/delete")
     public JsonObjectBO delete(@RequestBody Map map){
         String id = (String)map.get("id");
@@ -156,6 +167,11 @@ public class RecordDepartmentController {
         }
     }
 
+    /**
+     * 更新备案单位
+     * @param recordDepartment
+     * @return
+     */
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment){
         boolean result = false;
@@ -170,7 +186,17 @@ public class RecordDepartmentController {
         }else {
             return JsonObjectBO.error("修改失败");
         }
-
     }
+
+    /* public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
+        DistrictMenus districtMenus
+
+         try{
+
+         }catch (Exception e){
+            JsonObjectBO.exception(e.getMessage());
+         }
+     }*/
 
 }
