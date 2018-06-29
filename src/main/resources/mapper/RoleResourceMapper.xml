@@ -161,7 +161,7 @@
     resource_id as resourceId
     from sys_role_resources s ,sys_resource r where s.role_id = #{roleId,jdbcType=VARCHAR}
    and  s.resource_id = r.id
-   and  r.is_menu = 1
+   and  r.is_menu = 1 order by r.menu_sort
   </select>
 
 

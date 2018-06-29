@@ -37,7 +37,7 @@ public class FtpManager implements InitializingBean {
                     } catch (InterruptedException e) {
 	                    e.printStackTrace();
                     }
-					System.out.println("测试FTP连接状态");
+					//System.out.println("测试FTP连接状态");
 		            if(ftpClient.isConnected()) {
 		            	try {//防止第一次连接城后isConnected始终返回true导致无法重连，还有更好的办法？
 		                    ftpClient.getStatus();

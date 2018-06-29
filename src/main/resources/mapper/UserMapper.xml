@@ -201,18 +201,18 @@
         WHERE `user_name` = #{userName}
     </update>
     
-    <select id="findByTelphone" resultType="com.dhht.model.User">
+    <select id="findByTelphone" parameterType="java.lang.String" resultType="com.dhht.model.User">
         SELECT * FROM sys_user
         <where>
             <if test="telphone !=null and telphone !=''">
-                telphone = #{telphone}
+                telphone = #{telphone,jdbcType=VARCHAR}
             </if>
         </where>
 
     </select>
 
 
-    <select id="findById" resultType="com.dhht.model.User">
+    <select id="findById" parameterType="java.lang.String"  resultType="com.dhht.model.User">
         SELECT
         `id` AS id,user_name AS userName,real_name AS realName,password AS password,role_id AS roleId,object_id AS objectId,
         telphone AS telphone,is_locked AS isLocked,login_error_times AS loginErrorTimes,is_changed_pwd AS isChangedPwd,is_deleted AS  isDeleted,
@@ -220,17 +220,17 @@
         from sys_user WHERE id = #{id}
     </select>
 
-    <select id="find"  resultType="com.dhht.model.User">
+    <select id="find"  parameterType="java.lang.String"  resultType="com.dhht.model.User">
         SELECT id,user_name as userName,real_name as realName,is_locked as isLocked,telphone as telphone,district_id as districtId FROM sys_user
         <where>
             <if test="districtId !=null and districtId !=''">
-                district_id LIKE '%${districtId}%'
+                district_id LIKE  "%"#{districtId,jdbcType=VARCHAR}"%"
             </if>
             <if test="roleId !=null and roleId !=''">
-                AND role_id LIKE '%${roleId}%'
+                AND role_id LIKE  "%"#{roleId,jdbcType=VARCHAR}"%"
             </if>
             <if test="realName !=null and realName !=''">
-                AND real_name LIKE '%${realName}%'
+                AND real_name LIKE  "%"#{realName,jdbcType=VARCHAR}"%"
             </if>
         </where>
     </select>
