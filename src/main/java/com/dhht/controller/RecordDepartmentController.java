@@ -10,6 +10,7 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -115,6 +116,8 @@ public class RecordDepartmentController {
         boolean result = false;
         try {
             result = recordDepartmentService.insert(recordDepartment);
+        }catch (DuplicateKeyException exception){
+            return JsonObjectBO.error("该用户已经存在");
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }

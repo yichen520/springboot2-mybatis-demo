@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 2018/6/15 create by fyc
+ */
 @Service(value = "DistrictService")
 @Transactional
 public class DistrictServiceImp implements DistrictService{
@@ -34,7 +37,16 @@ public class DistrictServiceImp implements DistrictService{
 
     @Override
     public List<DistrictMenus> selectOneDistrict(String id) {
-        List<DistrictMenus> list = findDistrictList(districtMapper.selectAllDistrict());
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        String districtId = null;
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+           districtId = districtIds[0];
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0]+districtIds[1];
+        }else {
+            districtId = id;
+        }
+        List<DistrictMenus> list = findDistrictList(districtMapper.selectById(districtId));
         List<DistrictMenus> districtMenus = findOneParent(list,id);
         setAllChildren(districtMenus,list);
         return districtMenus;
@@ -149,7 +161,12 @@ public class DistrictServiceImp implements DistrictService{
             }
         }
     }
-    //生成菜单列表
+
+    /**
+     * 生成地区列表
+     * @param districtList
+     * @return
+     */
     public List<DistrictMenus> findDistrictList(List<District> districtList){
         List<DistrictMenus> districtMenus = new ArrayList<DistrictMenus>();
         for (District district:districtList) {
@@ -173,7 +190,11 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
-    //查找所有省级父节点
+    /**
+     *
+     * @param list
+     * @return
+     */
     public List<DistrictMenus> findParent(List<DistrictMenus> list){
         List<DistrictMenus> districtMenus = new ArrayList<DistrictMenus>();
         for (DistrictMenus d: list) {

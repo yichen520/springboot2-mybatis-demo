@@ -1,11 +1,15 @@
 package com.dhht.service.recordDepartment.Impl;
 
 import com.dhht.dao.RecordDepartmentMapper;
+import com.dhht.dao.RecordPoliceMapper;
 import com.dhht.dao.UserDao;
 import com.dhht.model.RecordDepartment;
+import com.dhht.model.RecordPolice;
 import com.dhht.model.User;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
@@ -19,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
+
 /**
  * 2018/6/26 create by fyc
  */
@@ -29,9 +35,13 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
     @Autowired
-    private UserService userService;
+    private SmsSendService smsSendService;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private RecordPoliceMapper recordPoliceMapper;
+
+    private String code;
 
     /**
      * 带分页的查询区域下的备案单位
@@ -51,7 +61,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         }else {
             recordDepartments = recordDepartmentMapper.selectByDistrictId(id);
         }
-        PageHelper.startPage(pageNum,pageSize);
+        PageHelper.startPage(pageNum,pageSize,false);
         PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
         return pageInfo;
     }
@@ -84,7 +94,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public PageInfo<RecordDepartment> selectAllRecordDepartMent(int pageSize, int pageNum) {
         List<RecordDepartment> recordDepartments= recordDepartmentMapper.selectAllRecordDepartment();
-        PageHelper.startPage(pageNum,pageSize);
+        PageHelper.startPage(pageNum,pageSize,false);
         PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
         return pageInfo;
     }
@@ -99,9 +109,11 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public Boolean insert(RecordDepartment recordDepartment) {
         recordDepartment.setId(UUIDUtil.generate());
+        User user = setUserByType(recordDepartment,1);
         int r = recordDepartmentMapper.insert(recordDepartment);
-        int u = userService.insert(setUserByType(recordDepartment,1)).getCode();
+        int u = userDao.addUser(user);
         if(r+u==2){
+            smsSendService.sendMessage(user.getTelphone(),code);
             return true;
         }
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -127,13 +139,28 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public boolean deleteById(String id) {
         RecordDepartment recordDepartment = recordDepartmentMapper.selectById(id);
-        int r = recordDepartmentMapper.deleteById(id);
-        int u = userService.deleteByTelphone(recordDepartment.getTelphone());
-        if(r+u==2){
-            return true;
-        }
+        try {
+            User user = setUserByType(recordDepartment,3);
+            if(user ==null){
+                int re = recordDepartmentMapper.deleteById(id);
+                if(re==1) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+            int r = recordDepartmentMapper.deleteById(id);
+            int u = userDao.deleteByTelphone(recordDepartment.getTelphone());
+            if (r + u == 2) {
+                return true;
+            }else {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        } catch (Exception e){
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         return false;
+    }
     }
 
     /**
@@ -143,13 +170,20 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      */
     @Override
     public boolean updateById(RecordDepartment recordDepartment) {
-        int u = userDao.update(setUserByType(recordDepartment, 2));
-        int r = recordDepartmentMapper.updateById(recordDepartment);
-        if (r + u == 2) {
-            return true;
+        try {
+            int u = userDao.update(setUserByType(recordDepartment, 2));
+            int r = recordDepartmentMapper.updateById(recordDepartment);
+            if (r + u == 2) {
+                return true;
+            }else {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
         }
-        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        return false;
+        //return true;
     }
 
 
@@ -162,27 +196,63 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         public User setUserByType (RecordDepartment recordDepartment,int type){
             User user = new User();
             switch (type) {
+                //添加user
                 case 1:
-                    user.setUserName(recordDepartment.getTelphone());
+                    user.setId(UUIDUtil.generate());
+                    user.setUserName("QY"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
+                    code = createRandomVcode();
+                    String password = MD5Util.toMd5(code);
+                    user.setPassword(password);
                     user.setRoleId("BADW");
                     user.setTelphone(recordDepartment.getTelphone());
                     user.setDistrictId(recordDepartment.getDepartmentAddress());
                     break;
+                 //修改user
                 case 2:
                     RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
                     user = userDao.findByTelphone(oldDate.getTelphone());
-                    user.setUserName(recordDepartment.getTelphone());
+                    user.setUserName("QY"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
                     //user.setRoleId("BADW");
                     user.setTelphone(recordDepartment.getTelphone());
                     user.setDistrictId(recordDepartment.getDepartmentAddress());
                     break;
+                 //删除user
+                case 3:
+                    user = userDao.findByTelphone(recordDepartment.getTelphone());
                 default:
                     break;
             }
             return user;
         }
+
+    /**
+     * 根据备案单户获取民警列表
+     * @param recordDepartment
+     * @param type
+     * @return
+     */
+     /*public List<RecordPolice> setRecordPolice(RecordDepartment recordDepartment,int type){
+        //RecordPolice recordPolice = new RecordPolice();
+         List<RecordPolice> list = new ArrayList<>();
+         switch (type){
+             case 1:
+                 RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
+                 list = recordPoliceMapper.selectByOfficeCode(oldDate.getDepartmentCode());
+                 for (RecordPolice r:list) {
+                     r.setOfficeDistrict(recordDepartment.getDepartmentAddress());
+                     r.setOfficeName(recordDepartment.getDepartmentName());
+                     r.setOfficeCode(recordDepartment.getDepartmentCode());
+                 }
+                 break;
+             case 2:
+                 list = recordPoliceMapper.selectByOfficeCode(recordDepartment.getDepartmentCode());
+             default:
+                  break;
+         }
+         return list;
+     }*/
 
 
 }

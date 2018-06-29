@@ -49,4 +49,7 @@ public interface DistrictMapper {
     //删除
     int delete(District district);
 
+    //查找指定Id的区域
+    List<District> selectById(@Param("id") String id);
+
 }
