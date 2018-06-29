@@ -221,7 +221,7 @@
     </select>
 
     <select id="find"  parameterType="java.lang.String"  resultType="com.dhht.model.User">
-        SELECT id,user_name as userName,real_name as realName,is_locked as isLocked,telphone as telphone,district_id as districtId FROM sys_user
+        SELECT id,role_id as roleId,user_name as userName,real_name as realName,is_locked as isLocked,telphone as telphone,district_id as districtId FROM sys_user
         <where>
             <if test="districtId !=null and districtId !=''">
                 district_id LIKE  "%"#{districtId,jdbcType=VARCHAR}"%"
