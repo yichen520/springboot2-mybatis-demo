@@ -200,12 +200,29 @@ public class UserServiceImpl implements UserService {
             jsonObjectBO.setCode(SUCCESS);
             jsonObjectBO.setMessage("查询成功");
         } else {
-            List<User> list = userDao.find(realName, districtId, roleId);
-            PageInfo<User> result = new PageInfo<>(list);
-            jsonObject.put("user", result);
-            jsonObjectBO.setData(jsonObject);
-            jsonObjectBO.setCode(SUCCESS);
-            jsonObjectBO.setMessage("查询成功");
+            String districtIds[] = StringUtil.DistrictUtil(districtId);
+            if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+                List<User> list = userDao.find(realName,districtIds[0],roleId);
+                PageInfo<User> result = new PageInfo<>(list);
+                jsonObject.put("user", result);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(SUCCESS);
+                jsonObjectBO.setMessage("查询成功");
+            }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+                List<User> list = userDao.find(realName,districtIds[0]+districtIds[1],roleId);
+                PageInfo<User> result = new PageInfo<>(list);
+                jsonObject.put("user", result);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(SUCCESS);
+                jsonObjectBO.setMessage("查询成功");
+            }else if (!districtIds[1].equals("00")&&!districtIds[2].equals("00")){
+                List<User> list = userDao.find(realName,districtId,roleId);
+                PageInfo<User> result = new PageInfo<>(list);
+                jsonObject.put("user", result);
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(SUCCESS);
+                jsonObjectBO.setMessage("查询成功");
+            }
         }
         return jsonObjectBO;
     }
