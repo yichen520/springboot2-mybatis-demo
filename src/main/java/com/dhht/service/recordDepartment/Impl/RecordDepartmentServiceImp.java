@@ -52,6 +52,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      */
     @Override
     public PageInfo<RecordDepartment> selectByDistrictId(String id,int pageSize,int pageNum ) {
+        PageHelper.startPage(pageNum,pageSize);
         List<RecordDepartment> recordDepartments = new ArrayList<>();
         String districtIds[] = StringUtil.DistrictUtil(id);
         if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
@@ -61,8 +62,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         }else {
             recordDepartments = recordDepartmentMapper.selectByDistrictId(id);
         }
-        PageHelper.startPage(pageNum,pageSize,false);
-        PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
+
+        PageInfo<RecordDepartment> pageInfo = new PageInfo<>(recordDepartments);
         return pageInfo;
     }
 
@@ -93,9 +94,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      */
     @Override
     public PageInfo<RecordDepartment> selectAllRecordDepartMent(int pageSize, int pageNum) {
+        PageHelper.startPage(pageNum,pageSize);
         List<RecordDepartment> recordDepartments= recordDepartmentMapper.selectAllRecordDepartment();
-        PageHelper.startPage(pageNum,pageSize,false);
-        PageInfo<RecordDepartment> pageInfo = new PageInfo(recordDepartments);
+        PageInfo<RecordDepartment> pageInfo = new PageInfo<>(recordDepartments);
         return pageInfo;
     }
 
@@ -108,6 +109,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      */
     @Override
     public Boolean insert(RecordDepartment recordDepartment) {
+        if(isInsert(recordDepartment)){
+            return false;
+        }
         recordDepartment.setId(UUIDUtil.generate());
         User user = setUserByType(recordDepartment,1);
         int r = recordDepartmentMapper.insert(recordDepartment);
@@ -186,6 +190,20 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         //return true;
     }
 
+    /**
+     * 判断该区域下是否有备案单位
+     * @param recordDepartment
+     * @return
+     */
+    public boolean isInsert(RecordDepartment recordDepartment){
+        List<RecordDepartment> list = recordDepartmentMapper.selectByDistrictId(recordDepartment.getDepartmentAddress());
+        if(list.size()>0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 
         /**
          * 设置User
@@ -199,7 +217,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 //添加user
                 case 1:
                     user.setId(UUIDUtil.generate());
-                    user.setUserName("QY"+recordDepartment.getTelphone());
+                    user.setUserName("BADW"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
                     code = createRandomVcode();
                     String password = MD5Util.toMd5(code);
@@ -212,7 +230,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 case 2:
                     RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
                     user = userDao.findByTelphone(oldDate.getTelphone());
-                    user.setUserName("QY"+recordDepartment.getTelphone());
+                    user.setUserName("BADW"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
                     //user.setRoleId("BADW");
                     user.setTelphone(recordDepartment.getTelphone());
@@ -226,6 +244,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             }
             return user;
         }
+
+
 
     /**
      * 根据备案单户获取民警列表
