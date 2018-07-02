@@ -28,35 +28,52 @@
 
   <sql id="Base_Column_List" >
     id,code,`name`,nation_name,english_name,english_ahhr,status,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
-    legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete
+    legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete,flag,version
   </sql>
 
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from use_department
+    where  code= #{code,jdbcType=CHAR} AND is_delete = 0
+    order BY version desc
+  </select>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from use_department
     where  id= #{id,jdbcType=CHAR}
+    order BY version desc
+  </select>
+
+  <select id="selectByFlag" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from use_department
+    where  flsg= #{flag,jdbcType=CHAR}
+    order BY version desc
   </select>
 
 
-  <update id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <update id="delete" parameterType="java.lang.String" >
     UPDATE use_department
     SET is_delete = 1
-    where id= #{id,jdbcType=CHAR}
+    where flag= #{flag,jdbcType=CHAR}
   </update>
 
 
 
-  <insert id="insert" parameterType="com.dhht.model.UserDepartment" >
-    insert into use_department (id,code, name,
+  <insert id="insert" parameterType="com.dhht.model.UseDepartment" >
+    insert into use_department (id,code, `name`,
     nation_name, english_name,
     english_ahhr, status,
     query_password, legal_name, legal_id,
     legal_id_type, legal_telphone, legal_country,
     district_id, address,
     telphone, postal_code, department_status,
-    department_certificate, department_certificate_type,is_delete
+    department_certificate, department_certificate_type,is_delete,version,flag
     )
     values (#{id,jdbcType=CHAR},#{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},
     #{nationName,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR},
@@ -65,41 +82,108 @@
     #{legalIdType,jdbcType=VARCHAR}, #{legalTelphone,jdbcType=VARCHAR}, #{legalCountry,jdbcType=VARCHAR},
     #{districtId,jdbcType=CHAR}, #{address,jdbcType=VARCHAR},
     #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
-    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},
+    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},#{version},#{flag,jdbcType=VARCHAR}
     #{isDelete}
     )
   </insert>
 
 
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.UserDepartment" >
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.UseDepartment" >
     update use_department
     set
+    <if test="code !=null">
+    `code` = #{code,jdbcType=VARCHAR},
+    </if>
+    <if test="name !=null">
     `name` = #{name,jdbcType=VARCHAR},
+    </if>
+    <if test="nationName !=null">
     nation_name = #{nationName,jdbcType=VARCHAR},
+    </if>
+    <if test="englishName !=null">
     english_name = #{englishName,jdbcType=VARCHAR},
+    </if>
+    <if test="englishAhhr !=null">
     english_ahhr = #{englishAhhr,jdbcType=VARCHAR},
+    </if>
+    <if test="status !=null">
     status = #{status,jdbcType=CHAR},
+    </if>
+    <if test="queryPassword !=null">
     query_password = #{queryPassword,jdbcType=VARCHAR},
+    </if>
+    <if test="legalName !=null">
     legal_name = #{legalName,jdbcType=VARCHAR},
+    </if>
+    <if test="legalId !=null">
     legal_id = #{legalId,jdbcType=VARCHAR},
+    </if>
+    <if test="legalIdType !=null">
     legal_id_type = #{legalIdType,jdbcType=VARCHAR},
+    </if>
+    <if test="legalTelphone !=null">
     legal_telphone = #{legalTelphone,jdbcType=VARCHAR},
+    </if>
+    <if test="legalCountry !=null">
     legal_country = #{legalCountry,jdbcType=VARCHAR},
+    </if>
+    <if test="districtId !=null">
     district_id = #{districtId,jdbcType=VARCHAR},
+    </if>
+    <if test="address !=null">
     address = #{address,jdbcType=VARCHAR},
+    </if>
+    <if test="telphone !=null">
     telphone = #{telphone,jdbcType=VARCHAR},
+    </if>
+    <if test="postalCode !=null">
     postal_code = #{postalCode,jdbcType=VARCHAR},
+    </if>
+    <if test="departmentStatus !=null">
     department_status = #{departmentStatus,jdbcType=CHAR},
+    </if>
+    <if test="departmentCertificate !=null">
     department_certificate = #{departmentCertificate,jdbcType=VARCHAR},
+    </if>
+    <if test="departmentCertificateType !=null">
     department_certificate_type = #{departmentCertificateType,jdbcType=VARCHAR},
+    </if>
+    <if test="isDelete !=null">
     is_delete = #{isDelete,jdbcType=BIT}
+    </if>
+    <if test="version !=null">
+      version = #{version,jdbcType=BIT}
+    </if>
+    <if test="flag !=null">
+      flag = #{flag,jdbcType=BIT}
+    </if>
     where id = #{id,jdbcType=CHAR}
+    order BY version desc
   </update>
 
   <select id="findAllMake" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />
     from use_department where is_delete = 0
+    order BY version desc
   </select>
 
+
+  <select id="find"  parameterType="java.lang.String"  resultType="com.dhht.model.UseDepartment">
+    SELECT id,`name` as name,code as code,legal_name as legalName,department_status as departmentStatus,district_id as districtId FROM use_department
+    <where>
+      <if test="districtId !=null and districtId !=''">
+        district_id LIKE  "%"#{districtId,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="name !=null and name !=''">
+        AND `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="code !=null and code !=''">
+        AND code LIKE  "%"#{code,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="departmentStatus !=null and departmentStatus !=''">
+        AND department_status LIKE  "%"#{departmentStatus,jdbcType=VARCHAR}"%"
+      </if>
+    </where>
+  </select>
 </mapper>
