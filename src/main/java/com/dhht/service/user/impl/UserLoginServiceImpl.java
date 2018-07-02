@@ -129,7 +129,6 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     @Override
     public Map<String, Object> validateUser(HttpServletRequest request, UserDomain userDomain) {
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
         Map<String,Object> map=new HashMap<>();
         try {
             User user1= new User();
@@ -142,10 +141,9 @@ public class UserLoginServiceImpl implements UserLoginService {
                 //更新登录错误次数
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 long  a = sdf.parse(sdf.format(new Date())).getTime();
-                Date c= currentUser.getLoginTime();
-
                 long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
                 long m = a - b;
+                //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
                 if (( m / (1000 * 60  )>loginErrorDate)){
                     userDao.updateErrorTimesZero(userDomain.getUsername());
                 }else {
@@ -179,9 +177,9 @@ public class UserLoginServiceImpl implements UserLoginService {
             map.put("currentAuthority", user.getRoleId());
             map.put("message","登录成功");
 
-            List<String> id = roleResourceDao.selectMenuResourceByID(user.getRoleId());
+            List<String> ids = roleResourceDao.selectMenuResourceByID(user.getRoleId());
             List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
-            List<Menus> menus = resourceService.findMenusByRole(id);
+            List<Menus> menus = resourceService.findMenusByRole(ids);
             List<Resource> resources = resourceService.findResourceByRole(resourceId);
             request.getSession().setAttribute("user", user);
             request.getSession().setAttribute("menus", menus);

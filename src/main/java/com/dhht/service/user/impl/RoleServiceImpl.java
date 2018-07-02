@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Transactional
 @Service(value = "roleService")
 public class RoleServiceImpl implements RoleService {
 
@@ -57,8 +57,6 @@ public class RoleServiceImpl implements RoleService {
     //@Transactional
     public AccessResult updataRole(Role role){
         List<String> resourcesIds = role.getResourceIds();
-       // String resourcesIds = role.getResources();
-       // List<RoleResourceKey> sysRoleResources = roleResourceDao.selectByRoleID(role.getId());
         //先删除角色资源关联表
         roleResourceDao.deleteRole(role.getId());
         //增加新的角色资源关联表
@@ -85,7 +83,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public int deleteRole(String id){
-
         //删除角色对应的资源信息
         roleResourceDao.deleteRole(id);
         //删除角色

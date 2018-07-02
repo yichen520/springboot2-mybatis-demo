@@ -36,14 +36,8 @@ public class ProjectSyncInterceptor {
 	public void saveProject(JoinPoint joinPoint, Object rtv) throws Throwable {
 		JsonObjectBO jsonObjectBO =(JsonObjectBO)rtv;
 		JSONObject jsonObject = jsonObjectBO.getData();
-		//jsonObject.get("resource");
 		Resource resource = (Resource)jsonObject.get("resource");
-
-//		JSONObject pr = (JSONObject)JSON.parse( rtv.toString());
-//		JSONArray jsonArray= pr.getJSONArray("data");
-//		// 遍历jsonObject数据,添加到Map对象
-//		Map map = (Map)jsonArray.get(0);
-//		Resource resource = (Resource)json.get("resource");
+     	// 遍历jsonObject数据,添加到Map对象
 		String projectStr =JSON.toJSONString(resource, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
 		syncDataToOutService.saveResult(SyncDataType.PROJECT, SyncOperateType.SAVE,JsonObjectBO.SUCCESS,projectStr);
 	}

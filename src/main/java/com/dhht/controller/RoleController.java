@@ -18,9 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 @RestController
-@SuppressWarnings("serial")
 @RequestMapping("/sys/role")
 public class RoleController extends JsonObjectBO {
     @Autowired
@@ -31,9 +29,6 @@ public class RoleController extends JsonObjectBO {
     private Role role = new Role();
 
     private JSONObject jsonObject = new JSONObject();
-
-    // 资源IDs，用于接收设置角色资源设置时的资源id
-    private Set<String> resourceIds;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(RoleController.class);
 
@@ -64,48 +59,32 @@ public class RoleController extends JsonObjectBO {
     @Log("查询角色")
     @RequestMapping("info")
     public JsonObjectBO getList(@RequestBody(required = false) Map map) {
-
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
         if (map == null){
             try {
                 List<Role> roles = roleService.getRoleListNopage();
                 jsonObject.put("roles", roles);
-                jsonObjectBO.setData(jsonObject);
-                jsonObjectBO.setMessage("查询角色成功");
-                jsonObjectBO.setCode(1);
-                return jsonObjectBO;
-
+                return  JsonObjectBO.success("查询角色成功",jsonObject);
             } catch (Exception e) {
-                jsonObjectBO.setMessage("查询角色失败");
-                jsonObjectBO.setCode(-1);
-                return jsonObjectBO;
+                e.printStackTrace();
+                return JsonObjectBO.error("查询角色失败");
             }
         }else {
-            int pageNum = (Integer) map.get("pageNum");
+        int pageNum = (Integer) map.get("pageNum");
         int pageSize = (Integer) map.get("pageSize");
+
         try {
             PageInfo<Role> roles = roleService.getRoleList(pageNum, pageSize);
             jsonObject.put("roles", roles);
-            jsonObjectBO.setData(jsonObject);
-            jsonObjectBO.setMessage("查询角色成功");
-            jsonObjectBO.setCode(1);
-            return jsonObjectBO;
-
+            return  JsonObjectBO.success("查询角色成功",jsonObject);
         } catch (Exception e) {
-            jsonObjectBO.setMessage("查询角色失败");
-            jsonObjectBO.setCode(-1);
-            return jsonObjectBO;
+            e.printStackTrace();
+            return JsonObjectBO.error("查询角色失败");
         }
     }
 
     }
 
-
-
-    /**
-     * 新增
-     */
+    @Log("新增角色")
     @RequestMapping("add")
     public JsonObjectBO save(@RequestBody Role role) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -115,10 +94,7 @@ public class RoleController extends JsonObjectBO {
             jsonObjectBO.setCode(result.getIsSuccess());
             return jsonObjectBO;
         } catch (Exception e) {
-            logger.error("新增角色失败", e);
-            jsonObjectBO.setMessage("新增角色失败");
-            jsonObjectBO.setCode(-1);
-            return jsonObjectBO;
+            return JsonObjectBO.exception("新增角色失败");
         }
 
     }
