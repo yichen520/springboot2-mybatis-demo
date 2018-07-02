@@ -110,6 +110,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     public Boolean insert(RecordDepartment recordDepartment) {
         recordDepartment.setId(UUIDUtil.generate());
         User user = setUserByType(recordDepartment,1);
+        recordDepartment.setVersion(1);
+        recordDepartment.setFlag(UUIDUtil.generate10());
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userDao.addUser(user);
         if(r+u==2){
