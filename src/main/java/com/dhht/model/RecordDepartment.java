@@ -2,6 +2,8 @@ package com.dhht.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class RecordDepartment {
 
@@ -28,6 +30,8 @@ public class RecordDepartment {
     private int version;
 
     private String flag;
+
+    private Date updateTime;
 
 
 }

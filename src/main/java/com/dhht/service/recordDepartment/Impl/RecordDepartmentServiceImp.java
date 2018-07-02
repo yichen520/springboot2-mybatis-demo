@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -112,6 +113,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         User user = setUserByType(recordDepartment,1);
         recordDepartment.setVersion(1);
         recordDepartment.setFlag(UUIDUtil.generate10());
+        recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userDao.addUser(user);
         if(r+u==2){
@@ -174,7 +176,12 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     public boolean updateById(RecordDepartment recordDepartment) {
         try {
             int u = userDao.update(setUserByType(recordDepartment, 2));
-            int r = recordDepartmentMapper.updateById(recordDepartment);
+            recordDepartmentMapper.deleteById(recordDepartment.getId());
+            recordDepartment.setVersion(recordDepartment.getVersion()+1);
+            recordDepartment.setIsDelete(true);
+            recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
+            recordDepartment.setId(UUIDUtil.generate());
+            int r = recordDepartmentMapper.insert(recordDepartment);
             if (r + u == 2) {
                 return true;
             }else {
@@ -229,32 +236,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             return user;
         }
 
-    /**
-     * 根据备案单户获取民警列表
-     * @param recordDepartment
-     * @param type
-     * @return
-     */
-     /*public List<RecordPolice> setRecordPolice(RecordDepartment recordDepartment,int type){
-        //RecordPolice recordPolice = new RecordPolice();
-         List<RecordPolice> list = new ArrayList<>();
-         switch (type){
-             case 1:
-                 RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-                 list = recordPoliceMapper.selectByOfficeCode(oldDate.getDepartmentCode());
-                 for (RecordPolice r:list) {
-                     r.setOfficeDistrict(recordDepartment.getDepartmentAddress());
-                     r.setOfficeName(recordDepartment.getDepartmentName());
-                     r.setOfficeCode(recordDepartment.getDepartmentCode());
-                 }
-                 break;
-             case 2:
-                 list = recordPoliceMapper.selectByOfficeCode(recordDepartment.getDepartmentCode());
-             default:
-                  break;
-         }
-         return list;
-     }*/
+    @Override
+    public List<RecordDepartment> showMore(String flag) {
 
-
+        return recordDepartmentMapper.selectByFlag(flag);
+    }
 }
