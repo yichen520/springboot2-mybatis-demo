@@ -26,7 +26,7 @@ public class SealServiceImpl implements SealService {
 
     @Override
    public UseDepartment isrecord(String useDepartmentCode){
-     return useDepartmentDao.selectByPrimaryKey(useDepartmentCode);
+     return useDepartmentDao.selectByCode(useDepartmentCode);
    }
 
    @Override
