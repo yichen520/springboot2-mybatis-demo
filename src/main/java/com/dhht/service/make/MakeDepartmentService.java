@@ -1,21 +1,24 @@
 package com.dhht.service.make;
 
+import com.dhht.model.MakeDepartmentSimple;
 import com.dhht.model.Makedepartment;
+import com.dhht.model.RecordDepartment;
 import com.dhht.model.UserDomain;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
 public interface MakeDepartmentService {
-     List<Makedepartment> findAllMake();
+     PageInfo<MakeDepartmentSimple> selectByDistrictId(String districtId, int pageNum, int pageSize);
 
-     int addMake(Makedepartment makedepartment);
+     Makedepartment selectDetailById(String id);
 
-     int deletemake(String code);
+     int insert(Makedepartment makedepartment);
 
-     int updatemake(Makedepartment makedepartment);
+     int update(Makedepartment makedepartment);
 
-     PageInfo<Makedepartment> findAllMakeBySize(int pageNum, int pageSize);
+     int deleteById(String id);
 
-     int validateUserAccout(String code);
+     PageInfo<Makedepartment> selectHistory(String flag,int pageNum,int pageSize);
+
 }
