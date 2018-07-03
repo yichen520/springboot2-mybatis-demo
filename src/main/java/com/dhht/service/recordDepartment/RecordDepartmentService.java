@@ -20,6 +20,8 @@ public interface RecordDepartmentService {
 
     boolean updateById(RecordDepartment recordDepartment);
 
+    List<RecordDepartment> showMore(String flag);
+
 
 
 }

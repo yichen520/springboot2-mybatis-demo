@@ -11,6 +11,8 @@ public interface RecordDepartmentMapper {
 
 
     int deleteByPrimaryKey(String departmentCode);
+   //更新老历史记录状态
+   int   updateDeleteFlag(@Param("id") String id);
 
     //根据Id查找备案单位
     RecordDepartment selectById(@Param("id") String id);
@@ -33,4 +35,8 @@ public interface RecordDepartmentMapper {
 
     //根据备案单位编号查询备案单位
     RecordDepartment selectByCode(String code);
+
+    List<RecordDepartment>  selectByFlag(@Param("flag") String flag);
+
+    int validateCode(@Param("code") String code);
 }

@@ -12,25 +12,33 @@
     <result column="telphone" jdbcType="VARCHAR" property="telphone" />
     <result column="postal_code" jdbcType="VARCHAR" property="postalCode" />
     <result column="is_delete" jdbcType="BIT" property="isDelete"/>
+    <result column="version" jdbcType="INTEGER" property="version"/>
+    <result column="flag" jdbcType="VARCHAR" property="flag"/>
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
   </resultMap>
 
   <sql id="Base_Column_List">
     id,department_code, department_name, principal_name, principal_id, department_address,
-    department_address_detail, telphone, postal_code,is_delete
+    department_address_detail, telphone, postal_code,is_delete,flag,updateTime,version
   </sql>
 
   <select id="selectAllRecordDepartment" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE is_delete = 0
+    SELECT r.* from record_department r RIGHT JOIN(
+    select flag,MAX(version) as ver from record_department GROUP BY flag
+    )as b on r.flag=b.flag and  r.version=b.ver
+    <!--SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE is_delete = 0-->
   </select>
+
+
    
   <select id="selectByDistrictId" resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address LIKE '${id}%' and is_delete = 0
   </select>
 
   <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
-    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete)
+    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete,version,flag,updateTime)
     VALUES (#{id,jdbcType=CHAR},#{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},#{principalName,jdbcType=VARCHAR},#{principalId,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR},
-    #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0)
+    #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0, #{version,jdbcType=INTEGER},#{flag,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
   </insert>
 
   <update id="updateById" parameterType="com.dhht.model.RecordDepartment">
@@ -57,7 +65,17 @@
     SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE id = #{id,jdbcType=CHAR}
   </select>
 
+  <select id="selectByFlag" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE flag = #{flag,jdbcType=VARCHAR} ORDER BY updateTime desc
+  </select>
+
+
+
   <update id="deleteById" parameterType="java.lang.String">
     UPDATE record_department SET is_delete = 1 WHERE id = #{id,jdbcType=CHAR}
   </update>
+  <select id="validateCode" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    SELECT  count(1) FROM record_department WHERE department_code = #{code,jdbcType=VARCHAR} and is_delete = 0
+  </select>
+
 </mapper>

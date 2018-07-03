@@ -2,8 +2,10 @@ package com.dhht.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
- * Created by imac_dhht on 2018/6/13.
+ * Created by 崔杨 on 2018/6/13.
  */
 @Data
 public class UseDepartment {
@@ -25,8 +27,12 @@ public class UseDepartment {
     private String address;//省市区详细地址
     private String telphone;//联系电话
     private String postalCode;//邮政编码
-    private String departmentStatus;//企业状态
+    private String departmentStatus;//企业状态  0-正常 1-注销
     private String departmentCertificate;//使用单位数字证书
     private String departmentCertificateType;//使用单位数字证书类型
     private Boolean isDelete;
+    private Integer version;
+    private String flag;
+    private Date updateTime;
+
 }

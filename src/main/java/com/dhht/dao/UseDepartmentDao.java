@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 
+import com.dhht.model.RecordDepartment;
 import com.dhht.model.UseDepartment;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -13,15 +15,27 @@ import java.util.List;
 @Repository
 public interface UseDepartmentDao {
 
-    int deleteByPrimaryKey(String code);
+    int deleteById(@Param("id")String id);
 
-    int insert(UseDepartment record);
+    int delete(@Param("id") String id);
 
-    UseDepartment selectByPrimaryKey(String userdepartmentCode);
+    List<UseDepartment> selectByDepartmentStatus(@Param("departmentStatus") String departmentStatus);
+
+    int insert(UseDepartment useDepartment);
+
+    UseDepartment selectByCode(String usedepartmentCode);
+
+    UseDepartment selectById(String Id);
 
 //    int updateByPrimaryKeySelective(UserDepartment record);
 
     int updateByPrimaryKey(UseDepartment record);
 
     List<UseDepartment> findAllMake();
+
+    List<UseDepartment> selectByFlag(@Param("flag") String flag);
+
+    int updateById(UseDepartment useDepartment);
+
+    List<UseDepartment> find(@Param("code") String code,@Param("districtId")String districtId,@Param("name")String name,@Param("departmentStatus")String departmentStatus);
 }

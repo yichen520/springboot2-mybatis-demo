@@ -140,9 +140,9 @@
 
 
 
-   <delete id="delete">
-       DELETE  FROM sys_user WHERE id = #{id}
-   </delete>
+    <update id="delete" parameterType="java.lang.String">
+        UPDATE sys_user SET is_delete = 1 WHERE id = #{id,jdbcType=CHAR}
+    </update>
 
     <delete id="deleteByTelphone" parameterType="java.lang.String">
         DELETE FROM sys_user WHERE telphone = #{telphone}
