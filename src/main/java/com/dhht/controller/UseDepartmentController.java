@@ -47,7 +47,7 @@ public class UseDepartmentController {
     }
 
     /**
-     * 修改
+     * 查找
      * @param
      * @return
      */
