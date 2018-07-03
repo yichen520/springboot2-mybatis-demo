@@ -8,6 +8,7 @@ import com.dhht.model.RecordPolice;
 import com.dhht.model.User;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.tools.SmsSendService;
+import com.dhht.service.user.UserPasswordService;
 import com.dhht.service.user.UserService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
@@ -41,6 +42,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     private UserDao userDao;
     @Autowired
     private RecordPoliceMapper recordPoliceMapper;
+    @Autowired
+    private UserPasswordService userPasswordService;
 
     private String code;
 
@@ -124,7 +127,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userDao.addUser(user);
         if(r+u==2){
-            smsSendService.sendMessage(user.getTelphone(),code);
+            userPasswordService.sendMessage(user.getTelphone(),code);
             return true;
         }
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
