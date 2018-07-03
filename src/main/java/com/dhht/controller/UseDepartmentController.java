@@ -2,6 +2,7 @@ package com.dhht.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.UseDepartment;
 import com.dhht.service.useDepartment.UseDepartmentService;
@@ -13,91 +14,79 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value="/useDepartment")     // 通过这里配置使下面的映射都在/users下，可去除
+@RequestMapping(value="/useDepartment")
 public class UseDepartmentController {
 
 
     @Autowired
    private UseDepartmentService useDepartmentService;
 
-//    /***
-//     * 添加使用单位
-//     * @param
-//     * @return
-//     */
-//    @RequestMapping(value ="/add", method = RequestMethod.POST)
-//    public JsonObjectBO addUserDepartment(@RequestBody UseDepartment useDepartment){
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        int addUseDepartment = useDepartmentService.insert(useDepartment);
-//        if(addUseDepartment>0){
-//            jsonObjectBO.setCode(1);
-//            jsonObjectBO.setMessage("添加成功");
-//        }else {
-//            jsonObjectBO.setCode(-1);
-//            jsonObjectBO.setMessage("添加失败");
-//        }
-//        return jsonObjectBO;
-//    }
-//
-//
-//    /**
-//     * 修改使用单位
-//     * @param
-//     * @return
-//     */
-//    @RequestMapping(value ="/update",method = RequestMethod.POST)
-//    public JsonObjectBO updateUserDepartment(@RequestBody UseDepartment useDepartment){
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        int update = useDepartmentService.update(useDepartment);
-//        if(update>0){
-//            jsonObjectBO.setCode(1);
-//            jsonObjectBO.setMessage("修改成功");
-//        }else{
-//            jsonObjectBO.setCode(-1);
-//            jsonObjectBO.setMessage("修改失败");
-//        }
-//        return jsonObjectBO;
-//    }
-//
-//    /**
-//     * 删除用使用单位
-//     * @param
-//     * @return
-//     */
-//    @RequestMapping(value = "/deleteUserDepartment" , method = RequestMethod.POST)
-//    public JsonObjectBO deleteUserDepartment(@RequestBody UseDepartment useDepartment){
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        int delete = useDepartmentService.delete(useDepartment);
-//        if (delete>0){
-//            jsonObjectBO.setCode(1);
-//            jsonObjectBO.setMessage("删除成功");
-//        }else{
-//            jsonObjectBO.setCode(-1);
-//            jsonObjectBO.setMessage("删除失败");
-//        }
-//        return jsonObjectBO;
-//    }
-//
-//    /**
-//     * 查询全部用户
-//     */
-//    @RequestMapping(value = "/findAll" , method = RequestMethod.POST)
-//    public JsonObjectBO findAll(@RequestBody Map map){
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        JSONObject jsonObject = new JSONObject();
-//        int pageSize =(Integer) map.get("pageSize");
-//        int pageNum =(Integer) map.get("pageNum");
-//        PageInfo<UseDepartment> useDepartmentPageInfo = useDepartmentService.findAllMakeBySize(pageNum,pageSize);
-//        jsonObject.put("UserDepartment",useDepartmentPageInfo);
-//        jsonObjectBO.setData(jsonObject);
-//        jsonObjectBO.setCode(1);
-//        jsonObjectBO.setMessage("查询成功");
-//        return jsonObjectBO;
-//
-//    }
-//
-//
+    /***
+     * 添加
+     * @param
+     * @return
+     */
+    @Log("添加用户")
+    @RequestMapping(value ="/insert", method = RequestMethod.POST)
+    public JsonObjectBO insert(@RequestBody UseDepartment useDepartment){
+        JsonObjectBO jsonObjectBO = useDepartmentService.insert(useDepartment);
+        return jsonObjectBO;
 
 
+    }
+
+    /**
+     * 修改
+     * @param useDepartment
+     * @return
+     */
+    @RequestMapping(value = "/update" , method = RequestMethod.POST)
+    public JsonObjectBO update(@RequestBody UseDepartment useDepartment){
+        JsonObjectBO jsonObjectBO = useDepartmentService.update(useDepartment);
+        return jsonObjectBO;
+    }
+
+    /**
+     * 修改
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/find" , method = RequestMethod.POST)
+    public JsonObjectBO find(@RequestBody Map map){
+        String code = (String)map.get("code");
+        String name = (String)map.get("name");
+        String districtId = (String)map.get("districtId");
+        String departmentStatus = (String)map.get("departmentStatus");
+
+        int pageNum = (int) map.get("pageNum");
+        int pageSize = (int) map.get("pageSize");
+        JsonObjectBO jsonObjectBO = useDepartmentService.find(code, name, districtId, departmentStatus, pageNum, pageSize);
+        return jsonObjectBO;
+    }
+
+
+    /**
+     * 删除
+     * @param useDepartment
+     * @return
+     */
+    @RequestMapping(value = "/delete" , method = RequestMethod.POST)
+    public JsonObjectBO delete(@RequestBody UseDepartment useDepartment){
+        JsonObjectBO jsonObjectBO = useDepartmentService.delete(useDepartment);
+        return jsonObjectBO;
+    }
+
+
+    /**
+     * 查询详情
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/showMore" , method = RequestMethod.POST)
+    public JsonObjectBO showMore(@RequestBody Map map){
+        String flag = (String)map.get("flag");
+        JsonObjectBO jsonObjectBO = useDepartmentService.showMore(flag);
+        return jsonObjectBO;
+    }
 
 }

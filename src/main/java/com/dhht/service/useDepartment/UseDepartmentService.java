@@ -18,5 +18,5 @@ public interface UseDepartmentService {
 
     JsonObjectBO delete(UseDepartment useDepartment);
 
-    JsonObjectBO item(UseDepartment useDepartment);
+    JsonObjectBO showMore(String flag);
 }

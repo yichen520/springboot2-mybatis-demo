@@ -2,6 +2,8 @@ package com.dhht.model;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * Created by 崔杨 on 2018/6/13.
  */
@@ -31,4 +33,6 @@ public class UseDepartment {
     private Boolean isDelete;
     private Integer version;
     private String flag;
+    private Date updateTime;
+
 }
