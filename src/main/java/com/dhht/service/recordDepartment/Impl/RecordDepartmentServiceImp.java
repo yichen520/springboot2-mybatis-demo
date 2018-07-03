@@ -113,6 +113,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         if(isInsert(recordDepartment)){
             return false;
         }
+        if (recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
+            return false;
+        }
         recordDepartment.setId(UUIDUtil.generate());
         User user = setUserByType(recordDepartment,1);
         recordDepartment.setVersion(1);

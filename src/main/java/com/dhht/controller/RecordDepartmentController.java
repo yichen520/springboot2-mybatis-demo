@@ -107,6 +107,23 @@ public class RecordDepartmentController {
     }
 
     /**
+     * 展示备案单位的列表
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/showhistory")
+    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        String flag = (String)map.get("flag");
+        JSONObject jsonObject = new JSONObject();
+        try{
+                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
+                jsonObject.put("recordDepartments",recordDepartments);
+        }catch (Exception e ){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+    /**
      * 添加备案单位
      * @param recordDepartment
      * @return
@@ -124,7 +141,7 @@ public class RecordDepartmentController {
         if(result){
             return JsonObjectBO.ok("添加成功");
         }else {
-            return JsonObjectBO.error("添加失败");
+            return JsonObjectBO.error("添加失败,该编号已存在");
         }
     }
 
@@ -191,15 +208,5 @@ public class RecordDepartmentController {
         }
     }
 
-    /* public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
-        DistrictMenus districtMenus
-
-         try{
-
-         }catch (Exception e){
-            JsonObjectBO.exception(e.getMessage());
-         }
-     }*/
 
 }

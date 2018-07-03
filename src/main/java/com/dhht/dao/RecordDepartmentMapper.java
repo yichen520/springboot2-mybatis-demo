@@ -37,4 +37,6 @@ public interface RecordDepartmentMapper {
     RecordDepartment selectByCode(String code);
 
     List<RecordDepartment>  selectByFlag(@Param("flag") String flag);
+
+    int validateCode(@Param("code") String code);
 }

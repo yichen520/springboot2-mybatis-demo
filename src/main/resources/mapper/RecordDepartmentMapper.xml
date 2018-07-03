@@ -74,7 +74,8 @@
   <update id="deleteById" parameterType="java.lang.String">
     UPDATE record_department SET is_delete = 1 WHERE id = #{id,jdbcType=CHAR}
   </update>
-
-
+  <select id="validateCode" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    SELECT  count(1) FROM record_department WHERE department_code = #{code,jdbcType=VARCHAR} and is_delete = 0
+  </select>
 
 </mapper>
