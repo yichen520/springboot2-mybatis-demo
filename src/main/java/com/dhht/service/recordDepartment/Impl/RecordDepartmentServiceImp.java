@@ -40,6 +40,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     private UserDao userDao;
     @Autowired
     private RecordPoliceMapper recordPoliceMapper;
+    @Autowired
+    private UserService userService;
 
     private String code;
 
@@ -175,7 +177,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public boolean updateById(RecordDepartment recordDepartment) {
         try {
-            int u = userDao.update(setUserByType(recordDepartment, 2));
+            int u = userService.update(setUserByType(recordDepartment, 2)).getCode();
             int r = recordDepartmentMapper.updateById(recordDepartment);
             if (r + u == 2) {
                 return true;
