@@ -11,10 +11,12 @@ import com.dhht.service.user.RoleService;
 import com.dhht.service.user.UserLockingService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +55,7 @@ public class UserController {
     @Log("添加用户")
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO adduser(@RequestBody User user){
-        JsonObjectBO jsonObjectBO = userService.insert(user);
-        return jsonObjectBO;
-
-
+        return ResultUtil.getResult(userService.insert(user));
     }
 
 
@@ -67,8 +66,7 @@ public class UserController {
      */
     @RequestMapping(value ="/update",method = RequestMethod.POST)
     public JsonObjectBO updateuser(@RequestBody User user){
-        JsonObjectBO jsonObjectBO = userService.update(user);
-        return jsonObjectBO;
+        return ResultUtil.getResult(userService.update(user));
 
     }
 
@@ -79,9 +77,7 @@ public class UserController {
      */
     @RequestMapping(value = "/delete" , method = RequestMethod.POST)
     public JsonObjectBO deleteSuser(@RequestBody User user){
-        String id = user.getId();
-        JsonObjectBO jsonObjectBO = userService.delete(id);
-        return  jsonObjectBO;
+        return ResultUtil.getResult(userService.delete(user.getId()));
 
     }
 
@@ -105,7 +101,6 @@ public class UserController {
      */
     @RequestMapping(value = "/info")
     public JsonObjectBO find(HttpServletRequest httpServletRequest, @RequestBody Map map){
-
         String realName = (String)map.get("realName");
         String roleId = (String) map.get("roleId");
         String districtId = (String) map.get("districtId");
@@ -113,9 +108,15 @@ public class UserController {
         int pageSize =(Integer) map.get("pageSize");
         int pageNum =(Integer) map.get("pageNum");
 
-        JsonObjectBO jsonObjectBO = userService.find(user,realName,roleId,districtId,pageNum,pageSize);
-        return jsonObjectBO;
-
+        JSONObject jsonObject = new JSONObject();
+        PageInfo<User> pageInfo = new PageInfo<>();
+        try {
+            pageInfo = userService.find(user,realName,roleId,districtId,pageNum,pageSize);
+            jsonObject.put("user",pageInfo);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
     }
 
 
