@@ -1,25 +1,27 @@
 package com.dhht.dao;
 
+import com.dhht.model.MakeDepartmentSimple;
 import com.dhht.model.Makedepartment;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface MakedepartmentMapper {
-    int deleteByPrimaryKey(String makedepartmentCode);
 
-    int insert(Makedepartment record);
 
-    int insertSelective(Makedepartment record);
+    List<MakeDepartmentSimple> selectByDistrictId(@Param("id") String id);
 
-    Makedepartment selectByPrimaryKey(String makedepartmentCode);
+    Makedepartment selectDetailById(@Param("id") String id);
 
-    int updateByPrimaryKeySelective(Makedepartment record);
+    int insert(Makedepartment makedepartment);
 
-    int updateByPrimaryKey(Makedepartment record);
+    int deleteById(Makedepartment makedepartment);
 
-    List<Makedepartment> findAllMake();
+    int deleteHistoryByID(@Param("id") String id);
 
-    int validateUserAccout(String code);
+    List<Makedepartment> selectByFlag(@Param("flag") String flag);
+
+    List<MakeDepartmentSimple> selectByCode(Makedepartment makedepartment);
 }

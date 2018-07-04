@@ -6,6 +6,7 @@ import com.dhht.dao.*;
 import com.dhht.model.RecordPolice;
 import com.dhht.model.User;
 import com.dhht.service.tools.SmsSendService;
+import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
@@ -38,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RecordPoliceMapper recordPoliceMapper;
+
+    @Autowired
+    private UserPasswordService userPasswordService;
 
     /**
      * 6位简单密码
@@ -80,7 +84,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(password);
         user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
-        smsSendService.sendMessage(user.getTelphone(),code);
+        userPasswordService.sendMessage(user.getTelphone(),code);
         if (a != 1) {
             jsonObjectBO.setCode(ERROR);
             jsonObjectBO.setMessage("添加失败");
@@ -102,38 +106,46 @@ public class UserServiceImpl implements UserService {
     @Override
     public JsonObjectBO update(User user) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        User user2 = userDao.findById(user.getId());
-        if (!user2.getTelphone().equals(user.getTelphone())) {
-            User user1 = userDao.findByTelphone(user.getTelphone());
-            if (user1 != null) {
-                jsonObjectBO.setCode(ERROR);
-                jsonObjectBO.setMessage("该用户已经存在");
-                return jsonObjectBO;
-            }
-            user.setUserName(user.getTelphone());
-            Integer a = userDao.update(user);
-            if (a != 1) {
-                jsonObjectBO.setCode(ERROR);
-                jsonObjectBO.setMessage("修改失败");
-                return jsonObjectBO;
+        try {
+
+            User user2 = userDao.findById(user.getId());
+            if (!user2.getTelphone().equals(user.getTelphone())) {
+                User user1 = userDao.findByTelphone(user.getTelphone());
+                if (user1 != null) {
+                    jsonObjectBO.setCode(ERROR);
+                    jsonObjectBO.setMessage("该用户已经存在");
+                    return jsonObjectBO;
+                }
+                user.setUserName(user.getTelphone());
+                Integer a = userDao.update(user);
+                if (a != 1) {
+                    jsonObjectBO.setCode(ERROR);
+                    jsonObjectBO.setMessage("修改失败");
+                    return jsonObjectBO;
+                } else {
+                    jsonObjectBO.setCode(SUCCESS);
+                    jsonObjectBO.setMessage("修改成功");
+                    userPasswordService.sendMessage(user.getTelphone(), createRandomVcode());
+                    return jsonObjectBO;
+                }
             } else {
-                jsonObjectBO.setCode(SUCCESS);
-                jsonObjectBO.setMessage("修改成功");
+                user.setUserName(user.getTelphone());
+                Integer a = userDao.update(user);
+                if (a != 1) {
+                    jsonObjectBO.setCode(ERROR);
+                    jsonObjectBO.setMessage("修改失败");
+                } else {
+                    jsonObjectBO.setCode(SUCCESS);
+                    jsonObjectBO.setMessage("修改成功");
+                    userPasswordService.sendMessage(user.getTelphone(), createRandomVcode());
+                }
                 return jsonObjectBO;
             }
-        } else {
-            user.setUserName(user.getTelphone());
-            Integer a = userDao.update(user);
-            if (a != 1) {
-                jsonObjectBO.setCode(ERROR);
-                jsonObjectBO.setMessage("修改失败");
-            } else {
-                jsonObjectBO.setCode(SUCCESS);
-                jsonObjectBO.setMessage("修改成功");
-            }
+        }catch (Exception e){
+            jsonObjectBO.setMessage("出现异常");
+            jsonObjectBO.setCode(-1);
             return jsonObjectBO;
         }
-
 
     }
 
@@ -176,7 +188,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findById(id);
         user.setPassword(MD5Util.toMd5(code));
         String phone = user.getTelphone();
-        return smsSendService.sendMessage(phone,code);
+        return userPasswordService.sendMessage(phone,code);
     }
 
 

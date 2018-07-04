@@ -31,7 +31,5 @@ public interface SmsSendService {
      */
     boolean sendSingleMsgByTemplate(String phoneNumber, int templateId, ArrayList<String> params);
 
-    void  sendPhoneMessage(String phone,ArrayList<String> params);
 
-    JsonObjectBO sendMessage(String phone,String code);
 }

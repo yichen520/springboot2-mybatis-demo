@@ -7,6 +7,7 @@ import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserLoginService;
+import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Autowired
     private SMSCodeDao smsCodeDao;
+
+    @Autowired
+    private UserPasswordService userPasswordService;
 
     @Autowired
     private RoleResourceDao roleResourceDao;
@@ -75,7 +79,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         User user = userDao.findById(id);
         user.setPassword(MD5Util.toMd5(code));
         String phone = user.getTelphone();
-        return smsSendService.sendMessage(phone,code);
+        return userPasswordService.sendMessage(phone,code);
     }
 
 
