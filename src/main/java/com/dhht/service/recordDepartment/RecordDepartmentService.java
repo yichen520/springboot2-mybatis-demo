@@ -12,13 +12,13 @@ public interface RecordDepartmentService {
 
     PageInfo<RecordDepartment> selectAllRecordDepartMent(int pageSize,int pageNum);
 
-    Boolean insert(RecordDepartment recordDepartment);
+    int insert(RecordDepartment recordDepartment);
 
     RecordDepartment selectByCode(String code);
 
-    boolean deleteById(String id);
+    int deleteById(String id);
 
-    boolean updateById(RecordDepartment recordDepartment);
+    int updateById(RecordDepartment recordDepartment);
 
     List<RecordDepartment> showMore(String flag);
 

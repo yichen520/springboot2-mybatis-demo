@@ -11,6 +11,7 @@ import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserPasswordService;
 import com.dhht.service.user.UserService;
 import com.dhht.util.MD5Util;
+import com.dhht.util.ResultUtil;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
@@ -36,16 +37,11 @@ import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
-    @Autowired
-    private SmsSendService smsSendService;
-    @Autowired
-    private UserDao userDao;
-    @Autowired
-    private RecordPoliceMapper recordPoliceMapper;
-    @Autowired
-    private UserPasswordService userPasswordService;
 
-    private String code;
+
+    @Autowired
+    private UserService userService;
+
 
     /**
      * 带分页的查询区域下的备案单位
@@ -112,12 +108,12 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @return
      */
     @Override
-    public Boolean insert(RecordDepartment recordDepartment) {
+    public int insert(RecordDepartment recordDepartment) {
         if(isInsert(recordDepartment)){
-            return false;
+            return ResultUtil.isDistrict;
         }
         if (recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
-            return false;
+            return ResultUtil.isHave;
         }
         recordDepartment.setId(UUIDUtil.generate());
         User user = setUserByType(recordDepartment,1);
@@ -125,13 +121,16 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         recordDepartment.setFlag(UUIDUtil.generate10());
         recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
-        int u = userDao.addUser(user);
-        if(r+u==2){
-            userPasswordService.sendMessage(user.getTelphone(),code);
-            return true;
+        int u = userService.insert(user);
+        if(r+u==3){
+            return ResultUtil.isSuccess;
+        }else if(u==1){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultUtil.isHave;
+        }else {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultUtil.isFail;
         }
-        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        return false;
     }
 
     /**
@@ -151,29 +150,29 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @return
      */
     @Override
-    public boolean deleteById(String id) {
+    public int deleteById(String id) {
         RecordDepartment recordDepartment = recordDepartmentMapper.selectById(id);
         try {
             User user = setUserByType(recordDepartment,3);
             if(user ==null){
                 int re = recordDepartmentMapper.deleteById(id);
                 if(re==1) {
-                    return true;
+                    return ResultUtil.isSuccess;
                 }else {
-                    return false;
+                    return ResultUtil.isFail;
                 }
             }
             int r = recordDepartmentMapper.deleteById(id);
-            int u = userDao.deleteByTelphone(recordDepartment.getTelphone());
+            int u = userService.deleteByTelphone(recordDepartment.getTelphone());
             if (r + u == 2) {
-                return true;
+                return ResultUtil.isSuccess;
             }else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return false;
+                return ResultUtil.isFail;
             }
         } catch (Exception e){
         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        return false;
+        return ResultUtil.isException;
     }
     }
 
@@ -183,24 +182,34 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @return
      */
     @Override
-    public boolean updateById(RecordDepartment recordDepartment) {
+    public int updateById(RecordDepartment recordDepartment) {
         try {
-            int u = userDao.update(setUserByType(recordDepartment, 2));
+            int d = recordDepartmentMapper.deleteById(recordDepartment.getId());
+            if(d==0){
+                return ResultUtil.isError;
+            }
+            if(recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
+                return ResultUtil.isHave;
+            }
+            int u = userService.update(setUserByType(recordDepartment, 2));
             recordDepartmentMapper.deleteById(recordDepartment.getId());
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
             recordDepartment.setIsDelete(true);
             recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
             recordDepartment.setId(UUIDUtil.generate());
             int r = recordDepartmentMapper.insert(recordDepartment);
-            if (r + u == 2) {
-                return true;
+            if (r + u == 3) {
+                return ResultUtil.isSuccess;
+            }else if(u==1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isHave;
             }else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return false;
+                return ResultUtil.isFail;
             }
         }catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return false;
+            return ResultUtil.isException;
         }
         //return true;
     }
@@ -234,9 +243,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                     user.setId(UUIDUtil.generate());
                     user.setUserName("BADW"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
-                    code = createRandomVcode();
-                    String password = MD5Util.toMd5(code);
-                    user.setPassword(password);
                     user.setRoleId("BADW");
                     user.setTelphone(recordDepartment.getTelphone());
                     user.setDistrictId(recordDepartment.getDepartmentAddress());
@@ -244,7 +250,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                  //修改user
                 case 2:
                     RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-                    user = userDao.findByTelphone(oldDate.getTelphone());
+                    user = userService.findByTelphone(oldDate.getTelphone());
                     user.setUserName("BADW"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
                     //user.setRoleId("BADW");
@@ -253,7 +259,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                     break;
                  //删除user
                 case 3:
-                    user = userDao.findByTelphone(recordDepartment.getTelphone());
+                    user = userService.findByTelphone(recordDepartment.getTelphone());
                 default:
                     break;
             }
@@ -262,7 +268,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
 
     @Override
     public List<RecordDepartment> showMore(String flag) {
-
         return recordDepartmentMapper.selectByFlag(flag);
     }
 }

@@ -34,7 +34,7 @@ public class UserLockingServiceImpl implements UserLockingService {
                 return ResultUtil.isFail;
             }
         } else {
-            return ResultUtil.islock;
+            return ResultUtil.isLock;
         }
     }
 
@@ -48,7 +48,7 @@ public class UserLockingServiceImpl implements UserLockingService {
     public int activeUnlocking(String id) {
         User user = userDao.findById(id);
         if (user.getIsLocked() == null || user.getIsLocked().equals("0") || !user.getIsLocked()) {
-            return ResultUtil.isUnlock;
+            return ResultUtil.isUnLock;
         } else {
             userDao.updateUnLock(id);
             return ResultUtil.isSuccess;

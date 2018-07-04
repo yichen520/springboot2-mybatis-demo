@@ -3,17 +3,19 @@ package com.dhht.service.employee;
 import com.dhht.model.Employee;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 public interface EmployeeService {
 
-    PageInfo<Employee> selectAllEmployee(int pageSum, int pageNum);
+   // PageInfo<Employee> selectAllEmployee(int pageSum, int pageNum);
 
-    PageInfo<Employee> selectByDepartmentCode(int pageSum,int pageNum,String employeeDepartmentCode);
+    List<Employee> selectByDepartmentCode(String employeeDepartmentCode);
 
-    boolean insertEmployee(Employee employee);
+    int insertEmployee(Employee employee);
 
-    boolean updateEmployee(Employee employee);
+    int updateEmployee(Employee employee);
 
-    boolean deleteEmployee(Employee employee);
+    int deleteEmployee(String id);
 
     Employee selectEmployeeByID(String employeeCode);
 }

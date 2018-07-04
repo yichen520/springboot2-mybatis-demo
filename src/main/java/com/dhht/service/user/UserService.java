@@ -29,6 +29,7 @@ public interface UserService  {
 
     int deleteByTelphone(String phone);
 
+    User findByTelphone(String phone);
 
     }
 

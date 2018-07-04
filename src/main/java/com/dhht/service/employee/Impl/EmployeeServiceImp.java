@@ -8,18 +8,24 @@ import com.dhht.model.User;
 
 import com.dhht.service.employee.EmployeeService;
 
+import com.dhht.service.user.UserService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.MD5Util;
+import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * 2018/7/2 create by fyc
+ */
 @Service(value = "EmployeeService")
 @Transactional
 public class EmployeeServiceImp implements EmployeeService {
@@ -27,55 +33,55 @@ public class EmployeeServiceImp implements EmployeeService {
     @Autowired
     private EmployeeDao employeeDao;
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
+    /**
+     * 查询某制作单位下的从业人员
+     * @param employeeDepartmentCode
+     * @return
+     */
     @Override
-    public PageInfo<Employee> selectAllEmployee(int pageSum,int pageNum ) {
-        List<Employee> employees = employeeDao.selectAllEmployee();
-        PageHelper.startPage(pageSum,pageNum);
-        PageInfo<Employee> result = new PageInfo(employees);
-        return result;
-    }
-
-    @Override
-    public PageInfo<Employee> selectByDepartmentCode(int pageSum, int pageNum, String employeeDepartmentCode) {
+    public List<Employee> selectByDepartmentCode(String employeeDepartmentCode) {
         List<Employee> employees = employeeDao.selectByDepartmentCode(employeeDepartmentCode);
-        PageHelper.startPage(pageSum,pageNum);
-        PageInfo<Employee> result = new PageInfo(employees);
-        return result;
+        return employees;
     }
 
     @Override
-    public boolean insertEmployee(Employee employee) {
+    public int insertEmployee(Employee employee) {
+        if(isInsert(employee.getEmployeeCode())){
+            return ResultUtil.isHave;
+        }
+        int u = userService.insert(setUserByType(employee,1));
+        employee.setId(UUIDUtil.generate());
         employee.setRegisterTime(DateUtil.getCurrentTime());
+        employee.setFlag(UUIDUtil.generate());
+        employee.setVersion(1);
+        employee.setVersionTime(DateUtil.getCurrentTime());
         int e = employeeDao.insert(employee);
-        int u = userDao.addUser(setUserByType(employee,1));
-        if(e+u==2){
-            return true;
+
+        if(u+e==3){
+            return ResultUtil.isSuccess;
+        }else if(u==1){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultUtil.isHave;
+        }else {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultUtil.isFail;
+
         }
-        return false;
+
     }
 
     @Override
-    public boolean updateEmployee(Employee employee) {
-        int e = employeeDao.updateByPrimaryKey(employee);
-        int u = userDao.update(setUserByType(employee,1));
-        if(e+u==2){
-            return true;
-        }
-        return false;
+    public int updateEmployee(Employee employee) {
+        return 0;
     }
 
     @Override
-    public boolean deleteEmployee(Employee employee) {
-        employee.setLogoutTime(DateUtil.getCurrentTime());
-        int e = employeeDao.updateByPrimaryKey(employee);
-        int u = userDao.update(setUserByType(employee,3));
-        if (e+u==2){
-            return true;
-        }
-        return false;
+    public int deleteEmployee(String id) {
+        return 0;
     }
+
 
     @Override
     public Employee selectEmployeeByID(String employeeCode) {
@@ -88,27 +94,32 @@ public class EmployeeServiceImp implements EmployeeService {
         switch (type){
             //新增用户
             case 1:
-                user.setId(UUIDUtil.generate());
-                user.setUserName(employee.getEmployeeCode());
+                user.setUserName("YG"+employee.getTelphone());
                 user.setRealName(employee.getEmployeeName());
-                user.setPassword(MD5Util.toMd5("123456"));
                 user.setTelphone(employee.getTelphone());
-                user.setDistrictId(employee.getFamilyAddress());
+                user.setDistrictId(employee.getNowAddress());
                 user.setRoleId("CYRY");
                 break;
             //修改用户
             case 2:
-                user = userDao.findByUserName(employee.getEmployeeCode());
+               /* user = userDao.findByUserName(employee.getEmployeeCode());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getFamilyAddress());
-                break;
+                break;*/
             //删除用户
             case 3:
-               user = userDao.findByUserName(employee.getEmployeeCode());
+               /*user = userDao.findByUserName(employee.getEmployeeCode());
                user.setIsDeleted(true);
-               break;
+               break;*/
         }
         return user;
+    }
+
+    public boolean isInsert(String code){
+        if(employeeDao.selectCountEmployeeCode(code)>0){
+            return true;
+        }
+        return false;
     }
 }

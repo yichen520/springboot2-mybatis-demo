@@ -2,8 +2,10 @@ package com.dhht.service.District.Impl;
 
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.DistrictMapper;
+import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
+import com.dhht.model.MakeDepartmentSimple;
 import com.dhht.model.Resource;
 import com.dhht.service.District.DistrictService;
 import com.dhht.util.StringUtil;
@@ -26,6 +28,9 @@ public class DistrictServiceImp implements DistrictService{
     @Autowired
     private DistrictMapper districtMapper;
 
+    @Autowired
+    private MakedepartmentMapper makedepartmentMapper;
+
 
     @Override
     public List<DistrictMenus> selectAllDistrict() {
@@ -35,6 +40,11 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
+    /**
+     * 生成区域列表
+     * @param id
+     * @return
+     */
     @Override
     public List<DistrictMenus> selectOneDistrict(String id) {
         String districtIds[] = StringUtil.DistrictUtil(id);
@@ -52,6 +62,38 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
+    @Override
+    public JsonObjectBO insert(String districtId, String parentId, String districtName) {
+        return null;
+    }
+
+    @Override
+    public JsonObjectBO delete(String districtId) {
+        return null;
+    }
+
+    /**
+     * 生成区域下带制作单位的列表
+     * @param id
+     * @return
+     */
+    @Override
+    public List<DistrictMenus> selectMakeDepartmentMenus(String id) {
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        String districtId = null;
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0];
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0]+districtIds[1];
+        }else {
+            districtId = id;
+        }
+        List<DistrictMenus> list = findDistrictList(districtMapper.selectById(districtId));
+        List<DistrictMenus> districtMenus = findOneParent(list,id);
+       setMakeDepartmentchildren(districtMenus,list);
+        return districtMenus;
+    }
+
     /**
      * 增加区域
      * @param districtId
@@ -59,7 +101,7 @@ public class DistrictServiceImp implements DistrictService{
      * @param districtName
      * @return
      */
-    @Override
+  /*  @Override
     public JsonObjectBO insert(String districtId, String parentId, String districtName) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         District district = new District();
@@ -130,7 +172,7 @@ public class DistrictServiceImp implements DistrictService{
      * @param districtId
      * @return
      */
-    @Override
+ /*   @Override
     public JsonObjectBO delete(String districtId){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         District district = new District();
@@ -160,7 +202,7 @@ public class DistrictServiceImp implements DistrictService{
                 return jsonObjectBO.error("删除失败");
             }
         }
-    }
+    }*/
 
     /**
      * 生成地区列表
@@ -205,7 +247,13 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
-    //查找指定父节点
+
+    /**
+     * 查找父节点
+     * @param list
+     * @param id
+     * @return
+     */
     public List<DistrictMenus> findOneParent(List<DistrictMenus> list,String id){
         List<DistrictMenus> districtMenus = new ArrayList<DistrictMenus>();
         for(DistrictMenus districtMenu:list){
@@ -226,6 +274,24 @@ public class DistrictServiceImp implements DistrictService{
             setAllChildren(list,districtMenus);
         }
     }
+
+    public void setMakeDepartmentchildren(List<DistrictMenus> parent, List<DistrictMenus> districtMenus){
+        for (DistrictMenus districtMenu:parent) {
+            List<DistrictMenus> list = findInList(districtMenus,districtMenu.getDistrictId());
+            if(list.size()>0){
+                districtMenu.setChildren(list);
+                for (DistrictMenus d:list) {
+                    List<MakeDepartmentSimple> makeDepartmentSimpleList = makedepartmentMapper.selectByDistrict(d.getDistrictId());
+                    if(makeDepartmentSimpleList.size()>0){
+                        d.setMakeDepartmentSimples(makeDepartmentSimpleList);
+                    }
+                }
+            }
+            setAllChildren(list,districtMenus);
+        }
+
+    }
+
 
 
     //在给定集合中根据parentID查找数据
@@ -252,4 +318,8 @@ public class DistrictServiceImp implements DistrictService{
         }
         return true;
     }
+
+
+
+
 }

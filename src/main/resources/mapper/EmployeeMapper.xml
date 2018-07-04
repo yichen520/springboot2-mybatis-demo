@@ -2,9 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dhht.dao.EmployeeDao" >
   <resultMap id="BaseResultMap" type="com.dhht.model.Employee" >
-    <id column="employee_code" property="employeeCode" jdbcType="VARCHAR" />
+    <id column="id" property="id" jdbcType="CHAR"/>
+    <result column="employee_code" property="employeeCode" jdbcType="VARCHAR" />
     <result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
     <result column="employee_id" property="employeeId" jdbcType="VARCHAR" />
+    <result column="employee_gender" property="employeeGender" jdbcType="CHAR"/>
     <result column="employee_job" property="employeeJob" jdbcType="VARCHAR" />
     <result column="employee_department_code" property="employeeDepartmentCode" jdbcType="VARCHAR"/>
     <result column="employee_nation" property="employeeNation" jdbcType="VARCHAR" />
@@ -24,430 +26,53 @@
     <result column="logout_office_name" property="logoutOfficeName" jdbcType="VARCHAR" />
     <result column="logout_name" property="logoutName" jdbcType="VARCHAR" />
     <result column="logout_time" property="logoutTime" jdbcType="TIMESTAMP" />
+    <result column="effective_time" property="effectiveTime" jdbcType="TIMESTAMP"/>
+    <result column="version" property="version" jdbcType="NUMERIC"/>
+    <result column="version_time" property="versionTime" jdbcType="TIMESTAMP"/>
+    <result column="flag" property="flag" jdbcType="VARCHAR"/>
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
+
   <sql id="Base_Column_List" >
-    employee_code, employee_name, employee_id, employee_job,employee_department_code, employee_nation, family_address,
+    id,employee_code, employee_name, employee_id,employee_gender, employee_job,employee_department_code, employee_nation, family_address,
     family_address_detail, now_address, now_address_detail, employee_image, telphone, 
     contact_name, contact_telphone, office_code, office_name, register_name, register_time,
-    logout_office_code, logout_office_name, logout_name, logout_time
+    logout_office_code, logout_office_name, logout_name, logout_time,effective_time,version,version_time,flag
   </sql>
+
   <select id="selectByDepartmentCode" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT <include refid="Base_Column_List"></include> FROM employee WHERE employee_department_code=#{employeeDepartmentCode}
+    SELECT <include refid="Base_Column_List"></include> FROM employee WHERE employee_department_code=#{employeeDepartmentCode} AND is_delete = 0;
   </select>
-  <select id="selectAllEmployee" resultMap="BaseResultMap">
-    SELECT
-    <include refid="Base_Column_List"></include>
-    FROM employee
-  </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dhht.model.EmployeeExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from employee
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+
+  <select id="selectCountEmployeeCode" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select 
-    <include refid="Base_Column_List" />
+    COUNT (employee_code)
     from employee
-    where employee_code = #{employeeCode,jdbcType=VARCHAR}
+    where employee_code = #{employeeCode,jdbcType=VARCHAR} AND  is_delete = 0;
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from employee
     where employee_code = #{employeeCode,jdbcType=VARCHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="com.dhht.model.EmployeeExample" >
-    delete from employee
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
+
   <insert id="insert" parameterType="com.dhht.model.Employee" >
-    insert into employee (employee_code, employee_name, employee_id, 
-      employee_job, employee_nation, family_address, 
+    insert into employee (id,employee_code, employee_name, employee_id,employee_gender,
+      employee_job, employee_nation, family_address,
       family_address_detail, now_address, now_address_detail, 
       employee_image, telphone, contact_name, 
       contact_telphone, office_code, office_name, 
-      register_name, register_time, logout_office_code, 
-      logout_office_name, logout_name, logout_time
+      register_name, register_time, effective_time,version,version_time,flag,is_delete
       )
-    values (#{employeeCode,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, #{employeeId,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR},#{employeeCode,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, #{employeeId,jdbcType=VARCHAR}, #{employeeGender,jdbcType=CHAR},
       #{employeeJob,jdbcType=VARCHAR}, #{employeeNation,jdbcType=VARCHAR}, #{familyAddress,jdbcType=VARCHAR}, 
       #{familyAddressDetail,jdbcType=VARCHAR}, #{nowAddress,jdbcType=VARCHAR}, #{nowAddressDetail,jdbcType=VARCHAR}, 
       #{employeeImage,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, 
       #{contactTelphone,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR}, 
-      #{registerName,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{logoutOfficeCode,jdbcType=VARCHAR}, 
-      #{logoutOfficeName,jdbcType=VARCHAR}, #{logoutName,jdbcType=VARCHAR}, #{logoutTime,jdbcType=TIMESTAMP}
+      #{registerName,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{effectiveTime,jdbcType=TIMESTAMP},#{version,jdbcType=NUMERIC},
+      #{versionTime,jdbcType=TIMESTAMP},#{flag,jdbcType=VARCHAR},0
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.dhht.model.Employee" >
-    insert into employee
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="employeeCode != null" >
-        employee_code,
-      </if>
-      <if test="employeeName != null" >
-        employee_name,
-      </if>
-      <if test="employeeId != null" >
-        employee_id,
-      </if>
-      <if test="employeeJob != null" >
-        employee_job,
-      </if>
-      <if test="employeeNation != null" >
-        employee_nation,
-      </if>
-      <if test="familyAddress != null" >
-        family_address,
-      </if>
-      <if test="familyAddressDetail != null" >
-        family_address_detail,
-      </if>
-      <if test="nowAddress != null" >
-        now_address,
-      </if>
-      <if test="nowAddressDetail != null" >
-        now_address_detail,
-      </if>
-      <if test="employeeImage != null" >
-        employee_image,
-      </if>
-      <if test="telphone != null" >
-        telphone,
-      </if>
-      <if test="contactName != null" >
-        contact_name,
-      </if>
-      <if test="contactTelphone != null" >
-        contact_telphone,
-      </if>
-      <if test="officeCode != null" >
-        office_code,
-      </if>
-      <if test="officeName != null" >
-        office_name,
-      </if>
-      <if test="registerName != null" >
-        register_name,
-      </if>
-      <if test="registerTime != null" >
-        register_time,
-      </if>
-      <if test="logoutOfficeCode != null" >
-        logout_office_code,
-      </if>
-      <if test="logoutOfficeName != null" >
-        logout_office_name,
-      </if>
-      <if test="logoutName != null" >
-        logout_name,
-      </if>
-      <if test="logoutTime != null" >
-        logout_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="employeeCode != null" >
-        #{employeeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeName != null" >
-        #{employeeName,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeId != null" >
-        #{employeeId,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeJob != null" >
-        #{employeeJob,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeNation != null" >
-        #{employeeNation,jdbcType=VARCHAR},
-      </if>
-      <if test="familyAddress != null" >
-        #{familyAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="familyAddressDetail != null" >
-        #{familyAddressDetail,jdbcType=VARCHAR},
-      </if>
-      <if test="nowAddress != null" >
-        #{nowAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="nowAddressDetail != null" >
-        #{nowAddressDetail,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeImage != null" >
-        #{employeeImage,jdbcType=VARCHAR},
-      </if>
-      <if test="telphone != null" >
-        #{telphone,jdbcType=VARCHAR},
-      </if>
-      <if test="contactName != null" >
-        #{contactName,jdbcType=VARCHAR},
-      </if>
-      <if test="contactTelphone != null" >
-        #{contactTelphone,jdbcType=VARCHAR},
-      </if>
-      <if test="officeCode != null" >
-        #{officeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="officeName != null" >
-        #{officeName,jdbcType=VARCHAR},
-      </if>
-      <if test="registerName != null" >
-        #{registerName,jdbcType=VARCHAR},
-      </if>
-      <if test="registerTime != null" >
-        #{registerTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="logoutOfficeCode != null" >
-        #{logoutOfficeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="logoutOfficeName != null" >
-        #{logoutOfficeName,jdbcType=VARCHAR},
-      </if>
-      <if test="logoutName != null" >
-        #{logoutName,jdbcType=VARCHAR},
-      </if>
-      <if test="logoutTime != null" >
-        #{logoutTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.dhht.model.EmployeeExample" resultType="java.lang.Integer" >
-    select count(*) from employee
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update employee
-    <set >
-      <if test="record.employeeCode != null" >
-        employee_code = #{record.employeeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.employeeName != null" >
-        employee_name = #{record.employeeName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.employeeId != null" >
-        employee_id = #{record.employeeId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.employeeJob != null" >
-        employee_job = #{record.employeeJob,jdbcType=VARCHAR},
-      </if>
-      <if test="record.employeeNation != null" >
-        employee_nation = #{record.employeeNation,jdbcType=VARCHAR},
-      </if>
-      <if test="record.familyAddress != null" >
-        family_address = #{record.familyAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="record.familyAddressDetail != null" >
-        family_address_detail = #{record.familyAddressDetail,jdbcType=VARCHAR},
-      </if>
-      <if test="record.nowAddress != null" >
-        now_address = #{record.nowAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="record.nowAddressDetail != null" >
-        now_address_detail = #{record.nowAddressDetail,jdbcType=VARCHAR},
-      </if>
-      <if test="record.employeeImage != null" >
-        employee_image = #{record.employeeImage,jdbcType=VARCHAR},
-      </if>
-      <if test="record.telphone != null" >
-        telphone = #{record.telphone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.contactName != null" >
-        contact_name = #{record.contactName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.contactTelphone != null" >
-        contact_telphone = #{record.contactTelphone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.officeCode != null" >
-        office_code = #{record.officeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.officeName != null" >
-        office_name = #{record.officeName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.registerName != null" >
-        register_name = #{record.registerName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.registerTime != null" >
-        register_time = #{record.registerTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.logoutOfficeCode != null" >
-        logout_office_code = #{record.logoutOfficeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.logoutOfficeName != null" >
-        logout_office_name = #{record.logoutOfficeName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.logoutName != null" >
-        logout_name = #{record.logoutName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.logoutTime != null" >
-        logout_time = #{record.logoutTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update employee
-    set employee_code = #{record.employeeCode,jdbcType=VARCHAR},
-      employee_name = #{record.employeeName,jdbcType=VARCHAR},
-      employee_id = #{record.employeeId,jdbcType=VARCHAR},
-      employee_job = #{record.employeeJob,jdbcType=VARCHAR},
-      employee_nation = #{record.employeeNation,jdbcType=VARCHAR},
-      family_address = #{record.familyAddress,jdbcType=VARCHAR},
-      family_address_detail = #{record.familyAddressDetail,jdbcType=VARCHAR},
-      now_address = #{record.nowAddress,jdbcType=VARCHAR},
-      now_address_detail = #{record.nowAddressDetail,jdbcType=VARCHAR},
-      employee_image = #{record.employeeImage,jdbcType=VARCHAR},
-      telphone = #{record.telphone,jdbcType=VARCHAR},
-      contact_name = #{record.contactName,jdbcType=VARCHAR},
-      contact_telphone = #{record.contactTelphone,jdbcType=VARCHAR},
-      office_code = #{record.officeCode,jdbcType=VARCHAR},
-      office_name = #{record.officeName,jdbcType=VARCHAR},
-      register_name = #{record.registerName,jdbcType=VARCHAR},
-      register_time = #{record.registerTime,jdbcType=TIMESTAMP},
-      logout_office_code = #{record.logoutOfficeCode,jdbcType=VARCHAR},
-      logout_office_name = #{record.logoutOfficeName,jdbcType=VARCHAR},
-      logout_name = #{record.logoutName,jdbcType=VARCHAR},
-      logout_time = #{record.logoutTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Employee" >
-    update employee
-    <set >
-      <if test="employeeName != null" >
-        employee_name = #{employeeName,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeId != null" >
-        employee_id = #{employeeId,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeJob != null" >
-        employee_job = #{employeeJob,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeNation != null" >
-        employee_nation = #{employeeNation,jdbcType=VARCHAR},
-      </if>
-      <if test="familyAddress != null" >
-        family_address = #{familyAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="familyAddressDetail != null" >
-        family_address_detail = #{familyAddressDetail,jdbcType=VARCHAR},
-      </if>
-      <if test="nowAddress != null" >
-        now_address = #{nowAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="nowAddressDetail != null" >
-        now_address_detail = #{nowAddressDetail,jdbcType=VARCHAR},
-      </if>
-      <if test="employeeImage != null" >
-        employee_image = #{employeeImage,jdbcType=VARCHAR},
-      </if>
-      <if test="telphone != null" >
-        telphone = #{telphone,jdbcType=VARCHAR},
-      </if>
-      <if test="contactName != null" >
-        contact_name = #{contactName,jdbcType=VARCHAR},
-      </if>
-      <if test="contactTelphone != null" >
-        contact_telphone = #{contactTelphone,jdbcType=VARCHAR},
-      </if>
-      <if test="officeCode != null" >
-        office_code = #{officeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="officeName != null" >
-        office_name = #{officeName,jdbcType=VARCHAR},
-      </if>
-      <if test="registerName != null" >
-        register_name = #{registerName,jdbcType=VARCHAR},
-      </if>
-      <if test="registerTime != null" >
-        register_time = #{registerTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="logoutOfficeCode != null" >
-        logout_office_code = #{logoutOfficeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="logoutOfficeName != null" >
-        logout_office_name = #{logoutOfficeName,jdbcType=VARCHAR},
-      </if>
-      <if test="logoutName != null" >
-        logout_name = #{logoutName,jdbcType=VARCHAR},
-      </if>
-      <if test="logoutTime != null" >
-        logout_time = #{logoutTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where employee_code = #{employeeCode,jdbcType=VARCHAR}
-  </update>
+
+
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.Employee" >
     update employee
     set employee_name = #{employeeName,jdbcType=VARCHAR},

@@ -35,6 +35,7 @@
     SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_address LIKE '${id}%' and is_delete = 0
   </select>
 
+
   <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
     INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete,version,flag,updateTime)
     VALUES (#{id,jdbcType=CHAR},#{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},#{principalName,jdbcType=VARCHAR},#{principalId,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR},
