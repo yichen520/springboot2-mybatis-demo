@@ -116,7 +116,7 @@ public class PoliceServiceImp implements PoliceService{
         record.setOfficeName(recordDepartment.getDepartmentName());
         record.setOfficeDistrict(recordDepartment.getDepartmentAddress());
          int r = recordPoliceMapper.insert(record);
-         int u = userService.insert(setUser(record,1)).getCode();
+         int u = userService.insert(setUser(record,1));
         if(r+u==2){
             return true;
         }
