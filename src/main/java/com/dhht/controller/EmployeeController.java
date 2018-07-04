@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.Employee;
+import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.util.ResultUtil;
@@ -12,8 +13,10 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +30,13 @@ public class EmployeeController {
 
     private JSONObject jsonObject = new JSONObject();
 
-    @RequestMapping(value = "/menus")
-    public JsonObjectBO selectAllEmployee(@RequestBody Map map){
-      String id = (String)map.get("districtId");
+    @RequestMapping(value = "/menus",method = RequestMethod.GET)
+    public JsonObjectBO selectAllEmployee(HttpServletRequest httpServletRequest){
+      //String id = (String)map.get("districtId");
       JSONObject jsonObject = new JSONObject();
+      User user = (User) httpServletRequest.getSession().getAttribute("user");
       try{
-          List<DistrictMenus> list = districtService.selectMakeDepartmentMenus(id);
+          List<DistrictMenus> list = districtService.selectMakeDepartmentMenus(user.getDistrictId());
           jsonObject.put("menus",list);
           return JsonObjectBO.success("查询成功",jsonObject);
       }catch (Exception e){
