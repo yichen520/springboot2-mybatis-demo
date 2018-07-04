@@ -9,6 +9,7 @@ import com.dhht.sms.SmsSingleSender;
 import com.dhht.sms.SmsSingleSenderResult;
 import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,14 +26,24 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     @Autowired
     private SMSCodeDao smsCodeDao;
 
+    @Value("${sms.appId}")
+    private int appid ;
+
+    @Value("${sms.appKey}")
+    private String appkey ;
+
+    @Value("${sms.tmplId}")
+    private int tmplId ;
+
+    @Value("${sms.nationCode}")
+    private String nationCode ;
+
+
+
 
     @Override
     public void sendPhoneMessage(String phone,ArrayList<String> params){
         try {
-            int appid = 1400047268;
-            String appkey = "5e0e87a6bc2f28ddc221b7de8386ffe1";
-            String nationCode = "86";// 国家码  123456为您申请绑定的验证码，请于2分钟内填写。如非本人操作，请忽略本短信。
-            int tmplId = 63278;
             SmsSingleSender singleSender;// 初始化单发
             SmsSingleSenderResult singleSenderResult = new SmsSingleSenderResult();
             // 初始化单发
