@@ -4,7 +4,9 @@ import com.dhht.model.File;
 import com.dhht.model.FileExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FileMapper {
     int countByExample(FileExample example);
 
