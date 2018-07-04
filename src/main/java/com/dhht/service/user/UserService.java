@@ -15,21 +15,20 @@ import java.util.Map;
  * Created by 崔杨 on 2018/4/19.
  */
 public interface UserService  {
-    JsonObjectBO insert(User user);
+    int insert(User user);
 
-    JsonObjectBO update(User user);
+    int update(User user);
 
-    JsonObjectBO delete(String id);
+    int delete(String id);
 
     JsonObjectBO changePwd(String id);
 
-    JsonObjectBO find(User user,String realName,String roleId,String districtId,int pageNum, int pageSize);
+    PageInfo<User> find(User user,String realName,String roleId,String districtId,int pageNum, int pageSize);
 
     PageInfo<User> selectByDistrict(String id,int pageSum,int pageNum);
 
     int deleteByTelphone(String phone);
 
-//    JsonObjectBO deleteOther(String id);
 
     }
 
