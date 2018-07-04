@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         String code = createRandomVcode();
         String password = MD5Util.toMd5(code);
         user.setPassword(password);
-        user.setRoleId("GLY");
+         // user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
         userPasswordService.sendMessage(user.getTelphone(), code);
         if (a != 1) {
@@ -212,6 +212,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public int deleteByTelphone(String phone) {
         return userDao.deleteByTelphone(phone);
+    }
+
+    @Override
+    public User findByTelphone(String phone) {
+        return userDao.findByTelphone(phone);
     }
 
 

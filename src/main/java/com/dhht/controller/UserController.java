@@ -55,6 +55,7 @@ public class UserController {
     @Log("添加用户")
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO add(@RequestBody User user){
+        user.setRoleId("GLY");
         return ResultUtil.getResult(userService.insert(user));
     }
 
