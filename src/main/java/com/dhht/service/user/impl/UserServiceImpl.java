@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(password);
         user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
-        userPasswordService.sendMessage(user.getTelphone(),code);
+        userPasswordService.sendMessage(user.getTelphone(), code);
         if (a != 1) {
             return ResultUtil.isFail;                //插入失败
         } else {
@@ -118,14 +118,13 @@ public class UserServiceImpl implements UserService {
                     return ResultUtil.isSuccess;          //修改成功
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 //            jsonObjectBO.setMessage("出现异常");
 //            jsonObjectBO.setCode(-1);
             return ResultUtil.isException;                   //出现异常
         }
 
     }
-
 
 
     /**
@@ -142,7 +141,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findById(id);
         user.setPassword(MD5Util.toMd5(code));
         String phone = user.getTelphone();
-        return userPasswordService.sendMessage(phone,code);
+        return userPasswordService.sendMessage(phone, code);
     }
 
 
@@ -154,22 +153,23 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public PageInfo<User> find(User user,String realName, String roleId, String districtId, int pageNum, int pageSize) {
+    public PageInfo<User> find(User user, String realName, String roleId, String districtId, int pageNum, int pageSize) {
         List<User> list = new ArrayList<User>();
         String localdistrictId = user.getDistrictId();
         if (realName == null && districtId == null && roleId == null) {
-            PageInfo<User> result = selectByDistrict(localdistrictId,pageSize,pageNum);
-        } else if(districtId != null){
+            PageInfo<User> result = selectByDistrict(localdistrictId, pageSize, pageNum);
+            return result;
+        } else if (districtId != null) {
             String districtIds[] = StringUtil.DistrictUtil(districtId);
-            if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
-               list = userDao.find(realName,districtIds[0],roleId);
-            }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
-               list = userDao.find(realName,districtIds[0]+districtIds[1],roleId);
-            }else if (!districtIds[1].equals("00")&&!districtIds[2].equals("00")){
-               list = userDao.find(realName,districtId,roleId);
+            if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
+                list = userDao.find(realName, districtIds[0], roleId);
+            } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
+                list = userDao.find(realName, districtIds[0] + districtIds[1], roleId);
+            } else if (!districtIds[1].equals("00") && !districtIds[2].equals("00")) {
+                list = userDao.find(realName, districtId, roleId);
             }
-            }else {
-            list = userDao.find(realName,districtId,roleId);
+        } else {
+            list = userDao.find(realName, districtId, roleId);
 
         }
         PageHelper.startPage(pageNum, pageSize);
@@ -180,6 +180,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据区域查找用户
+     *
      * @param id
      * @param pageSize
      * @param pageNum
@@ -189,20 +190,21 @@ public class UserServiceImpl implements UserService {
     public PageInfo<User> selectByDistrict(String id, int pageSize, int pageNum) {
         List<User> list = new ArrayList<User>();
         String districtIds[] = StringUtil.DistrictUtil(id);
-        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+        if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
             list = userDao.selectByDistrict(districtIds[0]);
-        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
-            list = userDao.selectByDistrict(districtIds[0]+districtIds[1]);
-        }else {
+        } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
+            list = userDao.selectByDistrict(districtIds[0] + districtIds[1]);
+        } else {
             list = userDao.selectByDistrict(id);
         }
-        PageHelper.startPage(pageNum,pageSize,false);
+        PageHelper.startPage(pageNum, pageSize, false);
         PageInfo<User> result = new PageInfo(list);
         return result;
     }
 
     /**
-     *根据电话删除用户
+     * 根据电话删除用户
+     *
      * @param phone
      * @return
      */
@@ -214,23 +216,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int delete(String id) {
-        User user = userDao.findById(id);
-        String telphone = user.getTelphone();
-        RecordPolice police = recordPoliceMapper.selectByTelphone(telphone);
-        if (police==null){
-            int a = userDao.delete(id);
+        int a = userDao.delete(id);
+        if (a != 1) {
+            return ResultUtil.isFail;
+        } else {
             return ResultUtil.isSuccess;
-        }else{
-            int a = userDao.delete(id);
-            int b =recordPoliceMapper.deleteByTelphone(telphone);
-            if (a==1&&b==1){
-                return ResultUtil.isSuccess;
-            }else{
-                return ResultUtil.isFail;
-            }
         }
-
     }
-
-
 }

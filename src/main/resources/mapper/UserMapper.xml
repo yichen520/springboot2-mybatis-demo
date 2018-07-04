@@ -141,7 +141,7 @@
 
 
     <update id="delete" parameterType="java.lang.String">
-        UPDATE sys_user SET is_delete = 1 WHERE id = #{id,jdbcType=CHAR}
+        UPDATE sys_user SET is_deleted = 1 WHERE id = #{id,jdbcType=CHAR}
     </update>
 
     <delete id="deleteByTelphone" parameterType="java.lang.String">

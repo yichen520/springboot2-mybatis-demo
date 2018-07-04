@@ -54,7 +54,7 @@ public class UserController {
      */
     @Log("添加用户")
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
-    public JsonObjectBO adduser(@RequestBody User user){
+    public JsonObjectBO add(@RequestBody User user){
         return ResultUtil.getResult(userService.insert(user));
     }
 
@@ -65,7 +65,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value ="/update",method = RequestMethod.POST)
-    public JsonObjectBO updateuser(@RequestBody User user){
+    public JsonObjectBO update(@RequestBody User user){
         return ResultUtil.getResult(userService.update(user));
 
     }
@@ -76,7 +76,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "/delete" , method = RequestMethod.POST)
-    public JsonObjectBO deleteSuser(@RequestBody User user){
+    public JsonObjectBO delete(@RequestBody User user){
         return ResultUtil.getResult(userService.delete(user.getId()));
 
     }
