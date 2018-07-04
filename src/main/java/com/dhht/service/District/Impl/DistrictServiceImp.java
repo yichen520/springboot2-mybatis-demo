@@ -287,9 +287,8 @@ public class DistrictServiceImp implements DistrictService{
                     }
                 }
             }
-            setAllChildren(list,districtMenus);
+            setMakeDepartmentchildren(list,districtMenus);
         }
-
     }
 
 
