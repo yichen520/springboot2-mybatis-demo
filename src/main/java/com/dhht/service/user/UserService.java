@@ -29,7 +29,6 @@ public interface UserService  {
 
     int deleteByTelphone(String phone);
 
-//    JsonObjectBO deleteOther(String id);
 
     }
 

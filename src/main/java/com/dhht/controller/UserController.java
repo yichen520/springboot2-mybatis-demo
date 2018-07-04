@@ -128,8 +128,7 @@ public class UserController {
     @RequestMapping(value = "/activeLocking")
     public JsonObjectBO activeLocking(@RequestBody Map map){
         String id = (String)map.get("id");
-        JsonObjectBO jsonObjectBO = userLockingService.activeLocking(id);
-        return  jsonObjectBO;
+        return ResultUtil.getResult(userLockingService.activeLocking(id));
     }
 
 
@@ -141,8 +140,7 @@ public class UserController {
     @RequestMapping(value = "/activeUnlocking")
     public JsonObjectBO activeUnlocking(@RequestBody Map map){
         String id = (String)map.get("id");
-        JsonObjectBO jsonObjectBO = userLockingService.activeUnlocking(id);
-        return  jsonObjectBO;
+        return ResultUtil.getResult(userLockingService.activeUnlocking(id));
     }
 
 

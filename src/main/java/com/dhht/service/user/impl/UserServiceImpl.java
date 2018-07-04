@@ -155,6 +155,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageInfo<User> find(User user, String realName, String roleId, String districtId, int pageNum, int pageSize) {
         List<User> list = new ArrayList<User>();
+        PageHelper.startPage(pageNum, pageSize);
         String localdistrictId = user.getDistrictId();
         if (realName == null && districtId == null && roleId == null) {
             PageInfo<User> result = selectByDistrict(localdistrictId, pageSize, pageNum);
@@ -172,7 +173,7 @@ public class UserServiceImpl implements UserService {
             list = userDao.find(realName, districtId, roleId);
 
         }
-        PageHelper.startPage(pageNum, pageSize);
+
         PageInfo<User> result = new PageInfo<>(list);
         return result;
     }
