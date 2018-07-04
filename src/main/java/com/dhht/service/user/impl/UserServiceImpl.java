@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.dhht.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserPasswordService userPasswordService;
 
+    @Value("${sms.template.newPassword}")
+    private int newPassword ;
     /**
      * 6位简单密码
      *
@@ -84,7 +87,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(password);
         user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
-        userPasswordService.sendMessage(user.getTelphone(),code);
+        ArrayList<String> params = new ArrayList<String>();
+        params.add(code);
+        smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params);
         if (a != 1) {
             jsonObjectBO.setCode(ERROR);
             jsonObjectBO.setMessage("添加失败");
@@ -125,7 +130,9 @@ public class UserServiceImpl implements UserService {
                 } else {
                     jsonObjectBO.setCode(SUCCESS);
                     jsonObjectBO.setMessage("修改成功");
-                    userPasswordService.sendMessage(user.getTelphone(), createRandomVcode());
+                    ArrayList<String> params = new ArrayList<String>();
+                    params.add(createRandomVcode());
+                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params);
                     return jsonObjectBO;
                 }
             } else {
@@ -148,31 +155,6 @@ public class UserServiceImpl implements UserService {
         }
 
     }
-
-
-//    /**
-//     * 删除用户
-//     *
-//     * @param id
-//     * @return
-//     */
-//    @Override
-//    public JsonObjectBO delete(String id) {
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        Integer a = userDao.delete(id);
-//        if (a != 1) {
-//            jsonObjectBO.setCode(ERROR);
-//            jsonObjectBO.setMessage("删除失败");
-//
-//        } else {
-//            jsonObjectBO.setCode(SUCCESS);
-//            jsonObjectBO.setMessage("删除成功");
-//
-//        }
-//
-//        return jsonObjectBO;
-//    }
-
 
     /**
      * 管理员修改密码

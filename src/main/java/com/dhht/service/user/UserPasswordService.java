@@ -9,7 +9,5 @@ import java.util.ArrayList;
  */
 public interface UserPasswordService {
 
-    void  sendPhoneMessage(String phone,ArrayList<String> params);
-
     JsonObjectBO sendMessage(String phone, String code);
 }
