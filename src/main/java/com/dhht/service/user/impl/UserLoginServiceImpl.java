@@ -65,22 +65,22 @@ public class UserLoginServiceImpl implements UserLoginService {
         return vcode;
     }
 
-    /**
-     * 管理员重置密码
-     *
-     * @param id
-     * @param
-     * @return
-     */
-    @Override
-    public JsonObjectBO resetPwd(String id) {
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String code = createRandomVcode();
-        User user = userDao.findById(id);
-        user.setPassword(MD5Util.toMd5(code));
-        String phone = user.getTelphone();
-        return userPasswordService.sendMessage(phone,code);
-    }
+//    /**
+//     * 管理员重置密码
+//     *
+//     * @param id
+//     * @param
+//     * @return
+//     */
+//    @Override
+//    public JsonObjectBO resetPwd(String id) {
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        String code = createRandomVcode();
+//        User user = userDao.findById(id);
+//        user.setPassword(MD5Util.toMd5(code));
+//        String phone = user.getTelphone();
+//        return userPasswordService.sendMessage(phone,code);
+//    }
 
 
     /**

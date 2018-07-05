@@ -9,6 +9,9 @@ public class ResultUtil {
     public static final int isException =4;
     public static final int isError = 5;
     public static final int isDistrict=6;
+    public static final int islock=7;
+    public static final int isUnlock=8;
+
 
     public static JsonObjectBO getResult(int type){
         switch (type){
@@ -24,6 +27,10 @@ public class ResultUtil {
                 return JsonObjectBO.error("发生错误");
             case 6:
                 return JsonObjectBO.error("该区域只能添加一个备案单位");
+            case 7:
+                return JsonObjectBO.error("该用户已经锁定,不能重复锁定");
+            case 8:
+                return JsonObjectBO.error("该账号未加锁");
                 default:
                     return null;
         }

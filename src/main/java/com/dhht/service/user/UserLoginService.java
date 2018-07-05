@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface UserLoginService {
 
-    JsonObjectBO resetPwd(String id);
+//    JsonObjectBO resetPwd(String id);
 
     JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
 

@@ -9,7 +9,11 @@ import java.util.ArrayList;
  */
 public interface UserPasswordService {
 
-    void  sendPhoneMessage(String phone,ArrayList<String> params);
+    int sendMessage(String phone, String code);
 
-    JsonObjectBO sendMessage(String phone, String code);
+    boolean adminResetPwd(String id);
+
+    int getCheckCode(String phone);
+
+    boolean resetPwd(String phone,String checkCode,String passWord);
 }

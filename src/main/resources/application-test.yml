@@ -87,8 +87,14 @@ logging:
 
 
 #短信发送接口
+
+#短信发送接口
 sms:
-    appId: 1400047268
-    appKey: 5e0e87a6bc2f28ddc221b7de8386ffe1
+    appId: 1400106872
+      appKey: 388d092c1857abd2b4271beef3b938ba
+        template:
+          insertUser: 150656
+          newPassword: 150660
+          resetPasswordCode: 150654
 
 #默认是开发环境
