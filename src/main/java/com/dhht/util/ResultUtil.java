@@ -9,7 +9,7 @@ public class ResultUtil {
     public static final int isException =4;
     public static final int isError = 5;
     public static final int isDistrict=6;
-    public static final int islock=7;
+    public static final int isLock=7;
     public static final int isUnlock=8;
 
 

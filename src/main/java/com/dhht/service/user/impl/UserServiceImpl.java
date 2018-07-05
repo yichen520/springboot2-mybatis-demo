@@ -103,7 +103,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public int update(User user) {
         try {
-
             User user2 = userDao.findById(user.getId());
             ArrayList<String> params = new ArrayList<String>();
             if (!user2.getTelphone().equals(user.getTelphone())) {
@@ -116,7 +115,6 @@ public class UserServiceImpl implements UserService {
                 if (a != 1) {
                     return ResultUtil.isFail;             //修改失败
                 } else {
-
                     params.add(user2.getUserName());
                     params.add(user.getUserName());
                     smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);

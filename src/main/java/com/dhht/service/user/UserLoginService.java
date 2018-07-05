@@ -15,8 +15,6 @@ import java.util.Map;
  */
 public interface UserLoginService {
 
-//    JsonObjectBO resetPwd(String id);
-
     JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
 
     Map<String,Object> validateUser(HttpServletRequest request,UserDomain userDomain);
