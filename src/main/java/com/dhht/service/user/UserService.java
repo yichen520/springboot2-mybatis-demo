@@ -21,8 +21,6 @@ public interface UserService  {
 
     int delete(String id);
 
-    JsonObjectBO changePwd(String id);
-
     PageInfo<User> find(User user,String realName,String roleId,String districtId,int pageNum, int pageSize);
 
     PageInfo<User> selectByDistrict(String id,int pageSum,int pageNum);
@@ -31,6 +29,6 @@ public interface UserService  {
 
     User findByTelphone(String phone);
 
-    }
+}
 
 

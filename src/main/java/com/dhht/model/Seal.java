@@ -1,6 +1,14 @@
 package com.dhht.model;
 
+import com.sun.xml.internal.ws.spi.db.DatabindingException;
+import lombok.Data;
+
+import java.sql.Date;
+
+@Data
 public class Seal extends SealKey {
+
+
     private String sealName;
 
     private String sealStatusCode;
@@ -35,140 +43,32 @@ public class Seal extends SealKey {
 
     private String sealRecordTypeCode;
 
-    public String getSealName() {
-        return sealName;
-    }
+    private Date recordDate;
 
-    public void setSealName(String sealName) {
-        this.sealName = sealName == null ? null : sealName.trim();
-    }
+    private Boolean isRecord;
 
-    public String getSealStatusCode() {
-        return sealStatusCode;
-    }
+    private Date makeDate;
 
-    public void setSealStatusCode(String sealStatusCode) {
-        this.sealStatusCode = sealStatusCode == null ? null : sealStatusCode.trim();
-    }
+    private Boolean isMake;
 
-    public String getUseDepartmentCode() {
-        return useDepartmentCode;
-    }
+    private Date personalate;
 
-    public void setUseDepartmentCode(String useDepartmentCode) {
-        this.useDepartmentCode = useDepartmentCode == null ? null : useDepartmentCode.trim();
-    }
+    private Boolean isPersonal;
 
-    public String getUseDepartmentName() {
-        return useDepartmentName;
-    }
+    private Date deliverDate;
 
-    public void setUseDepartmentName(String useDepartmentName) {
-        this.useDepartmentName = useDepartmentName == null ? null : useDepartmentName.trim();
-    }
+    private Boolean isDeliver;
 
-    public String getRecordDepartmentCode() {
-        return recordDepartmentCode;
-    }
+    private Date logoutDate;
 
-    public void setRecordDepartmentCode(String recordDepartmentCode) {
-        this.recordDepartmentCode = recordDepartmentCode == null ? null : recordDepartmentCode.trim();
-    }
+    private Boolean isLogout;
 
-    public String getRecordDepartmentName() {
-        return recordDepartmentName;
-    }
+    private Date lossDate;
 
-    public void setRecordDepartmentName(String recordDepartmentName) {
-        this.recordDepartmentName = recordDepartmentName == null ? null : recordDepartmentName.trim();
-    }
+    private Boolean isLoss;
 
-    public String getMakeDepartmentCode() {
-        return makeDepartmentCode;
-    }
+    private SealImage sealImage;
 
-    public void setMakeDepartmentCode(String makeDepartmentCode) {
-        this.makeDepartmentCode = makeDepartmentCode == null ? null : makeDepartmentCode.trim();
-    }
+ 
 
-    public String getMakeDepartmentName() {
-        return makeDepartmentName;
-    }
-
-    public void setMakeDepartmentName(String makeDepartmentName) {
-        this.makeDepartmentName = makeDepartmentName == null ? null : makeDepartmentName.trim();
-    }
-
-
-    public String getSealTypeCode() {
-        return sealTypeCode;
-    }
-
-    public void setSealTypeCode(String sealTypeCode) {
-        this.sealTypeCode = sealTypeCode;
-    }
-
-    public String getMaterialsCode() {
-        return materialsCode;
-    }
-
-    public void setMaterialsCode(String materialsCode) {
-        this.materialsCode = materialsCode == null ? null : materialsCode.trim();
-    }
-
-    public String getMimeographDescription() {
-        return mimeographDescription;
-    }
-
-    public void setMimeographDescription(String mimeographDescription) {
-        this.mimeographDescription = mimeographDescription == null ? null : mimeographDescription.trim();
-    }
-
-    public String getSealShapeCode() {
-        return sealShapeCode;
-    }
-
-    public void setSealShapeCode(String sealShapeCode) {
-        this.sealShapeCode = sealShapeCode == null ? null : sealShapeCode.trim();
-    }
-
-    public Double getSealSize() {
-        return sealSize;
-    }
-
-    public void setSealSize(Double sealSize) {
-        this.sealSize = sealSize;
-    }
-
-    public String getSealCenterImage() {
-        return sealCenterImage;
-    }
-
-    public void setSealCenterImage(String sealCenterImage) {
-        this.sealCenterImage = sealCenterImage == null ? null : sealCenterImage.trim();
-    }
-
-    public String getSealSpecification() {
-        return sealSpecification;
-    }
-
-    public void setSealSpecification(String sealSpecification) {
-        this.sealSpecification = sealSpecification == null ? null : sealSpecification.trim();
-    }
-
-    public String getSealMakeTypeCode() {
-        return sealMakeTypeCode;
-    }
-
-    public void setSealMakeTypeCode(String sealMakeTypeCode) {
-        this.sealMakeTypeCode = sealMakeTypeCode == null ? null : sealMakeTypeCode.trim();
-    }
-
-    public String getSealRecordTypeCode() {
-        return sealRecordTypeCode;
-    }
-
-    public void setSealRecordTypeCode(String sealRecordTypeCode) {
-        this.sealRecordTypeCode = sealRecordTypeCode == null ? null : sealRecordTypeCode.trim();
-    }
 }

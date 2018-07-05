@@ -32,7 +32,7 @@ spring:
         #druid相关配置
         druid:
           #监控统计拦截的filters
-#          filters: stat
+          filters: stat
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
 
@@ -86,9 +86,11 @@ logging:
 
 #短信发送接口
 sms:
-    appId: 1400047268
-    appKey: 5e0e87a6bc2f28ddc221b7de8386ffe1
+    appId: 1400106872
+    appKey: 388d092c1857abd2b4271beef3b938ba
+    nationCode : 86
     template:
-     insertUser: 150656
-     newPassword: 150660
-     resetPasswordCode: 150654
+        insertUser: 150656
+        newPassword: 150660
+        resetPasswordCode: 150654
+        newUserName: 150917

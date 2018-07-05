@@ -45,6 +45,10 @@ public class UserServiceImpl implements UserService {
 
     @Value("${sms.template.newPassword}")
     private int newPassword ;
+    @Value("${sms.template.insertUser}")
+    private int userCode ;
+    @Value("${sms.template.newUserName}")
+    private int newUserName ;
     /**
      * 6位简单密码
      *
@@ -79,8 +83,9 @@ public class UserServiceImpl implements UserService {
          // user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
         ArrayList<String> params = new ArrayList<String>();
+        params.add(user.getTelphone());
         params.add(code);
-        smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params);
+        smsSendService.sendSingleMsgByTemplate(user.getTelphone(),userCode,params);
         if (a != 1) {
             return ResultUtil.isFail;                //插入失败
         } else {
@@ -98,8 +103,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public int update(User user) {
         try {
-
             User user2 = userDao.findById(user.getId());
+            ArrayList<String> params = new ArrayList<String>();
             if (!user2.getTelphone().equals(user.getTelphone())) {
                 User user1 = userDao.findByTelphone(user.getTelphone());
                 if (user1 != null) {
@@ -110,10 +115,9 @@ public class UserServiceImpl implements UserService {
                 if (a != 1) {
                     return ResultUtil.isFail;             //修改失败
                 } else {
-
-                    ArrayList<String> params = new ArrayList<String>();
-                    params.add(createRandomVcode());
-                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params);
+                    params.add(user2.getUserName());
+                    params.add(user.getUserName());
+                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);
                     return ResultUtil.isSuccess;             //修改成功
                 }
             } else {
@@ -122,13 +126,13 @@ public class UserServiceImpl implements UserService {
                 if (a != 1) {
                     return ResultUtil.isFail;             //修改失败
                 } else {
-                    userPasswordService.sendMessage(user.getTelphone(), createRandomVcode());
+                    params.add(user2.getUserName());
+                    params.add(user.getUserName());
+                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);
                     return ResultUtil.isSuccess;          //修改成功
                 }
             }
         } catch (Exception e) {
-//            jsonObjectBO.setMessage("出现异常");
-//            jsonObjectBO.setCode(-1);
             return ResultUtil.isException;                   //出现异常
         }
 
@@ -136,22 +140,6 @@ public class UserServiceImpl implements UserService {
 
 
 
-    /**
-     * 管理员修改密码
-     *
-     * @param id
-     * @param
-     * @return
-     */
-    @Override
-    public JsonObjectBO changePwd(String id) {
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String code = createRandomVcode();
-        User user = userDao.findById(id);
-        user.setPassword(MD5Util.toMd5(code));
-        String phone = user.getTelphone();
-        return userPasswordService.sendMessage(phone, code);
-    }
 
 
     /**

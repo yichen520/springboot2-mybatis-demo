@@ -7,10 +7,7 @@ import com.dhht.model.DistrictMenus;
 import com.dhht.model.Role;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
-import com.dhht.service.user.RoleService;
-import com.dhht.service.user.UserLockingService;
-import com.dhht.service.user.UserLoginService;
-import com.dhht.service.user.UserService;
+import com.dhht.service.user.*;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +40,9 @@ public class UserController {
 
     @Autowired
     private UserLockingService userLockingService;
+
+    @Autowired
+    private UserPasswordService userPasswordService;
 
     private JSONObject jsonObject = new JSONObject();
 
@@ -82,18 +82,18 @@ public class UserController {
 
     }
 
-    /**
-     * 重置密码
-     * @param user
-     * @return
-     */
-    @RequestMapping(value = "/resetPwd" , method = RequestMethod.POST)
-    public JsonObjectBO changePwd(@RequestBody User user){
-        String id = user.getId();
-        JsonObjectBO jsonObjectBO = userLoginService.resetPwd(id);
-        return jsonObjectBO;
-
-    }
+//    /**
+//     * 重置密码
+//     * @param user
+//     * @return
+//     */
+//    @RequestMapping(value = "/resetPwd" , method = RequestMethod.POST)
+//    public JsonObjectBO changePwd(@RequestBody User user){
+//        String id = user.getId();
+//        JsonObjectBO jsonObjectBO = userPasswordService.resetPwd(id);
+//        return jsonObjectBO;
+//
+//    }
 
     /**
      * 模糊查询列表
@@ -144,6 +144,58 @@ public class UserController {
         return ResultUtil.getResult(userLockingService.activeUnlocking(id));
     }
 
+
+    /**
+     * 管理员密码重置
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/adminResetPwd")
+    public JsonObjectBO adminResetPwd(@RequestBody Map map){
+        String id = (String)map.get("id");
+        if(userPasswordService.adminResetPwd(id)){
+            return JsonObjectBO.success("重置成功",null);
+        }else {
+            return JsonObjectBO.error("重置失败");
+        }
+    }
+
+
+    /**
+     * 获取验证码
+     */
+    @RequestMapping(value = "/getCheckCode")
+    public JsonObjectBO getCheckCode(@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String phone = (String)map.get("telphone");
+
+        if (userPasswordService.getCheckCode(phone)==1){
+            jsonObjectBO.setMessage("获取验证码成功");
+            jsonObjectBO.setCode(1);
+        }else{
+            jsonObjectBO.setMessage("获取验证码成功");
+            jsonObjectBO.setCode(-1);
+        }
+        return jsonObjectBO;
+    }
+
+    /**
+     * 忘记密码后的密码重置
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/resetPwd")
+    public JsonObjectBO resetPwd(@RequestBody Map map){
+        String phone = (String)map.get("telphone");
+        String checkCode = (String)map.get("checkCode");
+        String passWord = (String)map.get("passWord");
+
+        if(userPasswordService.resetPwd(phone, checkCode, passWord)){
+            return JsonObjectBO.success("重置成功",null);
+        }else {
+            return JsonObjectBO.error("重置失败");
+        }
+    }
 
     /**
      * 根据区域查找用户

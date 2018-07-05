@@ -48,7 +48,7 @@ public class UserLockingServiceImpl implements UserLockingService {
     public int activeUnlocking(String id) {
         User user = userDao.findById(id);
         if (user.getIsLocked() == null || user.getIsLocked().equals("0") || !user.getIsLocked()) {
-            return ResultUtil.isUnLock;
+            return ResultUtil.isUnlock;
         } else {
             userDao.updateUnLock(id);
             return ResultUtil.isSuccess;

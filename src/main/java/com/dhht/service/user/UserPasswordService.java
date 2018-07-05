@@ -9,5 +9,11 @@ import java.util.ArrayList;
  */
 public interface UserPasswordService {
 
-    JsonObjectBO sendMessage(String phone, String code);
+    int sendMessage(String phone, String code);
+
+    boolean adminResetPwd(String id);
+
+    int getCheckCode(String phone);
+
+    boolean resetPwd(String phone,String checkCode,String passWord);
 }
