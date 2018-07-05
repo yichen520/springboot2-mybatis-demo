@@ -1,9 +1,11 @@
 package com.dhht.service.employee;
 
 import com.dhht.model.Employee;
+import com.dhht.model.User;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EmployeeService {
 
@@ -11,9 +13,9 @@ public interface EmployeeService {
 
     List<Employee> selectByDepartmentCode(String employeeDepartmentCode);
 
-    int insertEmployee(Employee employee);
+    int insertEmployee(Employee employee, User user);
 
-    int updateEmployee(Employee employee);
+    int updateEmployee(Map map);
 
     int deleteEmployee(String id);
 

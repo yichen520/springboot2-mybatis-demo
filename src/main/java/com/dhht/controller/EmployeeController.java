@@ -81,10 +81,8 @@ public class EmployeeController {
     @RequestMapping(value = "insert")
     public JsonObjectBO insertEmployee(@RequestBody Employee employee,HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
-        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByLegalTephone(user.getTelphone());
-        employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
         try {
-            return ResultUtil.getResult(employeeService.insertEmployee(employee));
+            return ResultUtil.getResult(employeeService.insertEmployee(employee,user));
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }
@@ -109,6 +107,13 @@ public class EmployeeController {
         }
     }
 
-
+   @RequestMapping(value = "update")
+    public JsonObjectBO update(@RequestBody Map map){
+        try{
+            return ResultUtil.getResult(employeeService.updateEmployee(map));
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+   }
 
 }

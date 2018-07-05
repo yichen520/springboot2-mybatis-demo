@@ -5,16 +5,15 @@ import com.dhht.dao.UserDao;
 import com.dhht.model.Employee;
 
 import com.dhht.model.MakeDepartmentSimple;
+import com.dhht.model.RecordDepartment;
 import com.dhht.model.User;
 
 import com.dhht.service.employee.EmployeeService;
 
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.UserService;
-import com.dhht.util.DateUtil;
-import com.dhht.util.MD5Util;
-import com.dhht.util.ResultUtil;
-import com.dhht.util.UUIDUtil;
+import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 2018/7/2 create by fyc
@@ -38,6 +38,8 @@ public class EmployeeServiceImp implements EmployeeService {
     private UserService userService;
     @Autowired
     private MakeDepartmentService makeDepartmentService;
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
 
     /**
      * 查询某制作单位下的从业人员
@@ -56,18 +58,22 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public int insertEmployee(Employee employee) {
-        if(isInsert(employee.getEmployeeCode())){
-            return ResultUtil.isHave;
-        }
-        int u = userService.insert(setUserByType(employee,1));
+    public int insertEmployee(Employee employee,User user) {
+        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByLegalTephone(user.getTelphone());
+        RecordDepartment recordDepartment = recordDepartmentService.selectByDistrictId(user.getDistrictId()).get(0);
+        employee.setEmployeeCode(CodeUtil.generate());
         employee.setId(UUIDUtil.generate());
+        employee.setDistrictId(user.getDistrictId());
+        employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
+        employee.setOfficeCode(recordDepartment.getDepartmentCode());
+        employee.setOfficeName(recordDepartment.getDepartmentName());
+        employee.setRegisterName(recordDepartment.getPrincipalName());
         employee.setRegisterTime(DateUtil.getCurrentTime());
         employee.setFlag(UUIDUtil.generate());
         employee.setVersion(1);
         employee.setVersionTime(DateUtil.getCurrentTime());
+        int u = userService.insert(setUserByType(employee,1));
         int e = employeeDao.insert(employee);
-
         if(u+e==3){
             return ResultUtil.isSuccess;
         }else if(u==1){
@@ -83,23 +89,31 @@ public class EmployeeServiceImp implements EmployeeService {
 
     /**
      * 更新从业人员
-     * @param employee
+     * @param map
      * @return
      */
     @Override
-    public int updateEmployee(Employee employee) {
-        if(isInsert(employee.getEmployeeCode())){
-            return ResultUtil.isHave;
-        }
+    public int updateEmployee(Map map) {
+        Employee employee = employeeDao.selectById((String) map.get("id"));
         int d = employeeDao.deleteById(employee.getId());
         if (d == 0) {
             return ResultUtil.isError;
         }
-        int u = userService.update(setUserByType(employee,1));
-        employee.setId(UUIDUtil.generate());
+        employee.setEmployeeName((String)map.get("employeeName"));
+        employee.setEmployeeId((String)map.get("employeeId"));
+        employee.setEmployeeJob((String)map.get("employeeJob"));
+        employee.setEmployeeNation((String)map.get("employeeNation"));
+        employee.setFamilyAddressDetail((String)map.get("familyAddressDetail"));
+        employee.setFamilyAddressDetail((String)map.get("nowAddressDetail"));
+        employee.setEmployeeImage((String)map.get("employeeImage"));
+        employee.setTelphone((String)map.get("telphone"));
+        employee.setContactName((String)map.get("contactName"));
+        employee.setContactTelphone((String)map.get("contactTelphone"));
         employee.setFlag(UUIDUtil.generate());
         employee.setVersion(employee.getVersion()+1);
         employee.setVersionTime(DateUtil.getCurrentTime());
+        employee.setId(UUIDUtil.generate());
+        int u = userService.update(setUserByType(employee,1));
         int e = employeeDao.insert(employee);
         if(u==2&&e==1){
             return ResultUtil.isSuccess;
@@ -124,13 +138,23 @@ public class EmployeeServiceImp implements EmployeeService {
        employee.setLogoutOfficeCode(employee.getOfficeCode());
        employee.setLogoutName(employee.getContactName());
        employee.setLogoutTime(DateUtil.getCurrentTime());
-       int u = userService.deleteByTelphone(employee.getTelphone());
-       int e = employeeDao.delete(employee);
-       if(u==2&&e==1){
-           return ResultUtil.isSuccess;
+       User user = setUserByType(employee,3);
+       if(user==null){
+           int e = employeeDao.delete(employee);
+           if(e==1){
+               return ResultUtil.isSuccess;
+           }else {
+               return ResultUtil.isFail;
+           }
        }else {
-           TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-           return ResultUtil.isFail;
+           int u = userService.deleteByTelphone(employee.getTelphone());
+           int e = employeeDao.delete(employee);
+           if (u == 2 && e == 1) {
+               return ResultUtil.isSuccess;
+           } else {
+               TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+               return ResultUtil.isFail;
+           }
        }
     }
 
@@ -152,14 +176,13 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     public User setUserByType(Employee employee, int type){
         User user = new User();
-        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(employee.getEmployeeDepartmentCode());
         switch (type){
             //新增用户
             case 1:
                 user.setUserName("YG"+employee.getTelphone());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
-                user.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+                user.setDistrictId(employee.getDistrictId());
                 user.setRoleId("CYRY");
                 break;
             //修改用户
@@ -168,8 +191,10 @@ public class EmployeeServiceImp implements EmployeeService {
                 user = userService.findByTelphone(oldDate.getTelphone());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
-                user.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+                user.setDistrictId(employee.getDistrictId());
                 break;
+            case 3:
+                user = userService.findByTelphone(employee.getTelphone());
         }
         return user;
     }

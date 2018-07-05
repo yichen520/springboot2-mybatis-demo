@@ -22,11 +22,7 @@ public class Employee {
 
     private String employeeNation;
 
-    private String familyAddress;
-
     private String familyAddressDetail;
-
-    private String nowAddress;
 
     private String nowAddressDetail;
 
@@ -63,6 +59,8 @@ public class Employee {
     private String flag;
 
     private boolean isDelete;
+
+    private String districtId;
 
     public Employee() {
     }
