@@ -1,15 +1,19 @@
 package com.dhht;
 
+import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.UserController;
 import com.dhht.dao.DistrictMapper;
 import com.dhht.dao.UserDao;
 import com.dhht.model.District;
 import com.dhht.model.SysLog;
+import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.Log.LogService;
+import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.service.user.UserPasswordService;
 import com.dhht.service.user.UserService;
-import com.dhht.service.userDepartment.UseDepartmentService;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +46,12 @@ public class Springboot2MybatisDemoApplicationTests {
 
 	@Test
 	public void contextLoads() {
-//		districtService.insert("990110","990100","天才崔杨");
-//		District district = new District();
-//		district.setCityId("331100");
-//		System.out.print(districtMapper.findByDistrictId(district).toString());
-//		districtService.delete("990110");
-		User user = new User();
-		System.out.print(userService.delete("6ea9727b513646b3b2387cec1200fb01"));
+//		UseDepartment useDepartment = new UseDepartment();
+//		useDepartment.setId("22042e5dced44a3d83e17127c555a35f");
+//		useDepartment.setCode("2");
+//		useDepartment.setIsDelete(false);
+//		useDepartment.setVersion(1);
+//		useDepartment
 	}
 
 }

@@ -4,6 +4,8 @@ import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.dao.UserDao;
 import com.dhht.model.*;
 import com.dhht.service.tools.SmsSendService;
+import com.dhht.service.user.UserPasswordService;
+import com.dhht.service.user.UserService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.MD5Util;
 import com.dhht.util.UUIDUtil;
@@ -37,7 +39,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     private UserDao userDao;
 
     @Autowired
-    private SmsSendService smsSendService;
+    private UserService userService;
+
+    @Autowired
+    private UserPasswordService userPasswordService;
 
     private SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm;ss");
 
@@ -95,7 +100,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         int m = makedepartmentMapper.insert(makedepartment);
         int u = userDao.addUser(user);
         if(m+u==2){
-            smsSendService.sendMessage(user.getTelphone(),code);
+            userPasswordService.sendMessage(user.getTelphone(),code);
             return 1;
         }else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

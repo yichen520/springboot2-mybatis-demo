@@ -18,4 +18,7 @@ public interface DistrictService {
 
     //删除
     JsonObjectBO delete(String districtId);
+
+    //生成区域下带制作单位单位列表
+    List<DistrictMenus> selectMakeDepartmentMenus(String id);
 }

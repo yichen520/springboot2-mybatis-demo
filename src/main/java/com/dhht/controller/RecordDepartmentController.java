@@ -8,6 +8,7 @@ import com.dhht.model.RecordDepartment;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -130,18 +131,14 @@ public class RecordDepartmentController {
      */
     @RequestMapping(value = "/insert")
     public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment){
-        boolean result = false;
+        int result = 0;
         try {
             result = recordDepartmentService.insert(recordDepartment);
+            return ResultUtil.getResult(result);
         }catch (DuplicateKeyException exception){
             return JsonObjectBO.error("该用户已经存在");
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
-        }
-        if(result){
-            return JsonObjectBO.ok("添加成功");
-        }else {
-            return JsonObjectBO.error("添加失败,该编号已存在");
         }
     }
 
@@ -173,18 +170,15 @@ public class RecordDepartmentController {
     @RequestMapping(value = "/delete")
     public JsonObjectBO delete(@RequestBody Map map){
         String id = (String)map.get("id");
-        boolean result = false;
+        int result = 0;
 
         try{
             result = recordDepartmentService.deleteById(id);
+            return ResultUtil.getResult(result);
         }catch (Exception e ){
             return JsonObjectBO.exception(e.getMessage());
         }
-        if(result){
-            return JsonObjectBO.ok("删除成功");
-        }else {
-            return JsonObjectBO.error("删除失败");
-        }
+
     }
 
     /**
@@ -194,18 +188,15 @@ public class RecordDepartmentController {
      */
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment){
-        boolean result = false;
+        int result = 0;
 
         try{
             result = recordDepartmentService.updateById(recordDepartment);
+            return ResultUtil.getResult(result);
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }
-        if(result){
-            return JsonObjectBO.ok("修改成功");
-        }else {
-            return JsonObjectBO.error("修改失败");
-        }
+
     }
 
 

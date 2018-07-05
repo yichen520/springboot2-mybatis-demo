@@ -111,6 +111,12 @@
     from make_department where delete_status = 0 and department_address like '${id}%'
   </select>
 
+  <select id="selectByDistrict" resultMap="SimpleResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Simple_Column_list" />
+    from make_department where delete_status = 0 and department_address =#{id,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectDetailById" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/>
     from make_department where id = #{id,jdbcType=VARCHAR}
