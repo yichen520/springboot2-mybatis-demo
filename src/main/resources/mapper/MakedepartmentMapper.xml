@@ -31,6 +31,7 @@
     <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
     <result column="department_type" property="departmentType" jdbcType="VARCHAR" />
     <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="department_address" property="departmentAddress"/>
     <result column="department_address_detail" property="departmentAddressDetail" jdbcType="VARCHAR" />
     <result column="telphone" property="telphone" jdbcType="VARCHAR" />
     <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
@@ -47,11 +48,17 @@
     legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail, 
     telphone, postal_code, logout_time, department_status,version,flag,version_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from make_department
-    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+    where makedepartment_code = #{departmentCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByLegalTephone" resultMap="SimpleResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Simple_Column_list" />
+    from make_department where delete_status = 0 and legal_phone =#{legalPhone,jdbcType=VARCHAR}
   </select>
 
   <update id="deleteById" parameterType="com.dhht.model.Makedepartment" >

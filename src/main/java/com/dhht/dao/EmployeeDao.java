@@ -10,18 +10,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeeDao {
 
+    int delete(Employee employee);
 
-    int deleteByPrimaryKey(String employeeCode);
+    int deleteById(@Param("id") String id);
 
     int selectCountEmployeeCode(@Param("employeeCode") String employeeCode);
 
     int insert(Employee employee);
 
+    Employee selectById(@Param("id") String id);
 
-    Employee selectByPrimaryKey(String employeeCode);
 
-
-    int updateByPrimaryKey(Employee record);
+    int update(Employee record);
 
     //查询某个制作单位下的从业人员
     List<Employee> selectByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);

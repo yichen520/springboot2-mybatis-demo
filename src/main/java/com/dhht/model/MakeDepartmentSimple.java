@@ -9,6 +9,7 @@ public class MakeDepartmentSimple {
     private String departmentName;
     private String departmentType;
     private String legalName;
+    private String departmentAddress;
     private String departmentAddressDetail;
     private String telphone;
     private String postalCode;

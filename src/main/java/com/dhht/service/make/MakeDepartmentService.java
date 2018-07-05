@@ -21,4 +21,8 @@ public interface MakeDepartmentService {
 
      PageInfo<Makedepartment> selectHistory(String flag,int pageNum,int pageSize);
 
+     MakeDepartmentSimple selectByLegalTephone(String phone);
+
+     MakeDepartmentSimple selectByDepartmentCode(String code);
+
 }

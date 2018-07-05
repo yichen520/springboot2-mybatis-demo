@@ -43,19 +43,24 @@
     SELECT <include refid="Base_Column_List"></include> FROM employee WHERE employee_department_code=#{employeeDepartmentCode} AND is_delete = 0;
   </select>
 
+  <select id="selectByID" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List"/> WHERE id=#{id.jdbcType=VARCHAR}
+  </select>
+
   <select id="selectCountEmployeeCode" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select 
-    COUNT (employee_code)
+    COUNT(0)
     from employee
     where employee_code = #{employeeCode,jdbcType=VARCHAR} AND  is_delete = 0;
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from employee
     where employee_code = #{employeeCode,jdbcType=VARCHAR}
   </delete>
 
   <insert id="insert" parameterType="com.dhht.model.Employee" >
-    insert into employee (id,employee_code, employee_name, employee_id,employee_gender,
+    insert into employee (id,employee_code, employee_name, employee_id,employee_gender,employee_department_code,
       employee_job, employee_nation, family_address,
       family_address_detail, now_address, now_address_detail, 
       employee_image, telphone, contact_name, 
@@ -63,7 +68,7 @@
       register_name, register_time, effective_time,version,version_time,flag,is_delete
       )
     values (#{id,jdbcType=VARCHAR},#{employeeCode,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, #{employeeId,jdbcType=VARCHAR}, #{employeeGender,jdbcType=CHAR},
-      #{employeeJob,jdbcType=VARCHAR}, #{employeeNation,jdbcType=VARCHAR}, #{familyAddress,jdbcType=VARCHAR}, 
+     #{employeeDepartmentCode,jdbcType=VARCHAR}, #{employeeJob,jdbcType=VARCHAR}, #{employeeNation,jdbcType=VARCHAR}, #{familyAddress,jdbcType=VARCHAR},
       #{familyAddressDetail,jdbcType=VARCHAR}, #{nowAddress,jdbcType=VARCHAR}, #{nowAddressDetail,jdbcType=VARCHAR}, 
       #{employeeImage,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, 
       #{contactTelphone,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR}, 
@@ -72,8 +77,21 @@
       )
   </insert>
 
+  <update id="deleteById" parameterType="java.lang.String">
+    UPDATE employee set is_delete = 1 WHERE id = #{id,jdbcType = VARCHAR}
+  </update>
 
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Employee" >
+  <update id="delete" parameterType="com.dhht.model.Employee">
+     UPDATE employee set is_delete = 1,
+      logout_office_code = #{logoutOfficeCode,jdbcType=VARCHAR},
+      logout_office_name = #{logoutOfficeName,jdbcType=VARCHAR},
+      logout_name = #{logoutName,jdbcType=VARCHAR},
+      logout_time=#{logoutTime,jdbcType=TIMESTAMP}
+     WHERE id = #{id,jdbcType = VARCHAR}
+  </update>
+
+
+  <update id="update" parameterType="com.dhht.model.Employee" >
     update employee
     set employee_name = #{employeeName,jdbcType=VARCHAR},
       employee_id = #{employeeId,jdbcType=VARCHAR},

@@ -182,6 +182,26 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
+     * 根据法人电话获取制作单位
+     * @param phone
+     * @return
+     */
+    @Override
+    public MakeDepartmentSimple selectByLegalTephone(String phone) {
+        return makedepartmentMapper.selectByLegalTephone(phone);
+    }
+
+    /**
+     * 根据制作单位的编号查询
+     * @param code
+     * @return
+     */
+    @Override
+    public MakeDepartmentSimple selectByDepartmentCode(String code) {
+        return makedepartmentMapper.selectByDepartmentCode(code);
+    }
+
+    /**
      * 设置user
      * @param makedepartment
      * @param type
@@ -202,7 +222,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 break;
             case 2:
                 Makedepartment oldDate =makedepartmentMapper.selectDetailById(makedepartment.getId());
-                user = userDao.findByTelphone(makedepartment.getLegalTelphone());
+                user = userDao.findByTelphone(oldDate.getLegalTelphone());
                 user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
                 user.setDistrictId(makedepartment.getDepartmentAddress());
                 user.setRealName(makedepartment.getDepartmentName());
