@@ -25,4 +25,7 @@ public interface EmployeeDao {
 
     //查询某个制作单位下的从业人员
     List<Employee> selectByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
+
+    List<Employee> selectHistory(@Param("flag") String flag);
+
 }
