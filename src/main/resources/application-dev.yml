@@ -88,6 +88,7 @@ logging:
 sms:
     appId: 1400106872
     appKey: 388d092c1857abd2b4271beef3b938ba
+    nationCode : 86
     template:
         insertUser: 150656
         newPassword: 150660

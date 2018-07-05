@@ -12,15 +12,6 @@ import java.util.ArrayList;
  */
 public interface SmsSendService {
 
-    /**
-     * 密码重置验证码模板ID
-     */
-    int TEMPLATE_CODE_RESET_PASSWORD = 63278;
-
-    /**
-     * 中国短信号码地区代号
-     */
-    String NATION_CODE_CHINA = "86";
 
     /**
      * 通过模板发送短信给单个手机号

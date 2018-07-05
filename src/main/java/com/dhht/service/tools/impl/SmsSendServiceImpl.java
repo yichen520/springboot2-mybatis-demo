@@ -33,11 +33,9 @@ public class SmsSendServiceImpl implements SmsSendService, InitializingBean {
 
     private SmsSingleSender sender;
 
-    @Autowired
-    private SMSCodeDao smsCodeDao;
 
-//    @Value("${sms.nationCode}")
-//    private String nationCode ;
+    @Value("${sms.nationCode}")
+    private String nationCode ;
     /**
      * 通过模板发送短信给单个手机号<br />
      * 仅能发送至国内手机号
@@ -49,7 +47,7 @@ public class SmsSendServiceImpl implements SmsSendService, InitializingBean {
     @Override
     public boolean sendSingleMsgByTemplate(String phoneNumber, int templateId, ArrayList<String> params) {
         try {
-            SmsSingleSenderResult result = sender.sendWithParam(SmsSendService.NATION_CODE_CHINA, phoneNumber, templateId, params, "", "", "");
+            SmsSingleSenderResult result = sender.sendWithParam(nationCode, phoneNumber, templateId, params, "", "", "");
             if(result.result == 0) {
                 return true;
             }
