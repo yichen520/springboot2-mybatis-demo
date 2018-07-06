@@ -16,9 +16,11 @@ public interface EmployeeDao {
 
     int selectCountEmployeeCode(@Param("employeeCode") String employeeCode);
 
-    List<Employee> selectAllEmployee();
+    List<Employee> selectAllEmployee(@Param("code") String code,@Param("name") String name);
 
-    List<Employee> selectDeleteEmployee();
+    List<Employee> selectWorkEmployee(@Param("code") String code,@Param("name") String name);
+
+    List<Employee> selectDeleteEmployee(@Param("code") String code,@Param("name") String name);
 
     int insert(Employee employee);
 
@@ -32,5 +34,9 @@ public interface EmployeeDao {
     List<Employee> selectByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
     List<Employee> selectHistory(@Param("flag") String flag);
+
+    List<Employee> selectWorkEmployee(@Param("employeeDepartmentCode") String employeeDepartmentCode);
+
+
 
 }

@@ -21,6 +21,8 @@ public interface MakedepartmentMapper {
 
     int deleteHistoryByID(@Param("id") String id);
 
+    String selectCodeByLegalTelphone(@Param("legalPhone") String phone);
+
     MakeDepartmentSimple selectByLegalTephone(@Param("legalPhone") String phone);
 
     MakeDepartmentSimple selectByDepartmentCode(@Param("departmentCode") String code);

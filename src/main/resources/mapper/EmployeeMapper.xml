@@ -27,7 +27,7 @@
     <result column="version" property="version" jdbcType="NUMERIC"/>
     <result column="version_time" property="versionTime" jdbcType="TIMESTAMP"/>
     <result column="flag" property="flag" jdbcType="VARCHAR"/>
-    <result column="is_delete" property="isDelete" jdbcType="BIT"/>
+    <result column="is_delete" property="deleteStatus" jdbcType="BIT"/>
   </resultMap>
 
   <sql id="Base_Column_List" >

@@ -59,59 +59,33 @@ public class EmployeeController {
      * @return
      */
     @RequestMapping(value = "/info")
-    public JsonObjectBO selectByDepartmentCode(@RequestBody Map map){
+    public JsonObjectBO selectByDepartmentCode(@RequestBody Map map,HttpServletRequest httpServletRequest ){
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer) map.get("pageNum");
-        String DepartmentCode = (String) map.get("code");
+        int status = (Integer)map.get("status");
+        String name = (String)map.get("name");
+        String departmentCode = makeDepartmentService.selectCodeByLegalTelphone(user.getTelphone());
+
         try {
              PageHelper.startPage(pageNum,pageSize);
-             PageInfo<Employee> pageInfo = new PageInfo<Employee>(employeeService.selectByDepartmentCode(DepartmentCode));
-             jsonObject.put("employee",pageInfo);
+             if(status==1) {
+                 PageInfo<Employee> pageInfo = new PageInfo<Employee>(employeeService.selectWorkEmployee(departmentCode,name));
+                 jsonObject.put("employee", pageInfo);
+             }else if(status==2){
+                 PageInfo<Employee> pageInfo = new PageInfo<Employee>(employeeService.selectDeleteEmployee(departmentCode,name));
+                 jsonObject.put("employee", pageInfo);
+             }else {
+                 PageInfo<Employee> pageInfo = new PageInfo<Employee>(employeeService.selectAllEmployee(departmentCode,name));
+                 jsonObject.put("employee", pageInfo);
+             }
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
-    /**
-     * 查询所有的从业人员
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = "allEmployee")
-    public JsonObjectBO selectAllEmployee(@RequestBody Map map){
-        int pageSize = (Integer)map.get("pageSize");
-        int pageNum =(Integer)map.get("pageNum");
-        JSONObject jsonObject = new JSONObject();
-        try{
-            PageHelper.startPage(pageNum,pageSize);
-            PageInfo<Employee> pageInfo = new PageInfo<>(employeeService.selectAllEmployee());
-            jsonObject.put("employee",pageInfo);
-            return JsonObjectBO.success("查询成功",jsonObject);
-        }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
-        }
-    }
 
-    /**
-     * 查询离职从业人员
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = "isDeleteEmployee")
-    public JsonObjectBO   selectDeleteEmployee(@RequestBody Map map){
-        int pageSize = (Integer)map.get("pageSize");
-        int pageNum =(Integer)map.get("pageNum");
-        JSONObject jsonObject = new JSONObject();
-        try{
-            PageHelper.startPage(pageNum,pageSize);
-            PageInfo<Employee> pageInfo = new PageInfo<>(employeeService.selectDeleteEmployee());
-            jsonObject.put("employee",pageInfo);
-            return JsonObjectBO.success("查询成功",jsonObject);
-        }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
-        }
-    }
 
     /**
      * 从业人员的添加

@@ -56,7 +56,7 @@ public class Employee {
 
     private String flag;
 
-    private boolean isDelete;
+    private boolean deleteStatus;
 
     private String districtId;
 
