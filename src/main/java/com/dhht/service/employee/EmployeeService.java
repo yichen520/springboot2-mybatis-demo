@@ -27,7 +27,9 @@ public interface EmployeeService {
 
     int update(Employee employee);
 
-    List<Employee> selectAllEmployee();
+    List<Employee> selectAllEmployee(String code,String name);
 
-    List<Employee> selectDeleteEmployee();
+    List<Employee> selectDeleteEmployee(String code,String name);
+
+    List<Employee> selectWorkEmployee(String code,String name);
 }

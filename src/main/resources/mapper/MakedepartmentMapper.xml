@@ -52,13 +52,17 @@
     select 
     <include refid="Base_Column_List" />
     from make_department
-    where department_code = #{departmentCode,jdbcType=VARCHAR} and delete_status = 0;
+    where department_code = #{departmentCode,jdbcType=VARCHAR} and delete_status = 0
   </select>
   
   <select id="selectByLegalTephone" resultMap="SimpleResultMap" parameterType="java.lang.String">
     select
     <include refid="Simple_Column_list" />
     from make_department where delete_status = 0 and legal_telphone =#{legalPhone,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectCodeByLegalTelphone" resultType="java.lang.String" parameterType="java.lang.String">
+      select department_code from make_department where  legal_telphone = #{legalPhone,jdbcType=VARCHAR} and  delete_status = 0
   </select>
 
   <update id="deleteById" parameterType="com.dhht.model.Makedepartment" >

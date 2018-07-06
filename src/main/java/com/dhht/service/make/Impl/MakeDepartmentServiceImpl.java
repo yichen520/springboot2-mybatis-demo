@@ -209,6 +209,16 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
+     * 根据法人手机号获取备案单位的编号
+     * @param phone
+     * @return
+     */
+    @Override
+    public String selectCodeByLegalTelphone(String phone) {
+        return makedepartmentMapper.selectCodeByLegalTelphone(phone);
+    }
+
+    /**
      * 设置user
      * @param makedepartment
      * @param type

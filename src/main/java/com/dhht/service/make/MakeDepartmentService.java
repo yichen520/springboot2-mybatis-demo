@@ -25,4 +25,6 @@ public interface MakeDepartmentService {
 
      MakeDepartmentSimple selectByDepartmentCode(String code);
 
+     String selectCodeByLegalTelphone(String phone);
+
 }

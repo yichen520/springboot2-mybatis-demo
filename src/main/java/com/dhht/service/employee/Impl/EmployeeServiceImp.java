@@ -41,16 +41,6 @@ public class EmployeeServiceImp implements EmployeeService {
     @Autowired
     private RecordDepartmentService recordDepartmentService;
 
-    /**
-     * 查询某制作单位下的从业人员
-     * @param employeeDepartmentCode
-     * @return
-     */
-    @Override
-    public List<Employee> selectByDepartmentCode(String employeeDepartmentCode) {
-        List<Employee> employees = employeeDao.selectByDepartmentCode(employeeDepartmentCode);
-        return employees;
-    }
 
     /**
      * 添加从业人员
@@ -201,21 +191,44 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     /**
-     * 查询所有的从业人员
+     * 查询某制作单位下在职的从业人员
+     * @param employeeDepartmentCode
      * @return
      */
     @Override
-    public List<Employee> selectAllEmployee() {
-        return employeeDao.selectAllEmployee();
+    public List<Employee> selectByDepartmentCode(String employeeDepartmentCode) {
+        List<Employee> employees = employeeDao.selectByDepartmentCode(employeeDepartmentCode);
+        return employees;
     }
+
+    /**
+     * 查询制作单位下所有的从业人员
+     * @return
+     */
+    @Override
+    public List<Employee> selectAllEmployee(String code,String name) {
+        return employeeDao.selectAllEmployee(code,name);
+    }
+
 
     /**
      * 查询离职的从业人员
      * @return
      */
     @Override
-    public List<Employee> selectDeleteEmployee() {
-        return employeeDao.selectDeleteEmployee();
+    public List<Employee> selectDeleteEmployee(String code,String name) {
+        return employeeDao.selectDeleteEmployee(code,name);
+    }
+
+    /**
+     * 查询制作单位在职人员
+     * @param code
+     * @param name
+     * @return
+     */
+    @Override
+    public List<Employee> selectWorkEmployee(String code, String name) {
+        return employeeDao.selectWorkEmployee(code,name);
     }
 
 
