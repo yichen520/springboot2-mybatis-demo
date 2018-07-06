@@ -24,6 +24,7 @@ public interface UserDao {
 
     List<User> find(@Param("realName")String realName,@Param("districtId")String districtId, @Param("roleId")String roleId);
 
+
     User findByNo(@Param("id") String id);
 
     int findByPhone(@Param("phone") String phone);
