@@ -20,4 +20,14 @@ public interface EmployeeService {
     int deleteEmployee(String id);
 
     Employee selectEmployeeByID(String employeeCode);
+
+    List<Employee> seletHistory(String flag);
+
+    int deleteByDepartCode(String code);
+
+    int update(Employee employee);
+
+    List<Employee> selectAllEmployee();
+
+    List<Employee> selectDeleteEmployee();
 }

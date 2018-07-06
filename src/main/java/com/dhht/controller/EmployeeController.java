@@ -54,7 +54,7 @@ public class EmployeeController {
     }
 
     /**
-     * 从业人员列表
+     * 在职从业人员列表
      * @param map
      * @return
      */
@@ -74,6 +74,46 @@ public class EmployeeController {
     }
 
     /**
+     * 查询所有的从业人员
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "allEmployee")
+    public JsonObjectBO selectAllEmployee(@RequestBody Map map){
+        int pageSize = (Integer)map.get("pageSize");
+        int pageNum =(Integer)map.get("pageNum");
+        JSONObject jsonObject = new JSONObject();
+        try{
+            PageHelper.startPage(pageNum,pageSize);
+            PageInfo<Employee> pageInfo = new PageInfo<>(employeeService.selectAllEmployee());
+            jsonObject.put("employee",pageInfo);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询离职从业人员
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "isDeleteEmployee")
+    public JsonObjectBO   selectDeleteEmployee(@RequestBody Map map){
+        int pageSize = (Integer)map.get("pageSize");
+        int pageNum =(Integer)map.get("pageNum");
+        JSONObject jsonObject = new JSONObject();
+        try{
+            PageHelper.startPage(pageNum,pageSize);
+            PageInfo<Employee> pageInfo = new PageInfo<>(employeeService.selectDeleteEmployee());
+            jsonObject.put("employee",pageInfo);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+    }
+
+    /**
      * 从业人员的添加
      * @param employee
      * @return
@@ -88,13 +128,8 @@ public class EmployeeController {
         }
     }
 
-
-    /**
-     * 添加时获取备案单位的信息
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = "recordDepartment")
+/*
+    estMapping(value = "recordDepartment")
     public JsonObjectBO selectRecordDepartment(@RequestBody Map map){
         String districtId = (String)map.get("districtId");
         JSONObject jsonObject = new JSONObject();
@@ -106,7 +141,12 @@ public class EmployeeController {
             return JsonObjectBO.exception(e.getMessage());
         }
     }
-
+*/
+    /**
+     * 修改从业人员
+     * @param map
+     * @return
+     */
    @RequestMapping(value = "update")
     public JsonObjectBO update(@RequestBody Map map){
         try{
@@ -114,6 +154,41 @@ public class EmployeeController {
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }
+   }
+
+    /**
+     * 删除从业人员
+     * @param map
+     * @return
+     */
+   @RequestMapping(value = "delete")
+    public JsonObjectBO delete(@RequestBody Map map){
+        String id = (String)map.get("id");
+
+        try {
+            return ResultUtil.getResult(employeeService.deleteEmployee(id));
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+   }
+
+    /**
+     * 查询历史记录
+     * @param map
+     * @return
+     */
+   @RequestMapping(value = "/history")
+    public JsonObjectBO showHistory(@RequestBody Map map){
+       String flag = (String)map.get("flag");
+       JSONObject jsonObject = new JSONObject();
+
+       try {
+           List<Employee> list = employeeService.seletHistory(flag);
+           jsonObject.put("history",list);
+           return JsonObjectBO.success("查询成功",jsonObject);
+       }catch (Exception e){
+           return JsonObjectBO.exception(e.getMessage());
+       }
    }
 
 }

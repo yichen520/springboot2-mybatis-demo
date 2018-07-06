@@ -109,11 +109,11 @@ public class EmployeeServiceImp implements EmployeeService {
         employee.setTelphone((String)map.get("telphone"));
         employee.setContactName((String)map.get("contactName"));
         employee.setContactTelphone((String)map.get("contactTelphone"));
-        employee.setFlag(UUIDUtil.generate());
+        employee.setFlag(employee.getFlag());
         employee.setVersion(employee.getVersion()+1);
         employee.setVersionTime(DateUtil.getCurrentTime());
+        int u = userService.update(setUserByType(employee,2));
         employee.setId(UUIDUtil.generate());
-        int u = userService.update(setUserByType(employee,1));
         int e = employeeDao.insert(employee);
         if(u==2&&e==1){
             return ResultUtil.isSuccess;
@@ -125,6 +125,8 @@ public class EmployeeServiceImp implements EmployeeService {
             return ResultUtil.isFail;
         }
     }
+
+
 
 
     /**
@@ -149,7 +151,7 @@ public class EmployeeServiceImp implements EmployeeService {
        }else {
            int u = userService.deleteByTelphone(employee.getTelphone());
            int e = employeeDao.delete(employee);
-           if (u == 2 && e == 1) {
+           if (u == 1 && e == 1) {
                return ResultUtil.isSuccess;
            } else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -167,6 +169,55 @@ public class EmployeeServiceImp implements EmployeeService {
     public Employee selectEmployeeByID(String id) {
         return employeeDao.selectById(id);
     }
+
+    /**
+     *历史记录
+     * @param flag
+     * @return
+     */
+    @Override
+    public List<Employee> seletHistory(String flag) {
+        return employeeDao.selectHistory(flag);
+    }
+
+    /**
+     * 根据制作单位删除
+     * @param code
+     * @return
+     */
+    @Override
+    public int deleteByDepartCode(String code) {
+        return 0;
+    }
+
+    /**
+     * 其他service 调用的更新方法
+     * @param employee
+     * @return
+     */
+    @Override
+    public int update(Employee employee) {
+        return employeeDao.update(employee);
+    }
+
+    /**
+     * 查询所有的从业人员
+     * @return
+     */
+    @Override
+    public List<Employee> selectAllEmployee() {
+        return employeeDao.selectAllEmployee();
+    }
+
+    /**
+     * 查询离职的从业人员
+     * @return
+     */
+    @Override
+    public List<Employee> selectDeleteEmployee() {
+        return employeeDao.selectDeleteEmployee();
+    }
+
 
     /**
      * 设置用户
@@ -189,7 +240,7 @@ public class EmployeeServiceImp implements EmployeeService {
             case 2:
                 Employee oldDate = employeeDao.selectById(employee.getId());
                 user = userService.findByTelphone(oldDate.getTelphone());
-                user.setRealName(employee.getEmployeeName());
+                user.setRealName("YG"+employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
                 break;

@@ -3,16 +3,15 @@ package com.dhht.service.make.Impl;
 import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.dao.UserDao;
 import com.dhht.model.*;
+import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserPasswordService;
 import com.dhht.service.user.UserService;
-import com.dhht.util.DateUtil;
-import com.dhht.util.MD5Util;
-import com.dhht.util.UUIDUtil;
+import com.dhht.util.*;
 import com.dhht.service.make.MakeDepartmentService;
-import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +35,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     private MakedepartmentMapper makedepartmentMapper;
 
     @Autowired
-    private UserDao userDao;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
-    private UserPasswordService userPasswordService;
+    private EmployeeService employeeService;
 
     private SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm;ss");
 
@@ -98,13 +94,15 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersion(1);
         User user =setUserByType(makedepartment,1);
         int m = makedepartmentMapper.insert(makedepartment);
-        int u = userDao.addUser(user);
-        if(m+u==2){
-            userPasswordService.sendMessage(user.getTelphone(),code);
-            return 1;
+        int u = userService.insert(setUserByType(makedepartment,1));
+        if(m+u==3){
+            return ResultUtil.isSuccess;
+        }else if(m==1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultUtil.isHave;
         }else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return 2;
+            return ResultUtil.isError;
         }
     }
 
@@ -115,6 +113,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      */
     @Override
     public int update(Makedepartment makedepartment) {
+        Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
+        List<Employee> employees = employeeService.selectByDepartmentCode(oldDate.getDepartmentCode());
         int d = makedepartmentMapper.deleteHistoryByID(makedepartment.getId());
         if(d==0){
             return 5;
@@ -123,15 +123,18 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return 3;
         }
+        User user =setUserByType(makedepartment,2);
         makedepartment.setId(UUIDUtil.generate());
         makedepartment.setVersionTime(simpleDateFormat.format(System.currentTimeMillis()));
         makedepartment.setFlag(makedepartment.getFlag());
         makedepartment.setVersion(makedepartment.getVersion()+1);
-        User user =setUserByType(makedepartment,2);
         int m = makedepartmentMapper.insert(makedepartment);
-        int u = userDao.update(setUserByType(makedepartment,2));
-        if(m+d+u==3){
-            return 1;
+        int e = setEmployeeByDepartment(employees,2);
+        int u = userService.update(setUserByType(makedepartment,2));
+        if(m==1&&u==2&&e==2){
+            return ResultUtil.isSuccess;
+        }else if(u==1) {
+            return ResultUtil.isHave;
         }else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return 2;
@@ -146,22 +149,26 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public int deleteById(String id) {
         Makedepartment makedepartment = makedepartmentMapper.selectDetailById(id);
+        List<Employee> employees = employeeService.selectByDepartmentCode(makedepartment.getDepartmentCode());
         makedepartment.setLogoutTime(DateUtil.getCurrentTime());
         if(setUserByType(makedepartment,3)==null){
             int m = makedepartmentMapper.deleteById(makedepartment);
-            if(m==1){
-                return 1;
+            int e =setEmployeeByDepartment(employees,1);
+            if(m==1&&e==2){
+                return ResultUtil.isSuccess;
             }else {
-                return 2;
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isError;
             }
         }else {
-            int u = userDao.deleteByTelphone(makedepartment.getLegalTelphone());
+            int u = userService.deleteByTelphone(makedepartment.getLegalTelphone());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            if (u + m == 2) {
-                return 1;
+            int e = setEmployeeByDepartment(employees,1);
+            if (u ==1&&m==1&&e==2) {
+                return ResultUtil.isSuccess;
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return 2;
+                return ResultUtil.isFail;
             }
         }
     }
@@ -222,14 +229,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 break;
             case 2:
                 Makedepartment oldDate =makedepartmentMapper.selectDetailById(makedepartment.getId());
-                user = userDao.findByTelphone(oldDate.getLegalTelphone());
+                user = userService.findByTelphone(oldDate.getLegalTelphone());
                 user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
                 user.setDistrictId(makedepartment.getDepartmentAddress());
                 user.setRealName(makedepartment.getDepartmentName());
                 user.setTelphone(makedepartment.getLegalTelphone());
                 break;
             case 3:
-                user = userDao.findByTelphone(makedepartment.getLegalTelphone());
+                user = userService.findByTelphone(makedepartment.getLegalTelphone());
                 break;
         }
         return user;
@@ -246,6 +253,37 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 对备案单位操作时同时操作从业人员
+     * @param employees
+     * @return
+     */
+    public int setEmployeeByDepartment(List<Employee> employees,int type) {
+        switch (type) {
+            //执行删除
+            case 1:
+                for (Employee emp : employees) {
+                    int e = employeeService.deleteEmployee(emp.getId());
+                    if (e != 2) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return ResultUtil.isError;
+                    }
+                }
+                return ResultUtil.isSuccess;
+            //执行修改
+            case 2:
+                for(Employee emp : employees){
+                    int e = employeeService.update(emp);
+                    if(e==0) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return ResultUtil.isError;
+                    }
+                }
+                return ResultUtil.isSuccess;
+        }
+        return ResultUtil.isSuccess;
     }
 
 }
