@@ -16,7 +16,7 @@ public class SealImage {
 
     private String url;
 
-    private byte[] sealImageData;
+//    private byte[] sealImageData;
 
 
 }

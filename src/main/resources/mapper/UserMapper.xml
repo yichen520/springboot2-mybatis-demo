@@ -117,6 +117,7 @@
             <if test="userName != null and userName!=''"> `user_name` = #{userName}, </if>
             <if test="realName != null and realName!=''"> `real_name` = #{realName}, </if>
             <if test="telphone != null and telphone!=''">`telphone` =#{telphone},</if>
+            <if test="password != null and password!=''">`password` = #{password},</if>
             <if test="roleId != null and roleId!=''"> `role_id` = #{roleId}, </if>
             <if test="districtId != null and districtId!='' "> `district_id` = #{districtId}, </if>
         </set>

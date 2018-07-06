@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
                 if (user1 != null) {
                     return ResultUtil.isHave;              //该用户已经存在
                 }
-                user.setUserName(user.getTelphone());
+//                user.setUserName(user.getTelphone());
                 Integer a = userDao.update(user);
                 if (a != 1) {
                     return ResultUtil.isFail;             //修改失败
@@ -121,7 +121,6 @@ public class UserServiceImpl implements UserService {
                     return ResultUtil.isSuccess;             //修改成功
                 }
             } else {
-                user.setUserName(user.getTelphone());
                 Integer a = userDao.update(user);
                 if (a != 1) {
                     return ResultUtil.isFail;             //修改失败

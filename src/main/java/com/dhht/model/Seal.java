@@ -42,6 +42,8 @@ public class Seal extends SealKey {
 
     private String sealRecordTypeCode;  //印章刻制类别代码
 
+    private String remark;//备注
+
     private Date recordDate;    //备案日期
 
     private Boolean isRecord;   //是否备案
@@ -68,7 +70,12 @@ public class Seal extends SealKey {
 
     private SealImage sealImage;    //印章图像
 
-    private SealOperationRecord sealOperationRecord;    //印章操作
+    private SealOperationRecord sealOperationRecord;    //经办人等
+
+    private SealStatus sealStatus;        //印章状态
+
+    private RecordDepartment recordDepartment;       //备案单位
+
 
 
 

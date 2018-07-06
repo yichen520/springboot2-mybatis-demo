@@ -4,6 +4,8 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.UseDepartment;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 
 /**
  * Created by imac_dhht on 2018/6/12.
@@ -19,4 +21,6 @@ public interface UseDepartmentService {
     JsonObjectBO delete(UseDepartment useDepartment);
 
     JsonObjectBO showMore(String flag);
+
+    List<UseDepartment> selectUseDepartment(String useDepartmentName);
 }

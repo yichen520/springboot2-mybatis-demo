@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dhht.dao.SealMapper" >
+<mapper namespace="com.dhht.dao.SealDao" >
   <resultMap id="BaseResultMap" type="com.dhht.model.Seal" >
     <id column="id" property="id" jdbcType="CHAR" />
     <id column="seal_code" property="sealCode" jdbcType="VARCHAR" />
@@ -21,6 +21,19 @@
     <result column="seal_specification" property="sealSpecification" jdbcType="VARCHAR" />
     <result column="seal_make_type_code" property="sealMakeTypeCode" jdbcType="VARCHAR" />
     <result column="seal_record_type_code" property="sealRecordTypeCode" jdbcType="VARCHAR" />
+    <result column="record_date" property="recordDate"  />
+    <result column="is_record" property="isRecord" jdbcType="BIT"/>
+    <result column="make_date" property="makeDate"  />
+    <result column="is_make" property="isMake" jdbcType="BIT"/>
+    <result column="personal_date" property="personalDate"  />
+    <result column="is_personal" property="isPersonal" jdbcType="BIT"/>
+    <result column="deliver_date" property="deliverDate"  />
+    <result column="is_deliver" property="isDeliver" jdbcType="BIT"/>
+    <result column="logout_date" property="logoutDate"  />
+    <result column="is_logout" property="isLogout" jdbcType="BIT"/>
+    <result column="loss_date" property="lossDate" />
+    <result column="is_loss" property="isLoss" jdbcType="BIT"/>
+    <result column="remark" property="remark" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -115,127 +128,6 @@
       #{sealSize,jdbcType=DOUBLE}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR}, 
       #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.dhht.model.Seal" >
-    insert into seal
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="sealCode != null" >
-        seal_code,
-      </if>
-      <if test="sealName != null" >
-        seal_name,
-      </if>
-      <if test="sealStatusCode != null" >
-        seal_status_code,
-      </if>
-      <if test="useDepartmentCode != null" >
-        use_department_code,
-      </if>
-      <if test="useDepartmentName != null" >
-        use_department_name,
-      </if>
-      <if test="recordDepartmentCode != null" >
-        record_department_code,
-      </if>
-      <if test="recordDepartmentName != null" >
-        record_department_name,
-      </if>
-      <if test="makeDepartmentCode != null" >
-        make_department_code,
-      </if>
-      <if test="makeDepartmentName != null" >
-        make_department_name,
-      </if>
-      <if test="sealTypeCode != null" >
-        seal_type_code,
-      </if>
-      <if test="materialsCode != null" >
-        materials_code,
-      </if>
-      <if test="mimeographDescription != null" >
-        mimeograph_description,
-      </if>
-      <if test="sealShapeCode != null" >
-        seal_shape_code,
-      </if>
-      <if test="sealSize != null" >
-        seal_size,
-      </if>
-      <if test="sealCenterImage != null" >
-        seal_center_image,
-      </if>
-      <if test="sealSpecification != null" >
-        seal_specification,
-      </if>
-      <if test="sealMakeTypeCode != null" >
-        seal_make_type_code,
-      </if>
-      <if test="sealRecordTypeCode != null" >
-        seal_record_type_code,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=CHAR},
-      </if>
-      <if test="sealCode != null" >
-        #{sealCode,jdbcType=VARCHAR},
-      </if>
-      <if test="sealName != null" >
-        #{sealName,jdbcType=VARCHAR},
-      </if>
-      <if test="sealStatusCode != null" >
-        #{sealStatusCode,jdbcType=CHAR},
-      </if>
-      <if test="useDepartmentCode != null" >
-        #{useDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="useDepartmentName != null" >
-        #{useDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="recordDepartmentCode != null" >
-        #{recordDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="recordDepartmentName != null" >
-        #{recordDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="makeDepartmentCode != null" >
-        #{makeDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="makeDepartmentName != null" >
-        #{makeDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="sealTypeCode != null" >
-        #{sealTypeCode,jdbcType=CHAR},
-      </if>
-      <if test="materialsCode != null" >
-        #{materialsCode,jdbcType=CHAR},
-      </if>
-      <if test="mimeographDescription != null" >
-        #{mimeographDescription,jdbcType=VARCHAR},
-      </if>
-      <if test="sealShapeCode != null" >
-        #{sealShapeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="sealSize != null" >
-        #{sealSize,jdbcType=DOUBLE},
-      </if>
-      <if test="sealCenterImage != null" >
-        #{sealCenterImage,jdbcType=VARCHAR},
-      </if>
-      <if test="sealSpecification != null" >
-        #{sealSpecification,jdbcType=VARCHAR},
-      </if>
-      <if test="sealMakeTypeCode != null" >
-        #{sealMakeTypeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="sealRecordTypeCode != null" >
-        #{sealRecordTypeCode,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
 
   <update id="updateByExampleSelective" parameterType="map" >
     update seal
@@ -327,64 +219,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Seal" >
-    update seal
-    <set >
-      <if test="sealName != null" >
-        seal_name = #{sealName,jdbcType=VARCHAR},
-      </if>
-      <if test="sealStatusCode != null" >
-        seal_status_code = #{sealStatusCode,jdbcType=CHAR},
-      </if>
-      <if test="useDepartmentCode != null" >
-        use_department_code = #{useDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="useDepartmentName != null" >
-        use_department_name = #{useDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="recordDepartmentCode != null" >
-        record_department_code = #{recordDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="recordDepartmentName != null" >
-        record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="makeDepartmentCode != null" >
-        make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="makeDepartmentName != null" >
-        make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="sealTypeCode != null" >
-        seal_type_code = #{sealTypeCode,jdbcType=CHAR},
-      </if>
-      <if test="materialsCode != null" >
-        materials_code = #{materialsCode,jdbcType=CHAR},
-      </if>
-      <if test="mimeographDescription != null" >
-        mimeograph_description = #{mimeographDescription,jdbcType=VARCHAR},
-      </if>
-      <if test="sealShapeCode != null" >
-        seal_shape_code = #{sealShapeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="sealSize != null" >
-        seal_size = #{sealSize,jdbcType=DOUBLE},
-      </if>
-      <if test="sealCenterImage != null" >
-        seal_center_image = #{sealCenterImage,jdbcType=VARCHAR},
-      </if>
-      <if test="sealSpecification != null" >
-        seal_specification = #{sealSpecification,jdbcType=VARCHAR},
-      </if>
-      <if test="sealMakeTypeCode != null" >
-        seal_make_type_code = #{sealMakeTypeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="sealRecordTypeCode != null" >
-        seal_record_type_code = #{sealRecordTypeCode,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=CHAR}
-      and seal_code = #{sealCode,jdbcType=VARCHAR}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.Seal" >
     update seal
     set seal_name = #{sealName,jdbcType=VARCHAR},
@@ -407,4 +242,20 @@
     where id = #{id,jdbcType=CHAR}
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
+
+
+  <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "01";
+  </select>
+
+
+  <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
+     insert into seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name
+      employee_id, operator_name, operator_certificate_code,
+      operator_certificate_type)
+    values (#{id,jdbcType=CHAR}, #{sealCode}, #{dateTime},
+      #{operatorTelphone,jdbcType=VARCHAR}, #{emplyeeName,jdbcType=CHAR}, #{employeeId,jdbcType=CHAR},
+      #{operatorName,jdbcType=VARCHAR}, #{operatorCertificateCode,jdbcType=CHAR},
+      #{operatorCrtificateType})
+  </insert>
 </mapper>

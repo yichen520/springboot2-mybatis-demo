@@ -28,6 +28,34 @@
     <result column="updateTime" property="updateTime" />
 
   </resultMap>
+  <resultMap id="BaseResultMap1" type="java.util.HashMap" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="code" property="code" jdbcType="CHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nation_name" property="nationName" jdbcType="VARCHAR" />
+    <result column="english_name" property="englishName" jdbcType="VARCHAR" />
+    <result column="english_ahhr" property="englishAhhr" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="query_password" property="queryPassword" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
+    <result column="legal_id_type" property="legalIdType" jdbcType="VARCHAR" />
+    <result column="legal_telphone" property="legalTelphone" jdbcType="VARCHAR" />
+    <result column="legal_country" property="legalCountry" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="CHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
+    <result column="department_status" property="departmentStatus" jdbcType="CHAR" />
+    <result column="department_certificate" property="departmentCertificate" jdbcType="VARCHAR" />
+    <result column="department_certificate_type" property="departmentCertificateType" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
+    <result column="version" property="version"/>
+    <result column="flag" property="flag" />
+    <result column="updateTime" property="updateTime" />
+
+  </resultMap>
+
 
 
   <sql id="Base_Column_List" >
@@ -220,5 +248,11 @@
     <if test="departmentStatus ='02'">
       department_status ='02'
     </if>
+  </select>
+
+  <select id="selectByName" parameterType="java.lang.String" resultType="com.dhht.model.UseDepartment">
+    SELECT * from use_department WHERE
+      `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%"
+    limit 20
   </select>
 </mapper>

@@ -68,6 +68,7 @@ public class UserController {
      */
     @RequestMapping(value ="/update",method = RequestMethod.POST)
     public JsonObjectBO update(@RequestBody User user){
+        user.setUserName("GLY"+user.getTelphone());
         return ResultUtil.getResult(userService.update(user));
 
     }

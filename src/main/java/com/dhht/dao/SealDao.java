@@ -3,24 +3,24 @@ package com.dhht.dao;
 import com.dhht.model.Seal;
 import com.dhht.model.SealKey;
 import java.util.List;
+
+import com.dhht.model.SealOperationRecord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SealMapper {
+public interface SealDao {
 
 
     int deleteByPrimaryKey(SealKey key);
 
     int insert(Seal record);
 
-    int insertSelective(Seal record);
-
     Seal selectByPrimaryKey(SealKey key);
 
-
-
-    int updateByPrimaryKeySelective(Seal record);
+    List<Seal> selectByCodeAndType(String useDepartmentCode);
 
     int updateByPrimaryKey(Seal record);
+
+    int insertSealOperationRecord(SealOperationRecord sealOperationRecord);
 }
