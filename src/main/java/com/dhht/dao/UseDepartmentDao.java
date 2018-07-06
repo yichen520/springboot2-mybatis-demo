@@ -27,8 +27,6 @@ public interface UseDepartmentDao {
 
     UseDepartment selectById(String Id);
 
-//    int updateByPrimaryKeySelective(UserDepartment record);
-
     int updateByPrimaryKey(UseDepartment record);
 
     List<UseDepartment> findAllMake();
@@ -38,4 +36,6 @@ public interface UseDepartmentDao {
     int updateById(UseDepartment useDepartment);
 
     List<UseDepartment> find(@Param("code") String code,@Param("districtId")String districtId,@Param("name")String name,@Param("departmentStatus")String departmentStatus);
+
+    List<UseDepartment> selectByName(@Param("name") String name);
 }

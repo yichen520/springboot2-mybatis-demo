@@ -44,9 +44,9 @@
     SELECT <include refid="Base_Column_List"/> from employee WHERE id = #{id,jdbcType=CHAR}
   </select>
 
-    <select id="selectByDepartmentCode" resultMap="BaseResultMap" parameterType="java.lang.String">
-        SELECT <include refid="Base_Column_List"/> from employee WHERE employee_department_code = #{employeeDepartmentCode,jdbcType=VARCHAR}
-    </select>
+    <!--<select id="selectByDepartmentCode" resultMap="BaseResultMap" parameterType="java.lang.String">-->
+        <!--SELECT <include refid="Base_Column_List"/> from employee WHERE employee_department_code = #{employeeDepartmentCode,jdbcType=VARCHAR}-->
+    <!--</select>-->
 
   <select id="selectCountEmployeeCode" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select 

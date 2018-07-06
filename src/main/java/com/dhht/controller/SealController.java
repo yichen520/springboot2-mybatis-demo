@@ -57,7 +57,7 @@ public class SealController  {
             seal.setRecordDepartmentName(user.getRealName());
             //从从业人员查找制作单位   稍后做
 
-            sealService.insert(seal);
+//            sealService.insert(seal);
             return JsonObjectBO.ok("添加成功");
         } catch (Exception e) {
             e.printStackTrace();

@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -89,4 +90,19 @@ public class UseDepartmentController {
         return jsonObjectBO;
     }
 
+    /**
+     * 根据名字进行了查询
+     */
+    @RequestMapping(value = "/selectByName" ,method = RequestMethod.POST)
+    public JsonObjectBO selectByName(@RequestBody Map map){
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String name = (String)map.get("name");
+        List<UseDepartment> list = useDepartmentService.selectUseDepartment(name);
+        jsonObject.put("useDepartment",list);
+        jsonObjectBO.setCode(1);
+        jsonObjectBO.setData(jsonObject);
+        return jsonObjectBO;
+
+    }
 }

@@ -114,9 +114,12 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         String code = createRandomVcode();
         User user = userDao.findById(id);
         user.setPassword(MD5Util.toMd5(code));
+//        user.setPassword(code);
+        String userName = user.getUserName();
         String phone = user.getTelphone();
+        userDao.update(user);
         ArrayList<String> params = new ArrayList<String>();
-        params.add(phone);
+        params.add(userName);
         params.add(code);
         if(smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params)){
             return true;

@@ -165,5 +165,16 @@ public class UseDepartmentImpl implements UseDepartmentService {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 根据名字查询使用单位
+     * @param useDepartmentName
+     * @return
+     */
+    @Override
+    public List<UseDepartment> selectUseDepartment(String useDepartmentName) {
+        List<UseDepartment> list = useDepartmentDao.selectByName(useDepartmentName);
+        return list;
+    }
+
 
 }
