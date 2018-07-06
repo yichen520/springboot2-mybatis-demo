@@ -76,14 +76,14 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.isHave;                  //该用户不存在
         }
         user.setId(UUIDUtil.generate());
-        user.setUserName(user.getTelphone());
+//        user.setUserName("GLY"+user.getTelphone());
         String code = createRandomVcode();
         String password = MD5Util.toMd5(code);
         user.setPassword(password);
          // user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
         ArrayList<String> params = new ArrayList<String>();
-        params.add(user.getTelphone());
+        params.add(user.getUserName());
         params.add(code);
         smsSendService.sendSingleMsgByTemplate(user.getTelphone(),userCode,params);
         if (a != 1) {
@@ -126,9 +126,6 @@ public class UserServiceImpl implements UserService {
                 if (a != 1) {
                     return ResultUtil.isFail;             //修改失败
                 } else {
-                    params.add(user2.getUserName());
-                    params.add(user.getUserName());
-                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);
                     return ResultUtil.isSuccess;          //修改成功
                 }
             }
@@ -154,6 +151,7 @@ public class UserServiceImpl implements UserService {
         List<User> list = new ArrayList<User>();
         PageHelper.startPage(pageNum, pageSize);
         String localdistrictId = user.getDistrictId();
+
         if (realName == null && districtId == null && roleId == null) {
             PageInfo<User> result = selectByDistrict(localdistrictId, pageSize, pageNum);
             return result;
@@ -167,7 +165,12 @@ public class UserServiceImpl implements UserService {
                 list = userDao.find(realName, districtId, roleId);
             }
         } else {
-            list = userDao.find(realName, districtId, roleId);
+            String localdistrictIds[] = StringUtil.DistrictUtil(localdistrictId);
+            if (localdistrictIds[1].equals("00") && localdistrictIds[2].equals("00")) {
+                list = userDao.find(realName, localdistrictIds[0], roleId);
+            } else if (!localdistrictIds[1].equals("00") && localdistrictIds[2].equals("00")) {
+                list = userDao.find(realName, localdistrictIds[0] + localdistrictIds[1], roleId);
+            }
 
         }
 

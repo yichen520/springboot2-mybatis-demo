@@ -56,6 +56,7 @@ public class UserController {
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO add(@RequestBody User user){
         user.setRoleId("GLY");
+        user.setUserName("GLY"+user.getTelphone());
         return ResultUtil.getResult(userService.insert(user));
     }
 
