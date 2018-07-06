@@ -2,11 +2,11 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.DistrictMenus;
-import com.dhht.model.Employee;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
+import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -27,16 +27,25 @@ public class EmployeeController {
     private EmployeeService employeeService;
     @Autowired
     private DistrictService districtService;
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
 
     private JSONObject jsonObject = new JSONObject();
 
+    /**
+     * 菜单
+     * @param httpServletRequest
+     * @return
+     */
     @RequestMapping(value = "/menus",method = RequestMethod.GET)
     public JsonObjectBO selectAllEmployee(HttpServletRequest httpServletRequest){
       //String id = (String)map.get("districtId");
       JSONObject jsonObject = new JSONObject();
-      User user = (User) httpServletRequest.getSession().getAttribute("user");
+     //User user = (User) httpServletRequest.getSession().getAttribute("user");
       try{
-          List<DistrictMenus> list = districtService.selectMakeDepartmentMenus(user.getDistrictId());
+          List<DistrictMenus> list = districtService.selectMakeDepartmentMenus("330000");
           jsonObject.put("menus",list);
           return JsonObjectBO.success("查询成功",jsonObject);
       }catch (Exception e){
@@ -44,6 +53,11 @@ public class EmployeeController {
       }
     }
 
+    /**
+     * 从业人员列表
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/info")
     public JsonObjectBO selectByDepartmentCode(@RequestBody Map map){
         int pageSize = (Integer) map.get("pageSize");
@@ -59,15 +73,47 @@ public class EmployeeController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 从业人员的添加
+     * @param employee
+     * @return
+     */
     @RequestMapping(value = "insert")
-    public JsonObjectBO insertEmployee(@RequestBody Employee employee){
+    public JsonObjectBO insertEmployee(@RequestBody Employee employee,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
-            return ResultUtil.getResult(employeeService.insertEmployee(employee));
+            return ResultUtil.getResult(employeeService.insertEmployee(employee,user));
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }
     }
 
 
+    /**
+     * 添加时获取备案单位的信息
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "recordDepartment")
+    public JsonObjectBO selectRecordDepartment(@RequestBody Map map){
+        String districtId = (String)map.get("districtId");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<RecordDepartment> recordDepartments = recordDepartmentService.selectByDistrictId(districtId);
+            jsonObject.put("recordDepartment",recordDepartments);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+    }
+
+   @RequestMapping(value = "update")
+    public JsonObjectBO update(@RequestBody Map map){
+        try{
+            return ResultUtil.getResult(employeeService.updateEmployee(map));
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+   }
 
 }

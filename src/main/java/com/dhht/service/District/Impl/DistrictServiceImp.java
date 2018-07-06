@@ -275,6 +275,11 @@ public class DistrictServiceImp implements DistrictService{
         }
     }
 
+    /**
+     * 循环添加区域下的刻章店
+     * @param parent
+     * @param districtMenus
+     */
     public void setMakeDepartmentchildren(List<DistrictMenus> parent, List<DistrictMenus> districtMenus){
         for (DistrictMenus districtMenu:parent) {
             List<DistrictMenus> list = findInList(districtMenus,districtMenu.getDistrictId());
