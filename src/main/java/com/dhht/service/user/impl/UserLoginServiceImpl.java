@@ -2,6 +2,7 @@ package com.dhht.service.user.impl;
 
 
 import com.dhht.common.JsonObjectBO;
+import com.dhht.controller.UploadController;
 import com.dhht.dao.*;
 import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
@@ -10,6 +11,8 @@ import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ import java.util.*;
 @Service(value = "userLoginService")
 @Transactional
 public class UserLoginServiceImpl implements UserLoginService {
+
+    private static Logger logger = LoggerFactory.getLogger(UserLoginServiceImpl.class);
 
     @Autowired
     private UserDao userDao;
@@ -191,6 +196,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             return map;
 
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             map.put("status", "error");
             map.put("currentAuthority", "guest");
             map.put("message","登录失败！");

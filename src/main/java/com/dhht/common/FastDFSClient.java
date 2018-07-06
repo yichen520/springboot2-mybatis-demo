@@ -105,6 +105,7 @@ public class FastDFSClient {
         return "http://"+getTrackerServer().getInetSocketAddress().getHostString()+":"+ClientGlobal.getG_tracker_http_port()+"/";
     }
 
+
     private static StorageClient getTrackerClient() throws IOException {
         TrackerServer trackerServer = getTrackerServer();
         StorageClient storageClient = new StorageClient(trackerServer, null);

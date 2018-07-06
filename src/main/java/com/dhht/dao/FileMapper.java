@@ -14,6 +14,8 @@ public interface FileMapper {
 
     int deleteByPrimaryKey(String id);
 
+    int deleteByPrimaryPath(String filePath);
+
     int insert(File record);
 
     int insertSelective(File record);
