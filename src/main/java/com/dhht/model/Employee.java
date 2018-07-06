@@ -50,8 +50,6 @@ public class Employee {
 
     private Date logoutTime;
 
-    private Date effectiveTime;
-
     private int version;
 
     private Date versionTime;

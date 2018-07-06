@@ -16,10 +16,15 @@ public interface EmployeeDao {
 
     int selectCountEmployeeCode(@Param("employeeCode") String employeeCode);
 
+    List<Employee> selectAllEmployee();
+
+    List<Employee> selectDeleteEmployee();
+
     int insert(Employee employee);
 
     Employee selectById(@Param("id") String id);
 
+    int deleteByDepartmentCode(@Param("employeeDepartmentCode") String code);
 
     int update(Employee record);
 
