@@ -4,6 +4,7 @@ import com.dhht.model.Seal;
 import com.dhht.model.SealKey;
 import java.util.List;
 
+import com.dhht.model.SealMaterial;
 import com.dhht.model.SealOperationRecord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,8 @@ public interface SealDao {
     int updateByPrimaryKey(Seal record);
 
     int insertSealOperationRecord(SealOperationRecord sealOperationRecord);
+
+    int insertSealMaterial(SealMaterial sealMaterial);
+
+    List<Seal> selectByCodeAndName(Seal seal);
 }

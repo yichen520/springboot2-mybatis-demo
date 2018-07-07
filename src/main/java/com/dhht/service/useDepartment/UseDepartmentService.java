@@ -22,5 +22,5 @@ public interface UseDepartmentService {
 
     JsonObjectBO showMore(String flag);
 
-    List<UseDepartment> selectUseDepartment(String useDepartmentName);
+    UseDepartment selectUseDepartment(String useDepartmentName);
 }

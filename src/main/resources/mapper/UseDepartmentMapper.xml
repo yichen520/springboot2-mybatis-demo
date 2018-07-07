@@ -252,7 +252,7 @@
 
   <select id="selectByName" parameterType="java.lang.String" resultType="com.dhht.model.UseDepartment">
     SELECT * from use_department WHERE
-      `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%"
+      `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%" AND is_delete = 0
     limit 20
   </select>
 </mapper>

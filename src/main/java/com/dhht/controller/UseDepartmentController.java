@@ -98,8 +98,8 @@ public class UseDepartmentController {
         JSONObject jsonObject = new JSONObject();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String name = (String)map.get("name");
-        List<UseDepartment> list = useDepartmentService.selectUseDepartment(name);
-        jsonObject.put("useDepartment",list);
+        UseDepartment useDepartment = useDepartmentService.selectUseDepartment(name);
+        jsonObject.put("useDepartment",useDepartment);
         jsonObjectBO.setCode(1);
         jsonObjectBO.setData(jsonObject);
         return jsonObjectBO;

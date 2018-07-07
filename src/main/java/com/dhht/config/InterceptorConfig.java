@@ -22,15 +22,15 @@ import java.util.Map;
 public class InterceptorConfig implements HandlerInterceptor {
     private static final Logger log = LoggerFactory.getLogger(InterceptorConfig.class);
 
-//    @Override
-//    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,Exception ex) throws Exception {
-//
-//    }
-//
-//    @Override
-//    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-//
-//    }
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,Exception ex) throws Exception {
+
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+    }
     public boolean validateResource(List<Resource> resources, String path) {
         if (resources == null) return false;
         for (Resource resource : resources) {
@@ -44,42 +44,42 @@ public class InterceptorConfig implements HandlerInterceptor {
         return false;
     }
 
-//    @Override
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        //登录不做要求
-//        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/error")){
-//            return true;
-//        }
-//        //获取session是否存在
-//        Object object = request.getSession().getAttribute("user");
-//        if(object==null ){
-//            String path = request.getServletPath();
-//            if(path.equals("/menu")||path.equals("/currentUser")){
-//                response.setStatus(401);
-//                return false;
-//            }
-//            response.setStatus(401);
-//            return false;
-//        }
-//        else {
-//            List<Resource> resources = (List<Resource>)request.getSession().getAttribute("resources");
-//            String path = request.getServletPath();
-//            if (path.equals("/login")||path.equals("/menu")||path.equals("/currentUser")){
-//                return true;
-//            }
-//            if (validateResource(resources,path)){
-//                try {
-//                    return true;
-//                } catch (Throwable e) {
-//                    e.printStackTrace();
-//                    response.setStatus(403);
-//                    return false;
-//                }
-//            }else {
-//                response.setStatus(403);
-//                return false;
-//            }
-//        }
-//    }
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //登录不做要求
+        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/error")){
+            return true;
+        }
+        //获取session是否存在
+        Object object = request.getSession().getAttribute("user");
+        if(object==null ){
+            String path = request.getServletPath();
+            if(path.equals("/menu")||path.equals("/currentUser")){
+                response.setStatus(401);
+                return false;
+            }
+            response.setStatus(401);
+            return false;
+        }
+        else {
+            List<Resource> resources = (List<Resource>)request.getSession().getAttribute("resources");
+            String path = request.getServletPath();
+            if (path.equals("/login")||path.equals("/menu")||path.equals("/currentUser")){
+                return true;
+            }
+            if (validateResource(resources,path)){
+                try {
+                    return true;
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    response.setStatus(403);
+                    return false;
+                }
+            }else {
+                response.setStatus(403);
+                return false;
+            }
+        }
+    }
 
 }

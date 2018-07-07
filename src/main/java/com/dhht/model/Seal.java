@@ -68,6 +68,8 @@ public class Seal extends SealKey {
 
     private Boolean isLoss; //是否挂失
 
+    private String sealreason; //印章原因
+
     private SealImage sealImage;    //印章图像
 
     private SealOperationRecord sealOperationRecord;    //经办人等
