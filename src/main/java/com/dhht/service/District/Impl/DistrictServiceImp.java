@@ -79,15 +79,7 @@ public class DistrictServiceImp implements DistrictService{
      */
     @Override
     public List<DistrictMenus> selectMakeDepartmentMenus(String id) {
-        String districtIds[] = StringUtil.DistrictUtil(id);
-        String districtId = null;
-        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
-            districtId = districtIds[0];
-        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
-            districtId = districtIds[0]+districtIds[1];
-        }else {
-            districtId = id;
-        }
+        String districtId = StringUtil.getDistrictId(id);
         List<DistrictMenus> list = findDistrictList(districtMapper.selectById(districtId));
         List<DistrictMenus> districtMenus = findOneParent(list,id);
        setMakeDepartmentchildren(districtMenus,list);

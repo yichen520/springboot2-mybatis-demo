@@ -92,6 +92,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersionTime(simpleDateFormat.format(System.currentTimeMillis()));
         makedepartment.setFlag(UUIDUtil.generate());
         makedepartment.setVersion(1);
+        makedepartment.setRegisterTime(DateUtil.getCurrentTime());
         User user =setUserByType(makedepartment,1);
         int m = makedepartmentMapper.insert(makedepartment);
         int u = userService.insert(setUserByType(makedepartment,1));
@@ -128,6 +129,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersionTime(simpleDateFormat.format(System.currentTimeMillis()));
         makedepartment.setFlag(makedepartment.getFlag());
         makedepartment.setVersion(makedepartment.getVersion()+1);
+        makedepartment.setRegisterTime(makedepartment.getRegisterTime());
         int m = makedepartmentMapper.insert(makedepartment);
         int e = setEmployeeByDepartment(employees,2);
         int u = userService.update(setUserByType(makedepartment,2));

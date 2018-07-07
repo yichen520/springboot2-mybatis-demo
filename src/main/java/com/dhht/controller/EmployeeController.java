@@ -172,6 +172,12 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * 头像上传接口
+     * @param request
+     * @param file
+     * @return
+     */
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
     public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {

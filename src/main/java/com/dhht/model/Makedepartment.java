@@ -28,5 +28,7 @@ public class Makedepartment {
     private int version;
     private String flag;
     private String versionTime;
+    private Date registerTime;
+
 
     }

@@ -62,7 +62,7 @@
     <select id="selectDeleteEmployee" resultMap="BaseResultMap">
          SELECT a.* from employee as a RIGHT JOIN(
     select flag,MAX(version) as ver from employee GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where is_delete = 1 and employee_department_code = #{code,jdbcType=VARCHAR}AND employee_name LIKE  '${name}%'
+    )as b on a.flag=b.flag and  a.version=b.ver where is_delete = 1 and employee_department_code = #{code,jdbcType=VARCHAR}AND employee_name LIKE  '%${name}%'
     </select>
 
   <select id="selectCountEmployeeCode" resultType="java.lang.Integer" parameterType="java.lang.String" >
@@ -115,6 +115,10 @@
     <update id="deleteByDepartmentCode" parameterType="java.lang.String">
       UPDATE employee set is_delete = 1 WHERE employee_department_code=#{employeeDepartmentCode,jdbcType=VARCHAR} AND is_delete = 0
     </update>
+
+  <update id="updateHeadById" parameterType="java.lang.String">
+     UPDATE employee set employee_image = #{employeeImage,jdbcType=VARCHAR} WHERE id=#{id,jdbcType=VARCHAR}
+  </update>
 
 
   <update id="update" parameterType="com.dhht.model.Employee" >
