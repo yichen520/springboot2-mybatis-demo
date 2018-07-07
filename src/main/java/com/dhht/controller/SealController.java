@@ -3,11 +3,14 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.model.Employee;
 import com.dhht.model.Seal;
 import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
+import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.UUIDUtil;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,9 @@ import java.util.Map;
 public class SealController  {
     @Autowired
     private SealService sealService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     private static JSONObject jsonObject = new JSONObject();;
 
@@ -65,6 +71,57 @@ public class SealController  {
         }
     }
 
+    /**
+     * 备案
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
+    @RequestMapping("/sealRecord")
+    public JsonObjectBO sealRecord(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        User user =(User) httpServletRequest.getSession(true).getAttribute("user");
+        String districtId = user.getDistrictId();
+        String operatorTelphone = (String) map.get("operatorTelphone");
+        String operatorName = (String) map.get("operatorName");
+        String operatorCertificateCode = (String) map.get("operatorCertificateCode");
+        String operatorCrtificateType = (String) map.get("operatorCrtificateType");
+        String operatorPhoto = (String) map.get("operatorPhoto");
+        String idCardScanner = (String) map.get("idCardScanner");
+        String proxy = (String) map.get("proxy");
+        Seal seal = (Seal)map.get("seal");
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCrtificateType,operatorPhoto,idCardScanner,proxy);
+        if(a==1) {
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("添加成功");
+        }else{
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("添加失败");
+        }
+        return jsonObjectBO;
+
+    }
+
+    @RequestMapping("/sealInfo")
+    public JsonObjectBO sealInfo(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        User user =(User) httpServletRequest.getSession(true).getAttribute("user");
+        String telphone = user.getTelphone();
+        Employee employee = employeeService.selectByPhone(telphone);
+        String recordCode = employee.getOfficeCode();
+        String useDepartmentName = (String)map.get("useDepartmentName");
+        String useDepartmentCode = (String)map.get("useDepartmentCode");
+        String status = (String)map.get("status");
+        int pageNum = (int)map.get("pageNum");
+        int pageSize = (int)map.get("pageSize");
+        PageInfo<Seal> seal = sealService.sealInfo(recordCode,useDepartmentName,useDepartmentCode,status,pageNum,pageSize);
+        jsonObject.put("seal",seal);
+        jsonObjectBO.setData(jsonObject);
+        jsonObjectBO.setCode(1);
+        jsonObjectBO.setMessage("查询成功");
+        return jsonObjectBO;
+    }
 
 
 }

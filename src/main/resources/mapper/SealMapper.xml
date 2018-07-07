@@ -34,6 +34,7 @@
     <result column="loss_date" property="lossDate" />
     <result column="is_loss" property="isLoss" jdbcType="BIT"/>
     <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="seal_reason" property="sealReason" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -206,7 +207,7 @@
       record_department_name = #{record.recordDepartmentName,jdbcType=VARCHAR},
       make_department_code = #{record.makeDepartmentCode,jdbcType=CHAR},
       make_department_name = #{record.makeDepartmentName,jdbcType=VARCHAR},
-      seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
+    seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
       materials_code = #{record.materialsCode,jdbcType=CHAR},
       mimeograph_description = #{record.mimeographDescription,jdbcType=VARCHAR},
       seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
@@ -245,17 +246,49 @@
 
 
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "01";
+      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_record_type_code = "01";
   </select>
 
 
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
-     insert into seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name
-      employee_id, operator_name, operator_certificate_code,
+    INSERT INTO seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name,
+      employee_id, operator_name,operator_certificate_code,
       operator_certificate_type)
-    values (#{id,jdbcType=CHAR}, #{sealCode}, #{dateTime},
-      #{operatorTelphone,jdbcType=VARCHAR}, #{emplyeeName,jdbcType=CHAR}, #{employeeId,jdbcType=CHAR},
-      #{operatorName,jdbcType=VARCHAR}, #{operatorCertificateCode,jdbcType=CHAR},
+    values (#{id}, #{sealCode}, #{dateTime},
+      #{operatorTelphone}, #{emplyeeName}, #{employeeId},
+      #{operatorName}, #{operatorCertificateCode},
       #{operatorCrtificateType})
   </insert>
+
+
+  <insert id="insertSealMaterial" parameterType="com.dhht.model.SealMaterial">
+    INSERT INTO seal_material (seal_code,`type`,file_path)values(#{sealCode},#{type},#{filePath})
+  </insert>
+
+  <select id="selectByCodeAndName" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+    SELECT * from seal
+    <where>
+      <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+        use_department_code LIKE  "%"#{useDepartmentCode,jdbcType=char}"%"
+      </if>
+      <if test="useDepartmentName !=null and useDepartmentName !=''">
+        AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="isRecord !=null and isRecord !=''">
+        AND is_record =  #{isRecord}
+      </if>
+      <if test="isMake !=null and isMake !=''">
+        AND is_make =  #{isMake}
+      </if>
+      <if test="isPersonal !=null and isPersonal !=''">
+        AND is_personal =  #{isPersonal}
+      </if>
+      <if test="isDeliver !=null and isDeliver !=''">
+        AND is_deliver =  #{isDeliver}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode}
+      </if>
+    </where>
+  </select>
 </mapper>
