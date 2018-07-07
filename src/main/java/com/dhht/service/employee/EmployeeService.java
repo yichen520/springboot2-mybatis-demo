@@ -32,4 +32,6 @@ public interface EmployeeService {
     List<Employee> selectDeleteEmployee(String code,String name);
 
     List<Employee> selectWorkEmployee(String code,String name);
+
+    Employee selectByPhone(String phone);
 }

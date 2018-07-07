@@ -231,6 +231,16 @@ public class EmployeeServiceImp implements EmployeeService {
         return employeeDao.selectWorkEmployee(code,name);
     }
 
+    /**
+     * 根据电话获取从业人员信息
+     * @param phone
+     * @return
+     */
+    @Override
+    public Employee selectByPhone(String phone) {
+        return employeeDao.selectByPhone(phone);
+    }
+
 
     /**
      * 设置用户
