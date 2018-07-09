@@ -119,10 +119,10 @@ public class FileServiceImpl implements FileService {
             logger.error("upload file failed,please upload again!");
         }
         //这是暴露出真实的文件服务器地址
-        //String path=FastDFSClient.getTrackerUrl()+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
+        String path=FastDFSClient.getTrackerUrl()+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
 
         //这是反向代理的真实tomcat的地址
-        String path="http://"+request.getLocalName()+"/"+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
+       // String path="http://"+request.getLocalName()+"/"+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
         return path;
     }
 
