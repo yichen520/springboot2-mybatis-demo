@@ -98,7 +98,7 @@ public class UploadController {
             file1.setId(UUIDUtil.generate());
             file1.setCreateTime(new Date(System.currentTimeMillis()));
             file1.setFileName(file.getOriginalFilename());
-            file1.setFilePath(path+fileName);
+            file1.setFilePath(fileName);
             User user = CurrentUser.currentUser(request.getSession());
             file1.setOperationRecordId(user.getRealName());
 
