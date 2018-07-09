@@ -65,11 +65,11 @@
     )as b on a.flag=b.flag and  a.version=b.ver where is_delete = 1 and employee_department_code = #{code,jdbcType=VARCHAR}AND employee_name LIKE  '%${name}%'
     </select>
 
-  <select id="selectCountEmployeeCode" resultType="java.lang.Integer" parameterType="java.lang.String" >
+  <select id="selectCountEmployeeId" resultType="java.lang.Integer" parameterType="java.lang.String" >
     select 
     COUNT(0)
     from employee
-    where employee_code = #{employeeCode,jdbcType=VARCHAR} AND  version_status = 0
+    where employee_id = #{employeeId,jdbcType=VARCHAR} AND  version_status = 0
   </select>
 
   <select id="selectHistory" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -108,16 +108,16 @@
       employee_job, employee_nation,
       family_address_detail,  now_address_detail,
       employee_image, telphone, contact_name,
-      contact_telphone, office_code, office_name, logout_office_code,logout_office_name,logout_name
+      contact_telphone, office_code, office_name, logout_office_code,logout_office_name,logout_name,
       register_name, register_time,version,version_time,flag,is_delete,version_status
       )
     values (#{id,jdbcType=VARCHAR},#{employeeCode,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, #{employeeId,jdbcType=VARCHAR}, #{employeeGender,jdbcType=CHAR},
      #{employeeDepartmentCode,jdbcType=VARCHAR}, #{employeeJob,jdbcType=VARCHAR}, #{employeeNation,jdbcType=VARCHAR},
       #{familyAddressDetail,jdbcType=VARCHAR}, #{nowAddressDetail,jdbcType=VARCHAR},
       #{employeeImage,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR},
-      #{contactTelphone,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR},#{logoutOfficeCode,jdbcType=VARCHAR},#{logoutOfficeName,jdbcType=VARCHAR},#{logoutName,jdbcType=VARCHAR}
+      #{contactTelphone,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR},#{logoutOfficeCode,jdbcType=VARCHAR},#{logoutOfficeName,jdbcType=VARCHAR},#{logoutName,jdbcType=VARCHAR},
       #{registerName,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{version,jdbcType=NUMERIC},
-      #{versionTime,jdbcType=TIMESTAMP},#{flag,jdbcType=VARCHAR},1,1
+      #{versionTime,jdbcType=TIMESTAMP},#{flag,jdbcType=VARCHAR},1,1)
   </insert>
 
     <update id="deleteByDepartmentCode" parameterType="java.lang.String">

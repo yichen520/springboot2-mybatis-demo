@@ -14,7 +14,7 @@ public interface EmployeeDao {
 
     int deleteById(@Param("id") String id);
 
-    int selectCountEmployeeCode(@Param("employeeCode") String employeeCode);
+    int selectCountEmployeeId(@Param("employeeId") String employeeId);
 
     List<Employee> selectAllEmployee(@Param("code") String code,@Param("name") String name);
 
