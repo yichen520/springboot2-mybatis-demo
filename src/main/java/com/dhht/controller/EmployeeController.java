@@ -95,7 +95,7 @@ public class EmployeeController {
      * @param employee
      * @return
      */
-    @RequestMapping(value = "insert")
+    @RequestMapping(value = "/insert")
     public JsonObjectBO insertEmployee(@RequestBody Employee employee, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         try {
@@ -126,7 +126,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
-    @RequestMapping(value = "update")
+    @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody Map map) {
         try {
             return ResultUtil.getResult(employeeService.updateEmployee(map));
@@ -141,7 +141,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
-    @RequestMapping(value = "delete")
+    @RequestMapping(value = "/delete")
     public JsonObjectBO delete(@RequestBody Map map) {
         String id = (String) map.get("id");
 
@@ -179,13 +179,15 @@ public class EmployeeController {
      * @return
      */
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
-    public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+    public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file,@RequestBody Map map) {
+        String id = (String)map.get("id");
         if (file.isEmpty()) {
             return JsonObjectBO.error("请选择上传文件");
         }
         try {
             File uploadFile = fileService.insertFile(request, file);
-            if (uploadFile != null) {
+            int i = employeeService.updateHeadById(id,uploadFile.getFilePath());
+            if (uploadFile != null&&i==ResultUtil.isSuccess) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("file", uploadFile);
                 return JsonObjectBO.success("头像上传成功", jsonObject);

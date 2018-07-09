@@ -241,6 +241,22 @@ public class EmployeeServiceImp implements EmployeeService {
         return employeeDao.selectByPhone(phone);
     }
 
+    /**
+     * 存储图像上传的URL路径
+     * @param id
+     * @param image
+     * @return
+     */
+    @Override
+    public int updateHeadById(String id, String image) {
+        int e = employeeDao.updateHeadById(id,image);
+        if(e==1){
+            return ResultUtil.isSuccess;
+        }else {
+            return ResultUtil.isUploadFail;
+        }
+    }
+
 
     /**
      * 设置用户

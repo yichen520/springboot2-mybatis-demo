@@ -60,6 +60,8 @@ public class Employee {
 
     private String districtId;
 
+    private String versionStatus;
+
     public Employee() {
     }
 
