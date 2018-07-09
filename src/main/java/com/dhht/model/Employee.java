@@ -48,8 +48,6 @@ public class Employee {
 
     private String logoutName;
 
-    private Date logoutTime;
-
     private int version;
 
     private Date versionTime;

@@ -179,15 +179,13 @@ public class EmployeeController {
      * @return
      */
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
-    public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file,@RequestBody Map map) {
-        String id = (String)map.get("id");
+    public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return JsonObjectBO.error("请选择上传文件");
         }
         try {
             File uploadFile = fileService.insertFile(request, file);
-            int i = employeeService.updateHeadById(id,uploadFile.getFilePath());
-            if (uploadFile != null&&i==ResultUtil.isSuccess) {
+            if (uploadFile != null) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("file", uploadFile);
                 return JsonObjectBO.success("头像上传成功", jsonObject);
@@ -195,6 +193,23 @@ public class EmployeeController {
                 return JsonObjectBO.error("头像上传失败");
             }
         } catch (Exception e) {
+            return JsonObjectBO.exception("头像文件失败");
+        }
+    }
+
+    /**
+     * emp表中存入URL字段
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/getUrl")
+    public JsonObjectBO getUrl(@RequestBody Map map){
+        String id = (String)map.get("id");
+        String url = (String)map.get("url");
+
+        try {
+            return ResultUtil.getResult(employeeService.updateHeadById(id,url));
+        }catch (Exception e){
             return JsonObjectBO.exception("头像文件失败");
         }
     }

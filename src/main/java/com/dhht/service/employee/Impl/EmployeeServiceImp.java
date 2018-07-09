@@ -127,15 +127,20 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int deleteEmployee(String id) {
        Employee employee = employeeDao.selectById(id);
+       employee.setId(UUIDUtil.generate());
        employee.setLogoutOfficeCode(employee.getOfficeCode());
+       employee.setOfficeName(employee.getOfficeName());
        employee.setLogoutName(employee.getContactName());
-       employee.setLogoutTime(DateUtil.getCurrentTime());
+       employee.setVersion(employee.getVersion()+1);
+       employee.setVersionTime(DateUtil.getCurrentTime());
        User user = setUserByType(employee,3);
        if(user==null){
+           int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if(e==1){
+           if(e==1&&d==1){
                return ResultUtil.isSuccess;
            }else {
+               TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                return ResultUtil.isFail;
            }
        }else {
