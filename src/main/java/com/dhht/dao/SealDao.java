@@ -1,11 +1,9 @@
 package com.dhht.dao;
 
-import com.dhht.model.Seal;
-import com.dhht.model.SealKey;
+import com.dhht.model.*;
+
 import java.util.List;
 
-import com.dhht.model.SealMaterial;
-import com.dhht.model.SealOperationRecord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +26,10 @@ public interface SealDao {
     int insertSealMaterial(SealMaterial sealMaterial);
 
     List<Seal> selectByCodeAndName(Seal seal);
+
+    SealOperationRecord SelectByCodeAndFlag(String sealcode);
+
+    SealOperationRecord SelectByCodeAndFlag03(String sealcode);
+
+    int insertSealGetperson(SealGetPerson sealGetPerson);
 }
