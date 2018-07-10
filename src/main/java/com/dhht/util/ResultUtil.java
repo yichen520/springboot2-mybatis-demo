@@ -11,6 +11,8 @@ public class ResultUtil {
     public static final int isDistrict=6;
     public static final int isLock=7;
     public static final int isUnlock=8;
+    public static final int isUploadFail=9;
+    public static final int isWrongId = 10;
 
 
     public static JsonObjectBO getResult(int type){
@@ -31,6 +33,10 @@ public class ResultUtil {
                 return JsonObjectBO.error("该用户已经锁定,不能重复锁定");
             case 8:
                 return JsonObjectBO.error("该账号未加锁");
+            case 9:
+                return JsonObjectBO.error("文件上传失败");
+            case 10:
+                return JsonObjectBO.error("重复的身份证号");
                 default:
                     return null;
         }

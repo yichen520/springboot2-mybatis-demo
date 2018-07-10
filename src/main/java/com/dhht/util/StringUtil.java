@@ -207,4 +207,17 @@ public class StringUtil {
         DistrictID[2] = id.substring(4,6);
         return DistrictID;
     }
+
+    public static String getDistrictId(String id){
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        String districtId = null;
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0];
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0]+districtIds[1];
+        }else {
+            districtId = id;
+        }
+        return districtId;
+    }
 }

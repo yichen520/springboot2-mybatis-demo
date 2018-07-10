@@ -14,7 +14,7 @@ public interface EmployeeDao {
 
     int deleteById(@Param("id") String id);
 
-    int selectCountEmployeeCode(@Param("employeeCode") String employeeCode);
+    int selectCountEmployeeId(@Param("employeeId") String employeeId);
 
     List<Employee> selectAllEmployee(@Param("code") String code,@Param("name") String name);
 
@@ -38,6 +38,8 @@ public interface EmployeeDao {
     List<Employee> selectWorkEmployee(@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
     Employee selectByPhone(@Param("phone") String phone);
+
+    int updateHeadById(@Param("id") String id,@Param("employeeImage") String image);
 
 
 

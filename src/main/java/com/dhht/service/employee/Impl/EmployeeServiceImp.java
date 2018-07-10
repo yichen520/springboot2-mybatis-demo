@@ -62,6 +62,9 @@ public class EmployeeServiceImp implements EmployeeService {
         employee.setFlag(UUIDUtil.generate());
         employee.setVersion(1);
         employee.setVersionTime(DateUtil.getCurrentTime());
+        if(isInsert(employee.getEmployeeId())){
+            return ResultUtil.isWrongId;
+        }
         int u = userService.insert(setUserByType(employee,1));
         int e = employeeDao.insert(employee);
         if(u+e==3){
@@ -102,8 +105,11 @@ public class EmployeeServiceImp implements EmployeeService {
         employee.setFlag(employee.getFlag());
         employee.setVersion(employee.getVersion()+1);
         employee.setVersionTime(DateUtil.getCurrentTime());
-        int u = userService.update(setUserByType(employee,2));
         employee.setId(UUIDUtil.generate());
+        if(isInsert(employee.getEmployeeId())){
+            return ResultUtil.isWrongId;
+        }
+        int u = userService.update(setUserByType(employee,2));
         int e = employeeDao.insert(employee);
         if(u==2&&e==1){
             return ResultUtil.isSuccess;
@@ -127,21 +133,27 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int deleteEmployee(String id) {
        Employee employee = employeeDao.selectById(id);
+       employee.setId(UUIDUtil.generate());
        employee.setLogoutOfficeCode(employee.getOfficeCode());
-       employee.setLogoutName(employee.getContactName());
-       employee.setLogoutTime(DateUtil.getCurrentTime());
+       employee.setOfficeName(employee.getOfficeName());
+       employee.setLogoutName(employee.getRegisterName());
+       employee.setVersion(employee.getVersion()+1);
+       employee.setVersionTime(DateUtil.getCurrentTime());
        User user = setUserByType(employee,3);
        if(user==null){
+           int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if(e==1){
+           if(e==1&&d==1){
                return ResultUtil.isSuccess;
            }else {
+               TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                return ResultUtil.isFail;
            }
        }else {
            int u = userService.deleteByTelphone(employee.getTelphone());
+           int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if (u == 1 && e == 1) {
+           if (u == 1 && e == 1&&d==1) {
                return ResultUtil.isSuccess;
            } else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -241,6 +253,22 @@ public class EmployeeServiceImp implements EmployeeService {
         return employeeDao.selectByPhone(phone);
     }
 
+    /**
+     * 存储图像上传的URL路径
+     * @param id
+     * @param image
+     * @return
+     */
+    @Override
+    public int updateHeadById(String id, String image) {
+        int e = employeeDao.updateHeadById(id,image);
+        if(e==1){
+            return ResultUtil.isSuccess;
+        }else {
+            return ResultUtil.isUploadFail;
+        }
+    }
+
 
     /**
      * 设置用户
@@ -274,12 +302,12 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     /**
-     * 判断code是否重复
-     * @param code
+     * 判断身份证号是否是否重复
+     * @param employeeId
      * @return
      */
-    public boolean isInsert(String code){
-        if(employeeDao.selectCountEmployeeCode(code)>0){
+    public boolean isInsert(String employeeId){
+        if(employeeDao.selectCountEmployeeId(employeeId)>0){
             return true;
         }
         return false;

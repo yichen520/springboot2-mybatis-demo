@@ -95,7 +95,7 @@ public class EmployeeController {
      * @param employee
      * @return
      */
-    @RequestMapping(value = "insert")
+    @RequestMapping(value = "/insert")
     public JsonObjectBO insertEmployee(@RequestBody Employee employee, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         try {
@@ -126,7 +126,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
-    @RequestMapping(value = "update")
+    @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody Map map) {
         try {
             return ResultUtil.getResult(employeeService.updateEmployee(map));
@@ -141,7 +141,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
-    @RequestMapping(value = "delete")
+    @RequestMapping(value = "/delete")
     public JsonObjectBO delete(@RequestBody Map map) {
         String id = (String) map.get("id");
 
@@ -172,6 +172,12 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * 头像上传接口
+     * @param request
+     * @param file
+     * @return
+     */
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
     public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -187,6 +193,23 @@ public class EmployeeController {
                 return JsonObjectBO.error("头像上传失败");
             }
         } catch (Exception e) {
+            return JsonObjectBO.exception("头像文件失败");
+        }
+    }
+
+    /**
+     * emp表中存入URL字段
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/getUrl")
+    public JsonObjectBO getUrl(@RequestBody Map map){
+        String id = (String)map.get("id");
+        String url = (String)map.get("url");
+
+        try {
+            return ResultUtil.getResult(employeeService.updateHeadById(id,url));
+        }catch (Exception e){
             return JsonObjectBO.exception("头像文件失败");
         }
     }
