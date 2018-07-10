@@ -25,6 +25,6 @@ public class SealOperationRecord extends SealKey {
 
     private String operatorCrtificateType; //身份类型
 
-
+    private String  flag;//类型
 
 }

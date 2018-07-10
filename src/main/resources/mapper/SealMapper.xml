@@ -239,7 +239,21 @@
       seal_center_image = #{sealCenterImage,jdbcType=VARCHAR},
       seal_specification = #{sealSpecification,jdbcType=VARCHAR},
       seal_make_type_code = #{sealMakeTypeCode,jdbcType=VARCHAR},
-      seal_record_type_code = #{sealRecordTypeCode,jdbcType=VARCHAR}
+      seal_record_type_code = #{sealRecordTypeCode,jdbcType=VARCHAR},
+      record_date = #{recordDate},
+      is_record = #{isRecord},
+      make_date = #{makeDate},
+      is_make = #{isMake},
+      personal_date = #{personalDate},
+      is_personal = #{isPersonal},
+      deliver_date = #{deliverDate},
+      is_deliver = #{isDeliver},
+      logout_date = #{logoutDate},
+      is_logout = #{isLogout},
+      loss_date = #{lossDate},
+      is_loss = #{isLoss},
+      remark = #{remark},
+      seal_reason = #{sealReason}
     where id = #{id,jdbcType=CHAR}
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
@@ -269,7 +283,7 @@
     SELECT * from seal
     <where>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
-        use_department_code LIKE  "%"#{useDepartmentCode,jdbcType=char}"%"
+        And use_department_code LIKE  "%"#{useDepartmentCode,jdbcType=char}"%"
       </if>
       <if test="useDepartmentName !=null and useDepartmentName !=''">
         AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
@@ -291,4 +305,18 @@
       </if>
     </where>
   </select>
+  
+  
+  <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
+    SELECT * from seal_operation_record WHERE seal_code =#{sealCode} AND flag="01"
+  </select>
+
+  <select id="SelectByCodeAndFlag03" resultType="com.dhht.model.SealOperationRecord">
+    SELECT * from seal_operation_record WHERE seal_code =#{sealCode} AND flag="01"
+  </select>
+
+<insert id="insertSealGetperson" parameterType="com.dhht.model.SealGetPerson">
+  insert into seal_getperson(id,seal_code,getperson_name,getperson_type,getperson_id,getperson_telphone,get_date,is_same)VALUES (#{id},#{sealCode},#{getpersonName},#{getpersonType},
+  #{getpersonId},#{getpersonTelphone},#{getDate},#{isSame})
+</insert>
 </mapper>

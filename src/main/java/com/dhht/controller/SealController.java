@@ -3,10 +3,7 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.Employee;
-import com.dhht.model.Seal;
-import com.dhht.model.UseDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.UUIDUtil;
@@ -124,4 +121,73 @@ public class SealController  {
     }
 
 
+    /**
+     * 上传印模
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
+    @RequestMapping("sealUpload")
+    public JsonObjectBO sealUpload(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user =(User) httpServletRequest.getSession(true).getAttribute("user");
+        Seal seal = (Seal)map.get("seal");
+        String electronicSealURL = (String)map.get("electronicSealURL");
+        String sealScannerURL = (String)map.get("sealScannerURL");
+        int a =sealService.sealUpload(user,seal,electronicSealURL, sealScannerURL);
+        if(a<0){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("上传印模失败");
+        }else{
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("上传印模成功");
+        }
+        return jsonObjectBO;
+    }
+
+
+    /**
+     * 个人化
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
+    @RequestMapping("sealPersonal")
+    public JsonObjectBO sealPersonal(HttpServletRequest httpServletRequest,@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user =(User) httpServletRequest.getSession(true).getAttribute("user");
+        Seal seal = (Seal)map.get("seal");
+        int a = sealService.sealPersonal (seal, user);
+        if(a<0){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("个人化失败");
+        }else{
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("个人化成功");
+        }
+        return jsonObjectBO;
+    }
+
+    /**
+     * 交付
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
+    @RequestMapping("deliver")
+    public JsonObjectBO deliver (HttpServletRequest httpServletRequest,@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user =(User) httpServletRequest.getSession(true).getAttribute("user");
+        Seal seal = (Seal)map.get("seal");
+        SealGetPerson sealGetPerson = (SealGetPerson)map.get("sealGetPerson");
+        boolean a = sealService.deliver(user,seal,sealGetPerson);
+        if(a){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("交付成功");
+        }else{
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("交付失败");
+        }
+        return jsonObjectBO;
+    }
 }
