@@ -98,14 +98,15 @@
     id, seal_code, seal_name, seal_status_code, use_department_code, use_department_name, 
     record_department_code, record_department_name, make_department_code, make_department_name, 
     seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
-    seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code
+    seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.dhht.model.SealKey" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
     select 
     <include refid="Base_Column_List" />
     from seal
     where id = #{id,jdbcType=CHAR}
-      and seal_code = #{sealCode,jdbcType=VARCHAR}
+
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.dhht.model.SealKey" >
     delete from seal
@@ -120,14 +121,17 @@
       make_department_code, make_department_name, seal_type_code,
       materials_code, mimeograph_description, seal_shape_code, 
       seal_size, seal_center_image, seal_specification, 
-      seal_make_type_code, seal_record_type_code)
+      seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason
+      )
     values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR}, 
       #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR}, 
       #{recordDepartmentCode,jdbcType=CHAR}, #{recordDepartmentName,jdbcType=VARCHAR}, 
       #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, #{sealTypeCode,jdbcType=CHAR},
       #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
       #{sealSize,jdbcType=DOUBLE}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR}, 
-      #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR})
+      #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR},#{recordDate},#{isRecord},#{makeDate},#{isMake},
+      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason})
   </insert>
 
   <update id="updateByExampleSelective" parameterType="map" >
@@ -267,16 +271,16 @@
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
     INSERT INTO seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name,
       employee_id, operator_name,operator_certificate_code,
-      operator_certificate_type)
+      operator_certificate_type,flag)
     values (#{id}, #{sealCode}, #{dateTime},
       #{operatorTelphone}, #{emplyeeName}, #{employeeId},
       #{operatorName}, #{operatorCertificateCode},
-      #{operatorCrtificateType})
+      #{operatorCrtificateType},#{flag})
   </insert>
 
 
   <insert id="insertSealMaterial" parameterType="com.dhht.model.SealMaterial">
-    INSERT INTO seal_material (seal_code,`type`,file_path)values(#{sealCode},#{type},#{filePath})
+    INSERT INTO seal_material (id,seal_code,`type`,file_path)values(#{id},#{sealCode},#{type},#{filePath})
   </insert>
 
   <select id="selectByCodeAndName" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
@@ -308,12 +312,17 @@
   
   
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
-    SELECT * from seal_operation_record WHERE seal_code =#{sealCode} AND flag="01"
+    SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName
+    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCrtificateType,
+    flag AS flag from seal_operation_record WHERE seal_code =#{sealCode} AND flag="01"
   </select>
 
   <select id="SelectByCodeAndFlag03" resultType="com.dhht.model.SealOperationRecord">
-    SELECT * from seal_operation_record WHERE seal_code =#{sealCode} AND flag="01"
+    SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName
+    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCrtificateType,
+    flag AS flag from seal_operation_record WHERE seal_code =#{sealCode} AND flag= #{flag}
   </select>
+
 
 <insert id="insertSealGetperson" parameterType="com.dhht.model.SealGetPerson">
   insert into seal_getperson(id,seal_code,getperson_name,getperson_type,getperson_id,getperson_telphone,get_date,is_same)VALUES (#{id},#{sealCode},#{getpersonName},#{getpersonType},
