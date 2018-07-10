@@ -9,7 +9,7 @@ import com.github.pagehelper.PageInfo;
 import java.util.List;
 
 public interface MakeDepartmentService {
-     PageInfo<MakeDepartmentSimple> selectByDistrictId(String districtId, int pageNum, int pageSize);
+     List<MakeDepartmentSimple> selectInfo(String districtId,String name,String status);
 
      Makedepartment selectDetailById(String id);
 

@@ -2,7 +2,7 @@ package com.dhht.service.make.Impl;
 
 import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.model.DistrictMenus;
-import com.dhht.model.MakedepartmentCount;
+import com.dhht.model.Count;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentCuontService;
 import com.dhht.util.StringUtil;
@@ -31,9 +31,9 @@ public class MakeDepartmentCountServiceImp implements MakeDepartmentCuontService
      * @return
      */
     @Override
-    public List<MakedepartmentCount> countAllDepartment(String districtId,String startTime,String endTime) {
+    public List<Count> countAllDepartment(String districtId, String startTime, String endTime) {
         List<DistrictMenus> districtList = getDistrictList(districtId);
-        List<MakedepartmentCount> makedepartmentCounts = new ArrayList<>();
+        List<Count> counts = new ArrayList<>();
         for (DistrictMenus districtMenus : districtList){
             String id =  StringUtil.getDistrictId(districtMenus.getDistrictId());
             int departmentAll = makedepartmentMapper.countAllDepartment(id);
@@ -41,9 +41,9 @@ public class MakeDepartmentCountServiceImp implements MakeDepartmentCuontService
             int departmentDel = makedepartmentMapper.countDeleteDepartment(id);
             int add = countByTime(id,startTime,endTime).get("add");
             int del = countByTime(id,startTime,endTime).get("del");
-            makedepartmentCounts.add(new MakedepartmentCount(districtMenus.getDistrictName(),departmentAll,departmentWork,departmentDel,add,del));
+            counts.add(new Count(districtMenus.getDistrictName(),departmentAll,departmentWork,departmentDel,add,del));
         }
-        return getSum(makedepartmentCounts);
+        return getSum(counts);
     }
 
     /**
@@ -61,23 +61,23 @@ public class MakeDepartmentCountServiceImp implements MakeDepartmentCuontService
      * @param list
      * @return
      */
-    public List<MakedepartmentCount> getSum(List<MakedepartmentCount> list){
+    public List<Count> getSum(List<Count> list){
         int departmentAllSum = 0;
         int departmentWorkSum = 0;
         int departmentDelSum = 0;
         int departmentAdd = 0;
         int departmentDel = 0;
 
-        for(MakedepartmentCount makedepartmentCounts : list){
-           departmentAllSum = departmentAllSum+makedepartmentCounts.getDepartmentAllSum();
-           departmentDelSum = departmentDelSum+makedepartmentCounts.getDepartmentDelSum();
-           departmentWorkSum =departmentWorkSum +makedepartmentCounts.getDepartmentWorkSum();
-           departmentAdd = departmentAdd+makedepartmentCounts.getAddCount();
-           departmentDel = departmentDel+makedepartmentCounts.getDeleteCount();
+        for(Count counts : list){
+           departmentAllSum = departmentAllSum+ counts.getAllSum();
+           departmentDelSum = departmentDelSum+ counts.getDelSum();
+           departmentWorkSum =departmentWorkSum + counts.getWorkSum();
+           departmentAdd = departmentAdd+ counts.getAddCount();
+           departmentDel = departmentDel+ counts.getDeleteCount();
            }
 
-        MakedepartmentCount makedepartmentCount = new MakedepartmentCount("总计",departmentAllSum,departmentWorkSum,departmentDelSum,departmentAdd,departmentDel);
-        list.add(makedepartmentCount);
+        Count count = new Count("总计",departmentAllSum,departmentWorkSum,departmentDelSum,departmentAdd,departmentDel);
+        list.add(count);
         return list;
     }
 

@@ -9,6 +9,7 @@ import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.util.ResultUtil;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -42,19 +43,25 @@ public class MakeDepartmentController {
      */
     @RequestMapping(value = "/info")
     public JsonObjectBO info(@RequestBody Map map, HttpServletRequest httpServletRequest){
-        //User user =(User)httpServletRequest.getSession().getAttribute("user");
+        User user =(User)httpServletRequest.getSession().getAttribute("user");
         String districtId = (String)map.get("districtId");
+        String name = (String)map.get("name");
+        String status = (String) map.get("status");
         int pageNum = (Integer) map.get("pageNum");
         int pageSize = (Integer) map.get("pageSize");
 
-        PageInfo<MakeDepartmentSimple> result = new PageInfo<>();
+
         JSONObject jsonObject = new JSONObject();
+        List<MakeDepartmentSimple> list = new ArrayList<>();
         try {
+            PageHelper.startPage(pageNum, pageSize);
             if(districtId==""||districtId==null) {
-                ///result = makeDepartmentService.selectByDistrictId(user.getDistrictId(), pageNum, pageSize);
+                 list = makeDepartmentService.selectInfo(user.getDistrictId(),name,status);
+                 PageInfo<MakeDepartmentSimple> result = new PageInfo<>(list);
                 jsonObject.put("makeDepartment", result);
             }else {
-                result = makeDepartmentService.selectByDistrictId(districtId, pageNum, pageSize);
+                list = makeDepartmentService.selectInfo(districtId,name,status);
+                PageInfo<MakeDepartmentSimple> result = new PageInfo<>(list);
                 jsonObject.put("makeDepartment", result);
             }
         }catch (Exception e){
@@ -63,27 +70,7 @@ public class MakeDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
-    /**
-     * 点击区域查询区域下的制作单位
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = "/selectByDistrictId")
-    public JsonObjectBO selectByDistrictId(@RequestBody Map map){
-       String districtId = (String) map.get("districtId");
-        int pageNum = (Integer) map.get("pageNum");
-        int pageSize = (Integer) map.get("pageSize");
 
-        PageInfo<MakeDepartmentSimple> result = new PageInfo<>();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            result = makeDepartmentService.selectByDistrictId(districtId,pageNum,pageSize);
-            jsonObject.put("makeDepartment",result);
-        }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
-        }
-        return JsonObjectBO.success("查询成功",jsonObject);
-    }
 
     /**
      * 展示修改记录

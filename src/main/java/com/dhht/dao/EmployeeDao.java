@@ -41,6 +41,23 @@ public interface EmployeeDao {
 
     int updateHeadById(@Param("id") String id,@Param("employeeImage") String image);
 
+    //---------------统计部分--------------------//
+    int countAllEmployee(@Param("districtId") String districtId);
 
+    int countWorkEmployee(@Param("districtId") String districtId);
+
+    int countDelEmployee(@Param("districtId") String districtId);
+
+    int countAddByStartTime(@Param("districtId") String districtId ,@Param("startTime") String startTime );
+
+    int countAddByEndTime(@Param("districtId") String districtId ,@Param("endTime") String endTime );
+
+    int countAddByTime(@Param("districtId") String districtId ,@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    int countDelByStartTime(@Param("districtId") String districtId ,@Param("startTime") String startTime );
+
+    int countDelByEndTime(@Param("districtId") String districtId ,@Param("endTime") String endTime );
+
+    int countDelByTime(@Param("districtId") String districtId ,@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 }

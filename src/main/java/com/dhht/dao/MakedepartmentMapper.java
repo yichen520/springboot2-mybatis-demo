@@ -11,7 +11,7 @@ import java.util.List;
 public interface MakedepartmentMapper {
 
    //---------------------------------------查询模块----------------------//
-    List<MakeDepartmentSimple> selectByDistrictId(@Param("id") String id);
+    List<MakeDepartmentSimple> selectInfo(@Param("districtId") String districtId,@Param("departmentStatus") String departmentStatus,@Param("name") String name);
 
     Makedepartment selectDetailById(@Param("id") String id);
 

@@ -23,11 +23,10 @@ public class Makedepartment {
     private String departmentAddressDetail;
     private String telphone;
     private String postalCode;
-    private Date logoutTime;
     private String departmentStatus;
     private int version;
     private String flag;
-    private String versionTime;
+    private Date versionTime;
     private Date registerTime;
 
 

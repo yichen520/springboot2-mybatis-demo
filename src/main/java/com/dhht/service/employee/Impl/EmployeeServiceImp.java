@@ -199,8 +199,12 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public int update(Employee employee) {
-        return employeeDao.update(employee);
-    }
+        employee.setVersion(employee.getVersion()+1);
+        employee.setVersionTime(DateUtil.getCurrentTime());
+        employee.setId(UUIDUtil.generate());
+        return employeeDao.insert(employee);
+        }
+
 
     /**
      * 查询某制作单位下在职的从业人员

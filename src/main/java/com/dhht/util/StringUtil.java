@@ -208,6 +208,11 @@ public class StringUtil {
         return DistrictID;
     }
 
+    /**
+     * 处理返回区域码，用于模糊查询
+     * @param id
+     * @return
+     */
     public static String getDistrictId(String id){
         String districtIds[] = StringUtil.DistrictUtil(id);
         String districtId = null;

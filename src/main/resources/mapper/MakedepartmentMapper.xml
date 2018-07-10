@@ -65,10 +65,26 @@
       select department_code from make_department where  legal_telphone = #{legalPhone,jdbcType=VARCHAR} and  delete_status = 0
   </select>
 
-  <update id="deleteById" parameterType="com.dhht.model.Makedepartment" >
-    update  make_department set delete_status = 1,logout_time=#{logoutTime, jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
+
+  <insert id="deleteById" parameterType="com.dhht.model.Makedepartment" >
+    insert into make_department (id,department_code, department_name,
+      department_nation_name, department_english_name,
+      department_english_ahhr,department_type,
+      legal_name, legal_id, legal_id_type,
+      legal_englishsurname, legal_englishname,
+      legal_telphone, department_address, department_address_detail,
+      telphone, postal_code,department_status,
+      version,flag,version_time,register_time
+      )
+    values (#{id,jdbcType=VARCHAR},#{departmentCode,jdbcType=VARCHAR},  #{departmentName,jdbcType=VARCHAR},
+      #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR},
+      #{departmentEnglishAhhr,jdbcType=VARCHAR}, #{departmentType,jdbcType=VARCHAR},
+      #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR}, #{legalIdType,jdbcType=VARCHAR},
+      #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR},
+      #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR},
+      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},'03',
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=VARCHAR}),#{registerTime,jdbcType=TIMESTAMP})
+  </insert>
 
   <update id="deleteHistoryByID" parameterType="java.lang.String">
      update  make_department set delete_status = 1
@@ -82,7 +98,8 @@
       legal_name, legal_id, legal_id_type, 
       legal_englishsurname, legal_englishname, 
       legal_telphone, department_address, department_address_detail, 
-      telphone, postal_code,version,flag,version_time,register_time
+      telphone, postal_code
+      version,flag,version_time,register_time
       )
     values (#{id,jdbcType=VARCHAR},#{departmentCode,jdbcType=VARCHAR},  #{departmentName,jdbcType=VARCHAR},
       #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR}, 
@@ -90,36 +107,19 @@
       #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR}, #{legalIdType,jdbcType=VARCHAR}, 
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR}, 
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR}, 
-      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=VARCHAR}),#{registerTime,jdbcType=TIMESTAMP}
+      #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=VARCHAR}),#{registerTime,jdbcType=TIMESTAMP}
+      )
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Makedepartment" >
-    update make_department
-    set password = #{password,jdbcType=VARCHAR},
-      department_name = #{departmentName,jdbcType=VARCHAR},
-      department_nation_name = #{departmentNationName,jdbcType=VARCHAR},
-      department_english_name = #{departmentEnglishName,jdbcType=VARCHAR},
-      department_english_ahhr = #{departmentEnglishAhhr,jdbcType=VARCHAR},
-      seal_makedepartment_status = #{sealMakedepartmentStatus,jdbcType=VARCHAR},
-      legal_name = #{legalName,jdbcType=VARCHAR},
-      legal_id = #{legalId,jdbcType=VARCHAR},
-      legal_id_type = #{legalIdType,jdbcType=VARCHAR},
-      legal_englishsurname = #{legalEnglishsurname,jdbcType=VARCHAR},
-      legal_englishname = #{legalEnglishname,jdbcType=VARCHAR},
-      legal_telphone = #{legalTelphone,jdbcType=VARCHAR},
-      department_address = #{departmentAddress,jdbcType=VARCHAR},
-      department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},
-      telphone = #{telphone,jdbcType=VARCHAR},
-      postal_code = #{postalCode,jdbcType=VARCHAR},
-      logout_time = #{logoutTime,jdbcType=TIMESTAMP},
-      department_status = #{departmentStatus,jdbcType=VARCHAR}
-    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
-  </update>
 
-  <select id="selectByDistrictId" resultMap="SimpleResultMap" parameterType="java.lang.String">
+
+  <select id="selectInfo" resultMap="SimpleResultMap" parameterType="java.lang.String">
     select
     <include refid="Simple_Column_list" />
-    from make_department where delete_status = 0 and department_address like '${id}%'
+    from make_department as a RIGHT JOIN(
+    select flag as fa,MAX(version) as ver from make_department GROUP BY flag
+    )as b on a.flag = b.fa and  a.version=b.ver  where  department_address like '${districtId}%' and department_status = #{departmentStatus,jdbcType=CHAR} and department_name LIKE '%${name}%'
   </select>
 
   <select id="selectByDistrict" resultMap="SimpleResultMap" parameterType="java.lang.String">
@@ -184,19 +184,19 @@
     <select id="countDelDepartmentByStartTime" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(id) from make_department as a RIGHT JOIN(
         select flag,MAX(version) as ver from make_department GROUP BY flag
-        )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and logout_time &gt; #{startTime}
+        )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and version_time &gt; #{startTime}
     </select>
 
     <select id="countDelDepartmentByEndTime" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(id) from make_department as a RIGHT JOIN(
         select flag,MAX(version) as ver from make_department GROUP BY flag
-        )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and logout_time &lt; #{endTime}
+        )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and version_time &lt; #{endTime}
     </select>
 
     <select id="countDelDepartmentByTime" resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(id) from make_department as a RIGHT JOIN(
         select flag,MAX(version) as ver from make_department GROUP BY flag
-        )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and logout_time BETWEEN #{startTime} and #{endTime}
+        )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and version_time BETWEEN #{startTime} and #{endTime}
     </select>
 
 </mapper>

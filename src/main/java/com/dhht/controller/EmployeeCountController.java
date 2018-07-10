@@ -1,11 +1,10 @@
 package com.dhht.controller;
 
-
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Count;
 import com.dhht.model.User;
-import com.dhht.service.make.MakeDepartmentCuontService;
+import com.dhht.service.employee.EmployeeCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,15 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
-@RequestMapping("count/makeDepartment")
-public class MakeDepartmentCountController {
-    @Autowired
-     private MakeDepartmentCuontService makeDepartmentCuontService;
+@RequestMapping(value = "count/employee")
+public class EmployeeCountController {
 
-    @RequestMapping("/info")
-    public JsonObjectBO info(HttpServletRequest httpServletRequest, @RequestBody Map map){
+    @Autowired
+    private EmployeeCountService employeeCountService;
+
+    @RequestMapping(value = "/info")
+    public JsonObjectBO info(@RequestBody Map map, HttpServletRequest httpServletRequest){
         String startTime = (String)map.get("startTime");
         String endTime = (String)map.get("endTime");
         String district = (String)map.get("districtId");
@@ -33,10 +32,10 @@ public class MakeDepartmentCountController {
 
         try {
             if(district==null) {
-                List<Count> counts = makeDepartmentCuontService.countAllDepartment(user.getDistrictId(),startTime,endTime);
+                List<Count> counts = employeeCountService.countAllEmployee(user.getDistrictId(),startTime,endTime);
                 jsonObject.put("count",counts);
             }else {
-                List<Count> counts = makeDepartmentCuontService.countAllDepartment(district,startTime,endTime);
+                List<Count> counts = employeeCountService.countAllEmployee(district,startTime,endTime);
                 jsonObject.put("count",counts);
             }
             return JsonObjectBO.success("查询",jsonObject);
@@ -45,3 +44,4 @@ public class MakeDepartmentCountController {
         }
     }
 }
+

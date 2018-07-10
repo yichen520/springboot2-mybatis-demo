@@ -69,7 +69,7 @@
     select 
     COUNT(0)
     from employee
-    where employee_id = #{employeeId,jdbcType=VARCHAR} AND  version_status = 0
+    where employee_code = #{employeeCode,jdbcType=VARCHAR} AND  version_status = 0
   </select>
 
   <select id="selectHistory" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -153,4 +153,94 @@
       logout_time = #{logoutTime,jdbcType=TIMESTAMP}
     where employee_code = #{employeeCode,jdbcType=VARCHAR}
   </update>
+
+  <!--统计部分-->
+  <select id="countAllEmployee" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+  </select>
+
+  <select id="countWorkEmployee" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 0
+  </select>
+
+  <select id="countDelEmployee" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 1
+  </select>
+
+  <select id="countAddByStartTime" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 0 and register_time &gt; #{startTime}
+  </select>
+
+  <select id="countAddByEndTime" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 0 and register_time &lt; #{endTime}
+  </select>
+
+  <select id="countAddByTime" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 0 and register_time BETWEEN #{startTime} and #{endTime}
+  </select>
+
+  <select id="countDelByEndTime" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 1 and version_time &lt; #{endTime}
+  </select>
+
+  <select id="countDelByStartTime" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 1 and version_time &gt; #{startTime}
+  </select>
+
+  <select id="countDelByTime" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
+    on a.flag=b.flag and a.version=b.ver
+    JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver
+    WHERE m1.department_address LIKE '${districtId}%' )AS c
+    on c.department_code = b.employee_department_code
+    where  is_delete = 1 and version_time BETWEEN #{startTime} and #{endTime}
+  </select>
 </mapper>

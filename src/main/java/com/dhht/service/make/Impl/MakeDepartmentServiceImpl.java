@@ -40,31 +40,19 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Autowired
     private EmployeeService employeeService;
 
-    private SimpleDateFormat simpleDateFormat= new SimpleDateFormat("yyyy-MM-dd HH:mm;ss");
-
-    private String code = null;
 
     /**
-     * 根据区域ID查询制作单位
+     * 展示制作单位列表
      * @param districtId
-     * @param pageNum
-     * @param pageSize
+     * @param name
+     * @param status
      * @return
      */
     @Override
-    public PageInfo<MakeDepartmentSimple> selectByDistrictId(String districtId, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum,pageSize);
-        List<MakeDepartmentSimple> list = new ArrayList<>();
-        String districtIds[] = StringUtil.DistrictUtil(districtId);
-        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
-            list = makedepartmentMapper.selectByDistrictId(districtIds[0]);
-        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
-            list = makedepartmentMapper.selectByDistrictId(districtIds[0]+districtIds[1]);
-        }else {
-            list = makedepartmentMapper.selectByDistrictId(districtId);
-        }
-        PageInfo<MakeDepartmentSimple> result = new PageInfo<>(list);
-        return result;
+    public List<MakeDepartmentSimple> selectInfo(String districtId, String name, String status) {
+        String did = StringUtil.getDistrictId(districtId);
+        List<MakeDepartmentSimple> list = makedepartmentMapper.selectInfo(did,status,name);
+        return list;
     }
 
     /**
@@ -89,7 +77,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             return 3;
         }
         makedepartment.setId(UUIDUtil.generate());
-        makedepartment.setVersionTime(simpleDateFormat.format(System.currentTimeMillis()));
+        makedepartment.setVersionTime(DateUtil.getCurrentTime());
         makedepartment.setFlag(UUIDUtil.generate());
         makedepartment.setVersion(1);
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
@@ -126,7 +114,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         }
         User user =setUserByType(makedepartment,2);
         makedepartment.setId(UUIDUtil.generate());
-        makedepartment.setVersionTime(simpleDateFormat.format(System.currentTimeMillis()));
+        makedepartment.setVersionTime(DateUtil.getCurrentTime());
         makedepartment.setFlag(makedepartment.getFlag());
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setRegisterTime(makedepartment.getRegisterTime());
@@ -152,7 +140,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public int deleteById(String id) {
         Makedepartment makedepartment = makedepartmentMapper.selectDetailById(id);
         List<Employee> employees = employeeService.selectByDepartmentCode(makedepartment.getDepartmentCode());
-        makedepartment.setLogoutTime(DateUtil.getCurrentTime());
+        makedepartment.setVersion(makedepartment.getVersion()+1);
+        makedepartment.setVersionTime(DateUtil.getCurrentTime());
         if(setUserByType(makedepartment,3)==null){
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e =setEmployeeByDepartment(employees,1);
@@ -235,8 +224,6 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 user.setRoleId("ZZDW");
                 user.setDistrictId(makedepartment.getDepartmentAddress());
                 user.setRealName(makedepartment.getDepartmentName());
-                code = createRandomVcode();
-                user.setPassword(MD5Util.toMd5(code));
                 user.setTelphone(makedepartment.getLegalTelphone());
                 break;
             case 2:
