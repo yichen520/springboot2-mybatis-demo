@@ -117,7 +117,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
         makedepartment.setFlag(makedepartment.getFlag());
         makedepartment.setVersion(makedepartment.getVersion()+1);
-        makedepartment.setRegisterTime(makedepartment.getRegisterTime());
+        makedepartment.setRegisterTime(oldDate.getRegisterTime());
         int m = makedepartmentMapper.insert(makedepartment);
         int e = setEmployeeByDepartment(employees,2);
         int u = userService.update(setUserByType(makedepartment,2));
@@ -143,6 +143,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
         if(setUserByType(makedepartment,3)==null){
+            makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e =setEmployeeByDepartment(employees,1);
             if(m==1&&e==2){
@@ -153,6 +154,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             }
         }else {
             int u = userService.deleteByTelphone(makedepartment.getLegalTelphone());
+            makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e = setEmployeeByDepartment(employees,1);
             if (u ==1&&m==1&&e==2) {

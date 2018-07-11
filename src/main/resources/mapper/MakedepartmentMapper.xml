@@ -24,6 +24,7 @@
     <result column="version" property="version" jdbcType="NUMERIC"/>
     <result column="flag" property="flag" jdbcType="CHAR"/>
     <result column="version_time" property="versionTime" jdbcType="VARCHAR"/>
+    <result column="register_time" property="registerTime" jdbcType="TIMESTAMP"/>
   </resultMap>
   <resultMap id="SimpleResultMap" type="com.dhht.model.MakeDepartmentSimple">
     <id column="id" property="id" jdbcType="VARCHAR"/>
@@ -46,7 +47,7 @@
     id,department_code,  department_name, department_nation_name, department_english_name,
     department_english_ahhr, department_type, legal_name, legal_id, legal_id_type,
     legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail, 
-    telphone, postal_code,  department_status,version,flag,version_time
+    telphone, postal_code,  department_status,version,flag,version_time,register_time
   </sql>
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
     select 
