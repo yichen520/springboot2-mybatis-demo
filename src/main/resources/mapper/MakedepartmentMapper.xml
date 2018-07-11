@@ -46,7 +46,7 @@
     id,department_code,  department_name, department_nation_name, department_english_name,
     department_english_ahhr, department_type, legal_name, legal_id, legal_id_type,
     legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail, 
-    telphone, postal_code, logout_time, department_status,version,flag,version_time
+    telphone, postal_code,  department_status,version,flag,version_time
   </sql>
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
     select 
