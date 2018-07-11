@@ -150,25 +150,25 @@ public class UserServiceImpl implements UserService {
         List<User> list = new ArrayList<User>();
         PageHelper.startPage(pageNum, pageSize);
         String localdistrictId = user.getDistrictId();
-
+        String role = user.getRoleId();
         if (realName == null && districtId == null && roleId == null) {
-            PageInfo<User> result = selectByDistrict(localdistrictId, pageSize, pageNum);
+            PageInfo<User> result = selectByDistrict(role,localdistrictId, pageSize, pageNum);
             return result;
         } else if (districtId != null) {
             String districtIds[] = StringUtil.DistrictUtil(districtId);
             if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
-                list = userDao.find(realName, districtIds[0], roleId);
+                list = userDao.find(realName, districtIds[0], roleId,role);
             } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
-                list = userDao.find(realName, districtIds[0] + districtIds[1], roleId);
+                list = userDao.find(realName, districtIds[0] + districtIds[1], roleId,role);
             } else if (!districtIds[1].equals("00") && !districtIds[2].equals("00")) {
-                list = userDao.find(realName, districtId, roleId);
+                list = userDao.find(realName, districtId, roleId,role);
             }
         } else {
             String localdistrictIds[] = StringUtil.DistrictUtil(localdistrictId);
             if (localdistrictIds[1].equals("00") && localdistrictIds[2].equals("00")) {
-                list = userDao.find(realName, localdistrictIds[0], roleId);
+                list = userDao.find(realName, localdistrictIds[0], roleId,role);
             } else if (!localdistrictIds[1].equals("00") && localdistrictIds[2].equals("00")) {
-                list = userDao.find(realName, localdistrictIds[0] + localdistrictIds[1], roleId);
+                list = userDao.find(realName, localdistrictIds[0] + localdistrictIds[1], roleId,role);
             }
 
         }
@@ -195,6 +195,29 @@ public class UserServiceImpl implements UserService {
             list = userDao.selectByDistrict(districtIds[0] + districtIds[1]);
         } else {
             list = userDao.selectByDistrict(id);
+        }
+        PageHelper.startPage(pageNum, pageSize, false);
+        PageInfo<User> result = new PageInfo(list);
+        return result;
+    }
+
+    /**
+     *根据区域查找用户
+     * @param role
+     * @param id
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public PageInfo<User> selectByDistrict(String role,String id, int pageSize, int pageNum) {
+        List<User> list = new ArrayList<User>();
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
+            list = userDao.selectByDistrict1(districtIds[0],role);
+        } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
+            list = userDao.selectByDistrict1(districtIds[0] + districtIds[1],role);
+        } else {
+            list = userDao.selectByDistrict1(id,role);
         }
         PageHelper.startPage(pageNum, pageSize, false);
         PageInfo<User> result = new PageInfo(list);

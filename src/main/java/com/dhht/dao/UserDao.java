@@ -22,7 +22,7 @@ public interface UserDao {
 
     List<User> findAllSuser();
 
-    List<User> find(@Param("realName")String realName,@Param("districtId")String districtId, @Param("roleId")String roleId);
+    List<User> find(@Param("realName")String realName,@Param("districtId")String districtId, @Param("roleId")String roleId ,@Param("role") String role);
 
 
     User findByNo(@Param("id") String id);
@@ -40,6 +40,8 @@ public interface UserDao {
     //根据区域ID查询用户
     List<User> selectByDistrict(@Param("id") String ID);
 
+    List<User> selectByDistrict1(@Param("id") String ID,@Param("role") String role);
+
     User findByTelphone(@Param("telphone") String telphone);
 
     User findById(@Param("id") String id);
@@ -56,5 +58,5 @@ public interface UserDao {
    //根据电话删除用户
     int deleteByTelphone(String telphone);
 
-
+    List<User> findAll();
 }

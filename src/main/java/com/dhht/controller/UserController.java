@@ -84,18 +84,6 @@ public class UserController {
 
     }
 
-//    /**
-//     * 重置密码
-//     * @param user
-//     * @return
-//     */
-//    @RequestMapping(value = "/resetPwd" , method = RequestMethod.POST)
-//    public JsonObjectBO changePwd(@RequestBody User user){
-//        String id = user.getId();
-//        JsonObjectBO jsonObjectBO = userPasswordService.resetPwd(id);
-//        return jsonObjectBO;
-//
-//    }
 
     /**
      * 模糊查询列表

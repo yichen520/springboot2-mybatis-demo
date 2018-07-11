@@ -191,6 +191,10 @@
         SELECT <include refid="simple_User_List"></include> FROM sys_user WHERE district_id like '${id}%'
     </select>
 
+    <select id="selectByDistrict1" resultMap="simpleResultMap" parameterType="java.lang.String">
+        SELECT <include refid="simple_User_List"></include> FROM sys_user WHERE district_id like '${id}%' AND role_id != #{role}
+    </select>
+
 
     <update id="updateUserDepartment" parameterType="com.dhht.model.User">
         UPDATE sys_user
@@ -224,8 +228,9 @@
     <select id="find"  parameterType="java.lang.String"  resultType="com.dhht.model.User">
         SELECT id,role_id as roleId,user_name as userName,real_name as realName,is_locked as isLocked,telphone as telphone,district_id as districtId FROM sys_user
         <where>
+            role_id != #{role}
             <if test="districtId !=null and districtId !=''">
-                district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
+                AND district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
             </if>
             <if test="roleId !=null and roleId !=''">
                 AND role_id LIKE  "%"#{roleId,jdbcType=VARCHAR}"%"
@@ -233,6 +238,7 @@
             <if test="realName !=null and realName !=''">
                 AND real_name LIKE  "%"#{realName,jdbcType=VARCHAR}"%"
             </if>
+
         </where>
     </select>
 
@@ -253,4 +259,9 @@
         </set>
         WHERE `id` = #{id}
     </update>
+
+
+    <select id="findAll" resultType="com.dhht.model.User">
+         SELECT id,role_id as roleId,user_name as userName,real_name as realName,is_locked as isLocked,telphone as telphone,district_id as districtId FROM sys_user
+    </select>
 </mapper>
