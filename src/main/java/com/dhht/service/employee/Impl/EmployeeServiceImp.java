@@ -102,6 +102,7 @@ public class EmployeeServiceImp implements EmployeeService {
         employee.setEmployeeNation((String)map.get("employeeNation"));
         employee.setFamilyAddressDetail((String)map.get("familyAddressDetail"));
         employee.setFamilyAddressDetail((String)map.get("nowAddressDetail"));
+        employee.setEmployeeGender((String) map.get("employeeGender"));
         employee.setTelphone((String)map.get("telphone"));
         employee.setContactName((String)map.get("contactName"));
         employee.setContactTelphone((String)map.get("contactTelphone"));
@@ -298,7 +299,7 @@ public class EmployeeServiceImp implements EmployeeService {
             case 2:
                 Employee oldDate = employeeDao.selectById(employee.getId());
                 user = userService.findByTelphone(oldDate.getTelphone());
-                user.setRealName("YG"+employee.getEmployeeName());
+                user.setRealName("YG"+employee.getTelphone());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
                 break;

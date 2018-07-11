@@ -80,14 +80,12 @@ public class MakeDepartmentController {
     @RequestMapping(value = "/showHistory")
     public JsonObjectBO selectHistory(@RequestBody Map map){
         String flag = (String)map.get("flag");
-        int pageNum = (Integer) map.get("pageNum");
-        int pageSize = (Integer) map.get("pageSize");
 
-        PageInfo<Makedepartment> result = new PageInfo<>();
+        List<Makedepartment> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
 
         try {
-            result = makeDepartmentService.selectHistory(flag,pageNum,pageSize);
+            result = makeDepartmentService.selectHistory(flag);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
@@ -108,7 +106,7 @@ public class MakeDepartmentController {
         JSONObject jsonObject = new JSONObject();
         try{
             makedepartment = makeDepartmentService.selectDetailById(id);
-            jsonObject.put("makdepartment",makedepartment);
+            jsonObject.put("makedepartment",makedepartment);
         }catch (Exception e){
             JsonObjectBO.exception(e.getMessage());
         }

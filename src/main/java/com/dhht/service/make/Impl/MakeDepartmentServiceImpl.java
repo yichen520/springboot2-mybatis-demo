@@ -165,18 +165,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
-     * 查看操作历史
+     * 查询历史
      * @param flag
-     * @param pageNum
-     * @param pageSize
      * @return
      */
     @Override
-    public PageInfo<Makedepartment> selectHistory(String flag,int pageNum,int pageSize) {
-        PageHelper.startPage(pageNum,pageSize);
+    public List<Makedepartment> selectHistory(String flag) {
         List<Makedepartment> makedepartments = makedepartmentMapper.selectByFlag(flag);
-        PageInfo<Makedepartment> result = new PageInfo<>(makedepartments);
-        return result;
+        return makedepartments;
     }
 
     /**

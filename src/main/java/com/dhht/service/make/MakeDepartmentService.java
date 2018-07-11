@@ -19,7 +19,7 @@ public interface MakeDepartmentService {
 
      int deleteById(String id);
 
-     PageInfo<Makedepartment> selectHistory(String flag,int pageNum,int pageSize);
+     List<Makedepartment> selectHistory(String flag);
 
      MakeDepartmentSimple selectByLegalTephone(String phone);
 
