@@ -83,7 +83,8 @@
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR},
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR},
       #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},'03',
-      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=VARCHAR}),#{registerTime,jdbcType=TIMESTAMP})
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP}
+      )
   </insert>
 
   <update id="deleteHistoryByID" parameterType="java.lang.String">
@@ -98,7 +99,7 @@
       legal_name, legal_id, legal_id_type, 
       legal_englishsurname, legal_englishname, 
       legal_telphone, department_address, department_address_detail, 
-      telphone, postal_code
+      telphone, postal_code,
       version,flag,version_time,register_time
       )
     values (#{id,jdbcType=VARCHAR},#{departmentCode,jdbcType=VARCHAR},  #{departmentName,jdbcType=VARCHAR},
@@ -108,7 +109,7 @@
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR}, 
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR}, 
       #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},
-      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=VARCHAR}),#{registerTime,jdbcType=TIMESTAMP}
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP}
       )
   </insert>
 
