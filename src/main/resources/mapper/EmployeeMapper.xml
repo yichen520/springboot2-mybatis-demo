@@ -69,7 +69,7 @@
     select 
     COUNT(0)
     from employee
-    where employee_code = #{employeeCode,jdbcType=VARCHAR} AND  version_status = 0
+    where employee_id = #{employeeId,jdbcType=VARCHAR} AND  version_status = 0
   </select>
 
   <select id="selectHistory" resultMap="BaseResultMap" parameterType="java.lang.String">

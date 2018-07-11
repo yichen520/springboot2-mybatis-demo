@@ -49,35 +49,39 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public int insertEmployee(Employee employee,User user) {
-        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByLegalTephone(user.getTelphone());
-        RecordDepartment recordDepartment = recordDepartmentService.selectByDistrictId(user.getDistrictId()).get(0);
-        employee.setEmployeeCode(CodeUtil.generate());
-        employee.setId(UUIDUtil.generate());
-        employee.setDistrictId(user.getDistrictId());
-        employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
-        employee.setOfficeCode(recordDepartment.getDepartmentCode());
-        employee.setOfficeName(recordDepartment.getDepartmentName());
-        employee.setRegisterName(recordDepartment.getPrincipalName());
-        employee.setRegisterTime(DateUtil.getCurrentTime());
-        employee.setFlag(UUIDUtil.generate());
-        employee.setVersion(1);
-        employee.setVersionTime(DateUtil.getCurrentTime());
-        if(isInsert(employee.getEmployeeId())){
-            return ResultUtil.isWrongId;
-        }
-        int u = userService.insert(setUserByType(employee,1));
-        int e = employeeDao.insert(employee);
-        if(u+e==3){
-            return ResultUtil.isSuccess;
-        }else if(u==1){
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultUtil.isHave;
-        }else {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultUtil.isFail;
+        try {
+            MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByLegalTephone(user.getTelphone());
+            RecordDepartment recordDepartment = recordDepartmentService.selectByDistrictId(user.getDistrictId()).get(0);
+            employee.setEmployeeCode(CodeUtil.generate());
+            employee.setId(UUIDUtil.generate());
+            employee.setDistrictId(user.getDistrictId());
+            employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
+            employee.setOfficeCode(recordDepartment.getDepartmentCode());
+            employee.setOfficeName(recordDepartment.getDepartmentName());
+            employee.setRegisterName(recordDepartment.getPrincipalName());
+            employee.setRegisterTime(DateUtil.getCurrentTime());
+            employee.setFlag(UUIDUtil.generate());
+            employee.setVersion(1);
+            employee.setVersionTime(DateUtil.getCurrentTime());
+            if (isInsert(employee.getEmployeeId())) {
+                return ResultUtil.isWrongId;
+            }
+            int u = userService.insert(setUserByType(employee, 1));
+            int e = employeeDao.insert(employee);
+            if (u ==2&& e == 1) {
+                return ResultUtil.isSuccess;
+            } else if (u == 1) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isHave;
+            } else {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isFail;
 
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return 0;
         }
-
     }
 
     /**
@@ -98,18 +102,17 @@ public class EmployeeServiceImp implements EmployeeService {
         employee.setEmployeeNation((String)map.get("employeeNation"));
         employee.setFamilyAddressDetail((String)map.get("familyAddressDetail"));
         employee.setFamilyAddressDetail((String)map.get("nowAddressDetail"));
-        employee.setEmployeeImage((String)map.get("employeeImage"));
         employee.setTelphone((String)map.get("telphone"));
         employee.setContactName((String)map.get("contactName"));
         employee.setContactTelphone((String)map.get("contactTelphone"));
-        employee.setFlag(employee.getFlag());
-        employee.setVersion(employee.getVersion()+1);
-        employee.setVersionTime(DateUtil.getCurrentTime());
-        employee.setId(UUIDUtil.generate());
+
         if(isInsert(employee.getEmployeeId())){
             return ResultUtil.isWrongId;
         }
         int u = userService.update(setUserByType(employee,2));
+        employee.setVersion(employee.getVersion()+1);
+        employee.setVersionTime(DateUtil.getCurrentTime());
+        employee.setId(UUIDUtil.generate());
         int e = employeeDao.insert(employee);
         if(u==2&&e==1){
             return ResultUtil.isSuccess;
@@ -135,7 +138,7 @@ public class EmployeeServiceImp implements EmployeeService {
        Employee employee = employeeDao.selectById(id);
        employee.setId(UUIDUtil.generate());
        employee.setLogoutOfficeCode(employee.getOfficeCode());
-       employee.setOfficeName(employee.getOfficeName());
+       employee.setLogoutOfficeName(employee.getOfficeName());
        employee.setLogoutName(employee.getRegisterName());
        employee.setVersion(employee.getVersion()+1);
        employee.setVersionTime(DateUtil.getCurrentTime());
