@@ -52,7 +52,7 @@ public class Seal extends SealKey {
 
     private Boolean isMake; //是否制作
 
-    private Date personalate;   //个人化日期
+    private Date personalDate;   //个人化日期
 
     private Boolean isPersonal; //是否个人化
 
@@ -68,7 +68,7 @@ public class Seal extends SealKey {
 
     private Boolean isLoss; //是否挂失
 
-    private String sealreason; //印章原因
+    private String sealReason; //印章原因
 
     private SealImage sealImage;    //印章图像
 

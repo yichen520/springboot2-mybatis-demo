@@ -46,7 +46,7 @@
   </select>
 
   <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT  <include refid="Base_Column_List"/> from employee WHERE  telphone = #{phone,jdbcType=VARCHAR} and version_status = 0
+    SELECT  <include refid="Base_Column_List"/> from employee WHERE  telphone = #{phone,jdbcType=VARCHAR} AND version_status = 0
   </select>
 
   <select id="selectWorkEmployee" resultMap="BaseResultMap" parameterType="java.lang.String">

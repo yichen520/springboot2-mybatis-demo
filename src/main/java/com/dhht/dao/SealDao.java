@@ -15,7 +15,7 @@ public interface SealDao {
 
     int insert(Seal record);
 
-    Seal selectByPrimaryKey(SealKey key);
+    Seal selectByPrimaryKey(@Param("id") String id);
 
     List<Seal> selectByCodeAndType(String useDepartmentCode);
 
@@ -27,9 +27,9 @@ public interface SealDao {
 
     List<Seal> selectByCodeAndName(Seal seal);
 
-    SealOperationRecord SelectByCodeAndFlag(String sealcode);
+    SealOperationRecord SelectByCodeAndFlag(@Param("sealCode") String sealcode);
 
-    SealOperationRecord SelectByCodeAndFlag03(String sealcode);
+    SealOperationRecord SelectByCodeAndFlag03(@Param("sealCode")String sealcode,@Param("flag")String flag);
 
     int insertSealGetperson(SealGetPerson sealGetPerson);
 }

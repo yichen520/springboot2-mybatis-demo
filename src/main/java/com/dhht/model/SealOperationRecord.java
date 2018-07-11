@@ -5,15 +5,14 @@ import lombok.Data;
 import java.sql.Date;
 
 @Data
-public class SealOperationRecord extends SealKey {
+public class SealOperationRecord {
+    private String id;
+
+    private String sealCode;
 
     private Date dateTime; //操作时间
 
     private String operatorTelphone; //操作人手机号
-
-//    private String operationType; //操作类型
-//
-//    private String operationState; //操作状态
 
     private String emplyeeName; //从业人员姓名
 
