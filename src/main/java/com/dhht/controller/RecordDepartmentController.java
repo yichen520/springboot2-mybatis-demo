@@ -136,7 +136,7 @@ public class RecordDepartmentController {
             result = recordDepartmentService.insert(recordDepartment);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException exception){
-            return JsonObjectBO.error("该用户已经存在");
+            return JsonObjectBO.error("该编号已经存在");
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
         }

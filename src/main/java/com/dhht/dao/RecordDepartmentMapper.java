@@ -39,4 +39,7 @@ public interface RecordDepartmentMapper {
     List<RecordDepartment>  selectByFlag(@Param("flag") String flag);
 
     int validateCode(@Param("code") String code);
+
+   RecordDepartment selectByPhone(@Param("phone")String phone);
+
 }

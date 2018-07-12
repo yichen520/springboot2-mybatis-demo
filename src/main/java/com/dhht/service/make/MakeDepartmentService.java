@@ -1,6 +1,9 @@
 package com.dhht.service.make;
 
-import com.dhht.model.*;
+import com.dhht.model.MakeDepartmentSimple;
+import com.dhht.model.Makedepartment;
+import com.dhht.model.RecordDepartment;
+import com.dhht.model.UserDomain;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;

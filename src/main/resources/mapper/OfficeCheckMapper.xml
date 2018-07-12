@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.OfficeCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.OfficeCheck" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="makedepartment_code" property="makedepartmentCode" jdbcType="VARCHAR" />
+    <result column="check_name" property="checkName" jdbcType="VARCHAR" />
+    <result column="office_code" property="officeCode" jdbcType="VARCHAR" />
+    <result column="office_name" property="officeName" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="check_address" property="checkAddress" jdbcType="VARCHAR" />
+    <result column="handle_result" property="handleResult" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="makedepartment_Name" property="makedepartmentName" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <resultMap id="punishResultMap" type="com.dhht.model.OfficeCheck" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="makedepartment_code" property="makedepartmentCode" jdbcType="VARCHAR" />
+    <result column="check_name" property="checkName" jdbcType="VARCHAR" />
+    <result column="office_code" property="officeCode" jdbcType="VARCHAR" />
+    <result column="office_name" property="officeName" jdbcType="VARCHAR" />
+    <result column="check_time" property="checkTime" jdbcType="TIMESTAMP" />
+    <result column="check_address" property="checkAddress" jdbcType="VARCHAR" />
+    <result column="handle_result" property="handleResult" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="makedepartment_name" property="makedepartmentName" jdbcType="VARCHAR" />
+    <collection property="punishLogs" ofType="com.dhht.model.PunishLog" >
+      <id property="id" column="pid"/>
+      <result property="punishId" column="punish_id"/>
+      <result property="result" column="result"/>
+      <result property="reason" column="reason"/>
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    makedepartment_code,makedepartment_name, id, check_name, office_code, office_name, check_time, check_address,
+    handle_result,district
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from office_check
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </select>
+  <select id="findPunish" resultMap="punishResultMap" parameterType="java.lang.String" >
+    select o.*,p.id pid,p.punish_id,p.result,p.reason
+    from office_check o,sys_punish_log p where o.id = p.id
+    <if test="startTime != null and  endTime != null" >
+     and o.check_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime == null and  endTime != null" >
+      and o.check_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != null and  endTime == null" >
+      and o.check_time &gt; #{startTime}
+    </if>
+    <if test="district != null" >
+      and o.district like '${district}%'
+    </if>
+    <if test="makedepartmentName != null" >
+      and o.makedepartment_name = #{makedepartmentName}
+    </if>
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from office_check
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.OfficeCheck" >
+    insert into office_check (makedepartment_code, id, check_name, 
+      office_code, office_name, check_time, 
+      check_address, handle_result,makedepartment_name)
+    values (#{makedepartmentCode,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{checkName,jdbcType=VARCHAR}, 
+      #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR}, #{checkTime,jdbcType=TIMESTAMP}, 
+      #{checkAddress,jdbcType=VARCHAR}, #{handleResult,jdbcType=VARCHAR},#{makedepartmentName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.OfficeCheck" >
+    insert into office_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="makedepartmentCode != null" >
+        makedepartment_code,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="checkName != null" >
+        check_name,
+      </if>
+      <if test="officeCode != null" >
+        office_code,
+      </if>
+      <if test="officeName != null" >
+        office_name,
+      </if>
+      <if test="checkTime != null" >
+        check_time,
+      </if>
+      <if test="checkAddress != null" >
+        check_address,
+      </if>
+      <if test="handleResult != null" >
+        handle_result,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="makedepartmentCode != null" >
+        #{makedepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="checkName != null" >
+        #{checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="officeCode != null" >
+        #{officeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="officeName != null" >
+        #{officeName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkAddress != null" >
+        #{checkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="handleResult != null" >
+        #{handleResult,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.OfficeCheck" >
+    update office_check
+    <set >
+      <if test="id != null" >
+        id = #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="checkName != null" >
+        check_name = #{checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="officeCode != null" >
+        office_code = #{officeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="officeName != null" >
+        office_name = #{officeName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkTime != null" >
+        check_time = #{checkTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkAddress != null" >
+        check_address = #{checkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="handleResult != null" >
+        handle_result = #{handleResult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.OfficeCheck" >
+    update office_check
+    set id = #{id,jdbcType=VARCHAR},
+      check_name = #{checkName,jdbcType=VARCHAR},
+      office_code = #{officeCode,jdbcType=VARCHAR},
+      office_name = #{officeName,jdbcType=VARCHAR},
+      check_time = #{checkTime,jdbcType=TIMESTAMP},
+      check_address = #{checkAddress,jdbcType=VARCHAR},
+      handle_result = #{handleResult,jdbcType=VARCHAR}
+    where makedepartment_code = #{makedepartmentCode,jdbcType=VARCHAR}
+  </update>
+
+
+</mapper>
