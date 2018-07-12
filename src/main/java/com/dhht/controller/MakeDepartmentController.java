@@ -191,4 +191,30 @@ public class MakeDepartmentController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
+
+    /**
+     * 制作单位处罚记录查询
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/selectPunish")
+    public JsonObjectBO selectPunish(@RequestBody Map map){
+        String makeDepartmentName = (String)map.get("MakeDepartmentName");
+        String startTime = (String)map.get("startTime");
+        String endTime = (String)map.get("endTime");
+        String districtId = (String)map.get("districtId");
+        User user = (User)map.get("user");
+        String localDistrictId = user.getDistrictId();
+        List<Makedepartment> result = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            result = makeDepartmentService.selectPunish(makeDepartmentName,startTime,endTime,districtId,localDistrictId);
+            jsonObject.put("makeDepartment",result);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
 }

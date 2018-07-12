@@ -25,7 +25,64 @@
     <result column="flag" property="flag" jdbcType="CHAR"/>
     <result column="version_time" property="versionTime" jdbcType="VARCHAR"/>
     <result column="register_time" property="registerTime" jdbcType="TIMESTAMP"/>
+    <association property="makeDepartmentPunish"  resultMap="makeDepartmentPunishResultMap" javaType="com.dhht.model.MakeDepartmentPunish"></association>
+    <!--<collection property="employee" resultMap="employeeResultMap" javaType="com.dhht.model.Employee"></collection>-->
   </resultMap>
+  <resultMap id="makeDepartmentPunishResultMap" type="com.dhht.model.MakeDepartmentPunish">
+    <id property="id" column="mid"/>
+    <result property="makedepartmentCode" column="makedepartment_code"/>
+    <result property="punishCode" column="punish_code"/>
+    <result property="punishDetail" column="punish_detail"/>
+    <result property="punishReason" column="punish_reason"/>
+    <result property="punishResult" column="punish_result"/>
+    <result property="officeCode" column="office_code"/>
+    <result property="officeName" column="office_name"/>
+    <result property="transactionName" column="transaction_name"/>
+    <result property="punishTime" column="punish_time"/>
+  </resultMap>
+  <!--<resultMap id="employeeResultMap" type="com.dhht.model.Employee">-->
+    <!--<id property="id" column="eid"/>-->
+    <!--<result property="employeeCode" column="employee_code"/>-->
+    <!--<result property="employeeName" column="employee_name"/>-->
+    <!--<result property="employeeId" column="employee_id"/>-->
+    <!--<result property="employeeGender" column="employee_gender"/>-->
+    <!--<result property="employeeJob" column="employee_job"/>-->
+    <!--<result property="employeeDepartmentCode" column="employee_department_code"/>-->
+    <!--<result property="employeeNation" column="employee_nation"/>-->
+    <!--<result property="familyAddressDetail" column="family_address_detail"/>-->
+    <!--<result property="nowAddressDetail" column="now_address_detail"/>-->
+    <!--<result property="employeeImage" column="employee_image"/>-->
+    <!--<result property="telphone" column="telphone"/>-->
+    <!--<result property="contactName" column="contact_name"/>-->
+    <!--<result property="contactTelphone" column="contact_telphone"/>-->
+    <!--<result property="officeCode" column="office_code"/>-->
+    <!--<result property="officeName" column="office_name"/>-->
+    <!--<result property="registerName" column="register_name"/>-->
+    <!--<result property="registerTime" column="register_time"/>-->
+    <!--<result property="logoutOfficeCode" column="logout_office_code"/>-->
+    <!--<result property="logoutOfficeName" column="logout_office_name"/>-->
+    <!--<result property="logoutName" column="logout_name"/>-->
+    <!--<result property="version" column="version"/>-->
+    <!--<result property="versionTime" column="version_time"/>-->
+    <!--<result property="flag" column="flag"/>-->
+    <!--<result property="deleteStatus" column="is_delete"/>-->
+    <!--<result property="versionStatus" column="version_status"/>-->
+    <!--<association property="EmployeePunish"  resultMap="employeePunishResultMap" javaType="com.dhht.model.EmployeePunish"></association>-->
+  </resultMap>
+  <!--<resultMap id="employeePunishResultMap" type="com.dhht.model.EmployeePunish">-->
+    <!--<id property="id" column="epid"/>-->
+    <!--<result property="makedepartmentCode" column="make_department_code"/>-->
+    <!--<result property="punishEmployeeCode" column="punish_employee_code"/>-->
+    <!--<result property="punishEmployeeName" column="punish_employee_name"/>-->
+    <!--<result property="punishEmployeeId" column="punish_employee_id"/>-->
+    <!--<result property="detail" column="detail"/>-->
+    <!--<result property="reason" column="reason"/>-->
+    <!--<result property="result" column="result"/>-->
+    <!--<result property="officeCode" column="office_code"/>-->
+    <!--<result property="officeName" column="office_name"/>-->
+    <!--<result property="transactionName" column="transaction_name"/>-->
+    <!--<result property="punishTime" column="punish_time"/>-->
+  <!--</resultMap>-->
   <resultMap id="SimpleResultMap" type="com.dhht.model.MakeDepartmentSimple">
     <id column="id" property="id" jdbcType="VARCHAR"/>
     <result column="department_code" property="departmentCode" jdbcType="VARCHAR" />
@@ -145,6 +202,35 @@
     from make_department where flag = #{flag,jdbcType =VARCHAR}
   </select>
 
+  <select id="selectByNameAndTimeAndDistrict" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select d.*,p.id mid,p.punish_code,p.punish_detail,p.punish_reason,p.punish_result,p.transaction_name  from make_department d,make_department_punish p <where>
+     d.department_code=p.makedepartment_code
+    <if test="districtId!=null and districtId!=''">
+    AND d.department_address = #{districtId}
+    </if>
+    <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+    AND p.punish_time BETWEEN #{startTime} AND #{endTime}
+    </if>
+    <if test="departmentName!=null and departmentName!=''">
+    and d.department_name = #{departmentName}
+    </if>
+  </where>
+    ORDER BY version  DESC LIMIT 1
+  </select>
+
+  <select id="selectByNameOrTimeAndDistrict" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select d.*,p.id mid,p.punish_code,p.punish_detail,p.punish_reason,p.punish_result,p.transaction_name  from make_department d,make_department_punish p <where>
+    d.department_code=p.makedepartment_code AND d.department_address = #{districtId}
+
+    <if test="startTime!=null and startTime!='' and endTime!=null and endTime!=''">
+      AND p.punish_time BETWEEN #{startTime} AND #{endTime}
+    </if>
+    <if test="departmentName!=null and departmentName!=''">
+      and d.department_name = #{departmentName}
+    </if>
+  </where>
+    ORDER BY version  DESC LIMIT 1
+  </select>
   <!--统计模块-->
 
   <select id="countAllDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
@@ -200,5 +286,6 @@
         select flag,MAX(version) as ver from make_department GROUP BY flag
         )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and version_time BETWEEN #{startTime} and #{endTime}
     </select>
+
 
 </mapper>

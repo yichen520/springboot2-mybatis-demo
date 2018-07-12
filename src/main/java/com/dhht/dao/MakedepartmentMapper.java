@@ -33,6 +33,9 @@ public interface MakedepartmentMapper {
 
     List<MakeDepartmentSimple> selectByDistrict(@Param("id") String id);
 
+    List<Makedepartment> selectByNameAndTimeAndDistrict(@Param("departmentName")String departmentName,String startTime,String endTime,@Param("districtId") String districtId);
+
+    List<Makedepartment> selectByNameOrTimeAndDistrict(@Param("departmentName")String departmentName,String startTime,String endTime,@Param("localDistrictId") String localDistrictId);
     //------------------------------统计模块-------------------------------------//
     int countAllDepartment(@Param("districtId") String districtId);
 

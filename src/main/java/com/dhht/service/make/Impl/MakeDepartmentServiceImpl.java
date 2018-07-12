@@ -19,6 +19,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
@@ -40,6 +41,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Autowired
     private EmployeeService employeeService;
 
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 
     /**
      * 展示制作单位列表
@@ -207,6 +209,66 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return makedepartmentMapper.selectCodeByLegalTelphone(phone);
     }
 
+    /**
+     * 处罚查询
+     * @param makeDepartmentName
+     * @param startTime
+     * @param endTime
+     * @param districtId
+     * @return
+     */
+    @Override
+    public List<Makedepartment> selectPunish(String makeDepartmentName, String startTime, String endTime, String districtId,String localDistrictId) {
+            List<Makedepartment> list = new ArrayList<>();
+        if (makeDepartmentName == null && districtId == null && startTime == null && endTime ==null) {
+             list =  makedepartmentMapper.selectByNameAndTimeAndDistrict(makeDepartmentName, startTime, endTime, localDistrictId);
+            return list;
+        } else if (districtId != null) {
+            String districtIds[] = StringUtil.DistrictUtil(districtId);
+            if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
+                list = selectByTime(makeDepartmentName, startTime, endTime,districtIds[0]);
+            } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
+                list =selectByTime(makeDepartmentName, startTime, endTime,districtIds[0] + districtIds[1]);
+            } else if (!districtIds[1].equals("00") && !districtIds[2].equals("00")) {
+                list =selectByTime(makeDepartmentName, startTime, endTime,districtId);
+            }
+        } else {
+            String localdistrictIds[] = StringUtil.DistrictUtil(localDistrictId);
+            if (localdistrictIds[1].equals("00") && localdistrictIds[2].equals("00")) {
+                list = selectByTime(makeDepartmentName, startTime, endTime,localdistrictIds[0]);
+            } else if (!localdistrictIds[1].equals("00") && localdistrictIds[2].equals("00")) {
+                list = selectByTime(makeDepartmentName, startTime, endTime,localdistrictIds[0] + localdistrictIds[1]);
+            }
+
+        }
+        return list;
+    }
+
+    /**
+     * 对时间做的判断
+     * @param makeDepartmentName
+     * @param startTime
+     * @param endTime
+     * @param districtId
+     * @return
+     */
+    public List<Makedepartment> selectByTime(String makeDepartmentName, String startTime, String endTime, String districtId){
+        List<Makedepartment> list = new ArrayList<>();
+        //如果时间段为空
+        if ((startTime == null || "".equals(startTime))
+                && (endTime == null || "".equals(endTime))) {
+            list = makedepartmentMapper.selectByNameAndTimeAndDistrict(makeDepartmentName, startTime, endTime, districtId);
+        }
+        //只有开始时间没有结束时间
+        else if((startTime != null || !"".equals(startTime)) && (endTime == null || "".equals(endTime))) {
+            String end= simpleDateFormat.format(new Date());
+            list = makedepartmentMapper.selectByNameAndTimeAndDistrict(makeDepartmentName, startTime, end, districtId);
+        }else
+        {
+            list = makedepartmentMapper.selectByNameAndTimeAndDistrict(makeDepartmentName, startTime, endTime, districtId);
+        }
+        return list;
+    }
     /**
      * 设置user
      * @param makedepartment

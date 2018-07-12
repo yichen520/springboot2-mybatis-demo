@@ -3,6 +3,7 @@ package com.dhht.model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Makedepartment {
@@ -29,5 +30,6 @@ public class Makedepartment {
     private Date versionTime;
     private Date registerTime;
 
-
+    private MakeDepartmentPunish makeDepartmentPunish;
+    private List<Employee> employeeList;
     }
