@@ -1,16 +1,21 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.DistrictMenus;
-import com.dhht.model.MakeDepartmentSimple;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.minitor.MinitorService;
+import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
+import com.dhht.util.StringUtil;
+import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +40,16 @@ public class MakeDepartmentController {
     @Autowired
     private DistrictService districtService;
 
+    @Autowired
+    private MinitorService minitorService;
+
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
+
+    private static Logger logger = LoggerFactory.getLogger(MakeDepartmentController.class);
+
+
+    private JSONObject jsonObject = new JSONObject();
     /**
      * 展示制作单位的列表
      * @param map
@@ -191,4 +206,69 @@ public class MakeDepartmentController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
+
+    @RequestMapping(value = "/survey")
+    public JsonObjectBO punish(@RequestBody Map map){
+        Integer minitor = (Integer) map.get("minitor");
+        try {
+            List<Minitor> survey = minitorService.info(minitor);
+            jsonObject.put("minitors",survey);
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+    @RequestMapping(value = "/punish")
+    public JsonObjectBO punish(HttpServletRequest httpServletRequest,@RequestBody OfficeCheck officeCheck){
+        String id = UUIDUtil.generate();
+        officeCheck.setId(id);
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        officeCheck.setCheckName(user.getUserName());
+        RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(user.getTelphone());
+        officeCheck.setOfficeCode(recordDepartment.getDepartmentCode());
+        officeCheck.setOfficeName(recordDepartment.getDepartmentName());
+        officeCheck.setCheckTime(DateUtil.getCurrentTime());
+        officeCheck.setDistrict(user.getDistrictId());
+        try {
+              if (recordDepartmentService.insertPunish(officeCheck)){
+                  return JsonObjectBO.success("制作单位检查成功",null);
+              }else {
+                  return JsonObjectBO.error("制作单位检查失败");
+              }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+    }
+
+
+    @RequestMapping(value = "/punishinfo")
+    public JsonObjectBO find(HttpServletRequest httpServletRequest, @RequestBody Map map){
+        String makedepartmentName = (String)map.get("makedepartmentName");
+        String startTime = (String) map.get("startTime");
+        String endTime = (String) map.get("endTime");
+        String districtId = (String) map.get("district");
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
+        if (districtId == null){
+             districtId = StringUtil.getDistrictId(user.getDistrictId());
+        }else{
+             districtId = StringUtil.getDistrictId(districtId);
+        }
+
+        Integer pageSize =(Integer) map.get("pageSize");
+        Integer pageNum =(Integer) map.get("pageNum");
+
+        try {
+            PageHelper.startPage(pageNum, pageSize);
+            PageInfo<OfficeCheck>  pageInfo =new PageInfo<OfficeCheck> (recordDepartmentService.findPunish(makedepartmentName,startTime,endTime,districtId));
+            jsonObject.put("punish",pageInfo);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+
 }

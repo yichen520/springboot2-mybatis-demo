@@ -1,5 +1,6 @@
 package com.dhht.service.recordDepartment;
 
+import com.dhht.model.OfficeCheck;
 import com.dhht.model.RecordDepartment;
 import com.github.pagehelper.PageInfo;
 
@@ -22,6 +23,9 @@ public interface RecordDepartmentService {
 
     List<RecordDepartment> showMore(String flag);
 
+    RecordDepartment selectByPhone(String phone);
 
+    boolean insertPunish(OfficeCheck officeCheck);
 
+    List<OfficeCheck>  findPunish(String makedepartmentName,String startTime,String endTime,String districtId);
 }

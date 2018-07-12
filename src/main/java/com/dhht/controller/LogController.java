@@ -21,8 +21,8 @@ public class LogController {
 
     @RequestMapping(value = "info")
     public JsonObjectBO findLog(@RequestBody Map map){
-        int pageSize = (Integer) map.get("pageSize");
-        int pageNum = (Integer) map.get("pageNum");
+        Integer pageSize = (Integer) map.get("pageSize");
+        Integer pageNum = (Integer) map.get("pageNum");
         String start = (String) map.get("start");
         String end = (String) map.get("end");
 

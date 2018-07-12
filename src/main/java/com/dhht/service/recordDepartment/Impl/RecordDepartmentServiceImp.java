@@ -1,11 +1,8 @@
 package com.dhht.service.recordDepartment.Impl;
 
-import com.dhht.dao.RecordDepartmentMapper;
-import com.dhht.dao.RecordPoliceMapper;
-import com.dhht.dao.UserDao;
-import com.dhht.model.RecordDepartment;
-import com.dhht.model.RecordPolice;
-import com.dhht.model.User;
+import com.dhht.common.JsonObjectBO;
+import com.dhht.dao.*;
+import com.dhht.model.*;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserPasswordService;
@@ -37,6 +34,11 @@ import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
+    @Autowired
+    private PunishLogMapper punishLogMapper;
+    @Autowired
+    private OfficeCheckMapper officeCheckMapper;
+
 
 
     @Autowired
@@ -269,5 +271,26 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public List<RecordDepartment> showMore(String flag) {
         return recordDepartmentMapper.selectByFlag(flag);
+    }
+
+    @Override
+    public RecordDepartment selectByPhone(String phone) {
+       return recordDepartmentMapper.selectByPhone(phone);
+    }
+
+    @Override
+    public boolean insertPunish(OfficeCheck officeCheck) {
+          List<PunishLog> punishLogs = officeCheck.getPunishLogs();
+              for (PunishLog punishLog:punishLogs){
+                  punishLog.setId(officeCheck.getId());
+                  punishLogMapper.insert(punishLog);
+              }
+              officeCheckMapper.insert(officeCheck);
+              return true;
+    }
+
+    @Override
+    public List<OfficeCheck> findPunish(String makedepartmentName, String startTime, String endTime, String districtId) {
+        return officeCheckMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
     }
 }

@@ -1,9 +1,6 @@
 package com.dhht.service.make;
 
-import com.dhht.model.MakeDepartmentSimple;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.RecordDepartment;
-import com.dhht.model.UserDomain;
+import com.dhht.model.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -26,5 +23,8 @@ public interface MakeDepartmentService {
      MakeDepartmentSimple selectByDepartmentCode(String code);
 
      String selectCodeByLegalTelphone(String phone);
+
+
+
 
 }
