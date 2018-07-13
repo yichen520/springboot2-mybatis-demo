@@ -1,8 +1,8 @@
 package com.dhht.service.useDepartment;
 
 import com.dhht.common.JsonObjectBO;
+
 import com.dhht.model.UseDepartment;
-import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -22,6 +22,7 @@ public interface UseDepartmentService {
 
     JsonObjectBO showHistory(String flag);
 
+    UseDepartment selectDetailById(String id);
 
     UseDepartment selectUseDepartment(String useDepartmentName);
 }

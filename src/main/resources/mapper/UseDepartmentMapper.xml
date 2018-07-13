@@ -79,7 +79,7 @@
   <sql id="Base_Column_List" >
     id,code,`name`,nation_name,english_name,english_ahhr,status,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
     legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete,flag,version,updateTime,
-    foundDate,startDate,endDate,registrationAuthority,managementRange,registeredapital,businessLicenceScanning,specialBusinessLicenceScanning,legalIdcardScanning
+    found_date,start_date,end_date,registration_authority,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning
   </sql>
 
 
@@ -300,5 +300,10 @@
     SELECT * from use_department WHERE
       `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%" AND is_delete = 0
     limit 20
+  </select>
+
+  <select id="selectDetailById" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List"/>
+    from use_department where id = #{id}
   </select>
 </mapper>

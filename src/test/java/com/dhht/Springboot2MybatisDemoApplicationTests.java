@@ -113,8 +113,8 @@ public class Springboot2MybatisDemoApplicationTests {
 //		String recordCode = "11233333333";
 //		int a = sealService.loss(user, seal,  operatorPhoto,   proxy , businessScanner, sealOperationRecord, recordCode);
 //		System.out.print(a);
-		List<Makedepartment> list = makedepartmentMapper.selectByNameAndTimeAndDistrict("修罗神殿","2018-07-11 11:09:00","2018-07-12 11:09:00","330108");
-		System.out.print(list.toString());
+		UseDepartment useDepartment = useDepartmentService.selectDetailById("7d37c2ef6be048adb5eb17921f1b1b8f");
+		System.out.print(useDepartment.getBusinessLicenceScanning());
 	}
 
 }

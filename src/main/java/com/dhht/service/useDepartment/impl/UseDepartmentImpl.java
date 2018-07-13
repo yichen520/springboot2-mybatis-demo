@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.UserDao;
+import com.dhht.model.Makedepartment;
 import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.service.useDepartment.UseDepartmentService;
@@ -179,7 +180,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     }
 
     /**
-     * 查看詳情
+     * 查看历史
      * @param flag
      * @return
      */
@@ -189,6 +190,17 @@ public class UseDepartmentImpl implements UseDepartmentService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("useDepartment",list);
         return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+    /**
+     * 查看详情
+     * @param id
+     * @return
+     */
+    @Override
+    public UseDepartment selectDetailById(String id) {
+        UseDepartment useDepartment = useDepartmentDao.selectDetailById(id);
+        return useDepartment;
     }
 
     /**

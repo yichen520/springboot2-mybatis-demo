@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.DistrictMenus;
+import com.dhht.model.Makedepartment;
 import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
@@ -56,7 +57,7 @@ public class UseDepartmentController {
     }
 
     /**
-     * 查找
+     * 模糊查找
      * @param
      * @return
      */
@@ -101,6 +102,25 @@ public class UseDepartmentController {
         return jsonObjectBO;
     }
 
+    /**
+     * 查看制作单位的详情
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/selectDetailById")
+    public JsonObjectBO selectDetailById(@RequestBody Map map){
+        String id = (String)map.get("id");
+
+        UseDepartment useDepartment = new UseDepartment();
+        JSONObject jsonObject = new JSONObject();
+        try{
+            useDepartment = useDepartmentService.selectDetailById(id);
+            jsonObject.put("useDepartment",useDepartment);
+        }catch (Exception e){
+            JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
     /**
      * 根据名字进行了查询
      */

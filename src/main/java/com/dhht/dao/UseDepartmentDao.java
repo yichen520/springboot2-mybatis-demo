@@ -39,4 +39,6 @@ public interface UseDepartmentDao {
 
     UseDepartment selectByName(@Param("name") String name);
 
+    UseDepartment selectDetailById(@Param("id") String id);
+
 }
