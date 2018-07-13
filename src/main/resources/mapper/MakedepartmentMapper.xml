@@ -68,7 +68,7 @@
     <!--<result property="deleteStatus" column="is_delete"/>-->
     <!--<result property="versionStatus" column="version_status"/>-->
     <!--<association property="EmployeePunish"  resultMap="employeePunishResultMap" javaType="com.dhht.model.EmployeePunish"></association>-->
-  </resultMap>
+  <!--</resultMap>-->
   <!--<resultMap id="employeePunishResultMap" type="com.dhht.model.EmployeePunish">-->
     <!--<id property="id" column="epid"/>-->
     <!--<result property="makedepartmentCode" column="make_department_code"/>-->
