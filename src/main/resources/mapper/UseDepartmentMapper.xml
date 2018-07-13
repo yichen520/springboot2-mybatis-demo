@@ -221,7 +221,7 @@
         AND department_status = '01'
       </if>
       <if test="departmentStatus =='00'">
-        AND department_status = '01' or department_status='02'
+        AND department_status in("01","02")
       </if>
       <if test="departmentStatus =='02'">
         AND department_status ='02'

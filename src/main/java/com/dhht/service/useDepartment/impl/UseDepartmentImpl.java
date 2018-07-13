@@ -96,8 +96,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum, pageSize);
-        if (code == null && districtId == null && name == null && departmentStatus==null) {
-            PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,pageNum,pageSize);
+        if (code == null && districtId == null && name == null) {
+            PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,departmentStatus,pageNum,pageSize);
             jsonObject.put("useDepartment", result);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
@@ -147,15 +147,15 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @param pageNum
      * @return
      */
-    public PageInfo<UseDepartment> selectByDistrict(String id, int pageNum, int pageSize) {
+    public PageInfo<UseDepartment> selectByDistrict(String id,String departmentStatus,int pageNum, int pageSize) {
         List<UseDepartment> list = new ArrayList<UseDepartment>();
         String districtIds[] = StringUtil.DistrictUtil(id);
         if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
-            list = useDepartmentDao.find(null,districtIds[0],null,null);
+            list = useDepartmentDao.find(null,districtIds[0],null,departmentStatus);
         } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
-            list = useDepartmentDao.find(null,districtIds[0] + districtIds[1],null,null);
+            list = useDepartmentDao.find(null,districtIds[0] + districtIds[1],null,departmentStatus);
         } else {
-            list = useDepartmentDao.find(null,id,null,null);
+            list = useDepartmentDao.find(null,id,null,departmentStatus);
         }
         PageHelper.startPage(pageNum, pageSize, false);
         PageInfo<UseDepartment> result = new PageInfo(list);
