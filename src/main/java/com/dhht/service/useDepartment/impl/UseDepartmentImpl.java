@@ -5,6 +5,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.UseDepartment;
+import com.dhht.model.User;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
@@ -90,13 +91,13 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public JsonObjectBO find(String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize) {
+    public JsonObjectBO find(String localDistrictId,String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize) {
+        List<UseDepartment> list = new ArrayList<>();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum, pageSize);
         if (code == null && districtId == null && name == null && departmentStatus==null) {
-            List<UseDepartment> list = useDepartmentDao.findAllMake();
-            PageInfo<UseDepartment> result = new PageInfo<>(list);
+            PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,pageNum,pageSize);
             jsonObject.put("useDepartment", result);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
@@ -104,36 +105,61 @@ public class UseDepartmentImpl implements UseDepartmentService {
         } else if(districtId != null){
             String districtIds[] = StringUtil.DistrictUtil(districtId);
             if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
-                List<UseDepartment> list = useDepartmentDao.find(code,districtIds[0],name,departmentStatus);
+                list = useDepartmentDao.find(code,districtIds[0],name,departmentStatus);
                 PageInfo<UseDepartment> result = new PageInfo<>(list);
                 jsonObject.put("useDepartment", result);
                 jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("查询成功");
             }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
-                List<UseDepartment> list = useDepartmentDao.find(code,districtIds[0] + districtIds[1],name,departmentStatus);
+                list = useDepartmentDao.find(code,districtIds[0] + districtIds[1],name,departmentStatus);
                 PageInfo<UseDepartment> result = new PageInfo<>(list);
                 jsonObject.put("useDepartment", result);
                 jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("查询成功");
             }else if (!districtIds[1].equals("00")&&!districtIds[2].equals("00")){
-                List<UseDepartment> list = useDepartmentDao.find(code,districtId,name,departmentStatus);
+                list = useDepartmentDao.find(code,districtId,name,departmentStatus);
                 PageInfo<UseDepartment> result = new PageInfo<>(list);
                 jsonObject.put("useDepartment", result);
                 jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("查询成功");
             }
-        } else {
-            List<UseDepartment> list = useDepartmentDao.find(code,districtId,name,departmentStatus);
-            PageInfo<UseDepartment> result = new PageInfo<>(list);
-            jsonObject.put("useDepartment", result);
-            jsonObjectBO.setData(jsonObject);
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("查询成功");
         }
+//        else {
+//             list = useDepartmentDao.find(code,districtId,name,departmentStatus);
+//            PageInfo<UseDepartment> result = new PageInfo<>(list);
+//            jsonObject.put("useDepartment", result);
+//            jsonObjectBO.setData(jsonObject);
+//            jsonObjectBO.setCode(1);
+//            jsonObjectBO.setMessage("查询成功");
+//        }
         return jsonObjectBO;
+    }
+
+
+    /**
+     *根据区域查找用户
+
+     * @param id
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public PageInfo<UseDepartment> selectByDistrict(String id, int pageNum, int pageSize) {
+        List<UseDepartment> list = new ArrayList<UseDepartment>();
+        String districtIds[] = StringUtil.DistrictUtil(id);
+        if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
+            list = useDepartmentDao.find(null,districtIds[0],null,null);
+        } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
+            list = useDepartmentDao.find(null,districtIds[0] + districtIds[1],null,null);
+        } else {
+            list = useDepartmentDao.find(null,id,null,null);
+        }
+        PageHelper.startPage(pageNum, pageSize, false);
+        PageInfo<UseDepartment> result = new PageInfo(list);
+        return result;
     }
 
     /**

@@ -16,7 +16,7 @@ public interface UseDepartmentService {
 
     JsonObjectBO update(UseDepartment useDepartment);
 
-    JsonObjectBO find(String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize);
+    JsonObjectBO find(String localDistrictId,String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize);
 
     JsonObjectBO delete(UseDepartment useDepartment);
 

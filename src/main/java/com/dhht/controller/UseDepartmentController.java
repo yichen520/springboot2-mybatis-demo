@@ -61,15 +61,18 @@ public class UseDepartmentController {
      * @return
      */
     @RequestMapping(value = "/find" , method = RequestMethod.POST)
-    public JsonObjectBO find(@RequestBody Map map){
+    public JsonObjectBO find(HttpServletRequest httpServletRequest,@RequestBody Map map){
         String code = (String)map.get("code");
         String name = (String)map.get("name");
         String districtId = (String)map.get("districtId");
         String departmentStatus = (String)map.get("status");
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        String localDistrictId = user.getDistrictId();
+
 
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");
-        JsonObjectBO jsonObjectBO = useDepartmentService.find(code, name, districtId, departmentStatus, pageNum, pageSize);
+        JsonObjectBO jsonObjectBO = useDepartmentService.find(localDistrictId,code, name, districtId, departmentStatus, pageNum, pageSize);
         return jsonObjectBO;
     }
 
