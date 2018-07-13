@@ -65,7 +65,7 @@ public class UseDepartmentController {
         String code = (String)map.get("code");
         String name = (String)map.get("name");
         String districtId = (String)map.get("districtId");
-        String departmentStatus = (String)map.get("departmentStatus");
+        String departmentStatus = (String)map.get("status");
 
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");

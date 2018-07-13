@@ -217,16 +217,13 @@
       <if test="code !=null and code !=''">
         AND code LIKE  "%"#{code,jdbcType=VARCHAR}"%"
       </if>
-      <if test="departmentStatus !=null and departmentStatus !=''">
-        AND department_status LIKE  "%"#{departmentStatus,jdbcType=VARCHAR}"%"
-      </if>
-      <if test="departmentStatus ='01'">
+      <if test="departmentStatus =='01'">
         AND department_status = '01'
       </if>
-      <if test="departmentStatus ='00'">
+      <if test="departmentStatus =='00'">
         AND department_status = '01' AND department_status='02'
       </if>
-      <if test="departmentStatus ='02'">
+      <if test="departmentStatus =='02'">
         AND department_status ='02'
       </if>
     </where>
@@ -239,13 +236,13 @@
 
   <select id="selectByDepartmentStatus" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" /> FROM use_department WHERE
-    <if test="departmentStatus ='01'">
-      department_status = '01'
+    <if test="departmentStatus =='01'">
+      department_status ='01'
     </if>
-    <if test="departmentStatus ='00'">
+    <if test="departmentStatus =='00'">
       department_status = '01' AND department_status='02'
     </if>
-    <if test="departmentStatus ='02'">
+    <if test="departmentStatus =='02'">
       department_status ='02'
     </if>
   </select>

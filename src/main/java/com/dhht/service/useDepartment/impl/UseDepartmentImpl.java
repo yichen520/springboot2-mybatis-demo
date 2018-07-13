@@ -128,7 +128,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         } else {
             List<UseDepartment> list = useDepartmentDao.find(code,districtId,name,departmentStatus);
             PageInfo<UseDepartment> result = new PageInfo<>(list);
-            jsonObject.put("user", result);
+            jsonObject.put("useDepartment", result);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("查询成功");
