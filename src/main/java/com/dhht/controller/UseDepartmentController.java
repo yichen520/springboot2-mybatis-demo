@@ -90,14 +90,14 @@ public class UseDepartmentController {
 
 
     /**
-     * 查询详情
+     * 查看历史
      * @param map
      * @return
      */
-    @RequestMapping(value = "/showMore" , method = RequestMethod.POST)
+    @RequestMapping(value = "/showHistory" , method = RequestMethod.POST)
     public JsonObjectBO showMore(@RequestBody Map map){
         String flag = (String)map.get("flag");
-        JsonObjectBO jsonObjectBO = useDepartmentService.showMore(flag);
+        JsonObjectBO jsonObjectBO = useDepartmentService.showHistory(flag);
         return jsonObjectBO;
     }
 

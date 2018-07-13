@@ -20,7 +20,7 @@ public interface UseDepartmentService {
 
     JsonObjectBO delete(UseDepartment useDepartment);
 
-    JsonObjectBO showMore(String flag);
+    JsonObjectBO showHistory(String flag);
 
 
     UseDepartment selectUseDepartment(String useDepartmentName);

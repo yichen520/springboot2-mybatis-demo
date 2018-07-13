@@ -184,7 +184,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public JsonObjectBO showMore(String flag) {
+    public JsonObjectBO showHistory(String flag) {
         List<UseDepartment> list = useDepartmentDao.selectByFlag(flag);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("useDepartment",list);
