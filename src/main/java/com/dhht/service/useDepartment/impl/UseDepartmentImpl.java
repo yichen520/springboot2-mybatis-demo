@@ -111,14 +111,14 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("查询成功");
             }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
-                List<UseDepartment> list = useDepartmentDao.find(code,districtIds[0],name,departmentStatus);
+                List<UseDepartment> list = useDepartmentDao.find(code,districtIds[0] + districtIds[1],name,departmentStatus);
                 PageInfo<UseDepartment> result = new PageInfo<>(list);
                 jsonObject.put("useDepartment", result);
                 jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("查询成功");
             }else if (!districtIds[1].equals("00")&&!districtIds[2].equals("00")){
-                List<UseDepartment> list = useDepartmentDao.find(code,districtIds[0],name,departmentStatus);
+                List<UseDepartment> list = useDepartmentDao.find(code,districtId,name,departmentStatus);
                 PageInfo<UseDepartment> result = new PageInfo<>(list);
                 jsonObject.put("useDepartment", result);
                 jsonObjectBO.setData(jsonObject);
