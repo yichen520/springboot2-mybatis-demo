@@ -107,7 +107,7 @@ public class UseDepartmentController {
      * @param map
      * @return
      */
-    @RequestMapping(value = "/selectDetailById")
+    @RequestMapping(value = "/showMore")
     public JsonObjectBO selectDetailById(@RequestBody Map map){
         String id = (String)map.get("id");
 
