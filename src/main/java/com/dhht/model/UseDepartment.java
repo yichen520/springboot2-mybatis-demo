@@ -30,6 +30,15 @@ public class UseDepartment {
     private String departmentStatus;//企业状态  0-正常 1-注销
     private String departmentCertificate;//使用单位数字证书
     private String departmentCertificateType;//使用单位数字证书类型
+    private Date foundDate;
+    private Date startDate;
+    private Date endDate;
+    private String registrationAuthority;
+    private String managementRange;
+    private String registeredapital;
+    private String businessLicenceScanning;
+    private String specialBusinessLicenceScanning;
+    private String legalIdcardScanning;
     private Boolean isDelete;
     private Integer version;
     private String flag;

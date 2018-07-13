@@ -26,6 +26,15 @@
     <result column="version" property="version"/>
     <result column="flag" property="flag" />
     <result column="updateTime" property="updateTime" />
+    <result column="found_date" property="foundDate" />
+    <result column="start_date" property="startDate" />
+    <result column="end_date" property="endDate" />
+    <result column="registration_authority" property="registrationAuthority" />
+    <result column="management_range" property="managementRange" />
+    <result column="registered_capital" property="registeredapital" />
+    <result column="business_licence_scanning" property="businessLicenceScanning" />
+    <result column="special_business_licence_scanning" property="specialBusinessLicenceScanning" />
+    <result column="legal_idcard_scanning" property="legalIdcardScanning" />
 
   </resultMap>
   <resultMap id="BaseResultMap1" type="java.util.HashMap" >
@@ -53,6 +62,15 @@
     <result column="version" property="version"/>
     <result column="flag" property="flag" />
     <result column="updateTime" property="updateTime" />
+    <result column="found_date" property="foundDate" />
+    <result column="start_date" property="startDate" />
+    <result column="end_date" property="endDate" />
+    <result column="registration_authority" property="registrationAuthority" />
+    <result column="management_range" property="managementRange" />
+    <result column="registered_capital" property="registeredapital" />
+    <result column="business_licence_scanning" property="businessLicenceScanning" />
+    <result column="special_business_licence_scanning" property="specialBusinessLicenceScanning" />
+    <result column="legal_idcard_scanning" property="legalIdcardScanning" />
 
   </resultMap>
 
@@ -60,7 +78,8 @@
 
   <sql id="Base_Column_List" >
     id,code,`name`,nation_name,english_name,english_ahhr,status,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
-    legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete,flag,version,updateTime
+    legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete,flag,version,updateTime,
+    foundDate,startDate,endDate,registrationAuthority,managementRange,registeredapital,businessLicenceScanning,specialBusinessLicenceScanning,legalIdcardScanning
   </sql>
 
 
@@ -103,7 +122,8 @@
     legal_id_type, legal_telphone, legal_country,
     district_id, address,
     telphone, postal_code, department_status,
-    department_certificate, department_certificate_type,is_delete,version,flag,updateTime
+    department_certificate, department_certificate_type,is_delete,version,flag,updateTime,found_date,start_date,
+    end_date,registration_authority,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning
     )
     values (#{id,jdbcType=CHAR},#{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},
     #{nationName,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR},
@@ -112,7 +132,9 @@
     #{legalIdType,jdbcType=VARCHAR}, #{legalTelphone,jdbcType=VARCHAR}, #{legalCountry,jdbcType=VARCHAR},
     #{districtId,jdbcType=CHAR}, #{address,jdbcType=VARCHAR},
     #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
-    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,#{version},#{flag,jdbcType=VARCHAR},#{updateTime}
+    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,#{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate}
+    ,#{startDate},#{endDate},#{registrationAuthority},#{managementRange},#{registeredapital},#{businessLicenceScanning}
+    ,#{specialBusinessLicenceScanning},#{legalIdcardScanning}
 
     )
   </insert>
@@ -193,8 +215,35 @@
       updateTime = #{updateTime},
     </if>
       `version` = #{version},
-      `flag` = #{flag}
-    where id = #{id,jdbcType=CHAR}
+      `flag` = #{flag},
+    <if test="foundDate !=null">
+      found_date = #{foundDate},
+    </if>
+    <if test="startDate !=null">
+      start_date = #{startDate},
+    </if>
+    <if test="endDate !=null">
+      end_date = #{endDate},
+    </if>
+    <if test="registrationAuthority !=null">
+      registration_authority = #{registrationAuthority},
+    </if>
+    <if test="managementRange !=null">
+      management_range = #{managementRange},
+    </if>
+    <if test="registeredapital !=null">
+      registered_capital = #{registeredapital},
+    </if>
+    <if test="businessLicenceScanning !=null">
+      business_licence_scanning = #{businessLicenceScanning},
+    </if>
+    <if test="specialBusinessLicenceScanning !=null">
+      special_business_licence_scanning = #{specialBusinessLicenceScanning},
+    </if>
+    <if test="legalIdcardScanning !=null">
+      legal_idcard_scanning = #{legalIdcardScanning}
+    </if>
+      where id = #{id,jdbcType=CHAR}
   </update>
 
   <select id="findAllMake" resultMap="BaseResultMap" >
