@@ -209,7 +209,7 @@
     SELECT id,`name` as name,code as code,legal_name as legalName,department_status as departmentStatus,district_id as districtId FROM use_department
     <where>
       <if test="districtId !=null and districtId !=''">
-        district_id LIKE  "%"#{districtId,jdbcType=VARCHAR}"%"
+        district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
       </if>
       <if test="name !=null and name !=''">
         AND `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%"
@@ -221,7 +221,7 @@
         AND department_status = '01'
       </if>
       <if test="departmentStatus =='00'">
-        AND department_status = '01' AND department_status='02'
+        AND department_status = '01' or department_status='02'
       </if>
       <if test="departmentStatus =='02'">
         AND department_status ='02'
@@ -240,7 +240,7 @@
       department_status ='01'
     </if>
     <if test="departmentStatus =='00'">
-      department_status = '01' AND department_status='02'
+      department_status = '01' or department_status='02'
     </if>
     <if test="departmentStatus =='02'">
       department_status ='02'
