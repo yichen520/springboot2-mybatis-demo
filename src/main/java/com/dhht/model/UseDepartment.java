@@ -37,7 +37,7 @@ public class UseDepartment {
     private Date endDate;
     private String registrationDepartment;
     private String managementRange;
-    private String registeredapital;
+    private String registeredCapital;
     private String businessLicenceScanning;
     private String specialBusinessLicenceScanning;
     private String legalIdcardScanning;

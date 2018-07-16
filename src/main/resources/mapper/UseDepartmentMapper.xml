@@ -33,7 +33,7 @@
     <result column="end_date" property="endDate" />
     <result column="registration_department" property="registrationDepartment" />
     <result column="management_range" property="managementRange" />
-    <result column="registered_capital" property="registeredapital" />
+    <result column="registered_capital" property="registeredCapital" />
     <result column="business_licence_scanning" property="businessLicenceScanning" />
     <result column="special_business_licence_scanning" property="specialBusinessLicenceScanning" />
     <result column="legal_idcard_scanning" property="legalIdcardScanning" />
@@ -99,7 +99,7 @@
     #{districtId,jdbcType=CHAR}, #{address,jdbcType=VARCHAR},
     #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
     #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,#{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate}
-    ,#{startDate},#{endDate},#{registrationDepartment},#{managementRange},#{registeredapital},#{businessLicenceScanning}
+    ,#{startDate},#{endDate},#{registrationDepartment},#{managementRange},#{registeredCapital},#{businessLicenceScanning}
     ,#{specialBusinessLicenceScanning},#{legalIdcardScanning},#{legalEnglishsurname},#{legalEnglishname}
 
     )
@@ -197,8 +197,8 @@
     <if test="managementRange !=null">
       management_range = #{managementRange},
     </if>
-    <if test="registeredapital !=null">
-      registered_capital = #{registeredapital},
+    <if test="registereCapital !=null">
+      registered_capital = #{registeredCapital},
     </if>
     <if test="businessLicenceScanning !=null">
       business_licence_scanning = #{businessLicenceScanning},
