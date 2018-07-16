@@ -15,7 +15,7 @@ public class UseDepartment {
     private String nationName;//单位少数名族文字名称
     private String englishName;//单位英语名称
     private String englishAhhr;//单位英语缩写
-    private String status;//单位使用单位类型代码
+    private String departmentType;//单位使用单位类型代码
     private String queryPassword;//查询密码
     private String legalName;//法定代表人
     private String legalId;//证件号码
@@ -33,7 +33,7 @@ public class UseDepartment {
     private Date foundDate;
     private Date startDate;
     private Date endDate;
-    private String registrationAuthority;
+    private String registrationDepartment;
     private String managementRange;
     private String registeredapital;
     private String businessLicenceScanning;

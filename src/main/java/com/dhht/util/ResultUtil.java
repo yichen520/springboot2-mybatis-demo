@@ -13,6 +13,8 @@ public class ResultUtil {
     public static final int isUnlock=8;
     public static final int isUploadFail=9;
     public static final int isWrongId = 10;
+    public static final int isSend = 11;
+    public static final int isNoSend = 12;
 
 
     public static JsonObjectBO getResult(int type){
@@ -37,6 +39,10 @@ public class ResultUtil {
                 return JsonObjectBO.error("文件上传失败");
             case 10:
                 return JsonObjectBO.error("重复的身份证号");
+            case 11:
+                return JsonObjectBO.ok("短信发送成功");
+            case 12:
+                return JsonObjectBO.error("短信发送失败");
                 default:
                     return null;
         }

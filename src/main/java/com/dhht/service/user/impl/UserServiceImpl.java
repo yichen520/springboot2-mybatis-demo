@@ -85,8 +85,13 @@ public class UserServiceImpl implements UserService {
         ArrayList<String> params = new ArrayList<String>();
         params.add(user.getUserName());
         params.add(code);
-        smsSendService.sendSingleMsgByTemplate(user.getTelphone(),userCode,params);
-        if (a != 1) {
+        Boolean b = smsSendService.sendSingleMsgByTemplate(user.getTelphone(),userCode,params);
+        if(b){
+            return ResultUtil.isSend;
+        }else if(!b){
+            return ResultUtil.isNoSend;
+        }
+        else if (a != 1) {
             return ResultUtil.isFail;                //插入失败
         } else {
             return ResultUtil.isSuccess;                //插入成功

@@ -8,7 +8,7 @@
     <result column="nation_name" property="nationName" jdbcType="VARCHAR" />
     <result column="english_name" property="englishName" jdbcType="VARCHAR" />
     <result column="english_ahhr" property="englishAhhr" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="department_type" property="departmentType" jdbcType="CHAR" />
     <result column="query_password" property="queryPassword" jdbcType="VARCHAR" />
     <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
     <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
@@ -29,7 +29,7 @@
     <result column="found_date" property="foundDate" />
     <result column="start_date" property="startDate" />
     <result column="end_date" property="endDate" />
-    <result column="registration_authority" property="registrationAuthority" />
+    <result column="registration_department" property="registrationDepartment" />
     <result column="management_range" property="managementRange" />
     <result column="registered_capital" property="registeredapital" />
     <result column="business_licence_scanning" property="businessLicenceScanning" />
@@ -44,7 +44,7 @@
     <result column="nation_name" property="nationName" jdbcType="VARCHAR" />
     <result column="english_name" property="englishName" jdbcType="VARCHAR" />
     <result column="english_ahhr" property="englishAhhr" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="department_type" property="departmentType" jdbcType="CHAR" />
     <result column="query_password" property="queryPassword" jdbcType="VARCHAR" />
     <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
     <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
@@ -65,7 +65,7 @@
     <result column="found_date" property="foundDate" />
     <result column="start_date" property="startDate" />
     <result column="end_date" property="endDate" />
-    <result column="registration_authority" property="registrationAuthority" />
+    <result column="registration_department" property="registrationDepartment" />
     <result column="management_range" property="managementRange" />
     <result column="registered_capital" property="registeredapital" />
     <result column="business_licence_scanning" property="businessLicenceScanning" />
@@ -77,9 +77,9 @@
 
 
   <sql id="Base_Column_List" >
-    id,code,`name`,nation_name,english_name,english_ahhr,status,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
+    id,code,`name`,nation_name,english_name,english_ahhr,department_type,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
     legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete,flag,version,updateTime,
-    found_date,start_date,end_date,registration_authority,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning
+    found_date,start_date,end_date,registration_department,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning
   </sql>
 
 
@@ -117,23 +117,23 @@
   <insert id="insert" parameterType="com.dhht.model.UseDepartment" >
     insert into use_department (id,code, `name`,
     nation_name, english_name,
-    english_ahhr, status,
+    english_ahhr, department_type,
     query_password, legal_name, legal_id,
     legal_id_type, legal_telphone, legal_country,
     district_id, address,
     telphone, postal_code, department_status,
     department_certificate, department_certificate_type,is_delete,version,flag,updateTime,found_date,start_date,
-    end_date,registration_authority,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning
+    end_date,registration_department,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning
     )
     values (#{id,jdbcType=CHAR},#{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},
     #{nationName,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR},
-    #{englishAhhr,jdbcType=VARCHAR}, #{status,jdbcType=CHAR},
+    #{englishAhhr,jdbcType=VARCHAR}, #{departmentType,jdbcType=CHAR},
     #{queryPassword,jdbcType=VARCHAR}, #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR},
     #{legalIdType,jdbcType=VARCHAR}, #{legalTelphone,jdbcType=VARCHAR}, #{legalCountry,jdbcType=VARCHAR},
     #{districtId,jdbcType=CHAR}, #{address,jdbcType=VARCHAR},
     #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
     #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,#{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate}
-    ,#{startDate},#{endDate},#{registrationAuthority},#{managementRange},#{registeredapital},#{businessLicenceScanning}
+    ,#{startDate},#{endDate},#{registrationDepartment},#{managementRange},#{registeredapital},#{businessLicenceScanning}
     ,#{specialBusinessLicenceScanning},#{legalIdcardScanning}
 
     )
@@ -166,8 +166,8 @@
     <if test="englishAhhr !=null">
     english_ahhr = #{englishAhhr,jdbcType=VARCHAR},
     </if>
-    <if test="status !=null">
-    `status` = #{status,jdbcType=CHAR},
+    <if test="department_type !=null">
+    `department_type` = #{departmentType,jdbcType=CHAR},
     </if>
     <if test="queryPassword !=null">
     query_password = #{queryPassword,jdbcType=VARCHAR},
@@ -225,8 +225,8 @@
     <if test="endDate !=null">
       end_date = #{endDate},
     </if>
-    <if test="registrationAuthority !=null">
-      registration_authority = #{registrationAuthority},
+    <if test="registrationDepartment !=null">
+      registration_department = #{registrationDepartment},
     </if>
     <if test="managementRange !=null">
       management_range = #{managementRange},
