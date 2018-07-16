@@ -21,6 +21,8 @@ public class UseDepartment {
     private String legalId;//证件号码
     private String legalIdType;//证件种类
     private String legalTelphone;//联系电话
+    private String legalEnglishsurname;
+    private String legalEnglishname;
     private String legalCountry;//国籍
     //    private String departmentAddress;//单位地址
     private String districtId;
