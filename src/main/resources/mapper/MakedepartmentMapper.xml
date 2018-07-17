@@ -107,10 +107,12 @@
     telphone, postal_code,  department_status,version,flag,version_time,register_time
   </sql>
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from make_department
-    where department_code = #{departmentCode,jdbcType=VARCHAR} and delete_status = 0
+    select
+    <include refid="Simple_Column_list" />
+    from make_department as a RIGHT JOIN(
+    select flag as fa,MAX(version) as ver from make_department GROUP BY flag
+    )as b on a.flag = b.fa and  a.version=b.ver
+    where department_code = #{departmentCode,jdbcType=VARCHAR}
   </select>
   
   <select id="selectByLegalTephone" resultMap="SimpleResultMap" parameterType="java.lang.String">
@@ -132,7 +134,7 @@
       legal_englishsurname, legal_englishname,
       legal_telphone, department_address, department_address_detail,
       telphone, postal_code,department_status,
-      version,flag,version_time,register_time
+      version,flag,version_time,register_time,delete_status
       )
     values (#{id,jdbcType=VARCHAR},#{departmentCode,jdbcType=VARCHAR},  #{departmentName,jdbcType=VARCHAR},
       #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR},
@@ -141,7 +143,7 @@
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR},
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR},
       #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},'03',
-      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP}
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP},1
       )
   </insert>
 
@@ -199,7 +201,7 @@
 
   <select id="selectByFlag" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/>
-    from make_department where flag = #{flag,jdbcType =VARCHAR}
+    from make_department where flag = #{flag,jdbcType =VARCHAR} ORDER BY version_time
   </select>
 
   <select id="selectByNameAndTimeAndDistrict" resultMap="BaseResultMap" parameterType="java.lang.String">

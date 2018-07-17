@@ -16,4 +16,6 @@ public interface FileService {
 
    boolean deleteLocalFile(String filePath);
 
+   File selectByPath(String path);
+
 }

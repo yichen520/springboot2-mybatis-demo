@@ -15,6 +15,8 @@ public class ResultUtil {
     public static final int isWrongId = 10;
     public static final int isSend = 11;
     public static final int isNoSend = 12;
+    public static final int isHaveCode = 13;
+    public static final int noRecordDepartment = 14;
 
 
     public static JsonObjectBO getResult(int type){
@@ -43,6 +45,10 @@ public class ResultUtil {
                 return JsonObjectBO.ok("短信发送成功");
             case 12:
                 return JsonObjectBO.error("短信发送失败");
+            case 13:
+                return JsonObjectBO.error("已经使用的社会统一信用编码");
+            case 14:
+                return JsonObjectBO.error("请现在该区域下添加备案单位");
                 default:
                     return null;
         }

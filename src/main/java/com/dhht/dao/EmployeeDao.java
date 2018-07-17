@@ -33,6 +33,8 @@ public interface EmployeeDao {
     //查询某个制作单位下的从业人员
     List<Employee> selectByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
+    List<Employee> operationByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
+
     List<Employee> selectHistory(@Param("flag") String flag);
 
     List<Employee> selectWorkEmployee(@Param("employeeDepartmentCode") String employeeDepartmentCode);
@@ -40,6 +42,8 @@ public interface EmployeeDao {
     Employee selectByPhone(@Param("phone") String phone);
 
     int updateHeadById(@Param("id") String id,@Param("employeeImage") String image);
+
+    int updateMakeDepartment(@Param("id") String id,@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
     //---------------统计部分--------------------//
     int countAllEmployee(@Param("districtId") String districtId);

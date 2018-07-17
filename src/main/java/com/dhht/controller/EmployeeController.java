@@ -179,7 +179,7 @@ public class EmployeeController {
      * @return
      */
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
-    public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+    public JsonObjectBO headFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return JsonObjectBO.error("请选择上传文件");
         }

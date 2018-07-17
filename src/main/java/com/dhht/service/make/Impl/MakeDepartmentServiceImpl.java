@@ -76,7 +76,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public int insert(Makedepartment makedepartment) {
         if(isInsert(makedepartment)){
-            return 3;
+            return ResultUtil.isHaveCode;
         }
         makedepartment.setId(UUIDUtil.generate());
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
@@ -86,9 +86,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         User user =setUserByType(makedepartment,1);
         int m = makedepartmentMapper.insert(makedepartment);
         int u = userService.insert(setUserByType(makedepartment,1));
-        if(m+u==3){
+        if(m==1&&u==ResultUtil.isSend){
             return ResultUtil.isSuccess;
-        }else if(m==1) {
+        }else if(u==1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isHave;
         }else {
@@ -105,14 +105,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public int update(Makedepartment makedepartment) {
         Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
-        List<Employee> employees = employeeService.selectByDepartmentCode(oldDate.getDepartmentCode());
-        int d = makedepartmentMapper.deleteHistoryByID(makedepartment.getId());
+        List<Employee> employees = employeeService.operationByDepartmentCode(oldDate.getDepartmentCode());
+        int d = makedepartmentMapper.deleteHistoryByID(oldDate.getId());
         if(d==0){
             return 5;
         }
         if(isInsert(makedepartment)){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return 3;
+            return ResultUtil.isHaveCode;
         }
         User user =setUserByType(makedepartment,2);
         makedepartment.setId(UUIDUtil.generate());
@@ -121,7 +121,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setRegisterTime(oldDate.getRegisterTime());
         int m = makedepartmentMapper.insert(makedepartment);
-        int e = setEmployeeByDepartment(employees,2);
+        int e = setEmployeeByDepartment(employees,makedepartment,2);
         int u = userService.update(setUserByType(makedepartment,2));
         if(m==1&&u==2&&e==2){
             return ResultUtil.isSuccess;
@@ -141,13 +141,16 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public int deleteById(String id) {
         Makedepartment makedepartment = makedepartmentMapper.selectDetailById(id);
-        List<Employee> employees = employeeService.selectByDepartmentCode(makedepartment.getDepartmentCode());
+        if(makedepartmentMapper.deleteHistoryByID(id)==0){
+            return ResultUtil.isError;
+        }
+        List<Employee> employees = employeeService.operationByDepartmentCode(makedepartment.getDepartmentCode());
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
         if(setUserByType(makedepartment,3)==null){
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e =setEmployeeByDepartment(employees,1);
+            int e =setEmployeeByDepartment(employees,makedepartment,1);
             if(m==1&&e==2){
                 return ResultUtil.isSuccess;
             }else {
@@ -158,7 +161,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int u = userService.deleteByTelphone(makedepartment.getLegalTelphone());
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e = setEmployeeByDepartment(employees,1);
+            int e = setEmployeeByDepartment(employees,makedepartment,1);
             if (u ==1&&m==1&&e==2) {
                 return ResultUtil.isSuccess;
             } else {
@@ -319,7 +322,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      * @param employees
      * @return
      */
-    public int setEmployeeByDepartment(List<Employee> employees,int type) {
+    public int setEmployeeByDepartment(List<Employee> employees,Makedepartment makedepartment,int type) {
         switch (type) {
             //执行删除
             case 1:
@@ -334,7 +337,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             //执行修改
             case 2:
                 for(Employee emp : employees){
-                    int e = employeeService.update(emp);
+                    int e = employeeService.updateMakeDepartment(emp.getId(),makedepartment.getDepartmentCode());
                     if(e==0) {
                         TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                         return ResultUtil.isError;

@@ -98,3 +98,7 @@ sms:
           resetPasswordCode: 150654
 
 #默认是开发环境
+
+
+notice:
+  pageNum: 5

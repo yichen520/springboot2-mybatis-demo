@@ -51,7 +51,11 @@ public class EmployeeServiceImp implements EmployeeService {
     public int insertEmployee(Employee employee,User user) {
         try {
             MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByLegalTephone(user.getTelphone());
-            RecordDepartment recordDepartment = recordDepartmentService.selectByDistrictId(user.getDistrictId()).get(0);
+            List<RecordDepartment> recordDepartments =recordDepartmentService.selectByDistrictId(user.getDistrictId());
+            if(recordDepartments.size()==0){
+                return ResultUtil.noRecordDepartment;
+            }
+            RecordDepartment recordDepartment = recordDepartments.get(0);
             employee.setEmployeeCode(CodeUtil.generate());
             employee.setId(UUIDUtil.generate());
             employee.setDistrictId(user.getDistrictId());
@@ -68,7 +72,7 @@ public class EmployeeServiceImp implements EmployeeService {
             }
             int u = userService.insert(setUserByType(employee, 1));
             int e = employeeDao.insert(employee);
-            if (u ==2&& e == 1) {
+            if (u==ResultUtil.isSend&&e==1) {
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -80,7 +84,7 @@ public class EmployeeServiceImp implements EmployeeService {
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return 0;
+            return ResultUtil.isError;
         }
     }
 
@@ -137,13 +141,14 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int deleteEmployee(String id) {
        Employee employee = employeeDao.selectById(id);
+       User user = setUserByType(employee,3);
        employee.setId(UUIDUtil.generate());
        employee.setLogoutOfficeCode(employee.getOfficeCode());
        employee.setLogoutOfficeName(employee.getOfficeName());
        employee.setLogoutName(employee.getRegisterName());
        employee.setVersion(employee.getVersion()+1);
        employee.setVersionTime(DateUtil.getCurrentTime());
-       User user = setUserByType(employee,3);
+
        if(user==null){
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
@@ -275,6 +280,27 @@ public class EmployeeServiceImp implements EmployeeService {
         }else {
             return ResultUtil.isUploadFail;
         }
+    }
+
+    /**
+     * 操作从业人员
+     * @param code
+     * @return
+     */
+    @Override
+    public List<Employee> operationByDepartmentCode(String code) {
+        return employeeDao.operationByDepartmentCode(code);
+    }
+
+    /**
+     * 更新制作单位的编号
+     * @param id
+     * @param code
+     * @return
+     */
+    @Override
+    public int updateMakeDepartment(String id, String code) {
+        return employeeDao.updateMakeDepartment(id,code);
     }
 
 

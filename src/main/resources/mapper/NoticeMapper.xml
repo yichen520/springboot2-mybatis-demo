@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhht.dao.NoticeMapper">
+  <resultMap id="BaseResultMap" type="com.dhht.model.Notice">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="send_username" jdbcType="VARCHAR" property="sendUsername" />
+    <result column="send_realname" jdbcType="VARCHAR" property="sendRealname" />
+    <result column="notice_title" jdbcType="VARCHAR" property="noticeTitle" />
+    <result column="notice_content" jdbcType="VARCHAR" property="noticeContent" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="district_id" jdbcType="CHAR" property="districtId" />
+    <result column="notice_file_url" jdbcType="VARCHAR" property="noticeFileUrl" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, send_username, send_realname, notice_title, notice_content, create_time, district_id, 
+    notice_file_url
+  </sql>
+
+  <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from notice
+    where send_username = #{userName,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectNoticeByNum" parameterType="java.lang.Object" resultMap="BaseResultMap">
+    SELECT     <include refid="Base_Column_List" />
+    from notice  WHERE district_id LIKE '${districtId}%' ORDER BY create_time LIMIT 0,#{pageNum}
+  </select>
+
+  <select id="selectById" parameterType="java.lang.String" resultType="com.dhht.model.Notice">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM notice
+    WHERE id = #{id,jdbcType=CHAR}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.String">
+    delete from notice
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.dhht.model.Notice">
+    insert into notice (id, send_username, send_realname, 
+      notice_title, notice_content, create_time, 
+      district_id, notice_file_url)
+    values (#{id,jdbcType=CHAR}, #{sendUsername,jdbcType=VARCHAR}, #{sendRealname,jdbcType=VARCHAR}, 
+      #{noticeTitle,jdbcType=VARCHAR}, #{noticeContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{districtId,jdbcType=CHAR}, #{noticeFileUrl,jdbcType=VARCHAR})
+  </insert>
+
+
+  <update id="update" parameterType="com.dhht.model.Notice">
+    update notice
+    set send_username = #{sendUsername,jdbcType=VARCHAR},
+      send_realname = #{sendRealname,jdbcType=VARCHAR},
+      notice_title = #{noticeTitle,jdbcType=VARCHAR},
+      notice_content = #{noticeContent,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      district_id = #{districtId,jdbcType=CHAR},
+      notice_file_url = #{noticeFileUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

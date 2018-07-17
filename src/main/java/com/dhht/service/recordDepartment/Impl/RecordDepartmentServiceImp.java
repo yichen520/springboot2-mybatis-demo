@@ -124,9 +124,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userService.insert(user);
-        if(r+u==3){
+        if(r==1&&u==ResultUtil.isSend){
             return ResultUtil.isSuccess;
-        }else if(u==1){
+        }else if(u==ResultUtil.isHave){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isHave;
         }else {
