@@ -67,14 +67,16 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public JsonObjectBO update(UseDepartment useDepartment) {
             useDepartmentDao.deleteById(useDepartment.getId());
-            UseDepartment useDepartment1 = useDepartmentDao.selectByCode(useDepartment.getCode());
-            if (useDepartment1 != null) {
+            UseDepartment useDepartment1 = useDepartmentDao.selectById(useDepartment.getId());
+            if (useDepartment1 == null) {
                 return JsonObjectBO.error("修改失败");
             } else {
                 useDepartment.setVersion(useDepartment.getVersion() + 1);
                 useDepartment.setIsDelete(false);
                 useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
                 useDepartment.setId(UUIDUtil.generate());
+                useDepartment.setFlag(useDepartment1.getFlag());
+                useDepartment.setDepartmentStatus(useDepartment1.getDepartmentStatus());
                 int r = useDepartmentDao.insert(useDepartment);
                 if (r == 1) {
                     return JsonObjectBO.success("修改成功", null);
@@ -82,6 +84,13 @@ public class UseDepartmentImpl implements UseDepartmentService {
                     return JsonObjectBO.error("修改失败");
                 }
             }
+//        UseDepartment oldData = useDepartmentDao.selectById(useDepartment.getId());
+//        useDepartment.setVersion(useDepartment.getVersion()+1);
+//        useDepartment.setIsDelete(false);
+//        useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
+//        useDepartment.setId(UUIDUtil.generate());
+//        useDepartment.setDepartmentStatus(oldData.getDepartmentStatus());
+
 
     }
 

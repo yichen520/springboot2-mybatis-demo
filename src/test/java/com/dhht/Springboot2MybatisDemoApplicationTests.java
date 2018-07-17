@@ -52,8 +52,6 @@ public class Springboot2MybatisDemoApplicationTests {
 	private SealDao sealDao;
 	@Autowired
 	private SealService sealService;
-	@Autowired
-	private
 
 	@Autowired
 	private UserPasswordService userPasswordService;
@@ -121,8 +119,11 @@ public class Springboot2MybatisDemoApplicationTests {
 //		System.out.print(a);
 //		User user = new User();
 //		user.setId("9be068d2ec904057bcef955ce54de214");
-		smsSendService.sendSingleMsgByTemplate(phone,checkCode,params);
-		System.out.print(a);
+//		String phone ="18405816966";
+////		int  a = userPasswordService.getCheckCode(phone);
+//		userPasswordService.resetPwd(phone,"467776","cuiyang");
+////		System.out.print(a);
+		userPasswordService.sendMessage("17826835954","123123");
 	}
 
 }
