@@ -94,3 +94,7 @@ sms:
         newPassword: 150660
         resetPasswordCode: 150654
         newUserName: 150917
+
+#公告条数
+notice:
+  pageNum: 5
