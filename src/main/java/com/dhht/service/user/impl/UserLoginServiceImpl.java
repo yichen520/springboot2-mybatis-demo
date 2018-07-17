@@ -1,6 +1,7 @@
 package com.dhht.service.user.impl;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.UploadController;
 import com.dhht.dao.*;
@@ -204,4 +205,55 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
     }
 
+    @Override
+    public JsonObjectBO validateAppUser(HttpServletRequest request, UserDomain userDomain) {
+        try {
+            User user1= new User();
+            user1.setPassword(userDomain.getPassword());
+            user1.setUserName(userDomain.getUsername());
+            User user = validate(user1);
+            User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
+
+            if(user==null && currentUser!=null ){
+                //更新登录错误次数
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                long  a = sdf.parse(sdf.format(new Date())).getTime();
+                long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
+                long m = a - b;
+                //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
+                if (( m / (1000 * 60  )>loginErrorDate)){
+                    userDao.updateErrorTimesZero(userDomain.getUsername());
+                }else {
+                    userDao.updateErrorTimes(userDomain.getUsername());
+                }
+
+                return JsonObjectBO.error("账号密码错误");
+            }
+            if (user.getIsLocked()){
+                return JsonObjectBO.error("该用户已被锁定，请联系管理员！");
+            }else {
+                if (currentUser.getLoginErrorTimes()>=loginErrorTime){
+                     return JsonObjectBO.error("该用户登录错误超过5次，请稍后重试！");
+                }
+            }
+            if(currentUser.getRoleId().equals("BADW")){
+                User user2 =new User();
+                user2.setLoginTime(new Date());
+                user2.setUserName(userDomain.getUsername());
+                user2.setLoginErrorTimes(0);
+                userDao.updateUser(user2);
+                User currentUser1 = usersMapper.validateCurrentuser(userDomain.getUsername());
+                currentUser1.setPassword(null);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("currentUser",currentUser1);
+                request.getSession().setAttribute("user", currentUser1);
+                return JsonObjectBO.success("登录成功",jsonObject);
+            }else {
+                return JsonObjectBO.error("此用户不是app端用户");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+    }
 }

@@ -21,6 +21,8 @@ public interface UserLoginService {
 
     User validate(User user);
 
+    JsonObjectBO validateAppUser(HttpServletRequest request,UserDomain userDomain);
+
 
 }
 

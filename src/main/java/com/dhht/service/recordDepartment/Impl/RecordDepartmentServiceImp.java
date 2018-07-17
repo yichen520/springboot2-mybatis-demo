@@ -278,19 +278,15 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
        return recordDepartmentMapper.selectByPhone(phone);
     }
 
-    @Override
-    public boolean insertPunish(OfficeCheck officeCheck) {
-          List<PunishLog> punishLogs = officeCheck.getPunishLogs();
-              for (PunishLog punishLog:punishLogs){
-                  punishLog.setId(officeCheck.getId());
-                  punishLogMapper.insert(punishLog);
-              }
-              officeCheckMapper.insert(officeCheck);
-              return true;
-    }
+
 
     @Override
     public List<OfficeCheck> findPunish(String makedepartmentName, String startTime, String endTime, String districtId) {
         return officeCheckMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
+    }
+
+    @Override
+    public boolean insertPunish(User user, ExamineRecord examineRecord) {
+        return false;
     }
 }
