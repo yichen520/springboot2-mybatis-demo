@@ -74,7 +74,7 @@ public class Seal extends SealKey {
 
     private SealOperationRecord sealOperationRecord;    //经办人等
 
-    private SealStatus sealStatus;        //印章状态
+//    private SealStatus sealStatus;        //印章状态
 
     private RecordDepartment recordDepartment;       //备案单位
 
