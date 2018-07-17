@@ -206,7 +206,7 @@
         WHERE `user_name` = #{userName}
     </update>
     
-    <select id="findByTelphone" parameterType="java.lang.String" resultType="com.dhht.model.User">
+    <select id="findByTelphone" parameterType="java.lang.String" resultMap="queryForListMap">
         SELECT * FROM sys_user
         <where>
             <if test="telphone !=null and telphone !=''">

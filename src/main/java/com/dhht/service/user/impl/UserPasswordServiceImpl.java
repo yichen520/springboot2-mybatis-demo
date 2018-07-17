@@ -50,7 +50,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
 
     //验证码
     @Value("${sms.template.resetPasswordCode}")
-    private int checkCode ;
+    private int checkCode1 ;
 
     /**
      * 6位简单密码
@@ -75,10 +75,11 @@ public class UserPasswordServiceImpl implements UserPasswordService{
      */
     @Override
     public int sendMessage(String phone, String code) {
-        try {
+//        try {
                 ArrayList<String> params = new ArrayList<String>();
-
+//                params.add(phone);
                 params.add(code);
+                params.add("5");
                 SMSCode smscode= smsCodeDao.getSms(phone);
                 if(smscode==null){
                     smscode = new SMSCode();
@@ -92,13 +93,17 @@ public class UserPasswordServiceImpl implements UserPasswordService{
                     smscode.setSmscode(code);
                     smsCodeDao.update(smscode);
                 }
-                smsSendService.sendSingleMsgByTemplate(phone,checkCode,params);
-                return ResultUtil.isSuccess;
+                boolean a =smsSendService.sendSingleMsgByTemplate(phone,checkCode1,params);
+                if(a){
+                    return ResultUtil.isSuccess;
+                }else{
+                    return ResultUtil.isFail;
+                }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtil.isFail;
-        }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResultUtil.isFail;
+//        }
     }
 
 
@@ -139,10 +144,10 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     public int getCheckCode(String phone) {
         String code = createRandomVcode();
         int a = sendMessage(phone,code);
-        if(a!=1){
-            return ResultUtil.isSuccess;
-        }else{
+        if(a<0){
             return ResultUtil.isFail;
+        }else{
+            return ResultUtil.isSuccess;
         }
     }
 
@@ -155,7 +160,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     public boolean resetPwd(String phone,String checkCode,String passWord){
         SMSCode code = smsCodeDao.getSMSCodeByPhone(phone);
         String smscode = code.getSmscode();
-        if(smscode==checkCode){
+        if(smscode.equals(checkCode)){
             User user = userDao.findByTelphone(phone);
             String userName = user.getUserName();
             String pwd = MD5Util.toMd5(passWord);
