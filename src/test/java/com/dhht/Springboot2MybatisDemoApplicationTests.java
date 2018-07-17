@@ -52,7 +52,13 @@ public class Springboot2MybatisDemoApplicationTests {
 	private SealDao sealDao;
 	@Autowired
 	private SealService sealService;
+	@Autowired
+	private
 
+	@Autowired
+	private UserPasswordService userPasswordService;
+	@Autowired
+	private UserController userController;
 	@Autowired
 	private MakedepartmentMapper makedepartmentMapper;
 	@Test
@@ -113,8 +119,10 @@ public class Springboot2MybatisDemoApplicationTests {
 //		String recordCode = "11233333333";
 //		int a = sealService.loss(user, seal,  operatorPhoto,   proxy , businessScanner, sealOperationRecord, recordCode);
 //		System.out.print(a);
-		UseDepartment useDepartment = useDepartmentService.selectDetailById("7d37c2ef6be048adb5eb17921f1b1b8f");
-		System.out.print(useDepartment.getBusinessLicenceScanning());
+//		User user = new User();
+//		user.setId("9be068d2ec904057bcef955ce54de214");
+		smsSendService.sendSingleMsgByTemplate(phone,checkCode,params);
+		System.out.print(a);
 	}
 
 }

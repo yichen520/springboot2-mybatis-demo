@@ -128,6 +128,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         }
     }
 
+
     /**
      * 密码重置中
      * 获取验证码
@@ -137,7 +138,8 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     @Override
     public int getCheckCode(String phone) {
         String code = createRandomVcode();
-        if(sendMessage(phone,code)==1){
+        int a = sendMessage(phone,code);
+        if(a!=1){
             return ResultUtil.isSuccess;
         }else{
             return ResultUtil.isFail;
@@ -155,6 +157,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         String smscode = code.getSmscode();
         if(smscode==checkCode){
             User user = userDao.findByTelphone(phone);
+            String userName = user.getUserName();
             String pwd = MD5Util.toMd5(passWord);
             user.setPassword(pwd);
             int a = userDao.update(user);
@@ -162,7 +165,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
                 return false;
             }else {
                 ArrayList<String> params = new ArrayList<String>();
-                params.add(phone);
+                params.add(userName);
                 params.add(passWord);
                 smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params);
                 return true;
@@ -172,5 +175,31 @@ public class UserPasswordServiceImpl implements UserPasswordService{
             return false;
         }
     }
+
+
+
+    /**
+     * app上的重置密码
+     */
+    @Override
+    public boolean appResetPwd(String id, String newPassWord) {
+        User user = userDao.findById(id);
+        String userName = user.getUserName();
+        String pwd = MD5Util.toMd5(newPassWord);
+        String phone = user.getTelphone();
+        user.setPassword(pwd);
+        int a = userDao.update(user);
+        if (a!=1){
+            return false;
+        }else {
+            ArrayList<String> params = new ArrayList<String>();
+            params.add(userName);
+            params.add(newPassWord);
+            smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params);
+            return true;
+        }
+    }
+
+
 
 }
