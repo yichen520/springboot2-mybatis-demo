@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     public int insert(User user) {
         User user1 = userDao.findByTelphone(user.getTelphone());
         if (user1 != null) {
-            return ResultUtil.isHave;                  //该用户不存在
+            return ResultUtil.isHave;                  //该用户已存在
         }
         user.setId(UUIDUtil.generate());
 //        user.setUserName("GLY"+user.getTelphone());

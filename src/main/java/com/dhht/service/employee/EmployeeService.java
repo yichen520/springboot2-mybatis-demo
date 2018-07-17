@@ -36,4 +36,8 @@ public interface EmployeeService {
     Employee selectByPhone(String phone);
 
     int updateHeadById(String id,String image);
+
+    List<Employee> operationByDepartmentCode(String code);
+
+    int updateMakeDepartment(String id,String code);
 }

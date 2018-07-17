@@ -225,4 +225,26 @@ public class StringUtil {
         }
         return districtId;
     }
+
+    /**
+     * 将字符串数组处理成用; 号分割的字符串
+     * @param str
+     * @return
+     */
+    public static String getString(String[] str){
+        StringBuffer stringBuffer = new StringBuffer();
+        for(int i = 0;i<str.length;i++){
+            stringBuffer.append(str[i]+";");
+        }
+        return stringBuffer.toString();
+    }
+
+    /**
+     * 将字符串转成字符串数组
+     * @param str
+     * @return
+     */
+    public static String[] toStringArray (String str){
+        return str.split(";");
+    }
 }

@@ -147,4 +147,14 @@ public class FileServiceImpl implements FileService {
         }
 
     }
+
+    /**
+     * 根据文件路径查询文件
+     * @param path
+     * @return
+     */
+    @Override
+    public File selectByPath(String path) {
+        return fileMapper.selectByPath(path);
+    }
 }
