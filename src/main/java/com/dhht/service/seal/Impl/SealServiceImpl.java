@@ -96,6 +96,9 @@ public class SealServiceImpl implements SealService {
         }
         seal.setSealCode(sealcode);
         UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
+        if(useDepartment==null){
+            return ResultUtil.isFail;
+        }
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
 //        String legalName = useDepartment.getLegalName();
