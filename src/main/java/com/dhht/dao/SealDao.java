@@ -27,6 +27,8 @@ public interface SealDao {
 
     List<Seal> selectByCodeAndName(Seal seal);
 
+    List<Seal> selectUndelivered(Seal seal);
+
     SealOperationRecord SelectByCodeAndFlag(@Param("sealCode") String sealcode);
 
     SealOperationRecord SelectByCodeAndFlag03(@Param("sealCode")String sealcode,@Param("flag")String flag);
