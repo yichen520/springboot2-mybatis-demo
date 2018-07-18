@@ -104,32 +104,40 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      */
     @Override
     public int update(Makedepartment makedepartment) {
-        Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
-        List<Employee> employees = employeeService.operationByDepartmentCode(oldDate.getDepartmentCode());
-        int d = makedepartmentMapper.deleteHistoryByID(oldDate.getId());
-        if(d==0){
-            return 5;
-        }
-        if(isInsert(makedepartment)){
+        try {
+            Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
+            List<Employee> employees = employeeService.operationByDepartmentCode(oldDate.getDepartmentCode());
+            int d = makedepartmentMapper.deleteHistoryByID(oldDate.getId());
+            if (d == 0) {
+                return 5;
+            }
+
+            User user = setUserByType(makedepartment, 2);
+            makedepartment.setId(UUIDUtil.generate());
+            makedepartment.setVersionTime(DateUtil.getCurrentTime());
+            makedepartment.setFlag(makedepartment.getFlag());
+            makedepartment.setVersion(makedepartment.getVersion() + 1);
+            makedepartment.setRegisterTime(oldDate.getRegisterTime());
+            if (isInsert(makedepartment)) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isHaveCode;
+            }
+            int m = makedepartmentMapper.insert(makedepartment);
+            int e = setEmployeeByDepartment(employees, makedepartment, 2);
+            int u = userService.update(user);
+            if (m == 1 && u == 2 && e == 2) {
+                return ResultUtil.isSuccess;
+            } else if (u == 1) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isHave;
+            } else {
+
+                return ResultUtil.isError;
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultUtil.isHaveCode;
-        }
-        User user =setUserByType(makedepartment,2);
-        makedepartment.setId(UUIDUtil.generate());
-        makedepartment.setVersionTime(DateUtil.getCurrentTime());
-        makedepartment.setFlag(makedepartment.getFlag());
-        makedepartment.setVersion(makedepartment.getVersion()+1);
-        makedepartment.setRegisterTime(oldDate.getRegisterTime());
-        int m = makedepartmentMapper.insert(makedepartment);
-        int e = setEmployeeByDepartment(employees,makedepartment,2);
-        int u = userService.update(setUserByType(makedepartment,2));
-        if(m==1&&u==2&&e==2){
-            return ResultUtil.isSuccess;
-        }else if(u==1) {
-            return ResultUtil.isHave;
-        }else {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return 2;
+            return ResultUtil.isException;
         }
     }
 
@@ -147,7 +155,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         List<Employee> employees = employeeService.operationByDepartmentCode(makedepartment.getDepartmentCode());
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
-        if(setUserByType(makedepartment,3)==null){
+        User user = setUserByType(makedepartment,3);
+        if(user==null){
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e =setEmployeeByDepartment(employees,makedepartment,1);
@@ -158,7 +167,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 return ResultUtil.isError;
             }
         }else {
-            int u = userService.deleteByTelphone(makedepartment.getLegalTelphone());
+            int u = userService.delete(user.getId());
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e = setEmployeeByDepartment(employees,makedepartment,1);

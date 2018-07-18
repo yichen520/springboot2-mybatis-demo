@@ -160,7 +160,8 @@
       legal_englishsurname, legal_englishname, 
       legal_telphone, department_address, department_address_detail, 
       telphone, postal_code,
-      version,flag,version_time,register_time
+      version,flag,version_time,register_time,
+      department_status
       )
     values (#{id,jdbcType=VARCHAR},#{departmentCode,jdbcType=VARCHAR},  #{departmentName,jdbcType=VARCHAR},
       #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR}, 
@@ -169,7 +170,7 @@
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR}, 
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR}, 
       #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},
-      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP}
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP},'01'
       )
   </insert>
 

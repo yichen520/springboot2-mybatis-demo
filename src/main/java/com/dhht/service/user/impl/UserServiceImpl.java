@@ -130,6 +130,7 @@ public class UserServiceImpl implements UserService {
                 if (a != 1) {
                     return ResultUtil.isFail;             //修改失败
                 } else {
+
                     return ResultUtil.isSuccess;          //修改成功
                 }
             }
@@ -237,7 +238,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int deleteByTelphone(String phone) {
-        return userDao.deleteByTelphone(phone);
+        int i= userDao.deleteByTelphone(phone);
+        return i;
     }
 
     @Override
