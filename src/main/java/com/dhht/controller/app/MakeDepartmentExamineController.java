@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 2018/7/2 create by fyc
+ * 2018/7/2 create by xzp
  */
 @RestController
 @RequestMapping(value = "examine/makeDepartment")
@@ -114,7 +114,7 @@ public class MakeDepartmentExamineController {
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
-        String districtId = (String) map.get("district");
+        String districtId = (String) map.get("districtId");
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         if (districtId == null){
              districtId = StringUtil.getDistrictId(user.getDistrictId());
@@ -127,9 +127,10 @@ public class MakeDepartmentExamineController {
 
         try {
             PageHelper.startPage(pageNum, pageSize);
-            PageInfo<OfficeCheck>  pageInfo =new PageInfo<OfficeCheck> (recordDepartmentService.findPunish(makedepartmentName,startTime,endTime,districtId));
+            PageInfo<ExamineRecord>  pageInfo =new PageInfo<ExamineRecord> (recordDepartmentService.findPunish(makedepartmentName,startTime,endTime,districtId));
             jsonObject.put("punishInfo",pageInfo);
         }catch (Exception e){
+            logger.error(e.getMessage(), e);
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);

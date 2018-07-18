@@ -29,5 +29,5 @@ public interface RecordDepartmentService {
 
     boolean insertPunish(User user,ExamineRecord examineRecord);
 
-    List<OfficeCheck>  findPunish(String makedepartmentName,String startTime,String endTime,String districtId);
+    List<ExamineRecord>  findPunish(String makedepartmentName,String startTime,String endTime,String districtId);
 }
