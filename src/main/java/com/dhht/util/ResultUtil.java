@@ -28,7 +28,7 @@ public class ResultUtil {
             case 3:
                 return JsonObjectBO.error("操作失败");
             case 4:
-                return JsonObjectBO.exception("发生异常");
+                return JsonObjectBO.exception("该数据异常");
             case 5:
                 return JsonObjectBO.error("发生错误");
             case 6:

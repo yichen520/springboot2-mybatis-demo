@@ -95,38 +95,42 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public int updateEmployee(Map map) {
-        Employee employee = employeeDao.selectById((String) map.get("id"));
-        int d = employeeDao.deleteById(employee.getId());
-        if (d == 0) {
-            return ResultUtil.isError;
-        }
-        employee.setEmployeeName((String)map.get("employeeName"));
-        employee.setEmployeeId((String)map.get("employeeId"));
-        employee.setEmployeeJob((String)map.get("employeeJob"));
-        employee.setEmployeeNation((String)map.get("employeeNation"));
-        employee.setFamilyAddressDetail((String)map.get("familyAddressDetail"));
-        employee.setFamilyAddressDetail((String)map.get("nowAddressDetail"));
-        employee.setEmployeeGender((String) map.get("employeeGender"));
-        employee.setTelphone((String)map.get("telphone"));
-        employee.setContactName((String)map.get("contactName"));
-        employee.setContactTelphone((String)map.get("contactTelphone"));
+        try {
+            Employee employee = employeeDao.selectById((String) map.get("id"));
+            int d = employeeDao.deleteById(employee.getId());
+            if (d == 0) {
+                return ResultUtil.isError;
+            }
+            employee.setEmployeeName((String) map.get("employeeName"));
+            employee.setEmployeeId((String) map.get("employeeId"));
+            employee.setEmployeeJob((String) map.get("employeeJob"));
+            employee.setEmployeeNation((String) map.get("employeeNation"));
+            employee.setFamilyAddressDetail((String) map.get("familyAddressDetail"));
+            employee.setFamilyAddressDetail((String) map.get("nowAddressDetail"));
+            employee.setEmployeeGender((String) map.get("employeeGender"));
+            employee.setTelphone((String) map.get("telphone"));
+            employee.setContactName((String) map.get("contactName"));
+            employee.setContactTelphone((String) map.get("contactTelphone"));
 
-        if(isInsert(employee.getEmployeeId())){
-            return ResultUtil.isWrongId;
-        }
-        int u = userService.update(setUserByType(employee,2));
-        employee.setVersion(employee.getVersion()+1);
-        employee.setVersionTime(DateUtil.getCurrentTime());
-        employee.setId(UUIDUtil.generate());
-        int e = employeeDao.insert(employee);
-        if(u==2&&e==1){
-            return ResultUtil.isSuccess;
-        }else if(u==1){
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultUtil.isHave;
-        }else {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return ResultUtil.isFail;
+            if (isInsert(employee.getEmployeeId())) {
+                return ResultUtil.isWrongId;
+            }
+            int u = userService.update(setUserByType(employee, 2));
+            employee.setVersion(employee.getVersion() + 1);
+            employee.setVersionTime(DateUtil.getCurrentTime());
+            employee.setId(UUIDUtil.generate());
+            int e = employeeDao.insert(employee);
+            if (u == 2 && e == 1) {
+                return ResultUtil.isSuccess;
+            } else if (u == 1) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isHave;
+            } else {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isFail;
+            }
+        }catch (Exception e){
+            return ResultUtil.isException;
         }
     }
 
@@ -159,10 +163,10 @@ public class EmployeeServiceImp implements EmployeeService {
                return ResultUtil.isFail;
            }
        }else {
-           int u = userService.deleteByTelphone(employee.getTelphone());
+           int u = userService.delete(user.getId());
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if (u == 1 && e == 1&&d==1) {
+           if (u == ResultUtil.isSuccess && e == 1&&d==1) {
                return ResultUtil.isSuccess;
            } else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -325,7 +329,8 @@ public class EmployeeServiceImp implements EmployeeService {
             case 2:
                 Employee oldDate = employeeDao.selectById(employee.getId());
                 user = userService.findByTelphone(oldDate.getTelphone());
-                user.setRealName("YG"+employee.getTelphone());
+                user.setUserName("YG"+employee.getTelphone());
+                user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
                 break;
