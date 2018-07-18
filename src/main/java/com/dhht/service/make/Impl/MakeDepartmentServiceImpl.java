@@ -171,7 +171,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e = setEmployeeByDepartment(employees,makedepartment,1);
-            if (u ==1&&m==1&&e==2) {
+            if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess) {
                 return ResultUtil.isSuccess;
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

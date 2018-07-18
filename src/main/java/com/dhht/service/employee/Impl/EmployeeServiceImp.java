@@ -163,10 +163,10 @@ public class EmployeeServiceImp implements EmployeeService {
                return ResultUtil.isFail;
            }
        }else {
-           int u = userService.deleteByTelphone(employee.getTelphone());
+           int u = userService.delete(user.getId());
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if (u == 1 && e == 1&&d==1) {
+           if (u == ResultUtil.isSuccess && e == 1&&d==1) {
                return ResultUtil.isSuccess;
            } else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
