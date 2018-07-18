@@ -209,6 +209,54 @@ public class UserController {
         return jsonObjectBO;
     }
 
+    /**
+     * app重置密码
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
+     @RequestMapping(value = "/appResetPwd")
+     public JsonObjectBO AppResetPwd(HttpServletRequest httpServletRequest,@RequestBody Map map){
+         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+         User user = (User) httpServletRequest.getSession().getAttribute("user");
+         String uid = user.getId();
+         String passWord = (String)map.get("passWord");
+         Boolean b = userPasswordService.appResetPwd(uid,passWord);
+         if(b){
+             jsonObjectBO.setCode(1);
+             jsonObjectBO.setMessage("密码已经重置成功");
+         }else{
+             jsonObjectBO.setCode(-1);
+             jsonObjectBO.setMessage("密码重置失败");
+         }
+         return jsonObjectBO;
+     }
+
+
+    /**
+     * app修改密码
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/appChangePwd")
+    public JsonObjectBO AppChangePwd(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
+        String phone = user.getTelphone();
+        String checkcode = (String)map.get("checkcode");
+        String passWord = (String)map.get("passWord");
+        Boolean b = userPasswordService.resetPwd(phone,checkcode,passWord);
+        if(b){
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("密码修改成功");
+        }else{
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("密码修改失败");
+        }
+        return jsonObjectBO;
+    }
+
     @RequestMapping(value = "/UserDistrict")
     public JsonObjectBO selectDistrictByUser(HttpServletRequest httpServletRequest){
         User user = (User) httpServletRequest.getSession().getAttribute("user");

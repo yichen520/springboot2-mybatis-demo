@@ -247,6 +247,7 @@
       <if test="departmentStatus =='02'">
         AND department_status ='02'
       </if>
+      and is_delete = 0
     </where>
   </select>
 
