@@ -1,6 +1,7 @@
 package com.dhht.dao;
 
-import com.dhht.model.Minitor;
+import com.dhht.model.Examine;
+import com.dhht.model.ExamineDetail;
 import com.dhht.model.MinitorExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -14,21 +15,23 @@ public interface MinitorMapper {
 
     int deleteByPrimaryKey(String id);
 
-    int insert(Minitor record);
+    int insert(Examine record);
 
-    int insertSelective(Minitor record);
+    int insertSelective(Examine record);
 
-    List<Minitor> selectByMinitor(@Param("minitor")Integer minitor);
+    List<Examine> selectByMinitor();
 
-    List<Minitor> selectByExample(MinitorExample example);
+    List<Examine> selectByExample(MinitorExample example);
 
-    Minitor selectByPrimaryKey(String id);
+    Examine selectByPrimaryKey(String id);
 
-    int updateByExampleSelective(@Param("record") Minitor record, @Param("example") MinitorExample example);
+    int updateByExampleSelective(@Param("record") Examine record, @Param("example") MinitorExample example);
 
-    int updateByExample(@Param("record") Minitor record, @Param("example") MinitorExample example);
+    int updateByExample(@Param("record") Examine record, @Param("example") MinitorExample example);
 
-    int updateByPrimaryKeySelective(Minitor record);
+    int updateByPrimaryKeySelective(Examine record);
 
-    int updateByPrimaryKey(Minitor record);
+    int updateByPrimaryKey(Examine record);
+
+   int insertExamineItem(ExamineDetail examineDetail);
 }

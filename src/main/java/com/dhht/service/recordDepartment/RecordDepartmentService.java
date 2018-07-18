@@ -1,7 +1,9 @@
 package com.dhht.service.recordDepartment;
 
+import com.dhht.model.ExamineRecord;
 import com.dhht.model.OfficeCheck;
 import com.dhht.model.RecordDepartment;
+import com.dhht.model.User;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public interface RecordDepartmentService {
 
     RecordDepartment selectByPhone(String phone);
 
-    boolean insertPunish(OfficeCheck officeCheck);
+    boolean insertPunish(User user,ExamineRecord examineRecord);
 
-    List<OfficeCheck>  findPunish(String makedepartmentName,String startTime,String endTime,String districtId);
+    List<ExamineRecord>  findPunish(String makedepartmentName,String startTime,String endTime,String districtId);
 }

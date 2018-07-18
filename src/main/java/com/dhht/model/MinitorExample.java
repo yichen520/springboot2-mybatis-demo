@@ -175,62 +175,62 @@ public class MinitorExample {
         }
 
         public Criteria andMinitorIsNull() {
-            addCriterion("minitor is null");
+            addCriterion("examine is null");
             return (Criteria) this;
         }
 
         public Criteria andMinitorIsNotNull() {
-            addCriterion("minitor is not null");
+            addCriterion("examine is not null");
             return (Criteria) this;
         }
 
         public Criteria andMinitorEqualTo(Integer value) {
-            addCriterion("minitor =", value, "minitor");
+            addCriterion("examine =", value, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorNotEqualTo(Integer value) {
-            addCriterion("minitor <>", value, "minitor");
+            addCriterion("examine <>", value, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorGreaterThan(Integer value) {
-            addCriterion("minitor >", value, "minitor");
+            addCriterion("examine >", value, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorGreaterThanOrEqualTo(Integer value) {
-            addCriterion("minitor >=", value, "minitor");
+            addCriterion("examine >=", value, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorLessThan(Integer value) {
-            addCriterion("minitor <", value, "minitor");
+            addCriterion("examine <", value, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorLessThanOrEqualTo(Integer value) {
-            addCriterion("minitor <=", value, "minitor");
+            addCriterion("examine <=", value, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorIn(List<Integer> values) {
-            addCriterion("minitor in", values, "minitor");
+            addCriterion("examine in", values, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorNotIn(List<Integer> values) {
-            addCriterion("minitor not in", values, "minitor");
+            addCriterion("examine not in", values, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorBetween(Integer value1, Integer value2) {
-            addCriterion("minitor between", value1, value2, "minitor");
+            addCriterion("examine between", value1, value2, "examine");
             return (Criteria) this;
         }
 
         public Criteria andMinitorNotBetween(Integer value1, Integer value2) {
-            addCriterion("minitor not between", value1, value2, "minitor");
+            addCriterion("examine not between", value1, value2, "examine");
             return (Criteria) this;
         }
 

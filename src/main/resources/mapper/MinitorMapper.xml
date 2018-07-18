@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dhht.dao.MinitorMapper" >
-  <resultMap id="BaseResultMap" type="com.dhht.model.Minitor" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Examine" >
     <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="minitor" property="minitor" jdbcType="INTEGER" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="rank" property="rank" jdbcType="TINYINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="VARCHAR" />
+    <collection property="examineDetails" ofType="com.dhht.model.ExamineDetail" >
+      <id property="id" column="eid"/>
+      <result property="examineId" column="examine_type_id"/>
+      <result property="item" column="examine_item"/>
+      <result property="rank" column="order_value"/>
+    </collection>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -66,17 +72,12 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, minitor, description, rank
+    id, examine, description, rank
   </sql>
 
-  <select id="selectByMinitor" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from sys_minitor
-    <if test="minitor != null" >
-      where minitor = #{minitor,jdbcType=INTEGER}
-    </if>
-   order by rank
+  <select id="selectByMinitor" resultMap="BaseResultMap"  >
+   select et.*,etd.*
+    from examine_type et,examine_type_detail etd where et.id = etd.examine_type_id
   </select>
 
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dhht.model.MinitorExample" >
@@ -112,20 +113,27 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.dhht.model.Minitor" >
-    insert into sys_minitor (id, minitor, description, 
-      rank)
-    values (#{id,jdbcType=VARCHAR}, #{minitor,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+  <insert id="insertExamineItem" parameterType="com.dhht.model.ExamineDetail" >
+    insert into examine_type_detail (id, examine_type_id, examine_item,
+      order_value)
+    values (#{id,jdbcType=VARCHAR}, #{examineId,jdbcType=VARCHAR}, #{item,jdbcType=VARCHAR},
       #{rank,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.dhht.model.Minitor" >
+
+  <insert id="insert" parameterType="com.dhht.model.Examine" >
+    insert into examine_type (id, name, remark,
+      district_id)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      #{districtId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.Examine" >
     insert into sys_minitor
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="minitor != null" >
-        minitor,
+      <if test="examine != null" >
+        examine,
       </if>
       <if test="description != null" >
         description,
@@ -138,8 +146,8 @@
       <if test="id != null" >
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="minitor != null" >
-        #{minitor,jdbcType=INTEGER},
+      <if test="examine != null" >
+        #{examine,jdbcType=INTEGER},
       </if>
       <if test="description != null" >
         #{description,jdbcType=VARCHAR},
@@ -161,8 +169,8 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=VARCHAR},
       </if>
-      <if test="record.minitor != null" >
-        minitor = #{record.minitor,jdbcType=INTEGER},
+      <if test="record.examine != null" >
+        examine = #{record.examine,jdbcType=INTEGER},
       </if>
       <if test="record.description != null" >
         description = #{record.description,jdbcType=VARCHAR},
@@ -178,18 +186,18 @@
   <update id="updateByExample" parameterType="map" >
     update sys_minitor
     set id = #{record.id,jdbcType=VARCHAR},
-      minitor = #{record.minitor,jdbcType=INTEGER},
+      examine = #{record.examine,jdbcType=INTEGER},
       description = #{record.description,jdbcType=VARCHAR},
       rank = #{record.rank,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Minitor" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Examine" >
     update sys_minitor
     <set >
-      <if test="minitor != null" >
-        minitor = #{minitor,jdbcType=INTEGER},
+      <if test="examine != null" >
+        examine = #{examine,jdbcType=INTEGER},
       </if>
       <if test="description != null" >
         description = #{description,jdbcType=VARCHAR},
@@ -200,9 +208,9 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Minitor" >
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Examine" >
     update sys_minitor
-    set minitor = #{minitor,jdbcType=INTEGER},
+    set examine = #{examine,jdbcType=INTEGER},
       description = #{description,jdbcType=VARCHAR},
       rank = #{rank,jdbcType=TINYINT}
     where id = #{id,jdbcType=VARCHAR}

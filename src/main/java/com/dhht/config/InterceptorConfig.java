@@ -47,7 +47,7 @@ public class InterceptorConfig implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //登录不做要求
-        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/error")){
+        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/app/login")){
             return true;
         }
         //获取session是否存在

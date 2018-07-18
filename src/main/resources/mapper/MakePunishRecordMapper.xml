@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.MakePunishRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.MakePunishRecord" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="make_department_code" property="makeDepartmentCode" jdbcType="CHAR" />
+    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+    <result column="punish_reason" property="punishReason" jdbcType="VARCHAR" />
+    <result column="punish_basis" property="punishBasis" jdbcType="VARCHAR" />
+    <result column="punish_way" property="punishWay" jdbcType="VARCHAR" />
+    <result column="punish_address" property="punishAddress" jdbcType="VARCHAR" />
+    <result column="record_department_code" property="recordDepartmentCode" jdbcType="CHAR" />
+    <result column="record_department_name" property="recordDepartmentName" jdbcType="VARCHAR" />
+    <result column="punisher_name" property="punisherName" jdbcType="VARCHAR" />
+    <result column="punish_time" property="punishTime" jdbcType="TIMESTAMP" />
+    <result column="district_id" property="districtId" jdbcType="CHAR" />
+    <result column="longitude" property="longitude" jdbcType="REAL" />
+    <result column="latitude" property="latitude" jdbcType="REAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, make_department_code, make_department_name, punish_reason, punish_basis, punish_way, 
+    punish_address, record_department_code, record_department_name, punisher_name, punish_time, 
+    district_id, longitude, latitude
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from punish_record_make_department
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from punish_record_make_department
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <select id="findPunish" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="Base_Column_List" />
+    from punish_record_make_department where 1 = 1
+    <if test="startTime == null and  endTime != null" >
+      and punish_time &lt; #{endTime}
+    </if>
+    <if test="startTime != null and  endTime != null" >
+      and punish_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != null and  endTime == null" >
+      and punish_time &gt; #{startTime}
+    </if>
+    <if test="district != null" >
+      and district_id like '${district}%'
+    </if>
+    <if test="makedepartmentName != null" >
+      and make_department_name like '%${makedepartmentName}%'
+    </if>
+  </select>
+
+  <insert id="insert" parameterType="com.dhht.model.MakePunishRecord" >
+    insert into punish_record_make_department (id, make_department_code, make_department_name, 
+      punish_reason, punish_basis, punish_way, 
+      punish_address, record_department_code, record_department_name, 
+      punisher_name, punish_time, district_id, 
+      longitude, latitude)
+    values (#{id,jdbcType=CHAR}, #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, 
+      #{punishReason,jdbcType=VARCHAR}, #{punishBasis,jdbcType=VARCHAR}, #{punishWay,jdbcType=VARCHAR}, 
+      #{punishAddress,jdbcType=VARCHAR}, #{recordDepartmentCode,jdbcType=CHAR}, #{recordDepartmentName,jdbcType=VARCHAR}, 
+      #{punisherName,jdbcType=VARCHAR}, #{punishTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR}, 
+      #{longitude,jdbcType=REAL}, #{latitude,jdbcType=REAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.MakePunishRecord" >
+    insert into punish_record_make_department
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code,
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name,
+      </if>
+      <if test="punishReason != null" >
+        punish_reason,
+      </if>
+      <if test="punishBasis != null" >
+        punish_basis,
+      </if>
+      <if test="punishWay != null" >
+        punish_way,
+      </if>
+      <if test="punishAddress != null" >
+        punish_address,
+      </if>
+      <if test="recordDepartmentCode != null" >
+        record_department_code,
+      </if>
+      <if test="recordDepartmentName != null" >
+        record_department_name,
+      </if>
+      <if test="punisherName != null" >
+        punisher_name,
+      </if>
+      <if test="punishTime != null" >
+        punish_time,
+      </if>
+      <if test="districtId != null" >
+        district_id,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        #{makeDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="punishReason != null" >
+        #{punishReason,jdbcType=VARCHAR},
+      </if>
+      <if test="punishBasis != null" >
+        #{punishBasis,jdbcType=VARCHAR},
+      </if>
+      <if test="punishWay != null" >
+        #{punishWay,jdbcType=VARCHAR},
+      </if>
+      <if test="punishAddress != null" >
+        #{punishAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentCode != null" >
+        #{recordDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="recordDepartmentName != null" >
+        #{recordDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="punisherName != null" >
+        #{punisherName,jdbcType=VARCHAR},
+      </if>
+      <if test="punishTime != null" >
+        #{punishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="districtId != null" >
+        #{districtId,jdbcType=CHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=REAL},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.MakePunishRecord" >
+    update punish_record_make_department
+    <set >
+      <if test="makeDepartmentCode != null" >
+        make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="punishReason != null" >
+        punish_reason = #{punishReason,jdbcType=VARCHAR},
+      </if>
+      <if test="punishBasis != null" >
+        punish_basis = #{punishBasis,jdbcType=VARCHAR},
+      </if>
+      <if test="punishWay != null" >
+        punish_way = #{punishWay,jdbcType=VARCHAR},
+      </if>
+      <if test="punishAddress != null" >
+        punish_address = #{punishAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentCode != null" >
+        record_department_code = #{recordDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="recordDepartmentName != null" >
+        record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="punisherName != null" >
+        punisher_name = #{punisherName,jdbcType=VARCHAR},
+      </if>
+      <if test="punishTime != null" >
+        punish_time = #{punishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="districtId != null" >
+        district_id = #{districtId,jdbcType=CHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=REAL},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=REAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.MakePunishRecord" >
+    update punish_record_make_department
+    set make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
+      make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      punish_reason = #{punishReason,jdbcType=VARCHAR},
+      punish_basis = #{punishBasis,jdbcType=VARCHAR},
+      punish_way = #{punishWay,jdbcType=VARCHAR},
+      punish_address = #{punishAddress,jdbcType=VARCHAR},
+      record_department_code = #{recordDepartmentCode,jdbcType=CHAR},
+      record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
+      punisher_name = #{punisherName,jdbcType=VARCHAR},
+      punish_time = #{punishTime,jdbcType=TIMESTAMP},
+      district_id = #{districtId,jdbcType=CHAR},
+      longitude = #{longitude,jdbcType=REAL},
+      latitude = #{latitude,jdbcType=REAL}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.ExamineRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.ExamineRecord" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="examiner_name" property="examinerName" jdbcType="VARCHAR" />
+    <result column="record_department_code" property="recordDepartmentCode" jdbcType="VARCHAR" />
+    <result column="record_department_name" property="recordDepartmentName" jdbcType="VARCHAR" />
+    <result column="examine_time" property="examineTime" jdbcType="TIMESTAMP" />
+    <result column="examine_address" property="examineAddress" jdbcType="VARCHAR" />
+    <result column="examine_result_description" property="examineResultDescription" jdbcType="VARCHAR" />
+    <result column="dispose_description" property="disposeDescription" jdbcType="VARCHAR" />
+    <result column="make_department_code" property="makeDepartmentCode" jdbcType="VARCHAR" />
+    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="CHAR" />
+    <result column="examine_type_id" property="examineTypeId" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="REAL" />
+    <result column="latitude" property="latitude" jdbcType="REAL" />
+  </resultMap>
+
+  <resultMap id="punishResultMap" type="com.dhht.model.ExamineRecord" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="examiner_name" property="examinerName" jdbcType="VARCHAR" />
+    <result column="record_department_code" property="recordDepartmentCode" jdbcType="VARCHAR" />
+    <result column="record_department_name" property="recordDepartmentName" jdbcType="VARCHAR" />
+    <result column="examine_time" property="examineTime" jdbcType="TIMESTAMP" />
+    <result column="examine_address" property="examineAddress" jdbcType="VARCHAR" />
+    <result column="examine_result_description" property="examineResultDescription" jdbcType="VARCHAR" />
+    <result column="dispose_description" property="disposeDescription" jdbcType="VARCHAR" />
+    <result column="make_department_code" property="makeDepartmentCode" jdbcType="VARCHAR" />
+    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="CHAR" />
+    <result column="examine_type_id" property="examineTypeId" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="REAL" />
+    <result column="latitude" property="latitude" jdbcType="REAL" />
+    <collection property="examineRecordDetails" ofType="com.dhht.model.ExamineRecordDetail" >
+      <id property="id" column="pid"/>
+      <result property="examineRecordId" column="recordid"/>
+      <result property="examineItem" column="examine_item"/>
+      <result property="result" column="result"/>
+      <result property="resultDestription" column="result_destription"/>
+    </collection>
+  </resultMap>
+  <select id="findPunish" resultMap="punishResultMap" parameterType="java.lang.String" >
+    select o.*,p.id pid,p.examine_record_id recordid,p.examine_item,p.result,p.result_destription
+    from examine_record o,examine_record_detail p where o.id = p.examine_record_id
+    <if test="startTime == null and  endTime != null" >
+      and o.examine_time &lt; #{endTime}
+    </if>
+    <if test="startTime != null and  endTime != null" >
+      and o.examine_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != null and  endTime == null" >
+      and o.examine_time &gt; #{startTime}
+    </if>
+    <if test="district != null" >
+      and o.district_id like '${district}%'
+    </if>
+    <if test="makedepartmentName != null" >
+      and o.make_department_name like '%${makedepartmentName}%'
+    </if>
+  </select>
+  <sql id="Base_Column_List" >
+    id, examiner_name, record_department_code, record_department_name, examine_time, 
+    examine_address, examine_result_description, dispose_description, make_department_code, 
+    make_department_name, remark, district_id, examine_type_id, longitude, latitude
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from examine_record
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from examine_record
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.ExamineRecord" >
+    insert into examine_record (id, examiner_name, record_department_code, 
+      record_department_name, examine_time, examine_address, 
+      examine_result_description, dispose_description, 
+      make_department_code, make_department_name, 
+      remark, district_id, examine_type_id,
+      longitude, latitude)
+    values (#{id,jdbcType=CHAR}, #{examinerName,jdbcType=VARCHAR}, #{recordDepartmentCode,jdbcType=VARCHAR}, 
+      #{recordDepartmentName,jdbcType=VARCHAR}, #{examineTime,jdbcType=TIMESTAMP}, #{examineAddress,jdbcType=VARCHAR}, 
+      #{examineResultDescription,jdbcType=VARCHAR}, #{disposeDescription,jdbcType=VARCHAR}, 
+      #{makeDepartmentCode,jdbcType=VARCHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{districtId,jdbcType=CHAR}, #{examineTypeId,jdbcType=VARCHAR},
+      #{longitude,jdbcType=REAL}, #{latitude,jdbcType=REAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.ExamineRecord" >
+    insert into examine_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="examinerName != null" >
+        examiner_name,
+      </if>
+      <if test="recordDepartmentCode != null" >
+        record_department_code,
+      </if>
+      <if test="recordDepartmentName != null" >
+        record_department_name,
+      </if>
+      <if test="examineTime != null" >
+        examine_time,
+      </if>
+      <if test="examineAddress != null" >
+        examine_address,
+      </if>
+      <if test="examineResultDescription != null" >
+        examine_result_description,
+      </if>
+      <if test="disposeDescription != null" >
+        dispose_description,
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code,
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="districtId != null" >
+        district_id,
+      </if>
+      <if test="examineTypeId != null" >
+        examine_type_id,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="examinerName != null" >
+        #{examinerName,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentCode != null" >
+        #{recordDepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentName != null" >
+        #{recordDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="examineTime != null" >
+        #{examineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examineAddress != null" >
+        #{examineAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="examineResultDescription != null" >
+        #{examineResultDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeDescription != null" >
+        #{disposeDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        #{makeDepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        #{districtId,jdbcType=CHAR},
+      </if>
+      <if test="examineTypeId != null" >
+        #{examineTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=REAL},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.ExamineRecord" >
+    update examine_record
+    <set >
+      <if test="examinerName != null" >
+        examiner_name = #{examinerName,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentCode != null" >
+        record_department_code = #{recordDepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDepartmentName != null" >
+        record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="examineTime != null" >
+        examine_time = #{examineTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examineAddress != null" >
+        examine_address = #{examineAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="examineResultDescription != null" >
+        examine_result_description = #{examineResultDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeDescription != null" >
+        dispose_description = #{disposeDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code = #{makeDepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        district_id = #{districtId,jdbcType=CHAR},
+      </if>
+
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=REAL},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=REAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.ExamineRecord" >
+    update examine_record
+    set examiner_name = #{examinerName,jdbcType=VARCHAR},
+      record_department_code = #{recordDepartmentCode,jdbcType=VARCHAR},
+      record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
+      examine_time = #{examineTime,jdbcType=TIMESTAMP},
+      examine_address = #{examineAddress,jdbcType=VARCHAR},
+      examine_result_description = #{examineResultDescription,jdbcType=VARCHAR},
+      dispose_description = #{disposeDescription,jdbcType=VARCHAR},
+      make_department_code = #{makeDepartmentCode,jdbcType=VARCHAR},
+      make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      district_id = #{districtId,jdbcType=CHAR},
+      longitude = #{longitude,jdbcType=REAL},
+      latitude = #{latitude,jdbcType=REAL}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

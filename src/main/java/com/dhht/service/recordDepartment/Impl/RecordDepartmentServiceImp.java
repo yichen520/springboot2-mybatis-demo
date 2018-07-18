@@ -7,10 +7,7 @@ import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserPasswordService;
 import com.dhht.service.user.UserService;
-import com.dhht.util.MD5Util;
-import com.dhht.util.ResultUtil;
-import com.dhht.util.StringUtil;
-import com.dhht.util.UUIDUtil;
+import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,12 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     private PunishLogMapper punishLogMapper;
     @Autowired
     private OfficeCheckMapper officeCheckMapper;
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
+    @Autowired
+    private ExamineRecordMapper examineRecordMapper;
+    @Autowired
+    private ExamineRecordDetailMapper examineRecordDetailMapper;
 
 
 
@@ -278,19 +281,31 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
        return recordDepartmentMapper.selectByPhone(phone);
     }
 
+
+
     @Override
-    public boolean insertPunish(OfficeCheck officeCheck) {
-          List<PunishLog> punishLogs = officeCheck.getPunishLogs();
-              for (PunishLog punishLog:punishLogs){
-                  punishLog.setId(officeCheck.getId());
-                  punishLogMapper.insert(punishLog);
-              }
-              officeCheckMapper.insert(officeCheck);
-              return true;
+    public List<ExamineRecord> findPunish(String makedepartmentName, String startTime, String endTime, String districtId) {
+        return examineRecordMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
     }
 
     @Override
-    public List<OfficeCheck> findPunish(String makedepartmentName, String startTime, String endTime, String districtId) {
-        return officeCheckMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
-    }
+    public boolean insertPunish(User user, ExamineRecord examineRecord) {
+            String id = UUIDUtil.generate();
+            examineRecord.setId(id);
+            examineRecord.setExaminerName(user.getUserName());
+            RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(user.getTelphone());
+            examineRecord.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
+            examineRecord.setRecordDepartmentName(recordDepartment.getDepartmentName());
+            examineRecord.setExamineTime(DateUtil.getCurrentTime());
+            examineRecord.setDistrictId(user.getDistrictId());
+            examineRecordMapper.insertSelective(examineRecord);
+            List<ExamineRecordDetail> punishLogs = examineRecord.getExamineRecordDetails();
+            for (ExamineRecordDetail examineRecordDetail:punishLogs){
+                examineRecordDetail.setId(UUIDUtil.generate());
+                examineRecordDetail.setExamineRecordId(examineRecord.getId());
+                examineRecordDetailMapper.insertSelective(examineRecordDetail);
+            }
+            return true;
+        }
+
 }

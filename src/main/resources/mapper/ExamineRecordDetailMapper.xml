@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.ExamineRecordDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.ExamineRecordDetail" >
+    <result column="id" property="id" jdbcType="CHAR" />
+    <result column="examine_record_id" property="examineRecordId" jdbcType="CHAR" />
+    <result column="examine_item" property="examineItem" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="BIT" />
+    <result column="result_destription" property="resultDestription" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.dhht.model.ExamineRecordDetail" >
+    insert into examine_record_detail (id, examine_record_id, examine_item, 
+      result, result_destription)
+    values (#{id,jdbcType=CHAR}, #{examineRecordId,jdbcType=CHAR}, #{examineItem,jdbcType=VARCHAR}, 
+      #{result,jdbcType=BIT}, #{resultDestription,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.ExamineRecordDetail" >
+    insert into examine_record_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="examineRecordId != null" >
+        examine_record_id,
+      </if>
+      <if test="examineItem != null" >
+        examine_item,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="resultDestription != null" >
+        result_destription,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="examineRecordId != null" >
+        #{examineRecordId,jdbcType=CHAR},
+      </if>
+      <if test="examineItem != null" >
+        #{examineItem,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=BIT},
+      </if>
+      <if test="resultDestription != null" >
+        #{resultDestription,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
