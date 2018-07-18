@@ -206,7 +206,7 @@ public class SealServiceImpl implements SealService {
         }else if (status.equals("06")){
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsDeliver(true); 
+            seal.setIsDeliver(true);
             seal.setIsLogout(true);
             list = sealDao.selectByCodeAndName(seal);
         }
