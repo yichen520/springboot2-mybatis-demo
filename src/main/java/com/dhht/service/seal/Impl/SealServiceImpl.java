@@ -193,8 +193,22 @@ public class SealServiceImpl implements SealService {
             seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("00")){
-
             list = sealDao.selectUndelivered(seal);
+        }else if(status.equals("04")){
+            seal.setIsRecord(true);
+            list = sealDao.selectByCodeAndName(seal);
+        }else if(status.equals("05")){
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsLoss(true);
+            list = sealDao.selectByCodeAndName(seal);
+        }else if (status.equals("06")){
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true); 
+            seal.setIsLogout(true);
+            list = sealDao.selectByCodeAndName(seal);
         }
 
         PageInfo<Seal> result = new PageInfo<>(list);
