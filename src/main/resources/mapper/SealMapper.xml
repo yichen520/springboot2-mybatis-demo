@@ -287,29 +287,45 @@
     SELECT * from seal
     <where>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
-        And use_department_code LIKE  "%"#{useDepartmentCode,jdbcType=char}"%"
+        And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
       <if test="useDepartmentName !=null and useDepartmentName !=''">
         AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
       </if>
       <if test="isRecord !=null and isRecord !=''">
-        AND is_record =  #{isRecord}
+        AND is_record =  #{isRecord,jdbcType=BIT}
       </if>
       <if test="isMake !=null and isMake !=''">
-        AND is_make =  #{isMake}
+        AND is_make =  #{isMake,jdbcType=BIT}
       </if>
       <if test="isPersonal !=null and isPersonal !=''">
-        AND is_personal =  #{isPersonal}
+        AND is_personal =  #{isPersonal,jdbcType=BIT}
       </if>
       <if test="isDeliver !=null and isDeliver !=''">
-        AND is_deliver =  #{isDeliver}
+        AND is_deliver =  #{isDeliver,jdbcType=BIT}
       </if>
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
-        AND record_department_code = #{recordDepartmentCode}
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
     </where>
   </select>
-  
+
+  <select id="selectUndelivered" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+    SELECT * from seal
+    <where>
+      is_deliver = 0 AND is_logout = 0 AND is_loss = 0
+      <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+        And use_department_code LIKE  "%"#{useDepartmentCode}"%"
+      </if>
+      <if test="useDepartmentName !=null and useDepartmentName !=''">
+        AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+      </if>
+
+    </where>
+  </select>
   
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName

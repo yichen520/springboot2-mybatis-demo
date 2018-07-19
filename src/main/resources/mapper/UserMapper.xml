@@ -233,7 +233,7 @@
                 AND district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
             </if>
             <if test="roleId !=null and roleId !=''">
-                AND role_id LIKE  "%"#{roleId,jdbcType=VARCHAR}"%"
+                AND role_id = #{roleId,jdbcType=VARCHAR}
             </if>
             <if test="realName !=null and realName !=''">
                 AND real_name LIKE  "%"#{realName,jdbcType=VARCHAR}"%"

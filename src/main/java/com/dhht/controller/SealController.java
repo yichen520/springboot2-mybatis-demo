@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value="/seal/deliver")
+@RequestMapping(value="/seal/record")
 public class SealController  {
     @Autowired
     private SealService sealService;
