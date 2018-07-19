@@ -73,11 +73,11 @@ public class MD5Util {
 	private static String getMD5Str(byte[] paramByte){
 		StringBuffer md5StrBuff = new StringBuffer();
 		for (int i = 0; i < paramByte.length; i++) {
-			if (Integer.toHexString(0xFF & paramByte[i]).length() == 1)
-                md5StrBuff.append("0").append(Integer.toHexString(0xFF & paramByte[i]));
-            else
-                md5StrBuff.append(Integer.toHexString(0xFF & paramByte[i]));
-
+			if (Integer.toHexString(0xFF & paramByte[i]).length() == 1){
+                md5StrBuff.append("0").append(Integer.toHexString(0xFF & paramByte[i]));}
+            else{
+				md5StrBuff.append(Integer.toHexString(0xFF & paramByte[i]));
+			}
         }
 		return md5StrBuff.toString();
 	}

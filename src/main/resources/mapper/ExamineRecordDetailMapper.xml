@@ -8,6 +8,15 @@
     <result column="result" property="result" jdbcType="BIT" />
     <result column="result_destription" property="resultDestription" jdbcType="VARCHAR" />
   </resultMap>
+  <sql id="Base_Column_List" >
+    id, examine_record_id,examine_item,result,result_destription
+  </sql>
+  <select id="selectExamineDetailByID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from examine_record_detail
+    where examine_record_id = #{id}
+  </select>
   <insert id="insert" parameterType="com.dhht.model.ExamineRecordDetail" >
     insert into examine_record_detail (id, examine_record_id, examine_item, 
       result, result_destription)

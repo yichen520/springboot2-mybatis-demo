@@ -116,7 +116,7 @@ public class MakeDepartmentExamineController {
         String endTime = (String) map.get("endTime");
         String districtId = (String) map.get("districtId");
         User user = (User) httpServletRequest.getSession().getAttribute("user");
-        if (districtId == null){
+        if (districtId == null || districtId == ""){
              districtId = StringUtil.getDistrictId(user.getDistrictId());
         }else{
              districtId = StringUtil.getDistrictId(districtId);
@@ -136,7 +136,24 @@ public class MakeDepartmentExamineController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 展示通过id来
+     * @param map
 
+     * @return
+     */
+    @RequestMapping(value = "/examinedetail")
+    public JsonObjectBO examinedetail(@RequestBody Map map){
+        String id = (String)map.get("id");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<ExamineRecordDetail> list= makeDepartmentService.selectExamineDetailByID(id);
+            jsonObject.put("makeDepartment", list);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
 
 
 

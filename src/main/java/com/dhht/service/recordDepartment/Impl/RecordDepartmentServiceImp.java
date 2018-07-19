@@ -300,11 +300,14 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             examineRecord.setDistrictId(user.getDistrictId());
             examineRecordMapper.insertSelective(examineRecord);
             List<ExamineRecordDetail> punishLogs = examineRecord.getExamineRecordDetails();
-            for (ExamineRecordDetail examineRecordDetail:punishLogs){
-                examineRecordDetail.setId(UUIDUtil.generate());
-                examineRecordDetail.setExamineRecordId(examineRecord.getId());
-                examineRecordDetailMapper.insertSelective(examineRecordDetail);
+            if(punishLogs!=null){
+                for (ExamineRecordDetail examineRecordDetail:punishLogs){
+                    examineRecordDetail.setId(UUIDUtil.generate());
+                    examineRecordDetail.setExamineRecordId(examineRecord.getId());
+                    examineRecordDetailMapper.insertSelective(examineRecordDetail);
+                }
             }
+
             return true;
         }
 

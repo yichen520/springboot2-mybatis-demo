@@ -1,7 +1,13 @@
 package com.dhht.dao;
 
 import com.dhht.model.EmployeePunishRecord;
+import com.dhht.model.MakePunishRecord;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface EmployeePunishRecordMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +20,6 @@ public interface EmployeePunishRecordMapper {
     int updateByPrimaryKeySelective(EmployeePunishRecord record);
 
     int updateByPrimaryKey(EmployeePunishRecord record);
+
+    List<EmployeePunishRecord> findPunish(@Param("makedepartmentName") String makedepartmentName, @Param("startTime") String startTime, @Param("endTime")String endTime, @Param("district")String districtId);
 }

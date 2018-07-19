@@ -246,7 +246,10 @@ public class UserLoginServiceImpl implements UserLoginService {
                 currentUser1.setPassword(null);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("currentUser",currentUser1);
+                List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
+                List<Resource> resources = resourceService.findResourceByRole(resourceId);
                 request.getSession().setAttribute("user", currentUser1);
+                request.getSession().setAttribute("resources", resources);
                 return JsonObjectBO.success("登录成功",jsonObject);
             }else {
                 return JsonObjectBO.error("此用户不是app端用户");
