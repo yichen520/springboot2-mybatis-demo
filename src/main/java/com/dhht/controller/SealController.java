@@ -28,7 +28,7 @@ public class SealController  {
     @Autowired
     private EmployeeService employeeService;
 
-    private static JSONObject jsonObject = new JSONObject();;
+    private static JSONObject jsonObject = new JSONObject();
 
     @Log("查询使用单位是否备案")
     @RequestMapping("isrecord")

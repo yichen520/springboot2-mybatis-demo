@@ -34,21 +34,21 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public AccessResult save(Role role){
         List<String> resourcesIds = role.getResourceIds();
-        if (resourcesIds.isEmpty()){
+        if (resourcesIds == null){
             return new AccessResult(-1,"请选择对应的权限");
         }
         if (role.getId() == null){
             return new AccessResult(-1,"角色代码不能为空");
         }
         //保存角色表
-        roleDao.insert(role);
+        roleDao.insertSelective(role);
         //保存到角色资源关联表
 //        List<String> rStrs = DaoUtil.parseJsonStrToList(resourcesIds);
         for(String resourcesId:resourcesIds){
             RoleResourceKey sysRoleResource = new RoleResourceKey();
             sysRoleResource.setResourceId(resourcesId); //资源Id
             sysRoleResource.setRoleId(role.getId());
-            roleResourceDao.insert(sysRoleResource);
+            roleResourceDao.insertSelective(sysRoleResource);
         }
         return new AccessResult(1,"新增角色成功");
     }

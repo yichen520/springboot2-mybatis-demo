@@ -10,6 +10,7 @@ import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.RoleService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,7 +94,10 @@ public class RoleController extends JsonObjectBO {
             jsonObjectBO.setMessage(result.getResultMsg());
             jsonObjectBO.setCode(result.getIsSuccess());
             return jsonObjectBO;
-        } catch (Exception e) {
+        }catch (DuplicateKeyException e) {
+            return JsonObjectBO.exception("角色名已存在,新增角色失败");
+        }
+        catch (Exception e) {
             return JsonObjectBO.exception("新增角色失败");
         }
 
