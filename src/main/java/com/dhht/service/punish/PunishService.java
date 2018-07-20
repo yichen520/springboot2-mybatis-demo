@@ -11,5 +11,9 @@ public interface PunishService {
 
     boolean insertPunish(User user, MakePunishRecord makePunishRecord);
 
+    boolean insertEmployeePunish(User user, EmployeePunishRecord employeePunish);
+
     List<MakePunishRecord>  findPunish(String makedepartmentName, String startTime, String endTime, String districtId);
+
+    List<EmployeePunishRecord>  findEmployeePunish(String makedepartmentName, String startTime, String endTime, String districtId);
 }

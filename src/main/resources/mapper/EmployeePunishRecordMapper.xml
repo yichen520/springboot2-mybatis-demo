@@ -31,6 +31,25 @@
     from punish_record_employee
     where id = #{id,jdbcType=CHAR}
   </select>
+  <select id="findPunish" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="Base_Column_List" />
+    from punish_record_employee where 1 = 1
+    <if test="startTime == null and  endTime != null" >
+      and punish_time &lt; #{endTime}
+    </if>
+    <if test="startTime != null and  endTime != null" >
+      and punish_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != null and  endTime == null" >
+      and punish_time &gt; #{startTime}
+    </if>
+    <if test="district != null" >
+      and district_id like '${district}%'
+    </if>
+    <if test="makedepartmentName != null" >
+      and make_department_name like '%${makedepartmentName}%' or employee_name like '%${makedepartmentName}%'
+    </if>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from punish_record_employee
     where id = #{id,jdbcType=CHAR}

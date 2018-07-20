@@ -3,8 +3,7 @@ package com.dhht.controller.app;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
-import com.dhht.service.District.DistrictService;
-import com.dhht.service.examine.MinitorService;
+import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.punish.PunishService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
@@ -34,7 +33,7 @@ public class PunishController {
     private MakeDepartmentService makeDepartmentService;
 
     @Autowired
-    private DistrictService districtService;
+    private EmployeeService employeeService;
 
     @Autowired
     private PunishService punishService;
@@ -73,9 +72,9 @@ public class PunishController {
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
-        String districtId = (String) map.get("district");
+        String districtId = (String) map.get("districtId");
         User user = (User) httpServletRequest.getSession().getAttribute("user");
-        if (districtId == null){
+        if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());
         }else{
             districtId = StringUtil.getDistrictId(districtId);
@@ -95,9 +94,74 @@ public class PunishController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     *查询制作单位下所有从业人员
+     * @return
+     */
+    @RequestMapping(value = "/employee/find")
+    public JsonObjectBO employee(@RequestBody Map map){
+        String departmentCode = (String) map.get("departmentCode");
+        JSONObject jsonObject = new JSONObject();
+        try {
+           List<Employee> employees = employeeService.selectByDepartmentCode(departmentCode);
+            jsonObject.put("employees",employees);
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
 
+    /**
+     *对从业人员进行惩罚操作
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/employee/add")
+    public JsonObjectBO employeeadd(HttpServletRequest httpServletRequest,@RequestBody EmployeePunishRecord employeePunish){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        try {
+            if (punishService.insertEmployeePunish(user,employeePunish)){
+                return JsonObjectBO.success("从业人员惩罚成功",null);
+            }else {
+                return JsonObjectBO.error("从业人员惩罚失败");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+    }
 
-
+    /**
+     *对从业人员处罚进行查询操作
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/employee/info")
+    public JsonObjectBO employeefind(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        String makedepartmentName = (String)map.get("makedepartmentName");
+        String startTime = (String) map.get("startTime");
+        String endTime = (String) map.get("endTime");
+        String districtId = (String) map.get("districtId");
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
+        if (districtId == null || districtId == ""){
+            districtId = StringUtil.getDistrictId(user.getDistrictId());
+        }else{
+            districtId = StringUtil.getDistrictId(districtId);
+        }
+        Integer pageSize =(Integer) map.get("pageSize");
+        Integer pageNum =(Integer) map.get("pageNum");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            PageHelper.startPage(pageNum, pageSize);
+            PageInfo<EmployeePunishRecord>  pageInfo =new PageInfo<EmployeePunishRecord> (punishService.findEmployeePunish(makedepartmentName,startTime,endTime,districtId));
+            jsonObject.put("punishInfo",pageInfo);
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
 
 
 }

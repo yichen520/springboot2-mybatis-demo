@@ -1,5 +1,6 @@
 package com.dhht.service.make.Impl;
 
+import com.dhht.dao.ExamineRecordDetailMapper;
 import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.dao.UserDao;
 import com.dhht.model.*;
@@ -34,6 +35,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
 
     @Autowired
     private MakedepartmentMapper makedepartmentMapper;
+
+    @Autowired
+    private ExamineRecordDetailMapper examineRecordDetailMapper;
 
     @Autowired
     private UserService userService;
@@ -357,4 +361,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return ResultUtil.isSuccess;
     }
 
+    @Override
+    public List<ExamineRecordDetail> selectExamineDetailByID(String id) {
+        return examineRecordDetailMapper.selectExamineDetailByID(id);
+    }
 }

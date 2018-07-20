@@ -1,9 +1,6 @@
 package com.dhht.service.make;
 
-import com.dhht.model.MakeDepartmentSimple;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.RecordDepartment;
-import com.dhht.model.UserDomain;
+import com.dhht.model.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -29,4 +26,5 @@ public interface MakeDepartmentService {
 
      List<Makedepartment> selectPunish(String MakeDepartmentName,String startTime,String endTime,String districtId,String localDistrictId);
 
+     List<ExamineRecordDetail> selectExamineDetailByID(String id);
 }

@@ -46,19 +46,19 @@
   <select id="findPunish" resultMap="punishResultMap" parameterType="java.lang.String" >
     select o.*,p.id pid,p.punish_id,p.result,p.reason
     from office_check o,sys_punish_log p where o.id = p.id
-    <if test="startTime != null and  endTime != null" >
+    <if test="startTime != '' and  endTime != ''" >
      and o.check_time BETWEEN #{startTime} and #{endTime}
     </if>
-    <if test="startTime == null and  endTime != null" >
+    <if test="startTime == '' and  endTime != ''" >
       and o.check_time BETWEEN #{startTime} and #{endTime}
     </if>
-    <if test="startTime != null and  endTime == null" >
+    <if test="startTime != '' and  endTime == ''" >
       and o.check_time &gt; #{startTime}
     </if>
-    <if test="district != null" >
+    <if test="district != ''" >
       and o.district like '${district}%'
     </if>
-    <if test="makedepartmentName != null" >
+    <if test="makedepartmentName != ''" >
       and o.makedepartment_name = #{makedepartmentName}
     </if>
 

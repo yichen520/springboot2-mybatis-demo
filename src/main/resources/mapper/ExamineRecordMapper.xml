@@ -15,8 +15,10 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="district_id" property="districtId" jdbcType="CHAR" />
     <result column="examine_type_id" property="examineTypeId" jdbcType="VARCHAR" />
+    <result column="examine_type_name" property="examineTypeName" jdbcType="VARCHAR" />
     <result column="longitude" property="longitude" jdbcType="REAL" />
     <result column="latitude" property="latitude" jdbcType="REAL" />
+    <result column="examine_file_url" property="examineFileUrl" jdbcType="VARCHAR" />
   </resultMap>
 
   <resultMap id="punishResultMap" type="com.dhht.model.ExamineRecord" >
@@ -43,29 +45,30 @@
       <result property="resultDestription" column="result_destription"/>
     </collection>
   </resultMap>
-  <select id="findPunish" resultMap="punishResultMap" parameterType="java.lang.String" >
-    select o.*,p.id pid,p.examine_record_id recordid,p.examine_item,p.result,p.result_destription
-    from examine_record o,examine_record_detail p where o.id = p.examine_record_id
-    <if test="startTime == null and  endTime != null" >
-      and o.examine_time &lt; #{endTime}
+  <select id="findPunish" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="Base_Column_List" />
+    from examine_record  where 1 = 1
+    <if test="startTime == '' and  endTime != ''" >
+      and examine_time &lt; #{endTime}
     </if>
-    <if test="startTime != null and  endTime != null" >
-      and o.examine_time BETWEEN #{startTime} and #{endTime}
+    <if test="startTime != '' and  endTime != ''" >
+      and examine_time BETWEEN #{startTime} and #{endTime}
     </if>
-    <if test="startTime != null and  endTime == null" >
-      and o.examine_time &gt; #{startTime}
+    <if test="startTime != '' and  endTime == ''" >
+      and examine_time &gt; #{startTime}
     </if>
-    <if test="district != null" >
-      and o.district_id like '${district}%'
+    <if test="district != ''" >
+      and district_id like '${district}%'
     </if>
-    <if test="makedepartmentName != null" >
-      and o.make_department_name like '%${makedepartmentName}%'
+    <if test="makedepartmentName != ''" >
+      and make_department_name like '%${makedepartmentName}%'
     </if>
   </select>
   <sql id="Base_Column_List" >
     id, examiner_name, record_department_code, record_department_name, examine_time, 
     examine_address, examine_result_description, dispose_description, make_department_code, 
-    make_department_name, remark, district_id, examine_type_id, longitude, latitude
+    make_department_name, remark, district_id, examine_type_id, longitude, latitude,
+    examine_file_url,examine_type_name
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -84,19 +87,26 @@
       examine_result_description, dispose_description, 
       make_department_code, make_department_name, 
       remark, district_id, examine_type_id,
-      longitude, latitude)
+      longitude, latitude,examine_file_url,examine_type_name)
     values (#{id,jdbcType=CHAR}, #{examinerName,jdbcType=VARCHAR}, #{recordDepartmentCode,jdbcType=VARCHAR}, 
       #{recordDepartmentName,jdbcType=VARCHAR}, #{examineTime,jdbcType=TIMESTAMP}, #{examineAddress,jdbcType=VARCHAR}, 
       #{examineResultDescription,jdbcType=VARCHAR}, #{disposeDescription,jdbcType=VARCHAR}, 
       #{makeDepartmentCode,jdbcType=VARCHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{districtId,jdbcType=CHAR}, #{examineTypeId,jdbcType=VARCHAR},
-      #{longitude,jdbcType=REAL}, #{latitude,jdbcType=REAL})
+      #{longitude,jdbcType=REAL}, #{latitude,jdbcType=REAL},
+     #{examineFileUrl,jdbcType=VARCHAR}, #{examineTypeName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.ExamineRecord" >
     insert into examine_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="examineTypeName != null" >
+        examine_type_name,
+      </if>
+      <if test="examineFileUrl != null" >
+        examine_file_url,
       </if>
       <if test="examinerName != null" >
         examiner_name,
@@ -144,6 +154,12 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=CHAR},
+      </if>
+      <if test="examineTypeName != null" >
+        #{examineTypeName,jdbcType=CHAR},
+      </if>
+      <if test="examineFileUrl != null" >
+        #{examineFileUrl,jdbcType=CHAR},
       </if>
       <if test="examinerName != null" >
         #{examinerName,jdbcType=VARCHAR},
@@ -232,6 +248,12 @@
       <if test="latitude != null" >
         latitude = #{latitude,jdbcType=REAL},
       </if>
+      <if test="examineTypeName != null" >
+       examine_type_name = #{examineTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="examineFileUrl != null" >
+       examine_file_url = #{examineFileUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
@@ -249,7 +271,9 @@
       remark = #{remark,jdbcType=VARCHAR},
       district_id = #{districtId,jdbcType=CHAR},
       longitude = #{longitude,jdbcType=REAL},
-      latitude = #{latitude,jdbcType=REAL}
+      latitude = #{latitude,jdbcType=REAL},
+      examine_type_name = #{examineTypeName,jdbcType=VARCHAR},
+      examine_file_url = #{examineFileUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
 </mapper>

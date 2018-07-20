@@ -36,6 +36,10 @@ public class ExamineRecord {
 
     private Float latitude;
 
-    private List<ExamineRecordDetail> examineRecordDetails;
+    private String examineTypeName;
+
+    private String examineFileUrl;
+
+   private List<ExamineRecordDetail> examineRecordDetails;
 
 }
