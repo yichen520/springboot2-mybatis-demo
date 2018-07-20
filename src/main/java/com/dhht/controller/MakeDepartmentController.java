@@ -44,7 +44,7 @@ public class MakeDepartmentController {
      * @param httpServletRequest
      * @return
      */
-    @Log("展示制作单位列表")
+    @Log("查看制作单位列表")
     @RequestMapping(value = "/info")
     public JsonObjectBO info(@RequestBody Map map, HttpServletRequest httpServletRequest){
         User user =(User)httpServletRequest.getSession().getAttribute("user");
@@ -74,25 +74,23 @@ public class MakeDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
-
-
     /**
      * 展示修改记录
      * @param map
      * @return
      */
+    @Log("查看修改记录")
     @RequestMapping(value = "/showHistory")
     public JsonObjectBO selectHistory(@RequestBody Map map){
         String flag = (String)map.get("flag");
-
         List<Makedepartment> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
-
         try {
             result = makeDepartmentService.selectHistory(flag);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
@@ -102,17 +100,18 @@ public class MakeDepartmentController {
      * @param map
      * @return
      */
+    @Log("查看制作单位详情")
     @RequestMapping(value = "/selectDetailById")
     public JsonObjectBO selectDetailById(@RequestBody Map map){
         String id = (String)map.get("id");
-
         Makedepartment makedepartment = new Makedepartment();
         JSONObject jsonObject = new JSONObject();
         try{
             makedepartment = makeDepartmentService.selectDetailById(id);
             jsonObject.put("makedepartment",makedepartment);
         }catch (Exception e){
-            JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            JsonObjectBO.exception(e.toString());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
@@ -122,18 +121,18 @@ public class MakeDepartmentController {
      * @param makedepartment
      * @return
      */
+    @Log("添加制作单位")
     @RequestMapping(value = "insert")
     public JsonObjectBO insert(@RequestBody Makedepartment makedepartment){
-        JSONObject jsonObject = new JSONObject();
-        int result = 0;
-
+        int result ;
         try {
             result = makeDepartmentService.insert(makedepartment);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException d){
             return JsonObjectBO.exception("该用户已经存在");
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -142,18 +141,17 @@ public class MakeDepartmentController {
      * @param map
      * @return
      */
+    @Log("注销制作单位")
     @RequestMapping(value = "/delete")
     public JsonObjectBO delete(@RequestBody Map map){
         String id = (String) map.get("id");
-
-        JSONObject jsonObject = new JSONObject();
-        int result = 0;
-
+        int result ;
         try{
             result = makeDepartmentService.deleteById(id);
             return ResultUtil.getResult(result);
         }catch (Exception e){
-           return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -162,18 +160,18 @@ public class MakeDepartmentController {
      * @param makedepartment
      * @return
      */
+    @Log("修改制作单位")
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody Makedepartment makedepartment){
-        JSONObject jsonObject = new JSONObject();
-        int result = 0;
-
+        int result ;
         try {
             result = makeDepartmentService.update(makedepartment);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException d){
             return JsonObjectBO.error("该用户已存在");
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -190,10 +188,11 @@ public class MakeDepartmentController {
         try {
             districtMenus = districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("districtMenus",districtMenus);
+            return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+           return JsonObjectBO.exception(e.toString());
         }
-        return JsonObjectBO.success("查询成功",jsonObject);
     }
 
 
@@ -220,7 +219,8 @@ public class MakeDepartmentController {
             result = makeDepartmentService.selectPunish(makeDepartmentName,startTime,endTime,districtId,localDistrictId);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            JsonObjectBO.exception(e.toString());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }

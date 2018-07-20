@@ -11,6 +11,7 @@ import com.dhht.service.resource.ResourceService;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,34 +25,14 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    private JSONObject jsonObject = new JSONObject();
-
-   //根据ID查找资源
-//   @RequestMapping(value = "/selcect")
-//    public JsonObjectBO selectresouer(@RequestBody Map map){
-//
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        JSONObject jsonObject = new JSONObject();
-//
-//        String Id = map.get("key").toString();
-//        Resource resource = resourceService.selectByPrimaryKey(Id);
-//
-//       jsonObject.put("Resource",resource);
-//       jsonObjectBO.setData(jsonObject);
-//       jsonObjectBO.setCode(1);
-//       return jsonObjectBO;
-//
-//   }
+    private static Logger logger = Logger.getLogger(ResourceController.class);
 
     @Log("查询所有资源")
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     public JsonObjectBO selectAllResource(){
-      //  int pageNum =(Integer) map.get("current");
-        //int pageSize =(Integer)map.get("pageSize");
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-
        List<Resource> resource = resourceService.selectAllResource();
         jsonObject.put("Resource",resource);
         jsonObjectBO.setData(jsonObject);
@@ -63,10 +44,7 @@ public class ResourceController {
     @Log("删除资源")
     @RequestMapping(value = "/delete")
     public JsonObjectBO deleteResource(@RequestBody Map map){
-       // JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
         String Id = (String) map.get("id");
-
         int result = 0;
         try {
            result =  resourceService.deleteByPrimaryKey(Id);
@@ -77,7 +55,6 @@ public class ResourceController {
             return JsonObjectBO.error("删除失败");
         }
         return JsonObjectBO.ok("删除成功");
-
 
         /* 有子节点不能删除父节点，方法暂时废除
         int flag = resourceService.findChild(Id).size();
@@ -101,9 +78,8 @@ public class ResourceController {
    @Sync
     @RequestMapping(value = "/add")
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
-        //为资源添加一个UUID
         resource.setId(UUIDUtil.generate());
-        if(resource.getParentId()==""||resource.getParentId()==null){
+        if(resource.getParentId() == ""||resource.getParentId()==null){
             resource.setParentId("0");
         }
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -125,7 +101,6 @@ public class ResourceController {
     @RequestMapping(value = "/update")
     public JsonObjectBO updateResource(@RequestBody Resource resource){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
 
         int result = resourceService.updateByPrimaryKey(resource);
         if(result>0){
@@ -138,7 +113,7 @@ public class ResourceController {
         return jsonObjectBO;
     }
 
-    //查找权限下的资源
+    @Log("查找权限下的资源")
     @RequestMapping(value = "/selectRoleResource")
     public JsonObjectBO selectRoleResource(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -153,14 +128,16 @@ public class ResourceController {
         return jsonObjectBO;
     }
 
-    //查找所有非倚赖资源
+    @Log("查找所有非倚赖资源")
     @RequestMapping(value = "requiredResourceInfo")
     public JsonObjectBO selectRequiredResource(){
+        JSONObject jsonObject = new JSONObject();
         try {
             List<Map> menus = resourceService.selectRequiredResource();
             jsonObject.put("resource",menus);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
