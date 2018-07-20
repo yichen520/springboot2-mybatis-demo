@@ -10,6 +10,8 @@ import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,12 +36,13 @@ public class SealController  {
     @Autowired
     private FileService fileService;
 
-    private static JSONObject jsonObject = new JSONObject();
+    private static Logger logger = LoggerFactory.getLogger(SealController.class);
 
     @Log("查询使用单位是否备案")
     @RequestMapping("isrecord")
     public JsonObjectBO isrecord(@RequestBody Map map){
 
+        JSONObject jsonObject = new JSONObject();
         try {
             String useDepartmentCode =(String) map.get("useDepartmentCode");
             UseDepartment useDepartment =sealService.isrecord(useDepartmentCode);
@@ -50,8 +53,8 @@ public class SealController  {
                 return JsonObjectBO.success("查询成功",jsonObject);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return JsonObjectBO.exception("发生异常");
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -81,6 +84,7 @@ public class SealController  {
      * @param
      * @return
      */
+    @Log("印章备案")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator){
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
@@ -94,7 +98,9 @@ public class SealController  {
         String proxy =  sealOperator.getProxy();
         Seal seal = sealOperator.getSeal();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCrtificateType,operatorPhoto,idCardScanner,proxy);
+        try{
+            int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCrtificateType,operatorPhoto,idCardScanner,proxy);
+
         if(a==1) {
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("添加成功");
@@ -102,7 +108,12 @@ public class SealController  {
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("添加失败");
         }
-        return jsonObjectBO;
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+
 
     }
 
@@ -112,12 +123,14 @@ public class SealController  {
      * @param sealOperator
      * @return
      */
+    @Log("印章信息")
     @RequestMapping("/sealInfo")
     public JsonObjectBO sealInfo(HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
         String telphone = user.getTelphone();
+        try{
         Employee employee = employeeService.selectByPhone(telphone);
         String recordCode = employee.getOfficeCode();
         String useDepartmentName = sealOperator.getSeal().getUseDepartmentName();
@@ -131,6 +144,10 @@ public class SealController  {
         jsonObjectBO.setCode(1);
         jsonObjectBO.setMessage("查询成功");
         return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
     }
 
 
@@ -140,6 +157,7 @@ public class SealController  {
      * @paraml
      * @return
      */
+    @Log("上传印模")
     @RequestMapping("/sealUpload")
     public JsonObjectBO sealUpload(HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -147,6 +165,7 @@ public class SealController  {
         Seal seal = sealOperator.getSeal();
         String electronicSealURL = sealOperator.getElectronicSealURL();
         String sealScannerURL = sealOperator.getSealScannerURL();
+        try{
         int a =sealService.sealUpload(user,seal,electronicSealURL, sealScannerURL);
         if(a<0){
             jsonObjectBO.setCode(-1);
@@ -156,6 +175,11 @@ public class SealController  {
             jsonObjectBO.setMessage("上传印模成功");
         }
         return jsonObjectBO;
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
     }
 
 
@@ -165,20 +189,26 @@ public class SealController  {
      * @param
      * @return
      */
+    @Log("个人化")
     @RequestMapping("/sealPersonal")
     public JsonObjectBO sealPersonal(HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
         Seal seal = sealOperator.getSeal();
-        int a = sealService.sealPersonal (seal, user);
-        if(a<0){
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("个人化失败");
-        }else{
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("个人化成功");
+        try {
+            int a = sealService.sealPersonal(seal, user);
+            if (a < 0) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("个人化失败");
+            } else {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("个人化成功");
+            }
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
-        return jsonObjectBO;
     }
 
     /**
@@ -187,21 +217,27 @@ public class SealController  {
      * @param
      * @return
      */
+    @Log("交付")
     @RequestMapping("/deliver")
     public JsonObjectBO deliver (HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
         Seal seal = sealOperator.getSeal();
         SealGetPerson sealGetPerson = sealOperator.getSealGetPerson();
-        boolean a = sealService.deliver(user,seal,sealGetPerson);
-        if(a){
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("交付成功");
-        }else{
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("交付失败");
+        try {
+            boolean a = sealService.deliver(user, seal, sealGetPerson);
+            if (a) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("交付成功");
+            } else {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("交付失败");
+            }
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
-        return jsonObjectBO;
     }
 
     /**
@@ -210,27 +246,33 @@ public class SealController  {
      * @param
      * @return
      */
+    @Log("挂失")
     @RequestMapping("/loss")
     public JsonObjectBO loss (HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
         String telphone = user.getTelphone();
-        Employee employee = employeeService.selectByPhone(telphone);
-        String recordCode = employee.getOfficeCode();
-        Seal seal = sealOperator.getSeal();
-        SealOperationRecord sealOperationRecord = sealOperator.getSealOperationRecord();
-        String operatorPhoto = sealOperator.getOperatorPhoto();
-        String businessScanner = sealOperator.getBusinessScanner();
-        String proxy = sealOperator.getProxy();
-        int a =sealService.loss(user,seal,operatorPhoto,proxy,businessScanner,sealOperationRecord,recordCode);
-        if(a<0){
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("挂失失败");
-        }else{
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("挂失成功");
+        try {
+            Employee employee = employeeService.selectByPhone(telphone);
+            String recordCode = employee.getOfficeCode();
+            Seal seal = sealOperator.getSeal();
+            SealOperationRecord sealOperationRecord = sealOperator.getSealOperationRecord();
+            String operatorPhoto = sealOperator.getOperatorPhoto();
+            String businessScanner = sealOperator.getBusinessScanner();
+            String proxy = sealOperator.getProxy();
+            int a = sealService.loss(user, seal, operatorPhoto, proxy, businessScanner, sealOperationRecord, recordCode);
+            if (a < 0) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("挂失失败");
+            } else {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("挂失成功");
+            }
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
-        return jsonObjectBO;
     }
 
     /**
@@ -239,11 +281,13 @@ public class SealController  {
      * @param
      * @return
      */
+    @Log("注销")
     @RequestMapping("/logout")
     public JsonObjectBO logout (HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
         String telphone = user.getTelphone();
+        try{
         Employee employee = employeeService.selectByPhone(telphone);
         Seal seal = sealOperator.getSeal();
         SealOperationRecord sealOperationRecord = sealOperator.getSealOperationRecord();
@@ -259,6 +303,10 @@ public class SealController  {
             jsonObjectBO.setMessage("注销成功");
         }
         return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
     }
 
     /**
@@ -267,6 +315,7 @@ public class SealController  {
      * @param file
      * @return
      */
+    @Log("文件上传")
     @RequestMapping(value="/upload",produces="application/json;charset=UTF-8")
     public JsonObjectBO singleFileUpload(HttpServletRequest request,@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -282,6 +331,7 @@ public class SealController  {
                 return JsonObjectBO.error("文件上传失败");
             }
         } catch (Exception e) {
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("上传文件失败");
         }
     }

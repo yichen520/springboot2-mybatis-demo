@@ -3,6 +3,7 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 //import com.dhht.common.FastDFSClient;
+import com.dhht.annotation.Log;
 import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.File;
@@ -38,6 +39,7 @@ public class UploadController {
      * @param map  文件的url链接路径
      * @return
      */
+    @Log("删除文件")
     @RequestMapping(value="/deleteFile",produces="application/json;charset=UTF-8")
     public JsonObjectBO deleteFile(@RequestBody Map map){
         String filePath = (String) map.get("filePath");
@@ -62,6 +64,7 @@ public class UploadController {
      * @param file
      * @return
      */
+    @Log("上传到fastdfs文件服务器")
     @RequestMapping(value="/upload",produces="application/json;charset=UTF-8")
     public JsonObjectBO singleFileUpload(HttpServletRequest request,@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -83,6 +86,7 @@ public class UploadController {
         }
     }
     //上传到本地
+    @Log("上传到本地")
     @RequestMapping(value="/uploadLocal",produces="application/json;charset=UTF-8")
     public JsonObjectBO uploadLocal(HttpServletRequest request,@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -116,6 +120,7 @@ public class UploadController {
         }
     }
 
+    @Log("删除文件")
     @RequestMapping(value="/deleteLocalFile",produces="application/json;charset=UTF-8")
     public JsonObjectBO deleteLocalFile(@RequestBody Map map){
         String filePath = (String) map.get("filePath");

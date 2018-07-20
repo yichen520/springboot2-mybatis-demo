@@ -11,6 +11,8 @@ import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,8 @@ public class UseDepartmentController {
     @Autowired
     private DistrictService districtService;
 
+    private static Logger logger = LoggerFactory.getLogger(UseDepartmentController.class);
+
     /***
      * 添加
      * @param
@@ -39,8 +43,13 @@ public class UseDepartmentController {
     @Log("添加用户")
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO insert(@RequestBody UseDepartment useDepartment){
+        try{
         JsonObjectBO jsonObjectBO = useDepartmentService.insert(useDepartment);
-        return jsonObjectBO;
+        return jsonObjectBO;}
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
 
 
     }
@@ -50,10 +59,17 @@ public class UseDepartmentController {
      * @param useDepartment
      * @return
      */
+    @Log("使用单位修改")
     @RequestMapping(value = "/update" , method = RequestMethod.POST)
     public JsonObjectBO update(@RequestBody UseDepartment useDepartment){
+        try {
         JsonObjectBO jsonObjectBO = useDepartmentService.update(useDepartment);
         return jsonObjectBO;
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
     }
 
     /**
@@ -61,6 +77,7 @@ public class UseDepartmentController {
      * @param
      * @return
      */
+    @Log("使用单位模糊查找")
     @RequestMapping(value = "/find" , method = RequestMethod.POST)
     public JsonObjectBO find(HttpServletRequest httpServletRequest,@RequestBody Map map){
         String code = (String)map.get("code");
@@ -73,8 +90,13 @@ public class UseDepartmentController {
 
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");
+        try{
         JsonObjectBO jsonObjectBO = useDepartmentService.find(localDistrictId,code, name, districtId, departmentStatus, pageNum, pageSize);
         return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
     }
 
 
@@ -83,10 +105,16 @@ public class UseDepartmentController {
      * @param useDepartment
      * @return
      */
+    @Log("使用单位删除")
     @RequestMapping(value = "/delete" , method = RequestMethod.POST)
     public JsonObjectBO delete(@RequestBody UseDepartment useDepartment){
-        JsonObjectBO jsonObjectBO = useDepartmentService.delete(useDepartment);
-        return jsonObjectBO;
+        try {
+            JsonObjectBO jsonObjectBO = useDepartmentService.delete(useDepartment);
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
     }
 
 
@@ -95,11 +123,17 @@ public class UseDepartmentController {
      * @param map
      * @return
      */
+    @Log("查看历史")
     @RequestMapping(value = "/showHistory" , method = RequestMethod.POST)
     public JsonObjectBO showMore(@RequestBody Map map){
         String flag = (String)map.get("flag");
-        JsonObjectBO jsonObjectBO = useDepartmentService.showHistory(flag);
-        return jsonObjectBO;
+        try {
+            JsonObjectBO jsonObjectBO = useDepartmentService.showHistory(flag);
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
     }
 
     /**
@@ -107,6 +141,7 @@ public class UseDepartmentController {
      * @param map
      * @return
      */
+    @Log("查看使用单位详情")
     @RequestMapping(value = "/showMore")
     public JsonObjectBO selectDetailById(@RequestBody Map map){
         String id = (String)map.get("id");
@@ -116,24 +151,32 @@ public class UseDepartmentController {
         try{
             useDepartment = useDepartmentService.selectDetailById(id);
             jsonObject.put("useDepartment",useDepartment);
+            return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
-        return JsonObjectBO.success("查询成功",jsonObject);
+
     }
     /**
      * 根据名字进行了查询
      */
+    @Log("根据名字进行查询")
     @RequestMapping(value = "/selectByName" ,method = RequestMethod.POST)
     public JsonObjectBO selectByName(@RequestBody Map map){
         JSONObject jsonObject = new JSONObject();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String name = (String)map.get("name");
-        UseDepartment useDepartment = useDepartmentService.selectUseDepartment(name);
-        jsonObject.put("useDepartment",useDepartment);
-        jsonObjectBO.setCode(1);
-        jsonObjectBO.setData(jsonObject);
-        return jsonObjectBO;
+        try {
+            UseDepartment useDepartment = useDepartmentService.selectUseDepartment(name);
+            jsonObject.put("useDepartment", useDepartment);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setData(jsonObject);
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
 
     }
 
@@ -143,6 +186,7 @@ public class UseDepartmentController {
      * @param httpServletRequest
      * @return
      */
+    @Log("获取区域列表")
     @RequestMapping(value = "/districtInfo")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
@@ -151,9 +195,11 @@ public class UseDepartmentController {
         try {
             districtMenus = districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("districtMenus",districtMenus);
+            return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
-        return JsonObjectBO.success("查询成功",jsonObject);
+
     }
 }
