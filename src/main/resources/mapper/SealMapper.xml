@@ -380,7 +380,36 @@
       and  is_logout =true AND logout_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
-  <!--<if test="districtId !=null or districtId!=''">-->
-    <!--and b.department_address = #{districtId}-->
-  <!--</if>-->
+  <select id="selectByDistrictId" resultMap="BaseResultMap">
+     SELECT * from seal as s RIGHT JOIN(
+        select department_code,MAX(version)as ver ,department_address	from make_department  GROUP BY flag
+        )as b on s.make_department_code=b.department_code where  b.department_address = #{districtId}
+  </select>
+
+  <select id="countAddSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT count(id) from seal as s RIGHT JOIN(
+    select department_code,MAX(version)as ver ,department_address	from make_department  GROUP BY flag
+    )as b on s.make_department_code=b.department_code where
+    s.seal_type_code=#{sealTypeCode} AND  b.department_address =#{districtId}
+    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+  <select id="countLossSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
+
+    SELECT count(id) from seal as s RIGHT JOIN(
+    select department_code,MAX(version)as ver ,department_address from make_department GROUP BY flag
+    )as b on s.make_department_code=b.department_code where s.seal_type_code=#{sealTypeCode}
+    AND  b.department_address =#{districtId}
+    AND  is_loss =true
+    AND is_logout!=true AND loss_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+
+  <select id="countLogoutSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT count(id) from seal as s RIGHT JOIN(
+    select department_code,MAX(version)as ver ,department_address	from make_department  GROUP BY flag
+    )as b on s.make_department_code=b.department_code where  s.seal_type_code=#{sealTypeCode}
+    AND  b.department_address =#{districtId}
+    AND  is_logout =true AND logout_date BETWEEN  #{startTime} and #{endTime}
+  </select>
 </mapper>
