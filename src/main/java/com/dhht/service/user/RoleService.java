@@ -23,4 +23,6 @@ public interface RoleService {
     Role findRoleById(String id);
 
    List<Role> getRoleListNopage();
+
+   List<Role> getRoleUser(String districtId);
 }

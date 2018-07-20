@@ -1,14 +1,19 @@
 package com.dhht.model;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Set;
 
+@Data
 public class Role {
     private String id;
 
     private String name;
 
     private Boolean isSystem;
+
+    private List<UserSimple> roleUser;
 
 
     public Boolean getIsSystem() {
@@ -46,6 +51,23 @@ public class Role {
 //    }
 //
 //    public void setResources(String resources) {
+
+    public Boolean getSystem() {
+        return isSystem;
+    }
+
+    public void setSystem(Boolean system) {
+        isSystem = system;
+    }
+
+    public List<UserSimple> getRoleUser() {
+        return roleUser;
+    }
+
+    public void setRoleUser(List<UserSimple> roleUser) {
+        this.roleUser = roleUser;
+    }
+
 //        this.resources = resources;
 //    }
 
@@ -65,7 +87,18 @@ public class Role {
         this.name = name == null ? null : name.trim();
     }
 
-//    public int getIsSystem() {
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", isSystem=" + isSystem +
+                ", roleUser=" + roleUser +
+                ", resourceIds=" + resourceIds +
+                '}';
+    }
+
+    //    public int getIsSystem() {
 //        return isSystem;
 //    }
 //

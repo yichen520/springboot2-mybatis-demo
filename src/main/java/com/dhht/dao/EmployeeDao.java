@@ -45,6 +45,8 @@ public interface EmployeeDao {
 
     int updateMakeDepartment(@Param("id") String id,@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
+    List<Employee> selectAllByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
+
     //---------------统计部分--------------------//
     int countAllEmployee(@Param("districtId") String districtId);
 

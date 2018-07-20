@@ -10,6 +10,7 @@ import java.util.Map;
 public interface EmployeeService {
 
    // PageInfo<Employee> selectAllEmployee(int pageSum, int pageNum);
+    List<Employee> selectAllByDepartmentCode(String employeeDepartmentCode);
 
     List<Employee> selectByDepartmentCode(String employeeDepartmentCode);
 

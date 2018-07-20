@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.NotifyMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Notify" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="send_username" property="sendUsername" jdbcType="VARCHAR" />
+    <result column="send_realname" property="sendRealname" jdbcType="VARCHAR" />
+    <result column="notify_title" property="notifyTitle" jdbcType="VARCHAR" />
+    <result column="notify_content" property="notifyContent" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_recall" property="isRecall" jdbcType="BIT" />
+    <result column="recall_time" property="recallTime" jdbcType="TIMESTAMP" />
+    <result column="district_id" property="districtId" jdbcType="CHAR" />
+    <result column="notify_file_url" property="notifyFileUrl" jdbcType="VARCHAR" />
+    <result column="recall_result" property="recallResult" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, send_username, send_realname, notify_title, notify_content, create_time, is_recall, 
+    recall_time, district_id, notify_file_url, recall_result
+  </sql>
+
+  <select id="selectNotifyDetail" parameterType="java.util.List" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM notify WHERE id IN
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+         #{item.notifyId}
+    </foreach>
+  </select>
+
+  <select id="selectNotifyBySendUser" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM notify WHERE send_username = #{userName,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.String" >
+    delete from notify
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <update id="recallNotify" parameterType="java.lang.Object">
+    UPDATE notify
+    SET is_recall = 1,
+         recall_time = #{recallTime,jdbcType=TIMESTAMP},
+         recall_result = #{recallResult,jdbcType=VARCHAR}
+         WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insert" parameterType="com.dhht.model.Notify" >
+    insert into notify (id, send_username, send_realname, 
+      notify_title, notify_content, create_time, 
+      is_recall, recall_time, district_id, 
+      notify_file_url, recall_result)
+    values (#{id,jdbcType=CHAR}, #{sendUsername,jdbcType=VARCHAR}, #{sendRealname,jdbcType=VARCHAR}, 
+      #{notifyTitle,jdbcType=VARCHAR}, #{notifyContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isRecall,jdbcType=BIT}, #{recallTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR}, 
+      #{notifyFileUrl,jdbcType=VARCHAR}, #{recallResult,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Notify" >
+    update notify
+    set send_username = #{sendUsername,jdbcType=VARCHAR},
+      send_realname = #{sendRealname,jdbcType=VARCHAR},
+      notify_title = #{notifyTitle,jdbcType=VARCHAR},
+      notify_content = #{notifyContent,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_recall = #{isRecall,jdbcType=BIT},
+      recall_time = #{recallTime,jdbcType=TIMESTAMP},
+      district_id = #{districtId,jdbcType=CHAR},
+      notify_file_url = #{notifyFileUrl,jdbcType=VARCHAR},
+      recall_result = #{recallResult,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+</mapper>
