@@ -344,4 +344,43 @@
   insert into seal_getperson(id,seal_code,getperson_name,getperson_type,getperson_id,getperson_telphone,get_date,is_same)VALUES (#{id},#{sealCode},#{getpersonName},#{getpersonType},
   #{getpersonId},#{getpersonTelphone},#{getDate},#{isSame})
 </insert>
+
+  <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">
+    SELECT * FROM seal
+    <where>
+      make_department_code = #{makeDepartmentCode}
+    </where>
+  </select>
+
+
+  <!---统计模块-->
+  <select id="countAddSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(id) from seal as s RIGHT JOIN(
+        select department_code,MAX(version)as ver ,department_address	from make_department where department_code= #{makeDepartmentCode} GROUP BY flag
+        )as b on s.make_department_code=b.department_code where
+         s.seal_type_code=#{sealTypeCode}
+		and is_record = true and is_make = true and is_loss!=true and is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+  <select id="countLossSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
+
+        SELECT count(id) from seal as s RIGHT JOIN(
+        select department_code,MAX(version)as ver ,department_address	from make_department where department_code= #{makeDepartmentCode} GROUP BY flag
+        )as b on s.make_department_code=b.department_code where s.seal_type_code=#{sealTypeCode}
+
+        and  is_loss =true
+        and is_logout!=true AND loss_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+
+  <select id="countLogoutSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT count(id) from seal as s RIGHT JOIN(
+        select department_code,MAX(version)as ver ,department_address	from make_department where department_code= #{makeDepartmentCode} GROUP BY flag
+        )as b on s.make_department_code=b.department_code where  s.seal_type_code=#{sealTypeCode}
+      and  is_logout =true AND logout_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+  <!--<if test="districtId !=null or districtId!=''">-->
+    <!--and b.department_address = #{districtId}-->
+  <!--</if>-->
 </mapper>
