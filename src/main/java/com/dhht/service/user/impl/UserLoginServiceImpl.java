@@ -154,15 +154,17 @@ public class UserLoginServiceImpl implements UserLoginService {
                 long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
                 long m = a - b;
                 //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
+                long errorTimes ;
                 if (( m / (1000 * 60  )>loginErrorDate)){
                     userDao.updateErrorTimesZero(userDomain.getUsername());
+                   errorTimes = 4;
                 }else {
                     userDao.updateErrorTimes(userDomain.getUsername());
+                    errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
                 }
-
                 map.put("status", "error");
                 map.put("currentAuthority","guest");
-                map.put("message","账号密码错误");
+                map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
                 return map;
             }
             if (user.getIsLocked()){
@@ -200,7 +202,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             logger.error(e.getMessage(), e);
             map.put("status", "error");
             map.put("currentAuthority", "guest");
-            map.put("message","登录失败！");
+            map.put("message","登录失败！系统无此账号");
             return map;
         }
     }
@@ -223,11 +225,12 @@ public class UserLoginServiceImpl implements UserLoginService {
                 //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
                 if (( m / (1000 * 60  )>loginErrorDate)){
                     userDao.updateErrorTimesZero(userDomain.getUsername());
+
                 }else {
                     userDao.updateErrorTimes(userDomain.getUsername());
                 }
 
-                return JsonObjectBO.error("账号密码错误");
+                return JsonObjectBO.error("账号密码错误,你还可以输入");
             }
             if (user.getIsLocked()){
                 return JsonObjectBO.error("该用户已被锁定，请联系管理员！");

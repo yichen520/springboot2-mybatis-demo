@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
@@ -35,29 +36,23 @@ public class MakeDepartmentController {
     @Autowired
     private DistrictService districtService;
 
-
-    @Autowired
-    private RecordDepartmentService recordDepartmentService;
-
     private static Logger logger = LoggerFactory.getLogger(MakeDepartmentController.class);
 
-
-    private JSONObject jsonObject = new JSONObject();
     /**
      * 展示制作单位的列表
      * @param map
      * @param httpServletRequest
      * @return
      */
+    @Log("展示制作单位列表")
     @RequestMapping(value = "/info")
     public JsonObjectBO info(@RequestBody Map map, HttpServletRequest httpServletRequest){
         User user =(User)httpServletRequest.getSession().getAttribute("user");
         String districtId = (String)map.get("districtId");
         String name = (String)map.get("name");
         String status = (String) map.get("status");
-        int pageNum = (Integer) map.get("pageNum");
-        int pageSize = (Integer) map.get("pageSize");
-
+        Integer pageNum = (Integer) map.get("pageNum");
+        Integer pageSize = (Integer) map.get("pageSize");
 
         JSONObject jsonObject = new JSONObject();
         List<MakeDepartmentSimple> list = new ArrayList<>();
@@ -73,7 +68,8 @@ public class MakeDepartmentController {
                 jsonObject.put("makeDepartment", result);
             }
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
