@@ -4,11 +4,11 @@ import com.dhht.common.AccessResult;
 import com.dhht.dao.RoleDao;
 import com.dhht.dao.RoleResourceDao;
 import com.dhht.dao.UserDao;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.Role;
-import com.dhht.model.RoleResourceKey;
+import com.dhht.model.*;
 import com.dhht.service.user.RoleService;
+import com.dhht.service.user.UserService;
 import com.dhht.util.DaoUtil;
+import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,10 +24,13 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private RoleDao roleDao;//这里会报错，但是并不会影响
+    private RoleDao roleDao;
 
     @Autowired
-    private RoleResourceDao roleResourceDao;//这里会报错，但是并不会影响
+    private RoleResourceDao roleResourceDao;
+
+    @Autowired
+    private UserDao userDao;
 
 
     @Override
@@ -99,7 +102,23 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getRoleListNopage() {
        return getRoles();
     }
-   //获取所有资源方法
+
+    /**
+     * 获取角色下的用户
+     * @return
+     */
+    @Override
+    public List<Role> getRoleUser(String district) {
+       String districtId = StringUtil.getDistrictId(district);
+       List<Role> roles = roleDao.findAllRole();
+        for (Role role:roles) {
+            List<UserSimple> list = userDao.getRoleUser(districtId,role.getId());
+            role.setRoleUser(list);
+        }
+        return roles;
+    }
+
+    //获取所有资源方法
      public List<Role> getRoles(){
         List<Role> roles = roleDao.findAllRole();
         for(Role sysRole:roles){

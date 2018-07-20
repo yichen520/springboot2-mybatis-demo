@@ -106,7 +106,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setEmployeeJob((String) map.get("employeeJob"));
             employee.setEmployeeNation((String) map.get("employeeNation"));
             employee.setFamilyAddressDetail((String) map.get("familyAddressDetail"));
-            employee.setFamilyAddressDetail((String) map.get("nowAddressDetail"));
+            employee.setNowAddressDetail((String) map.get("nowAddressDetail"));
             employee.setEmployeeGender((String) map.get("employeeGender"));
             employee.setTelphone((String) map.get("telphone"));
             employee.setContactName((String) map.get("contactName"));
@@ -218,6 +218,15 @@ public class EmployeeServiceImp implements EmployeeService {
         return employeeDao.insert(employee);
         }
 
+    /**
+     * 获取当前单位下所有版本的员工
+     * @param employeeDepartmentCode
+     * @return
+     */
+    @Override
+    public List<Employee> selectAllByDepartmentCode(String employeeDepartmentCode) {
+        return employeeDao.selectAllByDepartmentCode(employeeDepartmentCode);
+    }
 
     /**
      * 查询某制作单位下在职的从业人员

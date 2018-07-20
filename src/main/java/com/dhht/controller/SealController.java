@@ -7,14 +7,17 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.SealOperator;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.tools.FileService;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -28,7 +31,10 @@ public class SealController  {
     @Autowired
     private EmployeeService employeeService;
 
-    private static JSONObject jsonObject = new JSONObject();;
+    @Autowired
+    private FileService fileService;
+
+    private static JSONObject jsonObject = new JSONObject();
 
     @Log("查询使用单位是否备案")
     @RequestMapping("isrecord")
@@ -100,6 +106,12 @@ public class SealController  {
 
     }
 
+    /**
+     *印章信息
+     * @param httpServletRequest
+     * @param sealOperator
+     * @return
+     */
     @RequestMapping("/sealInfo")
     public JsonObjectBO sealInfo(HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -247,5 +259,30 @@ public class SealController  {
             jsonObjectBO.setMessage("注销成功");
         }
         return jsonObjectBO;
+    }
+
+    /**
+     * 文件上传接口
+     * @param request
+     * @param file
+     * @return
+     */
+    @RequestMapping(value="/upload",produces="application/json;charset=UTF-8")
+    public JsonObjectBO singleFileUpload(HttpServletRequest request,@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return JsonObjectBO.error("请选择上传文件");
+        }
+        try {
+            File uploadFile =fileService.insertFile(request,file);
+            if(uploadFile!=null){
+                JSONObject jsonObject =new JSONObject();
+                jsonObject.put("file",uploadFile);
+                return JsonObjectBO.success("文件上传成功",jsonObject);
+            }else {
+                return JsonObjectBO.error("文件上传失败");
+            }
+        } catch (Exception e) {
+            return JsonObjectBO.exception("上传文件失败");
+        }
     }
 }

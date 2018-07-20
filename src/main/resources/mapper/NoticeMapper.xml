@@ -11,11 +11,31 @@
     <result column="district_id" jdbcType="CHAR" property="districtId" />
     <result column="notice_file_url" jdbcType="VARCHAR" property="noticeFileUrl" />
   </resultMap>
+  
+  <resultMap id="SimpleResultMap" type="com.dhht.model.NoticeSimple">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="send_username" jdbcType="VARCHAR" property="sendUsername" />
+    <result column="notice_title" jdbcType="VARCHAR" property="noticeTitle" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
 
   <sql id="Base_Column_List">
     id, send_username, send_realname, notice_title, notice_content, create_time, district_id, 
     notice_file_url
   </sql>
+  
+  <sql id="Simple_Column_list">
+     id, send_username,notice_title, create_time
+  </sql>
+
+  <select id="selectNoticeList" parameterType="java.lang.String" resultMap="SimpleResultMap">
+    SELECT <include refid="Simple_Column_list"/> FROM notice
+    WHERE district_id = #{cityId,jdbcType=VARCHAR} OR  district_id = #{provinceId,jdbcType=VARCHAR} ORDER BY create_time
+  </select>
+  
+  <select id="selectNoticeDetail"  parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM notice WHERE id = #{id}
+  </select>
 
   <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT
@@ -24,12 +44,12 @@
     where send_username = #{userName,jdbcType=VARCHAR}
   </select>
   
-  <select id="selectNoticeByNum" parameterType="java.lang.Object" resultMap="BaseResultMap">
-    SELECT     <include refid="Base_Column_List" />
-    from notice  WHERE district_id LIKE '${districtId}%' ORDER BY create_time LIMIT 0,#{pageNum}
+  <select id="selectNoticeByNum" parameterType="java.lang.Object" resultMap="SimpleResultMap">
+    SELECT  <include refid="Simple_Column_list"/>
+    from notice  WHERE district_id LIKE '${cityId}%' OR  district_id LIKE '${provinceId}%' ORDER BY create_time LIMIT 0,#{pageNum}
   </select>
 
-  <select id="selectById" parameterType="java.lang.String" resultType="com.dhht.model.Notice">
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"></include>
     FROM notice
     WHERE id = #{id,jdbcType=CHAR}

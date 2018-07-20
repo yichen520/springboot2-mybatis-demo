@@ -3,6 +3,8 @@ package com.dhht.dao;
 import com.dhht.model.Notice;
 
 import java.util.List;
+
+import com.dhht.model.NoticeSimple;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -12,12 +14,16 @@ public interface NoticeMapper {
 
     List<Notice> selectByUserName(@Param("userName") String userName);
 
-    int delete (@Param("id") String id);
+    int deleteById (@Param("id") String id);
 
     Notice selectById(@Param("id") String id);
 
     int update(Notice notice);
 
-    List<Notice> selectNoticeByNum(@Param("pageNum") Integer pageNum,@Param("districtId") String districtId);
+    List<NoticeSimple> selectNoticeByNum(@Param("pageNum") Integer pageNum, @Param("cityId") String cityId, @Param("provinceId") String provinceId);
+
+    List<NoticeSimple> selectNoticeList( @Param("cityId") String cityId, @Param("provinceId") String provinceId);
+
+    Notice selectNoticeDetail(@Param("id") String id);
 
 }

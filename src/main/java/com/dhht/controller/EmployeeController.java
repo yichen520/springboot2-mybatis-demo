@@ -105,7 +105,7 @@ public class EmployeeController {
     }
 
 /*
-    estMapping(value = "recordDepartment")
+    RestMapping(value = "recordDepartment")
     public JsonObjectBO selectRecordDepartment(@RequestBody Map map){
         String districtId = (String)map.get("districtId");
         JSONObject jsonObject = new JSONObject();

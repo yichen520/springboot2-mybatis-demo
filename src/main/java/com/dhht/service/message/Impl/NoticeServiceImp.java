@@ -1,11 +1,12 @@
-package com.dhht.service.notice.Impl;
+package com.dhht.service.message.Impl;
 
 
 import com.dhht.dao.NoticeMapper;
 import com.dhht.model.File;
 import com.dhht.model.Notice;
+import com.dhht.model.NoticeSimple;
 import com.dhht.model.User;
-import com.dhht.service.notice.NoticeService;
+import com.dhht.service.message.NoticeService;
 import com.dhht.service.tools.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.dhht.util.*;
@@ -33,13 +34,12 @@ public class NoticeServiceImp implements NoticeService{
 
     /**
      * 新增公告
-     * @param map
+     * @param notice
      * @param user
      * @return
      */
     @Override
-    public int insert(Map map,User user) {
-        Notice notice = new Notice();
+    public int insert(Notice notice,User user) {
         StringBuffer stringBuffer = new StringBuffer();
         try {
             notice.setId(UUIDUtil.generate());
@@ -47,11 +47,9 @@ public class NoticeServiceImp implements NoticeService{
             notice.setDistrictId(user.getDistrictId());
             notice.setSendRealname(user.getRealName());
             notice.setSendUsername(user.getUserName());
-            notice.setNoticeContent((String) map.get("content"));
-            notice.setNoticeTitle((String)map.get("title"));
-            List<File> fileList = (List<File>) map.get("file");
-            for (int i =0;i<fileList.size();i++) {
-                String path = fileList.get(i).getFilePath();
+            List<File> fileList = notice.getFiles();
+            for (File file:fileList) {
+                String path =file.getFilePath();
                 stringBuffer.append(path+";");
             }
             notice.setNoticeFileUrl(stringBuffer.toString());
@@ -62,6 +60,7 @@ public class NoticeServiceImp implements NoticeService{
                 return ResultUtil.isFail;
             }
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return ResultUtil.isException;
         }
     }
@@ -93,15 +92,19 @@ public class NoticeServiceImp implements NoticeService{
     @Override
     public int delete(String id) {
         Notice notice = noticeMapper.selectById(id);
-        String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrl());
-        int n = noticeMapper.delete(id);
+
+        int n = noticeMapper.deleteById(id);
         if(n!=1){
             return ResultUtil.isFail;
         }
-
-       if(deleteFile(paths)==ResultUtil.isFail){
-            return ResultUtil.isFail;
-       }
+        if(notice.getNoticeFileUrl()!=null) {
+            String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrl());
+            if (deleteFile(paths) == ResultUtil.isFail) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isFail;
+            }
+            return ResultUtil.isSuccess;
+        }
         return ResultUtil.isSuccess;
     }
 
@@ -147,9 +150,43 @@ public class NoticeServiceImp implements NoticeService{
      * @return
      */
     @Override
-    public List<Notice> selectByNum(String district) {
-        String districtId = StringUtil.getDistrictId(district);
-        return noticeMapper.selectNoticeByNum(pageNum,districtId);
+    public List<NoticeSimple> selectByNum(String district) {
+        String districtIds[] = StringUtil.DistrictUtil(district);
+        String cityId = districtIds[0]+districtIds[1]+"00";
+        String provinceId = districtIds[0]+"00"+"00";
+        return noticeMapper.selectNoticeByNum(pageNum,cityId,provinceId);
+    }
+
+    /**
+     * 公告列表
+     * @param district
+     * @return
+     */
+    @Override
+    public List<NoticeSimple> selectNoticeList(String district) {
+        String districtIds[] = StringUtil.DistrictUtil(district);
+        String cityId = districtIds[0]+districtIds[1]+"00";
+        String provinceId = districtIds[0]+"00"+"00";
+        return noticeMapper.selectNoticeList(cityId,provinceId);
+    }
+
+    /**
+     * 公告详情展示
+     * @param id
+     * @return
+     */
+    @Override
+    public Notice selectNoticeDetail(String id) {
+        Notice notice = noticeMapper.selectNoticeDetail(id);
+        List<File> fileList = new ArrayList<>();
+        if(notice.getNoticeFileUrl()!=null){
+            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrl());
+            for(int i=0;i<paths.length;i++){
+                fileList.add(fileService.selectByPath(paths[i]));
+            }
+            notice.setFiles(fileList);
+        }
+        return notice;
     }
 
     /**
