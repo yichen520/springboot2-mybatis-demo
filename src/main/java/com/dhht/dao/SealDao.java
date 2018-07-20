@@ -44,4 +44,11 @@ public interface SealDao {
 
     int countLogoutSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
+    List<Seal> selectByDistrictId(@Param("districtId")String districtId);
+
+    int countAddSealByDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    int countLossSealByDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    int countLogoutSealByDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 }

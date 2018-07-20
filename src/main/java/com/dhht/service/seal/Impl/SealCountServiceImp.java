@@ -9,6 +9,7 @@ import com.dhht.model.SealCount;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentCuontService;
 import com.dhht.service.seal.SealCuontService;
+import com.dhht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,6 +153,52 @@ public class SealCountServiceImp implements SealCuontService {
         return sealCount;
     }
 
+
+    /***
+     * 根据status和districtId获取对应的num
+     * @param Status
+     * @param districtId
+     * @param sealTypeCode
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public SealCount getStatus(List<String> Status,String districtId,String sealTypeCode,String startTime, String endTime){
+        int newSealNum = 0;
+        int lossSealNum = 0;
+        int logoutSealNum = 0;
+
+        if (Status.contains("01") && Status.contains("05") && Status.contains("06")) { //只查询 已经制作 已经注销和已经挂失的
+            newSealNum = sealDao.countAddSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+            lossSealNum = sealDao.countLossSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+            logoutSealNum = sealDao.countLogoutSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        } else if (Status.contains("05") && Status.contains("06")) {
+            lossSealNum = sealDao.countLossSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+            logoutSealNum = sealDao.countLogoutSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        } else if (Status.contains("01") && Status.contains("06")) {
+            newSealNum = sealDao.countAddSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+            logoutSealNum = sealDao.countLogoutSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        } else if (Status.contains("01") && Status.contains("05")) {
+            newSealNum = sealDao.countAddSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+            lossSealNum = sealDao.countLossSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        } else if (Status.contains("01")) {
+            newSealNum = sealDao.countAddSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        } else if (Status.contains("05")) {
+            lossSealNum = sealDao.countLossSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        } else if (Status.contains("06")) {
+            logoutSealNum = sealDao.countLogoutSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        } else {
+            newSealNum = sealDao.countAddSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+            lossSealNum = sealDao.countLossSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+            logoutSealNum = sealDao.countLogoutSealByDistrictId(districtId, sealTypeCode, startTime, endTime);
+        }
+        SealCount sealCount = new SealCount();
+        sealCount.setNewSealNum(newSealNum);
+        sealCount.setLossSealNum(lossSealNum);
+        sealCount.setLogoutSealNum(logoutSealNum);
+        return sealCount;
+    }
+
     /**
      * 根据制作单位
      *
@@ -259,7 +306,6 @@ public class SealCountServiceImp implements SealCuontService {
                             sealType = "其他类型章";
                             break;
                     }
-//                    sealCount.setSealType(sealType);
                     SealCount Num=getStatus(Status,makeDepartmentCode, districtId,sealTypeCode , startTime, endTime);
                     newSealNum=Num.getNewSealNum();
                     lossSealNum=Num.getLossSealNum();
@@ -277,118 +323,39 @@ public class SealCountServiceImp implements SealCuontService {
         return getSum(counts);
     }
 
-    @Override
-    public List<SealCount> countByDistrictId(List<String> districtIds, List<String> sealTypeCodes, List<String> Status, String startTime, String endTime) {
+//    /**
+//     * 根据区域查找印章
+//     * @param districtIds
+//     * @param sealTypeCodes
+//     * @param Status
+//     * @param startTime
+//     * @param endTime
+//     * @return
+//     */
+//    @Override
+//    public List<SealCount> countByDistrictId(List<String> districtIds, List<String> sealTypeCodes, List<String> Status, String startTime, String endTime) {
 //        int newSealNum = 0;
 //        int lossSealNum = 0;
 //        int logoutSealNum = 0;
 //        List<SealCount> counts = new ArrayList<>();
-//        for (String districtId : districtIds) { //根据传入的code进行遍历
-//            List<SealCount> count = new ArrayList<>();
-//            String countName = makedepartmentMapper.selectByDepartmentCode(makeDepartmentCode).getDepartmentName(); //更加code查找name
-////            sealCount.setCountName(countName);  //存入count对象
-//            List<Seal> seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode); //根据code查找seal中的所有印章
-//            Set<String> set = new HashSet<>();
-//            for (Seal seal : seals) {
-//                set.add(seal.getSealTypeCode());
+//        for (String districtId : districtIds) { //根据传入的code进行遍历  判断省市区
+//            String districtIds1[] = StringUtil.DistrictUtil(districtId);
+//            String districtId1= null;
+//            if(districtIds1[1].equals("00")&&districtIds1[2].equals("00")){  //输入为省
+//                districtId1 = districtIds1[0];
+//                List<DistrictMenus> list = districtService.selectOneDistrict(districtId1);
+//
+//
+//            }else if(!districtIds1[1].equals("00")&&districtIds1[2].equals("00")){  //输入为市
+//                districtId1 = districtIds1[0]+districtIds1[1];
+//            }else {
+//                districtId1 = districtId;
 //            }
-//            Iterator<String> iterator = set.iterator();
-//            while (iterator.hasNext()) {
-//                String sealTypeCode = iterator.next();  //每个seal中的所有的sealtypecode的集合
-//                if (sealTypeCodes.size() != 0) {
-//                    for (String sealTypeCode1 : sealTypeCodes) {
-//                        if (sealTypeCode.equals(sealTypeCode1)) {
-//                            String sealType = "";
-//                            switch (sealTypeCode) {
-//                                case "01":
-//                                    sealType = "法定名称章";
-//                                    break;
-//                                case "02":
-//                                    sealType = "财务专用章";
-//                                    break;
-//                                case "03":
-//                                    sealType = "发票专用章";
-//                                    break;
-//                                case "04":
-//                                    sealType = "合同专用章";
-//                                    break;
-//                                case "05":
-//                                    sealType = "法人代表专用章";
-//                                    break;
-//                                case "06":
-//                                    sealType = "公章";
-//                                    break;
-//                                case "07":
-//                                    sealType = "内设机构章";
-//                                    break;
-//                                case "08":
-//                                    sealType = "分支机构章";
-//                                    break;
-//                                case "99":
-//                                    sealType = "其他类型章";
-//                                    break;
-//                            }
-//
-//                            SealCount Num=getStatus(Status,makeDepartmentCode, districtId,sealTypeCode , startTime, endTime);
-//                            newSealNum=Num.getNewSealNum();
-//                            lossSealNum=Num.getLossSealNum();
-//                            logoutSealNum=Num.getLogoutSealNum();
-//                            if (newSealNum != 0 || lossSealNum != 0 || logoutSealNum != 0) {
-//                                SealCount sealCount = new SealCount(countName,sealType,newSealNum,lossSealNum,logoutSealNum);
-//                                count.add(sealCount);
-//                            }
-//                        }
-//                    }
-//                } else { //当前端输入当type不存在当时候
-//                    String sealType = "";
-//                    switch (sealTypeCode) {
-//
-//                        case "01":
-//                            sealType = "法定名称章";
-//                            break;
-//                        case "02":
-//                            sealType = "财务专用章";
-//                            break;
-//                        case "03":
-//                            sealType = "发票专用章";
-//                            break;
-//                        case "04":
-//                            sealType = "合同专用章";
-//                            break;
-//                        case "05":
-//                            sealType = "法人代表专用章";
-//                            break;
-//                        case "06":
-//                            sealType = "公章";
-//                            break;
-//                        case "07":
-//                            sealType = "内设机构章";
-//                            break;
-//                        case "08":
-//                            sealType = "分支机构章";
-//                            break;
-//                        case "99":
-//                            sealType = "其他类型章";
-//                            break;
-//                    }
-////                    sealCount.setSealType(sealType);
-//                    SealCount Num=getStatus(Status,makeDepartmentCode, districtId,sealTypeCode , startTime, endTime);
-//                    newSealNum=Num.getNewSealNum();
-//                    lossSealNum=Num.getLossSealNum();
-//                    logoutSealNum=Num.getLogoutSealNum();
-//                    if (newSealNum != 0 || lossSealNum != 0 || logoutSealNum != 0) {
-//                        SealCount sealCount = new SealCount(countName,sealType,newSealNum,lossSealNum,logoutSealNum);
-//                        count.add(sealCount);
-//                    }
-//                }
-//            }
-//            count.add(subtotal(count));//把小计放入队列
-//            counts.addAll(count);
-//
 //        }
-//        return getSum(counts);
-        return null;
-    }
+//return null;
+//    }
+
+
 
 
 }

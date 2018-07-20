@@ -33,7 +33,6 @@ public class EmployeeController {
     @Autowired
     private FileService fileService;
 
-    private JSONObject jsonObject = new JSONObject();
 
     /**
      * 菜单
@@ -69,7 +68,7 @@ public class EmployeeController {
         int status = (Integer) map.get("status");
         String name = (String) map.get("name");
         String departmentCode = makeDepartmentService.selectCodeByLegalTelphone(user.getTelphone());
-
+        JSONObject jsonObject = new JSONObject();
         try {
             PageHelper.startPage(pageNum, pageSize);
             if (status == 1) {
