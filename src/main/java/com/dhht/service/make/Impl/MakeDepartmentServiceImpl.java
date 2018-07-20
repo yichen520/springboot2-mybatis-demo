@@ -110,7 +110,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public int update(Makedepartment makedepartment) {
         try {
             Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
-            List<Employee> employees = employeeService.operationByDepartmentCode(oldDate.getDepartmentCode());
+            List<Employee> employees = employeeService.selectAllByDepartmentCode(oldDate.getDepartmentCode());
             int d = makedepartmentMapper.deleteHistoryByID(oldDate.getId());
             if (d == 0) {
                 return 5;
@@ -156,7 +156,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         if(makedepartmentMapper.deleteHistoryByID(id)==0){
             return ResultUtil.isError;
         }
-        List<Employee> employees = employeeService.operationByDepartmentCode(makedepartment.getDepartmentCode());
+        List<Employee> employees = employeeService.selectAllByDepartmentCode(makedepartment.getDepartmentCode());
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
         User user = setUserByType(makedepartment,3);

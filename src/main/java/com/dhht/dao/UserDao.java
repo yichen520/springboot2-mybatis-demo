@@ -3,6 +3,7 @@ package com.dhht.dao;
 
 import com.dhht.model.UserDomain;
 import com.dhht.model.User;
+import com.dhht.model.UserSimple;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -59,4 +60,6 @@ public interface UserDao {
     int deleteByTelphone(String telphone);
 
     List<User> findAll();
+
+    List<UserSimple> getRoleUser(@Param("districtId")String districtId, @Param("roleId")String roleId);
 }

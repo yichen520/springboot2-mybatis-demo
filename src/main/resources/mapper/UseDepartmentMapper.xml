@@ -253,7 +253,7 @@
 
 
   <select id="selectByFlag" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT  <include refid="Base_Column_List" /> FROM use_department WHERE flag = #{flag,jdbcType=VARCHAR} ORDER BY updateTime desc
+    SELECT  <include refid="Base_Column_List" /> FROM use_department WHERE flag = #{flag,jdbcType=VARCHAR}  and is_delete = 1 ORDER BY updateTime desc
   </select>
 
   <select id="selectByDepartmentStatus" parameterType="java.lang.String" resultMap="BaseResultMap">

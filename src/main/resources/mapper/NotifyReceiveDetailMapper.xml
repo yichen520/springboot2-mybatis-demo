@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.NotifyReceiveDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.NotifyReceiveDetail" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="nofity_id" property="notifyId" jdbcType="CHAR" />
+    <result column="receive_user_id" property="receiveUserId" jdbcType="VARCHAR" />
+    <result column="receive_user_name" property="receiveUserName" jdbcType="VARCHAR" />
+    <result column="is_read" property="isRead" jdbcType="BIT" />
+    <result column="read_time" property="readTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, nofity_id, receive_user_id, receive_user_name, is_read, read_time
+  </sql>
+  
+  <select id="countNewNotify" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(id)  FROM notify_receive_detail WHERE receive_user_id =#{receiveUserId,jdbcType=VARCHAR} AND is_read = 0
+  </select>
+  
+  <select id="selectNotifyIdByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM notify_receive_detail WHERE receive_user_id = #{receiveUserId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from notify_receive_detail
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <delete id="deleteByNotifyId" parameterType="java.lang.String" >
+    delete from notify_receive_detail
+    where notify_id = #{notifyId,jdbcType=CHAR}
+  </delete>
+
+  
+
+  <insert id="insert" parameterType="com.dhht.model.NotifyReceiveDetail" >
+    insert into notify_receive_detail (id, nofity_id, receive_user_id, 
+      receive_user_name, is_read, read_time
+      )
+    values (#{id,jdbcType=CHAR}, #{nofityId,jdbcType=CHAR}, #{receiveUserId,jdbcType=VARCHAR}, 
+      #{receiveUserName,jdbcType=VARCHAR}, #{isRead,jdbcType=BIT}, #{readTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.NotifyReceiveDetail" >
+    update notify_receive_detail
+    set nofity_id = #{nofityId,jdbcType=CHAR},
+      receive_user_id = #{receiveUserId,jdbcType=VARCHAR},
+      receive_user_name = #{receiveUserName,jdbcType=VARCHAR},
+      is_read = #{isRead,jdbcType=BIT},
+      read_time = #{readTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <update id="isRead" parameterType="java.lang.Object">
+    UPDATE notify
+    SET is_read = 1,
+    read_time = #{readTime,jdbcType=TIMESTAMP}
+    WHERE id = receive_user_id = #{receiveUserId,jdbcType=VARCHAR}
+  </update>
+</mapper>

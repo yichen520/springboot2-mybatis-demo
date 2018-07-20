@@ -241,6 +241,18 @@
 
         </where>
     </select>
+    
+    <select id="getRoleUser" parameterType="java.lang.String" resultMap="simpleResultMap">
+        SELECT <include refid="simple_User_List"/> FROM sys_user
+        <where>
+            <if test="districtId !=null and districtId !=''">
+                AND district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="roleId !=null and roleId !=''">
+                AND role_id = #{roleId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
 
 
 

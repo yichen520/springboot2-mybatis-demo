@@ -6,6 +6,8 @@ import com.dhht.model.SealCount;
 import java.util.List;
 
 public interface SealCuontService {
-    //
-    List<SealCount> countByDepartment(String makeDepartmentCode,String districtId, String startTime, String endTime);
+    //按照刻制企业
+    List<SealCount> countByDepartment(List<String> makeDepartmentCodes, String districtId, List<String> sealTypeCodes, List<String> Status, String startTime, String endTime);
+
+    List<SealCount> countByDistrictId(List<String> districtIds,List<String> sealTypeCodes, List<String> Status, String startTime, String endTime );
 }

@@ -72,7 +72,7 @@
   </select>
 
   <select id="selectByFlag" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE flag = #{flag,jdbcType=VARCHAR} ORDER BY version desc
+    SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE flag = #{flag,jdbcType=VARCHAR} AND is_delete = 1 ORDER BY updateTime desc
   </select>
 
 
