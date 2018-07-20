@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
@@ -22,16 +23,17 @@ public class DistrictController {
     @Autowired
     private DistrictService districtService;
 
-
-
+    /**
+     * 查看所有区域
+     * @return
+     */
+    @Log("查看所有区域")
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     public JsonObjectBO selectAllDistrict(){
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-
         List<DistrictMenus> district = districtService.selectAllDistrict();
-       // System.out.println(district.size());
         for (DistrictMenus districts:district) {
             System.out.println(districts.toString());
         }
@@ -73,16 +75,10 @@ public class DistrictController {
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-
-
         List<DistrictMenus> district = districtService.selectOneDistrict(user.getDistrict().getDistrictId());
-
-
-        // System.out.println(district.size());
         for (DistrictMenus districts:district) {
             System.out.println(districts.toString());
         }
-
         jsonObject.put("District",district);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);

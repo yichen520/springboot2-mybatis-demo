@@ -1,5 +1,6 @@
 package com.dhht.controller;
 
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.User;
 import com.dhht.service.user.UserService;
