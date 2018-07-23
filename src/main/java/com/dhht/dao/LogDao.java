@@ -16,5 +16,5 @@ public interface LogDao {
     List<SysLog> selectAllLog();
 
     //模糊查询
-    List<SysLog> find(@Param("start") String start, @Param("end") String end);
+    List<SysLog> find(@Param("type") String type, @Param("result") String result,@Param("name") String name ,@Param("ip") String ip, @Param("startTime") String startTime ,@Param("endTime") String endTime);
  }

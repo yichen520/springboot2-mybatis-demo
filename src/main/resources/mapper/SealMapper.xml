@@ -416,7 +416,7 @@
     AND  is_logout =true AND logout_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
-  <select id="countByDistrictId" resultMap="java.util.Map" parameterType="java.util.List">
+  <select id="countByDistrictId" resultType="java.util.Map" parameterType="java.util.List">
     SELECT
     sys_district.province_id,
     sys_district.province_name,

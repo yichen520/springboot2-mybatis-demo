@@ -15,7 +15,7 @@
   <select id="selectAllLog" resultMap="BaseResultMap" >
     SELECT
     <include refid="Base_Column_List"/>
-    FROM sys_log
+    FROM sys_log ORDER BY log_time desc
   </select>
   <insert id="saveLog" parameterType="com.dhht.model.SysLog">
      insert into sys_log (log_type,log_result,log_user,log_time,ip) values(#{LogType,jdbcType=VARCHAR},#{LogResult,jdbcType=VARCHAR},
@@ -23,16 +23,29 @@
   </insert>
 
   <select id="find" resultMap="BaseResultMap">
-    SELECT
-    <include refid="Base_Column_List"/>
-    FROM sys_log
-    WHERE log_time
-    BETWEEN
-    <if test="start != null and start!=''">
-     #{start}
+    select <include refid="Base_Column_List" />
+    from sys_log  where 1 = 1
+    <if test="startTime == null and  endTime != null" >
+      and log_time &lt; #{endTime}
     </if>
-    <if test="end !=null and end!=''">
-    AND #{end}
+    <if test="startTime != null and  endTime != null" >
+      and log_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != null and  endTime == null" >
+      and log_time &gt; #{startTime}
+    </if>
+    <if test="result != null" >
+      and log_result = #{result}
+    </if>
+    <if test="name != null" >
+      and log_user like '%${name}%'
+    </if>
+    <if test="type != null" >
+      and log_type like '%${type}%'
+    </if>
+    <if test="ip != null" >
+      and ip like '%${ip}%'
     </if>
   </select>
+
 </mapper>

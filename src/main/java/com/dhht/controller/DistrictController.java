@@ -1,5 +1,6 @@
 package com.dhht.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
@@ -7,7 +8,11 @@ import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
+import com.dhht.sms.SmsSingleSender;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,9 +24,30 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/sys/district")
-public class DistrictController {
+public class DistrictController
+//        implements InitializingBean
+{
     @Autowired
     private DistrictService districtService;
+
+//    @Autowired
+//     private StringRedisTemplate template;
+//    @Autowired
+//    private RedisTemplate redisTemplate;
+
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        List<DistrictMenus> district = districtService.selectAllDistrict();
+//        if(district== null) {
+//            return ;
+//        }
+//        if(!template.hasKey("District")){
+//            template.opsForValue().append("District", JSON.toJSONString(district));
+//        }else{
+//            template.delete("District");
+//        }
+//
+//    }
 
     /**
      * 查看所有区域
@@ -34,9 +60,8 @@ public class DistrictController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         List<DistrictMenus> district = districtService.selectAllDistrict();
-        for (DistrictMenus districts:district) {
-            System.out.println(districts.toString());
-        }
+//        String districts = template.opsForValue().get("District");
+ //       List<DistrictMenus> district = JSON.parseArray(districts,DistrictMenus.class);
         jsonObject.put("District",district);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
