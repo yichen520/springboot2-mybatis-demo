@@ -278,7 +278,7 @@
     values (#{id}, #{sealCode}, #{dateTime},
       #{operatorTelphone}, #{emplyeeName}, #{employeeId},
       #{operatorName}, #{operatorCertificateCode},
-      #{operatorCrtificateType},#{flag})
+      #{operatorCertificateType},#{flag})
   </insert>
 
 
@@ -332,13 +332,13 @@
   
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName
-    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCrtificateType,
+    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCertificateType,
     flag AS flag from seal_operation_record WHERE seal_code =#{sealCode} AND flag="01"
   </select>
 
   <select id="SelectByCodeAndFlag03" resultType="com.dhht.model.SealOperationRecord">
     SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName
-    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCrtificateType,
+    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCertificateType,
     flag AS flag from seal_operation_record WHERE seal_code =#{sealCode} AND flag= #{flag}
   </select>
 
@@ -414,5 +414,25 @@
     )as b on s.make_department_code=b.department_code where  s.seal_type_code=#{sealTypeCode}
     AND  b.department_address =#{districtId}
     AND  is_logout =true AND logout_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+  <select id="countByDistrictId" resultMap="java.util.Map" parameterType="java.util.List">
+    SELECT
+    sys_district.province_id,
+    sys_district.province_name,
+    sys_district.city_id,
+    sys_district.city_name,
+    sys_district.district_id,
+    sys_district.district_name,
+    count(seal.id)
+    seal.seal_type_code,
+    FROM
+    sys_district ,
+    seal
+    WHERE seal.district_id = sys_district.district_id AND seal.district_id IN
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+    #{item.districtId}
+    </foreach>
+
   </select>
 </mapper>

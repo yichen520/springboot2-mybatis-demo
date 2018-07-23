@@ -158,27 +158,7 @@ public class UseDepartmentController {
         }
 
     }
-    /**
-     * 根据名字进行了查询
-     */
-    @Log("根据名字进行查询")
-    @RequestMapping(value = "/selectByName" ,method = RequestMethod.POST)
-    public JsonObjectBO selectByName(@RequestBody Map map){
-        JSONObject jsonObject = new JSONObject();
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String name = (String)map.get("name");
-        try {
-            UseDepartment useDepartment = useDepartmentService.selectUseDepartment(name);
-            jsonObject.put("useDepartment", useDepartment);
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setData(jsonObject);
-            return jsonObjectBO;
-        }catch (Exception e){
-            logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
-        }
 
-    }
 
 
     /**

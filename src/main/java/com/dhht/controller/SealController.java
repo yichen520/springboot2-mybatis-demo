@@ -4,19 +4,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
-import com.dhht.model.pojo.SealOperator;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +32,9 @@ public class SealController  {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private UseDepartmentService useDepartmentService;
 
     private static Logger logger = LoggerFactory.getLogger(SealController.class);
 
@@ -92,7 +92,7 @@ public class SealController  {
         String operatorTelphone = sealOperator.getSealOperationRecord().getOperatorTelphone();
         String operatorName = sealOperator.getSealOperationRecord().getOperatorName();
         String operatorCertificateCode = sealOperator.getSealOperationRecord().getOperatorCertificateCode();
-        String operatorCrtificateType = sealOperator.getSealOperationRecord().getOperatorCrtificateType();
+        String operatorCrtificateType = sealOperator.getSealOperationRecord().getOperatorCertificateType();
         String operatorPhoto = sealOperator.getOperatorPhoto();
         String idCardScanner = sealOperator.getIdCardScanner();
         String proxy =  sealOperator.getProxy();
@@ -334,5 +334,27 @@ public class SealController  {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("上传文件失败");
         }
+    }
+
+    /**
+     * 根据名字进行了查询
+     */
+    @Log("根据名字进行查询")
+    @RequestMapping(value = "/selectByName" ,method = RequestMethod.POST)
+    public JsonObjectBO selectByName(@RequestBody Map map){
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String name = (String)map.get("name");
+        try {
+            UseDepartment useDepartment = useDepartmentService.selectUseDepartment(name);
+            jsonObject.put("useDepartment", useDepartment);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setData(jsonObject);
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+
     }
 }

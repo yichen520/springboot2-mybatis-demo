@@ -22,7 +22,7 @@ public class SealOperationRecord {
 
     private String operatorCertificateCode; //经办人身份证
 
-    private String operatorCrtificateType; //身份类型
+    private String operatorCertificateType; //身份类型
 
     private String  flag;//类型
 

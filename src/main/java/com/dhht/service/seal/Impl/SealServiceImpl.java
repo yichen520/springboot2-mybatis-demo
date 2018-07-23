@@ -124,7 +124,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperatorName(operatorName);          //经办人
         sealOperationRecord.setOperatorTelphone(operatorTelphone);
         sealOperationRecord.setOperatorCertificateCode(operatorCertificateCode);
-        sealOperationRecord.setOperatorCrtificateType(operatorCrtificateType);
+        sealOperationRecord.setOperatorCertificateType(operatorCrtificateType);
         sealOperationRecord.setFlag("01");
         sealDao.insertSealOperationRecord(sealOperationRecord);
         SealMaterial sealMaterial = new SealMaterial();
@@ -362,7 +362,7 @@ public class SealServiceImpl implements SealService {
             sealGetPerson.setGetpersonId(sealOperationRecord.getOperatorCertificateCode());
             sealGetPerson.setGetpersonName(sealOperationRecord.getOperatorName());
             sealGetPerson.setGetpersonTelphone(sealOperationRecord.getOperatorTelphone());
-            sealGetPerson.setGetpersonType(sealOperationRecord.getOperatorCrtificateType());
+            sealGetPerson.setGetpersonType(sealOperationRecord.getOperatorCertificateType());
             c = sealDao.insertSealGetperson(sealGetPerson);
         }else{
             c = sealDao.insertSealGetperson(sealGetPerson);
