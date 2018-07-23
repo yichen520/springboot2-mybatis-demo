@@ -27,7 +27,6 @@ public class ExamineController {
 
     private static Logger logger = LoggerFactory.getLogger(ExamineController.class);
 
-    private JSONObject jsonObject = new JSONObject();
     @Autowired
     private MinitorService minitorService;
 
@@ -49,7 +48,7 @@ public class ExamineController {
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -64,13 +63,14 @@ public class ExamineController {
         Integer pageSize = (Integer) map.get("pageSize");
         Integer pageNum = (Integer) map.get("pageNum");
         try {
+            JSONObject jsonObject = new JSONObject();
             PageHelper.startPage(pageNum, pageSize);
             PageInfo<Examine> pageInfo = new PageInfo<Examine>(minitorService.info());
             jsonObject.put("examine", pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -94,7 +94,7 @@ public class ExamineController {
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -116,7 +116,7 @@ public class ExamineController {
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -132,7 +132,7 @@ public class ExamineController {
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -153,7 +153,7 @@ public class ExamineController {
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -174,7 +174,7 @@ public class ExamineController {
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 

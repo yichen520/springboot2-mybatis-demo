@@ -9,6 +9,8 @@ import com.dhht.service.user.UserService;
 import com.dhht.sms.SmsSingleSender;
 import com.dhht.sms.SmsSingleSenderResult;
 import com.dhht.util.UUIDUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,8 @@ public class SmsController {
     @Autowired
     private UserLoginService userLoginService;
 
+    private static Logger logger = LoggerFactory.getLogger(SmsController.class);
+
     @Log("验证手机号")
     @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
     public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
@@ -35,7 +39,7 @@ public class SmsController {
             return userLoginService.checkPhoneAndIDCard(smsCode);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("发送短信发生异常");
         }
     }

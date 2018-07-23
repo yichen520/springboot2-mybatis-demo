@@ -29,8 +29,7 @@ public class LoginController {
     @Log("登录")
    @RequestMapping(value ="login", method = RequestMethod.POST)
    public Map<String,Object> login(HttpServletRequest request,@RequestBody UserDomain userDomain){
-
-           return userLoginService.validateUser(request, userDomain);
+        return userLoginService.validateUser(request, userDomain);
    }
     /**
      * 获取目录

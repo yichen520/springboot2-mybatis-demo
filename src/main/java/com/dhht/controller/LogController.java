@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.SysLog;
 import com.dhht.service.Log.LogService;
@@ -19,6 +20,7 @@ public class LogController {
     private LogService logService;
 
 
+    @Log("查看日志")
     @RequestMapping(value = "info")
     public JsonObjectBO findLog(@RequestBody Map map){
         Integer pageSize = (Integer) map.get("pageSize");

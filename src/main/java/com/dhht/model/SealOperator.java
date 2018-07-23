@@ -1,12 +1,6 @@
-package com.dhht.model.pojo;
+package com.dhht.model;
 
-import com.dhht.model.Seal;
-import com.dhht.model.SealGetPerson;
-import com.dhht.model.SealOperationRecord;
-import com.dhht.model.User;
 import lombok.Data;
-
-import java.sql.Date;
 
 /**
  * Created by imac_dhht on 2018/7/17.

@@ -9,7 +9,7 @@ public class SealCount {
     private int newSealNum;
     private int lossSealNum;
     private int logoutSealNum;
-//    private int sealNum;
+    private int sealNum;
 
 public SealCount(String countName, String sealType, int newSealNum, int lossSealNum, int logoutSealNum) {
     this.countName = countName;
