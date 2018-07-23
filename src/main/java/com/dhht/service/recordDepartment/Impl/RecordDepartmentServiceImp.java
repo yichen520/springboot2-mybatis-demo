@@ -197,7 +197,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 return ResultUtil.isHave;
             }
             int u = userService.update(setUserByType(recordDepartment, 2));
-            recordDepartmentMapper.deleteById(recordDepartment.getId());
+           // recordDepartmentMapper.deleteById(recordDepartment.getId());
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
             recordDepartment.setIsDelete(true);
             recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));

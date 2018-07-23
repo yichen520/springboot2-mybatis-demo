@@ -1,6 +1,9 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
@@ -35,12 +38,15 @@ public class EmployeeController {
 
     private JSONObject jsonObject = new JSONObject();
 
+    private static Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
     /**
      * 菜单
      *
      * @param httpServletRequest
      * @return
      */
+    @Log("获取从业人员菜单")
     @RequestMapping(value = "/menus", method = RequestMethod.GET)
     public JsonObjectBO selectAllEmployee(HttpServletRequest httpServletRequest) {
         //String id = (String)map.get("districtId");
@@ -61,6 +67,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
+    @Log("获取从业人员列表")
     @RequestMapping(value = "/info")
     public JsonObjectBO selectByDepartmentCode(@RequestBody Map map, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getSession().getAttribute("user");
@@ -95,6 +102,7 @@ public class EmployeeController {
      * @param employee
      * @return
      */
+    @Log("从业人员添加")
     @RequestMapping(value = "/insert")
     public JsonObjectBO insertEmployee(@RequestBody Employee employee, HttpServletRequest httpServletRequest) {
         User user = (User) httpServletRequest.getSession().getAttribute("user");
@@ -126,6 +134,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
+    @Log("修改从业人员")
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody Map map) {
         try {
@@ -141,6 +150,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
+    @Log("删除从业人员")
     @RequestMapping(value = "/delete")
     public JsonObjectBO delete(@RequestBody Map map) {
         String id = (String) map.get("id");
@@ -158,6 +168,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
+    @Log("查询历史记录")
     @RequestMapping(value = "/history")
     public JsonObjectBO showHistory(@RequestBody Map map) {
         String flag = (String) map.get("flag");
@@ -178,6 +189,7 @@ public class EmployeeController {
      * @param file
      * @return
      */
+    @Log("头像上传")
     @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
     public JsonObjectBO headFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -193,6 +205,7 @@ public class EmployeeController {
                 return JsonObjectBO.error("头像上传失败");
             }
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("头像文件失败");
         }
     }
@@ -202,6 +215,7 @@ public class EmployeeController {
      * @param map
      * @return
      */
+    @Log("头像URL保存")
     @RequestMapping(value = "/getUrl")
     public JsonObjectBO getUrl(@RequestBody Map map){
         String id = (String)map.get("id");
