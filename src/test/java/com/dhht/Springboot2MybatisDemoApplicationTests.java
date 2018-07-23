@@ -123,7 +123,7 @@ public class Springboot2MybatisDemoApplicationTests {
 ////		int  a = userPasswordService.getCheckCode(phone);
 //		userPasswordService.resetPwd(phone,"467776","cuiyang");
 ////		System.out.print(a);
-		userPasswordService.sendMessage("17826835954","123123");
+		userPasswordService.sendMessage("17826835954","123123",111111);
 	}
 
 }
