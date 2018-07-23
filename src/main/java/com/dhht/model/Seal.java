@@ -70,6 +70,9 @@ public class Seal extends SealKey {
 
     private String sealReason; //印章原因
 
+    private String districtId;  //区域id
+
+
     private SealImage sealImage;    //印章图像
 
     private SealOperationRecord sealOperationRecord;    //经办人等

@@ -35,6 +35,7 @@
     <result column="is_loss" property="isLoss" jdbcType="BIT"/>
     <result column="remark" property="remark" jdbcType="VARCHAR"/>
     <result column="seal_reason" property="sealReason" jdbcType="VARCHAR"/>
+    <result column="district_id" property="districtId" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -122,7 +123,7 @@
       materials_code, mimeograph_description, seal_shape_code, 
       seal_size, seal_center_image, seal_specification, 
       seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id
       )
     values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR}, 
       #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR}, 
@@ -131,7 +132,7 @@
       #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
       #{sealSize,jdbcType=DOUBLE}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR}, 
       #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR},#{recordDate},#{isRecord},#{makeDate},#{isMake},
-      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason})
+      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId})
   </insert>
 
   <update id="updateByExampleSelective" parameterType="map" >
@@ -194,6 +195,7 @@
       <if test="record.sealRecordTypeCode != null" >
         seal_record_type_code = #{record.sealRecordTypeCode,jdbcType=VARCHAR},
       </if>
+
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -211,7 +213,7 @@
       record_department_name = #{record.recordDepartmentName,jdbcType=VARCHAR},
       make_department_code = #{record.makeDepartmentCode,jdbcType=CHAR},
       make_department_name = #{record.makeDepartmentName,jdbcType=VARCHAR},
-    seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
+     seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
       materials_code = #{record.materialsCode,jdbcType=CHAR},
       mimeograph_description = #{record.mimeographDescription,jdbcType=VARCHAR},
       seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
@@ -257,7 +259,8 @@
       loss_date = #{lossDate},
       is_loss = #{isLoss},
       remark = #{remark},
-      seal_reason = #{sealReason}
+      seal_reason = #{sealReason},
+      district_id = #{districtId}
     where id = #{id,jdbcType=CHAR}
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>

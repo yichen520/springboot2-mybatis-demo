@@ -111,6 +111,7 @@ public class SealServiceImpl implements SealService {
         seal.setIsLoss(false);
         seal.setIsPersonal(false);
         seal.setIsLogout(false);
+        seal.setDistrictId(useDepartment.getDistrictId());
         String useDepartmentCode = seal.getUseDepartmentCode();
 
         //操作记录
@@ -166,7 +167,7 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public PageInfo<Seal> sealInfo(String recordCode, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
+    public PageInfo<Seal> sealInfo( String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
 
         PageHelper.startPage(pageNum, pageSize);
         Seal seal = new Seal();
@@ -177,20 +178,20 @@ public class SealServiceImpl implements SealService {
         if (status.equals("01")) {
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setRecordDepartmentCode(recordCode);
+//            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         } else if (status.equals("02")) {
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsPersonal(true);
-            seal.setRecordDepartmentCode(recordCode);
+//            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         } else if (status.equals("03")) {
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsPersonal(true);
             seal.setIsDeliver(true);
-            seal.setRecordDepartmentCode(recordCode);
+//            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("00")){
             list = sealDao.selectUndelivered(seal);

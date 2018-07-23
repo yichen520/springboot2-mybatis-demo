@@ -130,15 +130,15 @@ public class SealController  {
         JSONObject jsonObject = new JSONObject();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
         String telphone = user.getTelphone();
-        try{
-        Employee employee = employeeService.selectByPhone(telphone);
-        String recordCode = employee.getOfficeCode();
+//        Employee employee = employeeService.selectByPhone(telphone);
+//        String recordCode = employee.getOfficeCode();
         String useDepartmentName = sealOperator.getSeal().getUseDepartmentName();
         String useDepartmentCode = sealOperator.getSeal().getUseDepartmentCode();
         String status = sealOperator.getSeal().getSealStatusCode();
         int pageNum = sealOperator.getPageNum();
         int pageSize = sealOperator.getPageSize();
-        PageInfo<Seal> seal = sealService.sealInfo(recordCode,useDepartmentName,useDepartmentCode,status,pageNum,pageSize);
+        try{
+        PageInfo<Seal> seal = sealService.sealInfo(useDepartmentName,useDepartmentCode,status,pageNum,pageSize);
         jsonObject.put("seal",seal);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
