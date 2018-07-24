@@ -202,7 +202,7 @@
 
   <select id="selectByFlag" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/>
-    from make_department where flag = #{flag,jdbcType =VARCHAR} ORDER BY version_time
+    from make_department where flag = #{flag,jdbcType =VARCHAR}  AND delete_status = 1 ORDER BY version_time DESC
   </select>
 
   <select id="selectByNameAndTimeAndDistrict" resultMap="BaseResultMap" parameterType="java.lang.String">
