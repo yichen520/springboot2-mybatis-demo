@@ -23,14 +23,9 @@ public class LogController {
     @Log("查看日志")
     @RequestMapping(value = "info")
     public JsonObjectBO findLog(@RequestBody Map map){
-        Integer pageSize = (Integer) map.get("pageSize");
-        Integer pageNum = (Integer) map.get("pageNum");
-        String start = (String) map.get("start");
-        String end = (String) map.get("end");
-
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        PageInfo<SysLog> logs = logService.findLog(start,end,pageNum,pageSize);
+        PageInfo<SysLog> logs = logService.findLog(map);
         jsonObject.put("log",logs);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);

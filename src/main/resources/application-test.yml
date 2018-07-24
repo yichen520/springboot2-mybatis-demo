@@ -91,11 +91,13 @@ logging:
 #短信发送接口
 sms:
     appId: 1400106872
-      appKey: 388d092c1857abd2b4271beef3b938ba
-        template:
-          insertUser: 150656
-          newPassword: 150660
-          resetPasswordCode: 150654
+    appKey: 388d092c1857abd2b4271beef3b938ba
+    nationCode : 86
+    template:
+        insertUser: 150656
+        newPassword: 150660
+        resetPasswordCode: 150654
+        newUserName: 150917
 
 #默认是开发环境
 

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "LogService")
 @Transactional
@@ -34,35 +35,25 @@ public class LogServiceImp implements LogService {
 
     /**
      * log根据时间模糊查询
-     * @param start
-     * @param end
      * @return
      */
     @Override
-    public PageInfo<SysLog> findLog(String start, String end,int pageNum, int pageSize) {
+    public PageInfo<SysLog> findLog(Map map) {
+        Integer pageSize = (Integer) map.get("pageSize");
+        Integer pageNum = (Integer) map.get("pageNum");
         PageHelper.startPage(pageNum, pageSize);
-        //如果输入都为空  查询全部
-        if ((start == null || "".equals(start))
-                && (end == null || "".equals(end))) {
-            return selectAllLog(pageNum,pageSize);
-        }
-        //如果有开始时间,没有结束时间,就查询开始到最后的时间
-        else if((start != null && !"".equals(start)) && (end == null || "".equals(end))) {
-            String endStr = simpleDateFormat.format(new Date());
-            List<SysLog> list = logDao.find(start,endStr);
-            PageInfo<SysLog> result = new PageInfo<>(list);
-            return result;
 
-        }
-        // 正常日期查询
-        else if(start != null && !"".equals(start) && end != null && !"".equals(end)) {
-            List<SysLog> list = logDao.find(start,end);
-            PageInfo<SysLog> result = new PageInfo<>(list);
-            return result;
-        }else {
-            return null;
-        }
+        String type = (String) map.get("type");
+        String result = (String) map.get("result");
+        String name = (String) map.get("name");
+        String ip = (String) map.get("ip");
+        String startTime = (String) map.get("startTime");
+        String endTime = (String) map.get("endTime");
 
+
+        List<SysLog> list = logDao.find(type,result,name,ip,startTime,endTime);
+        PageInfo<SysLog> sysLogPageInfo = new PageInfo<>(list);
+        return sysLogPageInfo;
 }
 
 

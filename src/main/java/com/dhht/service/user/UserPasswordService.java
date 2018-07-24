@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public interface UserPasswordService {
 
-    int sendMessage(String phone, String code);
+    int sendMessage(String phone, String code,int smsmesscode);
 
     boolean adminResetPwd(String id);
 

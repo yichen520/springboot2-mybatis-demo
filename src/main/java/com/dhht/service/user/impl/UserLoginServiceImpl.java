@@ -239,7 +239,7 @@ public class UserLoginServiceImpl implements UserLoginService {
                      return JsonObjectBO.error("该用户登录错误超过5次，请稍后重试！");
                 }
             }
-            if(currentUser.getRoleId().equals("BADW")){
+            if(currentUser.getRoleId().equals("BADW")||currentUser.getRoleId().equals("ZZDW")||currentUser.getRoleId().equals("CYRY")){
                 User user2 =new User();
                 user2.setLoginTime(new Date());
                 user2.setUserName(userDomain.getUsername());

@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8085
 
 #超级管理员账号密码
 
@@ -15,7 +15,36 @@ jiaohu:
   FTP_PWD: jKa4F9zS1
   FTP_PATH: /
 
+#redis
+#spring:
+# redis:
+#   database: 0
+#   host: 127.0.0.1
+#   port: 6379
+#   password:
+#   jedis:
+#     pool:
+#       max-idle: 8
+#       max-wait: -1
+#       max-active: 8
+#   timeout: 10000
 
+#spring:
+#  redis:
+#    host: 12
+#    password: redispassword
+#    port: 6379
+#    pool:
+#     max-idle: 100
+#     min-idle: 1
+#     max-active: 1000
+#      max-wait: -1
+#  jedis:
+#    pool:
+#     max-active: 8
+#     max-wait: -1
+#     max-idle: 8
+#timeout: 10000
 
 
 spring:
@@ -23,7 +52,7 @@ spring:
         admin:
           url: http://localhost:8001
         client:
-          service-base-url: http://localhost:8083
+          service-base-url: http://localhost:8085
     datasource:
         name: mysql_test
         type: com.alibaba.druid.pool.DruidDataSource
@@ -33,6 +62,10 @@ spring:
           filters: stat
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
+
+#          url: jdbc:mysql://127.0.0.1:3306/seal?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+#          username: root
+#          password: 123456
 
           url: jdbc:mysql://10.0.0.21:8739/dev_seal_V1_0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: dev_seal
@@ -92,6 +125,8 @@ sms:
         newPassword: 150660
         resetPasswordCode: 150654
         newUserName: 150917
+        makedepartmentpunish: 160963
+        employeepunish: 160972
 
 #公告条数
 notice:

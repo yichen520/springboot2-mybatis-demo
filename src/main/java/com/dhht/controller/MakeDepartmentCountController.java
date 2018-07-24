@@ -15,13 +15,21 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * create by fyc 2018/6/30
+ */
 @RestController
 @RequestMapping("count/makeDepartment")
 public class MakeDepartmentCountController {
     @Autowired
      private MakeDepartmentCuontService makeDepartmentCuontService;
 
+    /**
+     * 展示统计列表
+     * @param httpServletRequest
+     * @param map
+     * @return
+     */
     @RequestMapping("/info")
     public JsonObjectBO info(HttpServletRequest httpServletRequest, @RequestBody Map map){
         String startTime = (String)map.get("startTime");

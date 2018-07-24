@@ -416,23 +416,20 @@
     AND  is_logout =true AND logout_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
-  <select id="countByDistrictId" resultType="java.util.HashMap" parameterType="java.util.List">
+  <select id="countByDistrictId" resultType="java.util.Map" parameterType="java.lang.String">
     SELECT
-    count(seal.id),
     sys_district.province_id,
     sys_district.province_name,
     sys_district.city_id,
     sys_district.city_name,
     sys_district.district_id,
     sys_district.district_name,
+    count(seal.id) AS countId,
     seal.seal_type_code
     FROM
-    sys_district JOIN
+    sys_district ,
     seal
-    WHERE seal.district_id = sys_district.district_id AND seal.district_id IN
-    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-       #{item.districtId}
-    </foreach>
-    group by seal.district_id
+    WHERE seal.district_id = sys_district.district_id AND seal.district_id LIKE '${districtId}%'
+
   </select>
 </mapper>

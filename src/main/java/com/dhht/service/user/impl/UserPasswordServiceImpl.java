@@ -74,26 +74,25 @@ public class UserPasswordServiceImpl implements UserPasswordService{
      * @return
      */
     @Override
-    public int sendMessage(String phone, String code) {
+    public int sendMessage(String phone, String code,int smsmesscode) {
 //        try {
                 ArrayList<String> params = new ArrayList<String>();
-//                params.add(phone);
                 params.add(code);
                 params.add("5");
                 SMSCode smscode= smsCodeDao.getSms(phone);
                 if(smscode==null){
                     smscode = new SMSCode();
                     smscode.setId(UUIDUtil.generate());
-                    smscode.setLastTime(new Date().getTime());
+                    smscode.setLastTime(System.currentTimeMillis());
                     smscode.setPhone(phone);
                     smscode.setSmscode(code);
                     smsCodeDao.save(smscode);
                 }else{
-                    smscode.setLastTime(new Date().getTime());
+                    smscode.setLastTime(System.currentTimeMillis());
                     smscode.setSmscode(code);
                     smsCodeDao.update(smscode);
                 }
-                boolean a =smsSendService.sendSingleMsgByTemplate(phone,checkCode1,params);
+                boolean a =smsSendService.sendSingleMsgByTemplate(phone,smsmesscode,params);
                 if(a){
                     return ResultUtil.isSuccess;
                 }else{
@@ -143,7 +142,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     @Override
     public int getCheckCode(String phone) {
         String code = createRandomVcode();
-        int a = sendMessage(phone,code);
+        int a = sendMessage(phone,code,checkCode1);
         if(a<0){
             return ResultUtil.isFail;
         }else{

@@ -7,12 +7,16 @@ import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.punish.PunishService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.SmsSendService;
+import com.dhht.service.user.UserPasswordService;
+import com.dhht.util.ResultUtil;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +44,16 @@ public class PunishController {
 
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+
+    @Autowired
+    private SmsSendService smsSendService;
+
+    @Value("${sms.template.employeepunish}")
+    private int employeepunish ;
+    @Value("${sms.template.makedepartmentpunish}")
+    private int makedepartmentpunish ;
+
+
 
     private static Logger logger = LoggerFactory.getLogger(PunishController.class);
 
@@ -163,5 +177,41 @@ public class PunishController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 惩罚制作单位获取验证码
+     */
+    @RequestMapping(value = "/punishMakedepartmentCode")
+    public JsonObjectBO getCheckCode(@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String phone = (String)map.get("telphone");
+        String departmentName = (String)map.get("departmentName");
+        String code = StringUtil.createRandomVcode();
+
+        ArrayList<String> params = new ArrayList<String>();
+        params.add(departmentName);
+        params.add(code);
+        if (smsSendService.sendSingleMsgByTemplate(phone,makedepartmentpunish,params)){
+            return  JsonObjectBO.ok("获取验证码成功");
+        }else{
+            return  JsonObjectBO.error("获取验证码失败");
+        }
+
+    }
+    /**
+     * 惩罚制作单位获取验证码
+     */
+    @RequestMapping(value = "/punishEmployeeCode")
+    public JsonObjectBO punishEmployeeCode(@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String phone = (String)map.get("telphone");
+        String code = StringUtil.createRandomVcode();
+        ArrayList<String> params = new ArrayList<String>();
+        params.add(code);
+        if (smsSendService.sendSingleMsgByTemplate(phone,employeepunish,params)){
+            return  JsonObjectBO.ok("获取验证码成功");
+        }else{
+            return JsonObjectBO.error("获取验证码失败");
+        }
+    }
 
 }
