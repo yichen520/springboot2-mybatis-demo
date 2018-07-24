@@ -52,5 +52,5 @@ public interface SealDao {
 
     int countLogoutSealByDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
-    List countByDistrictId(List<NotifyReceiveDetail> notifyIds);
+    List<SealCount> countByDistrictId(List<DistrictMenus> districtIds,String  sealTypeCode,String  startTime, String endTime);
 }

@@ -19,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -346,7 +347,7 @@ public class SealController  {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String name = (String)map.get("name");
         try {
-            UseDepartment useDepartment = useDepartmentService.selectUseDepartment(name);
+            List<UseDepartment> useDepartment = useDepartmentService.selectUseDepartment(name);
             jsonObject.put("useDepartment", useDepartment);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setData(jsonObject);

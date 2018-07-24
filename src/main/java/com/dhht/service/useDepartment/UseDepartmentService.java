@@ -24,5 +24,5 @@ public interface UseDepartmentService {
 
     UseDepartment selectDetailById(String id);
 
-    UseDepartment selectUseDepartment(String useDepartmentName);
+    List<UseDepartment> selectUseDepartment(String useDepartmentName);
 }

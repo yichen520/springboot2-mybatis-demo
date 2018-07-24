@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -123,7 +124,17 @@ public class Springboot2MybatisDemoApplicationTests {
 ////		int  a = userPasswordService.getCheckCode(phone);
 //		userPasswordService.resetPwd(phone,"467776","cuiyang");
 ////		System.out.print(a);
-		userPasswordService.sendMessage("17826835954","123123");
+
+//		List<DistrictMenus> list = new ArrayList<>();
+//		DistrictMenus menus = new DistrictMenus();
+//		menus.setDistrictId("330101");
+//		list.add(menus);
+//		DistrictMenus menus1 = new DistrictMenus();
+//		menus1.setDistrictId("330102");
+//		list.add(menus1);
+//
+//		List<SealDistrict> sealCounts = sealDao.countByDistrictId(list);
+//		System.out.print(sealCounts.toString());
 	}
 
 }

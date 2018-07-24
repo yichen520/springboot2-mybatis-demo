@@ -37,7 +37,7 @@ public interface UseDepartmentDao {
 
     List<UseDepartment> find(@Param("code") String code,@Param("districtId")String districtId,@Param("name")String name,@Param("departmentStatus")String departmentStatus);
 
-    UseDepartment selectByName(@Param("name") String name);
+    List<UseDepartment> selectByName(@Param("name") String name);
 
     UseDepartment selectDetailById(@Param("id") String id);
 

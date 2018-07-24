@@ -218,8 +218,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public UseDepartment selectUseDepartment(String useDepartmentName) {
-        UseDepartment useDepartment = useDepartmentDao.selectByName(useDepartmentName);
+    public List<UseDepartment> selectUseDepartment(String useDepartmentName) {
+        List<UseDepartment> useDepartment = useDepartmentDao.selectByName(useDepartmentName);
         return useDepartment;
     }
 
