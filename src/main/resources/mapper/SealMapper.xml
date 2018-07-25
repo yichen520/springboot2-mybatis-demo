@@ -384,7 +384,7 @@
   </select>
 
   <select id="selectByDistrictId" resultMap="BaseResultMap">
-     SELECT * from seal where  district_id like #{districtId}"%"
+     SELECT * from seal where  district_id = #{districtId}
   </select>
 
   <select id="countAddSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">

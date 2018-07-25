@@ -451,8 +451,10 @@ public class SealCountServiceImp implements SealCuontService {
 
 
                 }
+            if(count.size()!=0){
             count.add(subtotal(count));//把小计放入队列
             counts.addAll(count);
+            }
 
             }
         return getSum(counts);
