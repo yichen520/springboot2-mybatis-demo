@@ -42,9 +42,9 @@ public class ResultUtil {
             case 10:
                 return JsonObjectBO.error("重复的身份证号");
             case 11:
-                return JsonObjectBO.ok("短信发送成功");
+                return JsonObjectBO.ok("用户创建成功");
             case 12:
-                return JsonObjectBO.error("短信发送失败");
+                return JsonObjectBO.error("用户创建失败");
             case 13:
                 return JsonObjectBO.error("已经使用的社会统一信用编码");
             case 14:
