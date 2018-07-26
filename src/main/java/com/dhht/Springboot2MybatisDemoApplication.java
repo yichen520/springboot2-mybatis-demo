@@ -32,7 +32,10 @@ public class Springboot2MybatisDemoApplication extends SpringBootServletInitiali
 //			}
 //		};
 //	}
-
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(Springboot2MybatisDemoApplication.class);
+	}
 	//设置单文件不能大于10M
 	@Bean
 	public MultipartConfigElement multipartConfigElement() {

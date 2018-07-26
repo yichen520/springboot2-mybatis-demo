@@ -16,22 +16,22 @@
     <result column="materials_code" property="materialsCode" jdbcType="CHAR" />
     <result column="mimeograph_description" property="mimeographDescription" jdbcType="VARCHAR" />
     <result column="seal_shape_code" property="sealShapeCode" jdbcType="VARCHAR" />
-    <result column="seal_size" property="sealSize" jdbcType="DOUBLE" />
+    <result column="seal_size" property="sealSize" jdbcType="VARCHAR" />
     <result column="seal_center_image" property="sealCenterImage" jdbcType="VARCHAR" />
     <result column="seal_specification" property="sealSpecification" jdbcType="VARCHAR" />
     <result column="seal_make_type_code" property="sealMakeTypeCode" jdbcType="VARCHAR" />
     <result column="seal_record_type_code" property="sealRecordTypeCode" jdbcType="VARCHAR" />
-    <result column="record_date" property="recordDate"  />
+    <result column="record_date" property="recordDate" jdbcType="TIMESTAMP" />
     <result column="is_record" property="isRecord" jdbcType="BIT"/>
-    <result column="make_date" property="makeDate"  />
+    <result column="make_date" property="makeDate" jdbcType="TIMESTAMP" />
     <result column="is_make" property="isMake" jdbcType="BIT"/>
-    <result column="personal_date" property="personalDate"  />
+    <result column="personal_date" property="personalDate"  jdbcType="TIMESTAMP"/>
     <result column="is_personal" property="isPersonal" jdbcType="BIT"/>
     <result column="deliver_date" property="deliverDate"  />
     <result column="is_deliver" property="isDeliver" jdbcType="BIT"/>
-    <result column="logout_date" property="logoutDate"  />
+    <result column="logout_date" property="logoutDate"  jdbcType="TIMESTAMP"/>
     <result column="is_logout" property="isLogout" jdbcType="BIT"/>
-    <result column="loss_date" property="lossDate" />
+    <result column="loss_date" property="lossDate" jdbcType="TIMESTAMP" />
     <result column="is_loss" property="isLoss" jdbcType="BIT"/>
     <result column="remark" property="remark" jdbcType="VARCHAR"/>
     <result column="seal_reason" property="sealReason" jdbcType="VARCHAR"/>
@@ -130,7 +130,7 @@
       #{recordDepartmentCode,jdbcType=CHAR}, #{recordDepartmentName,jdbcType=VARCHAR}, 
       #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, #{sealTypeCode,jdbcType=CHAR},
       #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
-      #{sealSize,jdbcType=DOUBLE}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR}, 
+      #{sealSize,jdbcType=VARCHAR}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR},
       #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR},#{recordDate},#{isRecord},#{makeDate},#{isMake},
       #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId})
   </insert>
@@ -181,7 +181,7 @@
         seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
       </if>
       <if test="record.sealSize != null" >
-        seal_size = #{record.sealSize,jdbcType=DOUBLE},
+        seal_size = #{record.sealSize,jdbcType=VARCHAR},
       </if>
       <if test="record.sealCenterImage != null" >
         seal_center_image = #{record.sealCenterImage,jdbcType=VARCHAR},
@@ -217,7 +217,7 @@
       materials_code = #{record.materialsCode,jdbcType=CHAR},
       mimeograph_description = #{record.mimeographDescription,jdbcType=VARCHAR},
       seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
-      seal_size = #{record.sealSize,jdbcType=DOUBLE},
+      seal_size = #{record.sealSize,jdbcType=VARCHAR},
       seal_center_image = #{record.sealCenterImage,jdbcType=VARCHAR},
       seal_specification = #{record.sealSpecification,jdbcType=VARCHAR},
       seal_make_type_code = #{record.sealMakeTypeCode,jdbcType=VARCHAR},
@@ -241,7 +241,7 @@
       materials_code = #{materialsCode,jdbcType=CHAR},
       mimeograph_description = #{mimeographDescription,jdbcType=VARCHAR},
       seal_shape_code = #{sealShapeCode,jdbcType=VARCHAR},
-      seal_size = #{sealSize,jdbcType=DOUBLE},
+      seal_size = #{sealSize,jdbcType=VARCHAR},
       seal_center_image = #{sealCenterImage,jdbcType=VARCHAR},
       seal_specification = #{sealSpecification,jdbcType=VARCHAR},
       seal_make_type_code = #{sealMakeTypeCode,jdbcType=VARCHAR},
@@ -267,7 +267,7 @@
 
 
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_record_type_code = "01";
+      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "01";
   </select>
 
 

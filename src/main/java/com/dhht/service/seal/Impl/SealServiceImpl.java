@@ -8,6 +8,7 @@ import com.dhht.model.*;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.seal.SealService;
+import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class SealServiceImpl implements SealService {
      * @param operatorTelphone
      * @param operatorName
      * @param operatorCertificateCode
-     * @param operatorCrtificateType
+     * @param operatorCertificateType
      * @param operatorPhoto
      * @param idCardScanner
      * @param proxy
@@ -86,7 +86,7 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int sealRecord(Seal seal, User user, String districtId, String operatorTelphone,
-                          String operatorName, String operatorCertificateCode, String operatorCrtificateType,
+                          String operatorName, String operatorCertificateCode, String operatorCertificateType,
                           String operatorPhoto, String idCardScanner, String proxy) {
 
         String sealcode = createRandomCode(districtId);
@@ -105,9 +105,11 @@ public class SealServiceImpl implements SealService {
 
         seal.setId(UUIDUtil.generate());
         seal.setSealName(useDepartment.getName());
+        seal.setSealStatusCode("04");
         seal.setIsRecord(true);
-        seal.setRecordDate(new Date(System.currentTimeMillis()));
+        seal.setRecordDate(DateUtil.getCurrentTime());
         seal.setIsMake(false);
+        seal.setIsDeliver(false);
         seal.setIsLoss(false);
         seal.setIsPersonal(false);
         seal.setIsLogout(false);
@@ -118,13 +120,13 @@ public class SealServiceImpl implements SealService {
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealcode);
-        sealOperationRecord.setDateTime(new Date(System.currentTimeMillis()));
+        sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setOperatorName(operatorName);          //经办人
         sealOperationRecord.setOperatorTelphone(operatorTelphone);
         sealOperationRecord.setOperatorCertificateCode(operatorCertificateCode);
-        sealOperationRecord.setOperatorCertificateType(operatorCrtificateType);
+        sealOperationRecord.setOperatorCertificateType(operatorCertificateType);
         sealOperationRecord.setFlag("01");
         sealDao.insertSealOperationRecord(sealOperationRecord);
         SealMaterial sealMaterial = new SealMaterial();
@@ -147,7 +149,7 @@ public class SealServiceImpl implements SealService {
         }
         seal.setSealCode(sealcode);
         seal.setIsRecord(true);
-        seal.setRecordDate(new Date(System.currentTimeMillis()));
+        seal.setRecordDate(DateUtil.getCurrentTime());
         int a = sealDao.insert(seal);
         if (a > 0) {
             return ResultUtil.isSuccess;
@@ -219,14 +221,15 @@ public class SealServiceImpl implements SealService {
     /**
      * 印模上传
      *
-     * @param seal
+     * @param
      * @param electronicSealURL
      * @param sealScannerURL
      * @return
      */
     @Override
-    public int sealUpload(User user, Seal seal, String electronicSealURL, String sealScannerURL) {
-        Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+    public int sealUpload(User user, String id, String electronicSealURL, String sealScannerURL) {
+        Seal seal1 = sealDao.selectByPrimaryKey(id);
+        seal1.setSealStatusCode("01");
         if(seal1.getIsLogout()){
             return ResultUtil.isFail;
         }
@@ -241,7 +244,7 @@ public class SealServiceImpl implements SealService {
         Employee employee = employeeService.selectByPhone(telphone);
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealCode);
-        sealOperationRecord.setDateTime(new Date(System.currentTimeMillis()));
+        sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
 //        sealOperationRecord.setOperatorName("");          //经办人
@@ -264,7 +267,7 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setFilePath(sealScannerURL);
 
         seal1.setIsMake(true);
-        seal1.setMakeDate(new Date(System.currentTimeMillis()));
+        seal1.setMakeDate(DateUtil.getCurrentTime());
         int a = sealDao.updateByPrimaryKey(seal1);
         if (a < 0 || b < 0 || c < 0) {
             return ResultUtil.isFail;
@@ -277,12 +280,13 @@ public class SealServiceImpl implements SealService {
     /**
      * 印章个人化
      *
-     * @param seal
+     * @param
      * @return
      */
     @Override
-    public int sealPersonal(Seal seal, User user) {
-        Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+    public int sealPersonal(String id, User user) {
+        Seal seal1 = sealDao.selectByPrimaryKey(id);
+        seal1.setSealStatusCode("02");
         if(seal1.getIsLogout()){
             return ResultUtil.isFail;
         }
@@ -302,7 +306,7 @@ public class SealServiceImpl implements SealService {
             SealOperationRecord sealOperationRecord = sealDao.SelectByCodeAndFlag(sealCode);
             sealOperationRecord.setId(UUIDUtil.generate());
             sealOperationRecord.setSealCode(sealCode);
-            sealOperationRecord.setDateTime(new Date(System.currentTimeMillis()));
+            sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
             sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
             sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
             sealOperationRecord.setFlag("03");//个人化
@@ -312,7 +316,7 @@ public class SealServiceImpl implements SealService {
 //            sealOperationRecord.setOperatorCrtificateType(operatorCrtificateType);
             int a = sealDao.insertSealOperationRecord(sealOperationRecord);
             seal1.setIsPersonal(true);
-            seal1.setPersonalDate(new Date(System.currentTimeMillis()));
+            seal1.setPersonalDate(DateUtil.getCurrentTime());
             int b = sealDao.updateByPrimaryKey(seal1);
             seal1.setSealOperationRecord(sealOperationRecord);
             if (a < 0 || b < 0) {
@@ -327,14 +331,15 @@ public class SealServiceImpl implements SealService {
     /**
      * 交付
      * @param user
-     * @param seal
+     * @param
      * @param sealGetPerson
      * @return
      */
     @Override
-    public boolean deliver(User user,Seal  seal,SealGetPerson sealGetPerson) {
+    public boolean deliver(User user,String id,SealGetPerson sealGetPerson) {
         int c = 0;
-        Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+        Seal seal1 = sealDao.selectByPrimaryKey(id);
+        seal1.setSealStatusCode("03");
         if(seal1.getIsLogout()){
             return false;
         }
@@ -348,17 +353,17 @@ public class SealServiceImpl implements SealService {
         SealOperationRecord sealOperationRecord = sealDao.SelectByCodeAndFlag(sealCode);
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealCode);
-        sealOperationRecord.setDateTime(new Date(System.currentTimeMillis()));
+        sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setFlag("04");//交付
         int a = sealDao.insertSealOperationRecord(sealOperationRecord);
         seal1.setIsDeliver(true);
-        seal1.setDeliverDate(new Date(System.currentTimeMillis()));
+        seal1.setDeliverDate(DateUtil.getCurrentTime());
         int b = sealDao.updateByPrimaryKey(seal1);
         if(sealGetPerson.getIsSame()){
             sealGetPerson.setId(UUIDUtil.generate());
-            sealGetPerson.setGetDate(new Date(System.currentTimeMillis()));
+            sealGetPerson.setGetDate(DateUtil.getCurrentTime());
             sealGetPerson.setGetpersonId(sealOperationRecord.getOperatorCertificateCode());
             sealGetPerson.setGetpersonName(sealOperationRecord.getOperatorName());
             sealGetPerson.setGetpersonTelphone(sealOperationRecord.getOperatorTelphone());
@@ -378,7 +383,7 @@ public class SealServiceImpl implements SealService {
     /**
      * 挂失
      * @param user
-     * @param seal
+     * @param
      * @param operatorPhoto
      * @param proxy
      * @param businessScanner
@@ -387,8 +392,9 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int  loss (User user,Seal seal, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode){
-        Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+    public int  loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode){
+        Seal seal1 = sealDao.selectByPrimaryKey(id);
+        seal1.setSealStatusCode("05");
         if(seal1.getIsLoss()){
              return ResultUtil.isFail;
          }
@@ -412,14 +418,14 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setFilePath(businessScanner);
         int c =sealDao.insertSealMaterial(sealMaterial);
         seal1.setIsLoss(true);
-        seal1.setLossDate(new Date(System.currentTimeMillis()));
+        seal1.setLossDate(DateUtil.getCurrentTime());
         RecordDepartment recordDepartment = recordDepartmentMapper.selectByCode(recordCode);
         seal1.setRecordDepartmentCode(recordCode);
         seal1.setRecordDepartmentName(recordDepartment.getDepartmentName());
         int d =sealDao.updateByPrimaryKey(seal1);
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealCode);
-        sealOperationRecord.setDateTime(new Date(System.currentTimeMillis()));
+        sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setFlag("05");//挂失
@@ -443,8 +449,9 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int  logout (User user,Seal seal, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord) {
-        Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+    public int  logout (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord) {
+        Seal seal1 = sealDao.selectByPrimaryKey(id);
+        seal1.setSealStatusCode("06");
         if (seal1.getIsLogout()){
             return ResultUtil.isFail;
         }
@@ -468,11 +475,11 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setFilePath(businessScanner);
         int c =sealDao.insertSealMaterial(sealMaterial);
         seal1.setIsLogout(true);
-        seal1.setLossDate(new Date(System.currentTimeMillis()));
-        int d =sealDao.updateByPrimaryKey(seal);
+        seal1.setLossDate(DateUtil.getCurrentTime());
+        int d =sealDao.updateByPrimaryKey(seal1);
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealCode);
-        sealOperationRecord.setDateTime(new Date(System.currentTimeMillis()));
+        sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setFlag("06");//挂失

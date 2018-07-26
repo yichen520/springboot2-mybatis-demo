@@ -124,11 +124,11 @@ public class WebLogAspect {
                 sysLog.setLogResult("失败");
             }
         }else if(ret instanceof JsonObjectBO) {
-           if (((JsonObjectBO) ret).getCode()==1){
-               sysLog.setLogResult("成功");
-           }else {
-               sysLog.setLogResult("失败");
-           }
+            if (((JsonObjectBO) ret).getCode()==1){
+                sysLog.setLogResult("成功");
+            }else {
+                sysLog.setLogResult("失败");
+            }
         }
         // 保存系统日志
         logDao.saveLog(sysLog);

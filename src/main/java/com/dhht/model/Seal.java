@@ -2,7 +2,7 @@ package com.dhht.model;
 
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class Seal extends SealKey {
@@ -32,7 +32,7 @@ public class Seal extends SealKey {
 
     private String sealShapeCode;   //印章图案编码
 
-    private Double sealSize;    //章面尺寸
+    private String sealSize;    //章面尺寸
 
     private String sealCenterImage; //中心图案
 

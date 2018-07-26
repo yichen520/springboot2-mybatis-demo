@@ -7,6 +7,8 @@ import lombok.Data;
  */
 @Data
 public class SealOperator {
+    private String id;
+
     private Seal seal;
 
     private SealGetPerson sealGetPerson;
