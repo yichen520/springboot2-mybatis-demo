@@ -58,8 +58,6 @@ public class DistrictController implements InitializingBean
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     public JsonObjectBO selectAllDistrict(){
 
-        System.out.println("--------------------------------------------");
-        Long a = System.currentTimeMillis();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
 //        List<DistrictMenus> district = districtService.selectAllDistrict();
@@ -68,8 +66,6 @@ public class DistrictController implements InitializingBean
         jsonObject.put("District",district);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
-        System.out.print(System.currentTimeMillis()-a);
-        System.out.println("--------------------------------------------");
         return jsonObjectBO;
     }
 
