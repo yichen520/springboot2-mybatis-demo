@@ -21,17 +21,17 @@
     <result column="seal_specification" property="sealSpecification" jdbcType="VARCHAR" />
     <result column="seal_make_type_code" property="sealMakeTypeCode" jdbcType="VARCHAR" />
     <result column="seal_record_type_code" property="sealRecordTypeCode" jdbcType="VARCHAR" />
-    <result column="record_date" property="recordDate"  />
+    <result column="record_date" property="recordDate" jdbcType="TIMESTAMP" />
     <result column="is_record" property="isRecord" jdbcType="BIT"/>
-    <result column="make_date" property="makeDate"  />
+    <result column="make_date" property="makeDate" jdbcType="TIMESTAMP" />
     <result column="is_make" property="isMake" jdbcType="BIT"/>
-    <result column="personal_date" property="personalDate"  />
+    <result column="personal_date" property="personalDate"  jdbcType="TIMESTAMP"/>
     <result column="is_personal" property="isPersonal" jdbcType="BIT"/>
     <result column="deliver_date" property="deliverDate"  />
     <result column="is_deliver" property="isDeliver" jdbcType="BIT"/>
-    <result column="logout_date" property="logoutDate"  />
+    <result column="logout_date" property="logoutDate"  jdbcType="TIMESTAMP"/>
     <result column="is_logout" property="isLogout" jdbcType="BIT"/>
-    <result column="loss_date" property="lossDate" />
+    <result column="loss_date" property="lossDate" jdbcType="TIMESTAMP" />
     <result column="is_loss" property="isLoss" jdbcType="BIT"/>
     <result column="remark" property="remark" jdbcType="VARCHAR"/>
     <result column="seal_reason" property="sealReason" jdbcType="VARCHAR"/>
@@ -267,7 +267,7 @@
 
 
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_record_type_code = "01";
+      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "01";
   </select>
 
 

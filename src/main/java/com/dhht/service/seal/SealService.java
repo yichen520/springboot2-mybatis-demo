@@ -18,19 +18,19 @@ public interface SealService {
    PageInfo<Seal> sealInfo( String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
    //印模上传
-   int sealUpload(User user ,Seal seal, String electronicSealURL, String sealScannerURL);
+   int sealUpload(User user ,String id, String electronicSealURL, String sealScannerURL);
 
    //印章个人化
-   int sealPersonal(Seal seal,User user);
+   int sealPersonal(String id,User user);
 
    //印章交付
-   boolean deliver(User user,Seal  seal,SealGetPerson sealGetPerson);
+   boolean deliver(User user,String id,SealGetPerson sealGetPerson);
 
    //印章挂失
-   int loss (User user,Seal seal, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode);
+   int loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode);
 
    //印章注销
-   int logout (User user,Seal seal, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord);
+   int logout (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord);
 
 }
 

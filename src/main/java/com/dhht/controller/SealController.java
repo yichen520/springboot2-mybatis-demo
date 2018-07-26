@@ -163,11 +163,12 @@ public class SealController  {
     public JsonObjectBO sealUpload(HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
-        Seal seal = sealOperator.getSeal();
+//        Seal seal = sealOperator.getSeal();
+        String id = sealOperator.getId();
         String electronicSealURL = sealOperator.getElectronicSealURL();
         String sealScannerURL = sealOperator.getSealScannerURL();
         try{
-        int a =sealService.sealUpload(user,seal,electronicSealURL, sealScannerURL);
+        int a =sealService.sealUpload(user,id,electronicSealURL, sealScannerURL);
         if(a<0){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("上传印模失败");
@@ -195,9 +196,10 @@ public class SealController  {
     public JsonObjectBO sealPersonal(HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
-        Seal seal = sealOperator.getSeal();
+//        Seal seal = sealOperator.getSeal();
+        String id = sealOperator.getId();
         try {
-            int a = sealService.sealPersonal(seal, user);
+            int a = sealService.sealPersonal(id, user);
             if (a < 0) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("个人化失败");
@@ -223,10 +225,11 @@ public class SealController  {
     public JsonObjectBO deliver (HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
-        Seal seal = sealOperator.getSeal();
+//        Seal seal = sealOperator.getSeal();
+        String id = sealOperator.getId();
         SealGetPerson sealGetPerson = sealOperator.getSealGetPerson();
         try {
-            boolean a = sealService.deliver(user, seal, sealGetPerson);
+            boolean a = sealService.deliver(user, id, sealGetPerson);
             if (a) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("交付成功");
@@ -256,12 +259,13 @@ public class SealController  {
         try {
             Employee employee = employeeService.selectByPhone(telphone);
             String recordCode = employee.getOfficeCode();
-            Seal seal = sealOperator.getSeal();
+//            Seal seal = sealOperator.getSeal();
+            String id = sealOperator.getId();
             SealOperationRecord sealOperationRecord = sealOperator.getSealOperationRecord();
             String operatorPhoto = sealOperator.getOperatorPhoto();
             String businessScanner = sealOperator.getBusinessScanner();
             String proxy = sealOperator.getProxy();
-            int a = sealService.loss(user, seal, operatorPhoto, proxy, businessScanner, sealOperationRecord, recordCode);
+            int a = sealService.loss(user, id, operatorPhoto, proxy, businessScanner, sealOperationRecord, recordCode);
             if (a < 0) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("挂失失败");
@@ -290,12 +294,13 @@ public class SealController  {
         String telphone = user.getTelphone();
         try{
         Employee employee = employeeService.selectByPhone(telphone);
-        Seal seal = sealOperator.getSeal();
+//        Seal seal = sealOperator.getSeal();
+            String id = sealOperator.getId();
         SealOperationRecord sealOperationRecord = sealOperator.getSealOperationRecord();
         String operatorPhoto = sealOperator.getOperatorPhoto();
         String businessScanner = sealOperator.getBusinessScanner();
         String proxy = sealOperator.getProxy();
-        int a = sealService.logout(user,seal,operatorPhoto,proxy,businessScanner,sealOperationRecord);
+        int a = sealService.logout(user,id,operatorPhoto,proxy,businessScanner,sealOperationRecord);
         if(a<0){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("注销失败");

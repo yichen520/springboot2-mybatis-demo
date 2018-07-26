@@ -2,7 +2,7 @@ package com.dhht.model;
 
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class Seal extends SealKey {

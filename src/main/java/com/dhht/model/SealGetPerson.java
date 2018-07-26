@@ -2,7 +2,7 @@ package com.dhht.model;
 
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by imac_dhht on 2018/7/6.

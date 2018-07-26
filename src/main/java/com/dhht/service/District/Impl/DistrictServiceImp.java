@@ -315,6 +315,38 @@ public class DistrictServiceImp implements DistrictService{
         return true;
     }
 
+    /**
+     * 根据区域id 数组来获取去域列表
+     * @param DistrictIds
+     * @return
+     */
+    @Override
+    public List<DistrictMenus> selectDistrictByArray(List<String> DistrictIds) {
+        List<DistrictMenus> districtMenus = new ArrayList<>();
+        for (String ids:DistrictIds) {
+            String district[] =  StringUtil.DistrictUtil(ids);
+            if (district[1].equals("00")  && district[2].equals("00")) {
+                return selectOneDistrict(ids).get(0).getChildren();
+            }else if(!district[1].equals("00")&&district[2].equals("00")){
+                districtMenus.addAll(selectOneDistrict(ids));
+            }else {
+                boolean isNotAdd = true;
+                String str = district[0]+district[1]+"00";
+                for(DistrictMenus districtMenu : districtMenus){
+                    if(districtMenu.getDistrictId().equals(str)){
+                        districtMenu.getChildren().addAll(selectOneDistrict(ids));
+                        isNotAdd = false;
+                    }
+                }
+                if(isNotAdd){
+                    List<DistrictMenus> list = selectOneDistrict(str);
+                    list.get(0).setChildren(selectOneDistrict(ids));
+                    districtMenus.addAll(list);
+                }
+            }
+        }
+        return districtMenus;
+    }
 
 
 
