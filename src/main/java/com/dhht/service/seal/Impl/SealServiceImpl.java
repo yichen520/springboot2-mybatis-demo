@@ -78,7 +78,7 @@ public class SealServiceImpl implements SealService {
      * @param operatorTelphone
      * @param operatorName
      * @param operatorCertificateCode
-     * @param operatorCrtificateType
+     * @param operatorCertificateType
      * @param operatorPhoto
      * @param idCardScanner
      * @param proxy
@@ -86,7 +86,7 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int sealRecord(Seal seal, User user, String districtId, String operatorTelphone,
-                          String operatorName, String operatorCertificateCode, String operatorCrtificateType,
+                          String operatorName, String operatorCertificateCode, String operatorCertificateType,
                           String operatorPhoto, String idCardScanner, String proxy) {
 
         String sealcode = createRandomCode(districtId);
@@ -105,9 +105,11 @@ public class SealServiceImpl implements SealService {
 
         seal.setId(UUIDUtil.generate());
         seal.setSealName(useDepartment.getName());
+        seal.setSealStatusCode("04");
         seal.setIsRecord(true);
         seal.setRecordDate(new Date(System.currentTimeMillis()));
         seal.setIsMake(false);
+        seal.setIsDeliver(false);
         seal.setIsLoss(false);
         seal.setIsPersonal(false);
         seal.setIsLogout(false);
@@ -124,7 +126,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperatorName(operatorName);          //经办人
         sealOperationRecord.setOperatorTelphone(operatorTelphone);
         sealOperationRecord.setOperatorCertificateCode(operatorCertificateCode);
-        sealOperationRecord.setOperatorCertificateType(operatorCrtificateType);
+        sealOperationRecord.setOperatorCertificateType(operatorCertificateType);
         sealOperationRecord.setFlag("01");
         sealDao.insertSealOperationRecord(sealOperationRecord);
         SealMaterial sealMaterial = new SealMaterial();
@@ -227,6 +229,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int sealUpload(User user, Seal seal, String electronicSealURL, String sealScannerURL) {
         Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+        seal1.setSealStatusCode("01");
         if(seal1.getIsLogout()){
             return ResultUtil.isFail;
         }
@@ -283,6 +286,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int sealPersonal(Seal seal, User user) {
         Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+        seal1.setSealStatusCode("02");
         if(seal1.getIsLogout()){
             return ResultUtil.isFail;
         }
@@ -335,6 +339,7 @@ public class SealServiceImpl implements SealService {
     public boolean deliver(User user,Seal  seal,SealGetPerson sealGetPerson) {
         int c = 0;
         Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+        seal1.setSealStatusCode("03");
         if(seal1.getIsLogout()){
             return false;
         }
@@ -389,6 +394,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int  loss (User user,Seal seal, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode){
         Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+        seal1.setSealStatusCode("05");
         if(seal1.getIsLoss()){
              return ResultUtil.isFail;
          }
@@ -445,6 +451,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int  logout (User user,Seal seal, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord) {
         Seal seal1 = sealDao.selectByPrimaryKey(seal.getId());
+        seal1.setSealStatusCode("06");
         if (seal1.getIsLogout()){
             return ResultUtil.isFail;
         }

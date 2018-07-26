@@ -93,21 +93,21 @@ public class SealController  {
         String operatorTelphone = sealOperator.getSealOperationRecord().getOperatorTelphone();
         String operatorName = sealOperator.getSealOperationRecord().getOperatorName();
         String operatorCertificateCode = sealOperator.getSealOperationRecord().getOperatorCertificateCode();
-        String operatorCrtificateType = sealOperator.getSealOperationRecord().getOperatorCertificateType();
+        String operatorCertificateType = sealOperator.getSealOperationRecord().getOperatorCertificateType();
         String operatorPhoto = sealOperator.getOperatorPhoto();
         String idCardScanner = sealOperator.getIdCardScanner();
         String proxy =  sealOperator.getProxy();
         Seal seal = sealOperator.getSeal();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try{
-            int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCrtificateType,operatorPhoto,idCardScanner,proxy);
+            int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCertificateType,operatorPhoto,idCardScanner,proxy);
 
-        if(a==1) {
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("添加成功");
-        }else{
+        if(a<0) {
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("添加失败");
+        }else{
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("添加成功");
         }
             return jsonObjectBO;
         }catch (Exception e){

@@ -12,7 +12,7 @@ public interface SealService {
    int insert(Seal seal);
 
    //印章备案
-   int sealRecord(Seal seal, User user, String districtId, String operatorTelphone, String operatorName, String operatorCertificateCode, String operatorCrtificateType, String operatorPhoto, String idCardScanner, String proxy);
+   int sealRecord(Seal seal, User user, String districtId, String operatorTelphone, String operatorName, String operatorCertificateCode, String operatorCertificateType, String operatorPhoto, String idCardScanner, String proxy);
 
    //印章主界面
    PageInfo<Seal> sealInfo( String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
