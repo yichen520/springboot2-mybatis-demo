@@ -1,6 +1,7 @@
 package com.dhht.dao;
 
 import com.dhht.model.Examine;
+import com.dhht.model.ExamineCount;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,8 @@ public interface ExamineMapper {
     List<Examine> selectExamine();
 
     List<Examine> selectExamineForm(@Param("dis1")String dis1,@Param("dis2")String dis2,@Param("dis3")String dis3);
+
+    ExamineCount selectExamineCountByDistrict(@Param("district")String district,@Param("month")String month) ;
+
+    ExamineCount selectExamineCountByCityDistrict(@Param("district")String district,@Param("month")String month);
 }

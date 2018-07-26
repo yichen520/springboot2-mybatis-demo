@@ -81,8 +81,11 @@ public class WebLogAspect {
         // 设置IP地址
         sysLog.setIp(IPUtil.getIpAddr(request));
         User users = (User)request.getSession(true).getAttribute("user");
-        String user = users.getRealName();
-        sysLog.setLogUser(user);
+        if(users == null){
+            sysLog.setLogUser("匿名");
+        }else {
+            sysLog.setLogUser(users.getRealName());
+        }
         String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
         sysLog.setLogTime(dateStr);
         sysLog.setLogResult("发生异常");
@@ -105,8 +108,11 @@ public class WebLogAspect {
         // 设置IP地址
         sysLog.setIp(IPUtil.getIpAddr(request));
         User users = (User)request.getSession(true).getAttribute("user");
-        String user = users.getRealName();
-        sysLog.setLogUser(user);
+        if(users == null){
+            sysLog.setLogUser("匿名");
+        }else {
+            sysLog.setLogUser(users.getRealName());
+        }
         String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
         sysLog.setLogTime(dateStr);
         if (ret instanceof Map ){

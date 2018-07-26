@@ -2,6 +2,7 @@ package com.dhht.service.punish;
 
 import com.dhht.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,4 +17,7 @@ public interface PunishService {
     List<MakePunishRecord>  findPunish(String makedepartmentName, String startTime, String endTime, String districtId);
 
     List<EmployeePunishRecord>  findEmployeePunish(String makedepartmentName, String startTime, String endTime, String districtId);
+
+    boolean sendcode(String phoneNumber, int templateId, ArrayList<String> params);
+    boolean sendcode1(String phoneNumber, int templateId, ArrayList<String> params);
 }

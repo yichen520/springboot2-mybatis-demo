@@ -1,18 +1,17 @@
 package com.dhht.service.examine.impl;
 
-import com.dhht.dao.ExamineDetailMapper;
-import com.dhht.dao.ExamineMapper;
-import com.dhht.dao.MinitorMapper;
-import com.dhht.model.Examine;
-import com.dhht.model.ExamineDetail;
+import com.dhht.dao.*;
+import com.dhht.model.*;
+import com.dhht.service.District.DistrictService;
 import com.dhht.service.examine.MinitorService;
-import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.*;
 
 @Service("minitorService")
 @Transactional
@@ -22,7 +21,12 @@ public class MinitorServiceImpl implements MinitorService {
     private ExamineDetailMapper examineDetailMapper;
     @Autowired
     private ExamineMapper examineMapper;
-
+    @Autowired
+    private DistrictService districtService;
+    @Autowired
+    private MakePunishRecordMapper makePunishRecordMapper;
+    @Autowired
+    private EmployeePunishRecordMapper employeePunishRecordMapper;
     @Override
     public List<Examine> info() {
       return   examineMapper.selectExamine();
@@ -96,5 +100,95 @@ public class MinitorServiceImpl implements MinitorService {
         String dis1 = districtId.substring(0,2)+"0000";
         String dis2 = districtId.substring(0,4)+"00";
         return examineMapper.selectExamineForm(dis1,dis2,districtId);
+    }
+
+    @Override
+    public List<ExamineCount> countExamine(Map map, HttpServletRequest httpServletRequest) {
+        String month = (String)map.get("month");
+        List<String>  list =(List<String>)map.get("districts");
+        User user= (User)httpServletRequest.getSession().getAttribute("user");
+        if (list == null){
+            String str = user.getDistrictId().substring(0,2);
+            list=new ArrayList<String>();
+            list.add(str+"0000");
+        }
+        List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
+        List<ExamineCount> examineCounts = new ArrayList<>();
+        for (DistrictMenus districtId : districtIds) {
+            if (districtId.getChildren() != null){
+                for (DistrictMenus districtchilrenId : districtId.getChildren()) {
+                    ExamineCount examineCount = examineMapper.selectExamineCountByDistrict(districtchilrenId.getDistrictId(),month);
+                    if (examineCount.getCountNum()!=0){
+                        examineCounts.add(examineCount);
+                    }
+                }
+            }
+            String dis = districtId.getDistrictId().substring(0,4);
+            ExamineCount examineCount = examineMapper.selectExamineCountByCityDistrict(dis,month);
+            if (examineCount.getCountNum()!=0){
+                examineCounts.add(examineCount);
+            }
+        }
+        return examineCounts;
+    }
+
+    @Override
+    public List<ExamineCount> countPunish(Map map, HttpServletRequest httpServletRequest) {
+        String month = (String)map.get("month");
+        List<String>  list =(List<String>)map.get("districts");
+        User user= (User)httpServletRequest.getSession().getAttribute("user");
+        if (list == null){
+            String str = user.getDistrictId().substring(0,2);
+            list=new ArrayList<String>();
+            list.add(str+"0000");
+        }
+        List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
+        List<ExamineCount> examineCounts = new ArrayList<>();
+        for (DistrictMenus districtId : districtIds) {
+            if (districtId.getChildren() != null){
+                for (DistrictMenus districtchilrenId : districtId.getChildren()) {
+                    ExamineCount examineCount = makePunishRecordMapper.selectPunishCountByDistrict(districtchilrenId.getDistrictId(),month);
+                    if (examineCount.getCountNum()!=0){
+                        examineCounts.add(examineCount);
+                    }
+                }
+            }
+            String dis = districtId.getDistrictId().substring(0,4);
+            ExamineCount examineCount =makePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
+            if (examineCount.getCountNum()!=0){
+                examineCounts.add(examineCount);
+            }
+        }
+        return examineCounts;
+    }
+
+    @Override
+    public List<ExamineCount> countemployeePunish(Map map, HttpServletRequest httpServletRequest) {
+        String month = (String)map.get("month");
+        List<String>  list =(List<String>)map.get("districts");
+        User user= (User)httpServletRequest.getSession().getAttribute("user");
+        if (list == null){
+            String str = user.getDistrictId().substring(0,2);
+            list=new ArrayList<String>();
+            list.add(str+"0000");
+        }
+        List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
+        List<ExamineCount> examineCounts = new ArrayList<>();
+        for (DistrictMenus districtId : districtIds) {
+            if (districtId.getChildren() != null){
+                for (DistrictMenus districtchilrenId : districtId.getChildren()) {
+                    ExamineCount examineCount = employeePunishRecordMapper.selectPunishCountByDistrict(districtchilrenId.getDistrictId(),month);
+                    if (examineCount.getCountNum()!=0){
+                        examineCounts.add(examineCount);
+                    }
+                }
+            }
+            String dis = districtId.getDistrictId().substring(0,4);
+            ExamineCount examineCount =employeePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
+            if (examineCount.getCountNum()!=0){
+                examineCounts.add(examineCount);
+            }
+        }
+        return examineCounts;
     }
 }

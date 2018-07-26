@@ -21,4 +21,6 @@ public interface DistrictService {
 
     //生成区域下带制作单位单位列表
     List<DistrictMenus> selectMakeDepartmentMenus(String id);
+
+    List<DistrictMenus> selectDistrictByArray(List<String> DistrictIds);
 }
