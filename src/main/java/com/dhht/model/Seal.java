@@ -32,7 +32,7 @@ public class Seal extends SealKey {
 
     private String sealShapeCode;   //印章图案编码
 
-    private Double sealSize;    //章面尺寸
+    private String sealSize;    //章面尺寸
 
     private String sealCenterImage; //中心图案
 
