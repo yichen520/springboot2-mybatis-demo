@@ -15,7 +15,7 @@ public interface MinitorService {
 
     boolean add(Examine examine);
 
-    List<Examine> info();
+    List<Examine> info(String districtId);
 
     boolean delete(String id);
 
