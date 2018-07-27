@@ -140,7 +140,7 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setType("02");  //02为身份证扫描件
         sealMaterial.setFilePath(idCardScanner);
         sealDao.insertSealMaterial(sealMaterial);
-        if (proxy != null || proxy != "") {
+        if (proxy != null) {
             sealMaterial.setId(UUIDUtil.generate());
             sealMaterial.setSealCode(sealcode);
             sealMaterial.setType("03");  //03为委托书
@@ -336,7 +336,7 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public boolean deliver(User user,String id,SealGetPerson sealGetPerson) {
+    public boolean deliver(User user,String id,SealGetPerson sealGetPerson, String proxy) {
         int c = 0;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("03");
@@ -372,7 +372,14 @@ public class SealServiceImpl implements SealService {
         }else{
             c = sealDao.insertSealGetperson(sealGetPerson);
         }
-
+        SealMaterial sealMaterial = new SealMaterial();
+        if (proxy != null) {
+            sealMaterial.setId(UUIDUtil.generate());
+            sealMaterial.setSealCode(sealCode);
+            sealMaterial.setType("03");  //03为委托书
+            sealMaterial.setFilePath(proxy);
+            sealDao.insertSealMaterial(sealMaterial);
+        }
         if(c<0&&b<0&&c<0){
             return false;
         }else{
