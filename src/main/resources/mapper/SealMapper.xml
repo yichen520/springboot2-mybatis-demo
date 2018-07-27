@@ -358,33 +358,31 @@
 
   <!---统计模块-->
   <select id="countAddSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT count(id) from seal as s RIGHT JOIN(
-        select department_code,MAX(version)as ver ,department_address	from make_department where department_code= #{makeDepartmentCode} GROUP BY flag
-        )as b on s.make_department_code=b.department_code where
-         s.seal_type_code=#{sealTypeCode}
+        SELECT count(id) from seal s  where
+         s.seal_type_code=#{sealTypeCode} and s.make_department_code= #{makeDepartmentCode}
 		and is_record = true and is_make = true and is_loss!=true and is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
   <select id="countLossSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
 
-        SELECT count(id) from seal as s RIGHT JOIN(
-        select department_code,MAX(version)as ver ,department_address	from make_department where department_code= #{makeDepartmentCode} GROUP BY flag
-        )as b on s.make_department_code=b.department_code where s.seal_type_code=#{sealTypeCode}
-
+      SELECT count(id) from seal s  where
+      s.seal_type_code=#{sealTypeCode} and s.make_department_code= #{makeDepartmentCode}
         and  is_loss =true
         and is_logout!=true AND loss_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
 
   <select id="countLogoutSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
-        SELECT count(id) from seal as s RIGHT JOIN(
-        select department_code,MAX(version)as ver ,department_address	from make_department where department_code= #{makeDepartmentCode} GROUP BY flag
-        )as b on s.make_department_code=b.department_code where  s.seal_type_code=#{sealTypeCode}
+      SELECT count(id) from seal s  where
+      s.seal_type_code=#{sealTypeCode} and s.make_department_code= #{makeDepartmentCode}
       and  is_logout =true AND logout_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
-  <select id="selectByDistrictId" resultMap="BaseResultMap">
-     SELECT * from seal where  district_id = #{districtId}
+  <select id="selectLikeDistrictId"  resultType="java.lang.String">
+     SELECT seal.make_department_code from seal where  district_id like #{districtId}"%" group by seal.make_department_code
+  </select>
+  <select id="selectByDistrictId"  resultMap="BaseResultMap">
+    SELECT * from seal where  district_id = #{districtId}
   </select>
 
   <select id="countAddSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
@@ -406,21 +404,14 @@
 
   <select id="countByDistrictId" resultType="java.util.Map" parameterType="java.lang.Object">
 SELECT
-    count(seal.id) AS  `count`,
-    sys_district.province_id AS provinceId,
-    sys_district.province_name AS provinceName,
-    sys_district.city_id AS cityId,
-    sys_district.city_name AS  cityName,
-    sys_district.district_id AS districtId,
-    sys_district.district_name AS districtName
+    seal.make_department_code
     FROM
-    sys_district JOIN
     seal
-    WHERE seal.district_id = sys_district.district_id   AND seal.district_id IN
+    WHERE seal.district_id IN
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
        #{item.DistrictId}
     </foreach>
-    group by seal.district_id
+    group by  seal.make_department_code
 
   </select>
 </mapper>

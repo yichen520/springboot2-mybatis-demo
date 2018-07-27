@@ -97,7 +97,11 @@ public class SealOperator {
 
     private String operatorPhoto; //经办人照片
 
-    private String idCardScanner; //身份证扫描件
+//    private String idCardScanner; //身份证扫描件
+
+    private String positiveIdCardScanner;//身份证正面扫描件
+
+    private String reverseIdCardScanner;//身份证反面扫描件
 
     private String proxy; //委托书
 
