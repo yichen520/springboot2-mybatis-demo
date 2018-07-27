@@ -24,7 +24,7 @@ public interface SealService {
    int sealPersonal(String id,User user);
 
    //印章交付
-   boolean deliver(User user,String id,SealGetPerson sealGetPerson);
+   boolean deliver(User user,String id,SealGetPerson sealGetPerson,String proxy);
 
    //印章挂失
    int loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode);

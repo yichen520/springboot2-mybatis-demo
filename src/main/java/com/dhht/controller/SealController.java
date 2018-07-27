@@ -102,12 +102,12 @@ public class SealController  {
         try{
             int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCertificateType,operatorPhoto,idCardScanner,proxy);
 
-        if(a<0) {
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("添加失败");
-        }else{
+        if(a==2) {
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("添加成功");
+        }else{
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("添加失败");
         }
             return jsonObjectBO;
         }catch (Exception e){
@@ -227,9 +227,10 @@ public class SealController  {
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
 //        Seal seal = sealOperator.getSeal();
         String id = sealOperator.getId();
+        String proxy =  sealOperator.getProxy();
         SealGetPerson sealGetPerson = sealOperator.getSealGetPerson();
         try {
-            boolean a = sealService.deliver(user, id, sealGetPerson);
+            boolean a = sealService.deliver(user, id, sealGetPerson, proxy);
             if (a) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("交付成功");

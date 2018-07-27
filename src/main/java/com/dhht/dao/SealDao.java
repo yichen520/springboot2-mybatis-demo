@@ -38,11 +38,11 @@ public interface SealDao {
     List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode);
 
     //------------------------------统计模块-------------------------------------//
-    int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+    int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
-    int countLossSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+    int countLossSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
-    int countLogoutSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+    int countLogoutSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
     List<Seal> selectByDistrictId(@Param("districtId")String districtId);
 
