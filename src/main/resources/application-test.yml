@@ -15,7 +15,17 @@ jiaohu:
   FTP_PWD: jKa4F9zS1
   FTP_PATH: /
 
-
+spring:
+ redis:
+   host: 127.0.0.1
+   port: 6379
+   password:
+   jedis:
+     pool:
+       max-idle: 8
+       max-wait: -1
+       max-active: 8
+   timeout: 10000
 
 
 
@@ -98,6 +108,8 @@ sms:
         newPassword: 150660
         resetPasswordCode: 150654
         newUserName: 150917
+        makedepartmentpunish: 160963
+        employeepunish: 160972
 
 #默认是开发环境
 

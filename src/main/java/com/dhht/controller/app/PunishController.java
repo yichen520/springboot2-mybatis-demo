@@ -190,7 +190,8 @@ public class PunishController {
         ArrayList<String> params = new ArrayList<String>();
         params.add(departmentName);
         params.add(code);
-        if (smsSendService.sendSingleMsgByTemplate(phone,makedepartmentpunish,params)){
+
+        if (punishService.sendcode(phone,makedepartmentpunish,params)){
             return  JsonObjectBO.ok("获取验证码成功");
         }else{
             return  JsonObjectBO.error("获取验证码失败");
@@ -207,7 +208,7 @@ public class PunishController {
         String code = StringUtil.createRandomVcode();
         ArrayList<String> params = new ArrayList<String>();
         params.add(code);
-        if (smsSendService.sendSingleMsgByTemplate(phone,employeepunish,params)){
+        if (punishService.sendcode1(phone,makedepartmentpunish,params)){
             return  JsonObjectBO.ok("获取验证码成功");
         }else{
             return JsonObjectBO.error("获取验证码失败");

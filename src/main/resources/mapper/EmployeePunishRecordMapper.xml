@@ -20,11 +20,43 @@
     <result column="longitude" property="longitude" jdbcType="REAL" />
     <result column="latitude" property="latitude" jdbcType="REAL" />
   </resultMap>
+  <resultMap id="BaseCountResultMap" type="com.dhht.model.ExamineCount">
+    <result column="countNum" jdbcType="INTEGER" property="countNum" />
+    <result column="district_id" jdbcType="CHAR" property="district" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, make_department_code, make_department_name, employee_code, employee_name, employee_idcard_no, 
     punish_reason, punish_basis, punish_way, punish_address, record_department_code, 
     record_department_name, punisher_name, punish_time, district_id, longitude, latitude
   </sql>
+  <select id="selectPunishCountByDistrict" parameterType="java.lang.String" resultMap="BaseCountResultMap">
+    SELECT  count(1) as countNum, s.district_name as district_id from punish_record_employee e LEFT JOIN sys_district s
+    on e.district_id = s.district_id
+    where
+    <choose>
+      <when test="month != null and month !=''">
+        date_format(e.punish_time,'%Y-%m') = date_format(#{month},'%Y-%m')
+      </when>
+      <otherwise>
+        date_format(e.punish_time,'%Y-%m') = date_format(NOW(),'%Y-%m')
+      </otherwise>
+    </choose>
+    and e.district_id = #{district}
+  </select>
+  <select id="selectPunishCountByCityDistrict" parameterType="java.lang.String" resultMap="BaseCountResultMap">
+    SELECT  count(1) as countNum, s.city_name as district_id from punish_record_employee e LEFT JOIN sys_district s on
+    e.district_id = s.district_id
+    where
+    <choose>
+      <when test="month != null and month !=''">
+        date_format(e.punish_time,'%Y-%m') = date_format(#{month},'%Y-%m')
+      </when>
+      <otherwise>
+        date_format(e.punish_time,'%Y-%m') = date_format(NOW(),'%Y-%m')
+      </otherwise>
+    </choose>
+    and e.district_id like '${district}%'
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

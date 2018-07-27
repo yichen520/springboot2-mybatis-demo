@@ -12,6 +12,7 @@ import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.MD5Util;
 import com.dhht.util.StringUtil;
+import com.dhht.util.UUIDUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     private ResourceService resourceService;
 
     @Autowired
-    private SmsSendService smsSendService;
+    private APKVersionMapper apkVersionMapper;
 
     @Autowired
     private UsersMapper usersMapper;
@@ -48,7 +49,7 @@ public class UserLoginServiceImpl implements UserLoginService {
     private SMSCodeDao smsCodeDao;
 
     @Autowired
-    private UserPasswordService userPasswordService;
+    private AppReportLogMapper appReportLogMapper;
 
     @Autowired
     private RoleResourceDao roleResourceDao;
@@ -71,24 +72,6 @@ public class UserLoginServiceImpl implements UserLoginService {
         return vcode;
     }
 
-//    /**
-//     * 管理员重置密码
-//     *
-//     * @param id
-//     * @param
-//     * @return
-//     */
-//    @Override
-//    public JsonObjectBO resetPwd(String id) {
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        String code = createRandomVcode();
-//        User user = userDao.findById(id);
-//        user.setPassword(MD5Util.toMd5(code));
-//        String phone = user.getTelphone();
-//        return userPasswordService.sendMessage(phone,code);
-//    }
-
-
     /**
      * 验证账号和密码
      * @param user
@@ -110,7 +93,7 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     @Override
     public JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode) {
-        Long nowtime = new Date().getTime();
+        Long nowtime =System.currentTimeMillis();
 
         int count = userDao.findByPhone(smsCode.getPhone());
         if(count>0){
@@ -260,6 +243,56 @@ public class UserLoginServiceImpl implements UserLoginService {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public APKVersion versionupdate() {
+        return apkVersionMapper.selectNewVersion();
+    }
+
+    @Override
+    public boolean addversion(HttpServletRequest request,APKVersion apkVersion) {
+        User user = (User)request.getSession().getAttribute("user");
+        apkVersion.setUserId(user.getId());
+        apkVersion.setUserName(user.getUserName());
+        apkVersion.setCreatetime(new Date(System.currentTimeMillis()));
+        apkVersion.setId(UUIDUtil.generate());
+        if(apkVersionMapper.insertSelective(apkVersion)==1){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
+    @Override
+    public List<APKVersion> getAllApk() {
+        return apkVersionMapper.getAllApk();
+    }
+
+    @Override
+    public boolean insertlog(HttpServletRequest request,Map map) {
+
+        AppReportLog appReportLog = new AppReportLog();
+        String reportLog = (String)map.get("log");
+        String phoneType = (String) map.get("deviceInfo");
+        String remark = (String) map.get("remark");
+        String appversion = (String) map.get("appVersion");
+        String systemVersion = (String) map.get("systemVersion");
+        User user = (User)request.getSession().getAttribute("user");
+        appReportLog.setId(UUIDUtil.generate());
+        appReportLog.setCreatetime(new Date(System.currentTimeMillis()));
+        appReportLog.setDeviceInfo(phoneType);
+        appReportLog.setReportlog(reportLog);
+        appReportLog.setRemark(remark);
+        appReportLog.setAppVersion(appversion);
+        appReportLog.setSystemVersion(systemVersion);
+        appReportLog.setUserId(user.getUserName());
+        if(appReportLogMapper.insertSelective(appReportLog)==1){
+            return true;
+        }else {
+            return false;
         }
     }
 }

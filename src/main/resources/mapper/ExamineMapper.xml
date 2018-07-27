@@ -7,9 +7,17 @@
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="district_id" jdbcType="CHAR" property="districtId" />
   </resultMap>
+  <resultMap id="BaseCountResultMap" type="com.dhht.model.ExamineCount">
+    <result column="countNum" jdbcType="INTEGER" property="countNum" />
+    <result column="district_id" jdbcType="CHAR" property="district" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, name, remark, district_id
   </sql>
+
+
+
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -21,6 +29,34 @@
     <include refid="Base_Column_List" />
     from examine_type
     where district_id = #{dis1} or district_id = #{dis2} or district_id = #{dis3}
+  </select>
+  <select id="selectExamineCountByDistrict" parameterType="java.lang.String" resultMap="BaseCountResultMap">
+    SELECT  count(1) as countNum, s.district_name as district_id from examine_record e LEFT JOIN sys_district s
+    on e.district_id = s.district_id
+  where
+    <choose>
+      <when test="month != null and month !=''">
+        date_format(e.examine_time,'%Y-%m') = date_format(#{month},'%Y-%m')
+      </when>
+      <otherwise>
+        date_format(e.examine_time,'%Y-%m') = date_format(NOW(),'%Y-%m')
+      </otherwise>
+    </choose>
+      and e.district_id = #{district}
+  </select>
+  <select id="selectExamineCountByCityDistrict" parameterType="java.lang.String" resultMap="BaseCountResultMap">
+ SELECT  count(1) as countNum, s.city_name as district_id from examine_record e LEFT JOIN sys_district s on
+e.district_id = s.district_id
+  where
+    <choose>
+      <when test="month != null and month !=''">
+        date_format(e.examine_time,'%Y-%m') = date_format(#{month},'%Y-%m')
+      </when>
+      <otherwise>
+        date_format(e.examine_time,'%Y-%m') = date_format(NOW(),'%Y-%m')
+      </otherwise>
+    </choose>
+ and e.district_id like '${district}%'
   </select>
 
 

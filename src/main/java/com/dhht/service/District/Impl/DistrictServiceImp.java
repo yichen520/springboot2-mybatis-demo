@@ -314,7 +314,6 @@ public class DistrictServiceImp implements DistrictService{
         }
         return true;
     }
-
     /**
      * 根据区域id 数组来获取去域列表
      * @param DistrictIds

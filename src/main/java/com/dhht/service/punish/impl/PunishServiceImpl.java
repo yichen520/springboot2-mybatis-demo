@@ -2,15 +2,20 @@ package com.dhht.service.punish.impl;
 
 import com.dhht.dao.EmployeePunishRecordMapper;
 import com.dhht.dao.MakePunishRecordMapper;
+import com.dhht.dao.SMSCodeDao;
+import com.dhht.dao.UserDao;
 import com.dhht.model.*;
 import com.dhht.service.punish.PunishService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.SmsSendService;
+import com.dhht.service.user.UserService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("punishService")
@@ -23,7 +28,17 @@ public class PunishServiceImpl implements PunishService {
     private EmployeePunishRecordMapper employeePunishRecordMapper;
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+    @Autowired
+    private SMSCodeDao smsCodeDao;
 
+    @Autowired
+    private SmsSendService smsSendService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
     public boolean insertPunish(User user, MakePunishRecord makePunishRecord) {
@@ -65,5 +80,43 @@ public class PunishServiceImpl implements PunishService {
     @Override
     public List<EmployeePunishRecord> findEmployeePunish(String makedepartmentName, String startTime, String endTime, String districtId) {
         return employeePunishRecordMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
+    }
+
+    @Override
+    public boolean sendcode(String phone, int templateId, ArrayList<String> params) {
+        SMSCode smscode= smsCodeDao.getSms(phone);
+        if(smscode==null){
+            smscode = new SMSCode();
+            smscode.setId(UUIDUtil.generate());
+            smscode.setLastTime(System.currentTimeMillis());
+            smscode.setPhone(phone);
+            smscode.setSmscode(params.get(1));
+            smsCodeDao.save(smscode);
+        }else{
+            smscode.setLastTime(System.currentTimeMillis());
+            smscode.setSmscode(params.get(1));
+            smsCodeDao.update(smscode);
+        }
+        smsSendService.sendSingleMsgByTemplate(phone,templateId,params);
+        return true;
+    }
+
+    @Override
+    public boolean sendcode1(String phone, int templateId, ArrayList<String> params) {
+        SMSCode smscode= smsCodeDao.getSms(phone);
+        if(smscode==null){
+            smscode = new SMSCode();
+            smscode.setId(UUIDUtil.generate());
+            smscode.setLastTime(System.currentTimeMillis());
+            smscode.setPhone(phone);
+            smscode.setSmscode(params.get(0));
+            smsCodeDao.save(smscode);
+        }else{
+            smscode.setLastTime(System.currentTimeMillis());
+            smscode.setSmscode(params.get(0));
+            smsCodeDao.update(smscode);
+        }
+        smsSendService.sendSingleMsgByTemplate(phone,templateId,params);
+        return true;
     }
 }

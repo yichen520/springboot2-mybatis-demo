@@ -1,5 +1,6 @@
 package com.dhht.dao;
 
+import com.dhht.model.ExamineCount;
 import com.dhht.model.ExamineRecord;
 import com.dhht.model.MakePunishRecord;
 import org.apache.ibatis.annotations.Param;
@@ -22,4 +23,8 @@ public interface MakePunishRecordMapper {
     int updateByPrimaryKey(MakePunishRecord record);
 
     List<MakePunishRecord> findPunish(@Param("makedepartmentName") String makedepartmentName, @Param("startTime") String startTime, @Param("endTime")String endTime, @Param("district")String districtId);
+
+    ExamineCount selectPunishCountByDistrict(@Param("district")String district, @Param("month")String month);
+
+    ExamineCount selectPunishCountByCityDistrict(@Param("district")String district, @Param("month")String month);
 }

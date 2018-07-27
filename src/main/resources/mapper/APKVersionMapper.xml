@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.APKVersionMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.APKVersion" >
+    <id column="version_code" property="versionCode" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="version_name" property="versionName" jdbcType="VARCHAR" />
+    <result column="apk_url" property="apkurl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="force_install" property="forceInstall" jdbcType="BIT" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    version_code, id, version_name, apk_url, create_time, description,force_install,user_id,user_name
+  </sql>
+  <select id="selectNewVersion" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from app_version
+     ORDER BY create_time desc limit 1
+  </select>
+
+  <select id="getAllApk" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from app_version
+    ORDER BY create_time desc
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.dhht.model.APKVersionKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from app_version
+    where version_code = #{versionCode,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.dhht.model.APKVersionKey" >
+    delete from app_version
+    where version_code = #{versionCode,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.APKVersion" >
+    insert into app_version (version_code, id, version_name,
+      apk_url, create_time, description,
+      )
+    values (#{versionCode,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{versionName,jdbcType=VARCHAR}, 
+      #{apkurl,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.APKVersion" >
+    insert into app_version
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="forceInstall != null" >
+        force_install,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="versionName != null" >
+        version_name,
+      </if>
+      <if test="apkurl != null" >
+        apk_url,
+      </if>
+      <if test="createtime != null" >
+        create_time,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="forceInstall != null" >
+        #{forceInstall,jdbcType=BIT},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="versionName != null" >
+        #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="apkurl != null" >
+        #{apkurl,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.APKVersion" >
+    update apk_version
+    <set >
+      <if test="versionName != null" >
+        version_name = #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="apkurl != null" >
+        apkUrl = #{apkurl,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where version_code = #{versionCode,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.APKVersion" >
+    update apk_version
+    set version_name = #{versionName,jdbcType=VARCHAR},
+      apkUrl = #{apkurl,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR}
+    where version_code = #{versionCode,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

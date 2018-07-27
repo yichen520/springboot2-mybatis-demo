@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.AppReportLogMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.AppReportLog" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="create_time" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="device_info" property="deviceInfo" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="app_version" property="appVersion" jdbcType="VARCHAR" />
+    <result column="system_version" property="systemVersion" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.dhht.model.AppReportLog" extends="BaseResultMap" >
+    <result column="reportlog" property="log" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_time, device_info, user_id,app_version,system_version,remark,
+  </sql>
+  <sql id="Blob_Column_List" >
+    reportlog
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_crash_log
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from app_crash_log
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.AppReportLog" >
+    insert into app_crash_log (id, createTime, phoneType, 
+      user, reportlog)
+    values (#{id,jdbcType=CHAR}, #{createtime,jdbcType=TIMESTAMP}, #{phonetype,jdbcType=VARCHAR}, 
+      #{user,jdbcType=VARCHAR}, #{reportlog,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.AppReportLog" >
+    insert into app_crash_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createtime != null" >
+        create_time,
+      </if>
+      <if test="deviceInfo != null" >
+        device_info,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="appVersion != null" >
+        app_version,
+      </if>
+      <if test="systemVersion != null" >
+        system_version,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="reportlog != null" >
+        log,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deviceInfo != null" >
+        #{deviceInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="appVersion != null" >
+        #{appVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="systemVersion != null" >
+        #{systemVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="reportlog != null" >
+        #{reportlog,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.AppReportLog" >
+    update app_crash_log
+    <set >
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phonetype != null" >
+        phoneType = #{phonetype,jdbcType=VARCHAR},
+      </if>
+      <if test="user != null" >
+        user = #{user,jdbcType=VARCHAR},
+      </if>
+      <if test="reportlog != null" >
+        reportlog = #{reportlog,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dhht.model.AppReportLog" >
+    update app_crash_log
+    set createTime = #{createtime,jdbcType=TIMESTAMP},
+      phoneType = #{phonetype,jdbcType=VARCHAR},
+      user = #{user,jdbcType=VARCHAR},
+      reportlog = #{reportlog,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.AppReportLog" >
+    update app_crash_log
+    set createTime = #{createtime,jdbcType=TIMESTAMP},
+      phoneType = #{phonetype,jdbcType=VARCHAR},
+      user = #{user,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

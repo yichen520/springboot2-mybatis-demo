@@ -18,6 +18,11 @@ public class Springboot2MybatisDemoApplication extends SpringBootServletInitiali
 	public static void main(String[] args) {
 		SpringApplication.run(Springboot2MybatisDemoApplication.class, args);
 	}
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(Springboot2MybatisDemoApplication.class);
+	}
 //	@Bean
 //	public EmbeddedServletContainerCustomizer containerCustomizer(){
 //		return new EmbeddedServletContainerCustomizer() {
