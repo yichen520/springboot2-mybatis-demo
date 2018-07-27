@@ -15,6 +15,18 @@
   <sql id="Base_Column_List">
     id, name, remark, district_id
   </sql>
+  <select id="selectExamineForm" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from examine_type
+    where district_id = #{dis1} or district_id = #{dis2} or district_id = #{dis3}
+  </select>
+  <select id="selectExamine" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from examine_type
+    where district_id like '${districtId}%'
+  </select>
 
 
 
