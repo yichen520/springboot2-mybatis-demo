@@ -89,12 +89,12 @@ logging:
     com:
       dhht:
         dao: debug
-    root: INFO
-      org:
-        springframework:
-          web: DEBUG
-  mybatis: ERROR
-    file: dhht.log
+#    root: INFO
+#      org:
+#        springframework:
+#          web: DEBUG
+#  mybatis: ERROR
+#    file: dhht.log
 
 
 
