@@ -21,7 +21,7 @@ public interface ExamineMapper {
 
     int updateByPrimaryKey(Examine record);
 
-    List<Examine> selectExamine();
+    List<Examine> selectExamine(@Param("districtId")String districtId);
 
     List<Examine> selectExamineForm(@Param("dis1")String dis1,@Param("dis2")String dis2,@Param("dis3")String dis3);
 

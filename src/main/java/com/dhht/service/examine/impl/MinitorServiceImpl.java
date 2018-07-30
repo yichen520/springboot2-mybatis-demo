@@ -28,8 +28,8 @@ public class MinitorServiceImpl implements MinitorService {
     @Autowired
     private EmployeePunishRecordMapper employeePunishRecordMapper;
     @Override
-    public List<Examine> info() {
-      return   examineMapper.selectExamine();
+    public List<Examine> info(String districtId) {
+      return   examineMapper.selectExamine(districtId);
     }
 
 

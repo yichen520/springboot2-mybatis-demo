@@ -96,12 +96,16 @@ public class SealController  {
         String operatorCertificateCode = sealOperator.getSealOperationRecord().getOperatorCertificateCode();
         String operatorCertificateType = sealOperator.getSealOperationRecord().getOperatorCertificateType();
         String operatorPhoto = sealOperator.getOperatorPhoto();
-        String idCardScanner = sealOperator.getIdCardScanner();
+//        String idCardScanner = sealOperator.getIdCardScanner();
+        String PositiveIdCardScanner = sealOperator.getPositiveIdCardScanner();//身份证正面扫描件
+
+        String ReverseIdCardScanner = sealOperator.getReverseIdCardScanner();//身份证反面扫描件
+
         String proxy =  sealOperator.getProxy();
         Seal seal = sealOperator.getSeal();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try{
-            int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCertificateType,operatorPhoto,idCardScanner,proxy);
+            int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCertificateType,operatorPhoto,PositiveIdCardScanner,ReverseIdCardScanner,proxy);
 
         if(a==2) {
             jsonObjectBO.setCode(1);
@@ -297,7 +301,7 @@ public class SealController  {
         try{
         Employee employee = employeeService.selectByPhone(telphone);
 //        Seal seal = sealOperator.getSeal();
-            String id = sealOperator.getId();
+        String id = sealOperator.getId();
         SealOperationRecord sealOperationRecord = sealOperator.getSealOperationRecord();
         String operatorPhoto = sealOperator.getOperatorPhoto();
         String businessScanner = sealOperator.getBusinessScanner();

@@ -37,14 +37,12 @@ public class SealCountController {
     public JsonObjectBO selectBymakedepartment(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        List<String> makeDepartmentCodes = (List<String>)map.get("makeDepartmentCodes");
-        List<String> sealTypeCodes = (List<String>)map.get("sealTypeCodes") ;
-        List<String> Status = (List<String>)map.get("Ststus");
-        String districtId = (String)map.get("districtId");
+        List<String> sealTypeCodes = (List<String>)map.get("sealTypeCodes");
+        List<String> districtIds = (List<String>)map.get("districtIds");
         String startTime = (String)map.get("startTime");
         String endTime = (String)map.get("endTime");
         try {
-            List<SealCount> sealCounts = sealCuontService.countByDepartment(makeDepartmentCodes,districtId,sealTypeCodes,Status,startTime,endTime);
+            List<SealCount> sealCounts = sealCuontService.countByDepartment(districtIds,sealTypeCodes,startTime,endTime);
             jsonObject.put("sealCounts",sealCounts);
             return JsonObjectBO.success("查询",jsonObject);
         }catch (Exception e){

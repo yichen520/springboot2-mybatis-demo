@@ -7,6 +7,7 @@ import com.dhht.model.Examine;
 import com.dhht.model.ExamineDetail;
 import com.dhht.model.User;
 import com.dhht.service.examine.MinitorService;
+import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -59,13 +60,15 @@ public class ExamineController {
      */
     @RequestMapping("info")
     @Log("查询监督表配置")
-    public JsonObjectBO info( @RequestBody Map map){
+    public JsonObjectBO info( @RequestBody Map map,HttpServletRequest httpServletRequest){
         Integer pageSize = (Integer) map.get("pageSize");
         Integer pageNum = (Integer) map.get("pageNum");
+        User user =(User)httpServletRequest.getSession().getAttribute("user");
+        String districtId =StringUtil.getDistrictId( user.getDistrictId());
         try {
             JSONObject jsonObject = new JSONObject();
             PageHelper.startPage(pageNum, pageSize);
-            PageInfo<Examine> pageInfo = new PageInfo<Examine>(minitorService.info());
+            PageInfo<Examine> pageInfo = new PageInfo<Examine>(minitorService.info(districtId));
             jsonObject.put("examine", pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
@@ -76,7 +79,6 @@ public class ExamineController {
 
     /**
      * 查询监督表配置
-     * @param map 传入minitor类型（非必选）例如 1代表制作单位配置表等
      * @return
      */
     @RequestMapping("items")
