@@ -26,6 +26,12 @@
     <include refid="Base_Column_List" />
     from examine_type
     where district_id like '${districtId}%'
+    <if test="name != null">
+      and  `name`  like '%${name}%'
+    </if>
+    <if test="remark != null">
+      and remark like '%${remark}%'
+    </if>
   </select>
 
 
