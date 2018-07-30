@@ -65,10 +65,12 @@ public class ExamineController {
         Integer pageNum = (Integer) map.get("pageNum");
         User user =(User)httpServletRequest.getSession().getAttribute("user");
         String districtId =StringUtil.getDistrictId( user.getDistrictId());
+        String name = (String) map.get("name");
+        String remark = (String) map.get("remark");
         try {
             JSONObject jsonObject = new JSONObject();
             PageHelper.startPage(pageNum, pageSize);
-            PageInfo<Examine> pageInfo = new PageInfo<Examine>(minitorService.info(districtId));
+            PageInfo<Examine> pageInfo = new PageInfo<Examine>(minitorService.info(districtId,name,remark));
             jsonObject.put("examine", pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
