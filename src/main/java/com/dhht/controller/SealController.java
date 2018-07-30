@@ -282,7 +282,7 @@ public class SealController  {
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception("异常数据！");
+            return JsonObjectBO.exception("异常数据！ ");
         }
     }
 
