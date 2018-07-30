@@ -67,58 +67,59 @@ public class MyTest {
     private SealDao sealDao;
 
 
-    @Test
-    public void Test() {
-        List<String> list = new ArrayList<>();
-        list.add("330100");
-        list.add("330401");
-        list.add("330402");
-        list.add("330203");
-        list.add("330212");
-        List<DistrictMenus> districtMenus = districtService.selectDistrictByArray(list);
-        for (DistrictMenus district : districtMenus) {
-            System.out.println(district.toString());
-        }
-    }
-
-    @Test
-    public void Test1() {
-        List<DistrictMenus> list = districtService.selectMakeDepartmentMenus("330100");
-        for (DistrictMenus d1 : list) {
-            System.out.println(d1.toString());
-        }
-    }
-
-    @Test
-    public void Test3() {
-        Notice notice = noticeService.selectNoticeDetail("fa097054569b4809843ca7a47ad794f8");
-        System.out.println(notice.toString());
-    }
-
-    @Test
-    public void Test4() {
-        System.out.println(notifyService.countNewNotify("00265c419a8347ee80b346b7d545f183"));
-    }
-
-    @Test
-    public void Test5() {
-        List<DistrictMenus> list = new ArrayList<>();
-        DistrictMenus districtMenus = new DistrictMenus();
-        districtMenus.setDistrictId("330100");
-        list.add(districtMenus);
-        DistrictMenus a = new DistrictMenus();
-        a.setDistrictId("330200");
-        list.add(a);
-        List b = sealDao.countByDistrictId(list);
-        System.out.println(b.toString());
-
-    }
+//    @Test
+//    public void Test() {
+//        List<String> list = new ArrayList<>();
+//        list.add("330100");
+//        list.add("330401");
+//        list.add("330402");
+//        list.add("330203");
+//        list.add("330212");
+//        List<DistrictMenus> districtMenus = districtService.selectDistrictByArray(list);
+//        for (DistrictMenus district : districtMenus) {
+//            System.out.println(district.toString());
+//        }
+//    }
+//
+//    @Test
+//    public void Test1() {
+//        List<DistrictMenus> list = districtService.selectMakeDepartmentMenus("330100");
+//        for (DistrictMenus d1 : list) {
+//            System.out.println(d1.toString());
+//        }
+//    }
+//
+//    @Test
+//    public void Test3() {
+//        Notice notice = noticeService.selectNoticeDetail("fa097054569b4809843ca7a47ad794f8");
+//        System.out.println(notice.toString());
+//    }
+//
+//    @Test
+//    public void Test4() {
+//        System.out.println(notifyService.countNewNotify("00265c419a8347ee80b346b7d545f183"));
+//    }
+//
+//    @Test
+//    public void Test5() {
+//        List<DistrictMenus> list = new ArrayList<>();
+//        DistrictMenus districtMenus = new DistrictMenus();
+//        districtMenus.setDistrictId("330100");
+//        list.add(districtMenus);
+//        DistrictMenus a = new DistrictMenus();
+//        a.setDistrictId("330200");
+//        list.add(a);
+//        List b = sealDao.countByDistrictId(list);
+//        System.out.println(b.toString());
+//
+//    }
+//}
+//
+//
+//  /*  public void Test1(){
+//        List<Users> list = userService.selectByDistrict(110107);
+//        for (Users users:list) {
+//            System.out.println(users.toString());
+//        }
+//    }*/
 }
-
-
-  /*  public void Test1(){
-        List<Users> list = userService.selectByDistrict(110107);
-        for (Users users:list) {
-            System.out.println(users.toString());
-        }
-    }*/
