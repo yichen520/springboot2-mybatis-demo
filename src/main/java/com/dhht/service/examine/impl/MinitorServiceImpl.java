@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.*;
@@ -17,16 +18,17 @@ import java.util.*;
 @Transactional
 public class MinitorServiceImpl implements MinitorService {
 
-    @Autowired
+    @Resource
     private ExamineDetailMapper examineDetailMapper;
-    @Autowired
+    @Resource
     private ExamineMapper examineMapper;
-    @Autowired
+    @Resource
     private DistrictService districtService;
-    @Autowired
+    @Resource
     private MakePunishRecordMapper makePunishRecordMapper;
-    @Autowired
+    @Resource
     private EmployeePunishRecordMapper employeePunishRecordMapper;
+    @Resource
     @Override
     public List<Examine> info(String districtId,String name,String remark) {
       return   examineMapper.selectExamine(districtId,name,remark);
@@ -190,5 +192,17 @@ public class MinitorServiceImpl implements MinitorService {
             }
         }
         return examineCounts;
+    }
+
+    @Override
+    public boolean itemadd(List<ExamineDetail> examineDetails) {
+
+            for (int i = 0; i < examineDetails.size(); i++) {
+                if( examineDetails.get(i).getId()==null) {
+                    examineDetails.get(i).setId(UUIDUtil.generate());
+                    examineDetailMapper.insertSelective(examineDetails.get(i));
+                }
+            }
+            return true;
     }
 }

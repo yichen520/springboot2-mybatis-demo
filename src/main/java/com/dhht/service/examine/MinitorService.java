@@ -35,4 +35,6 @@ public interface MinitorService {
 
     List<ExamineCount> countemployeePunish(Map map, HttpServletRequest httpServletRequest);
 
+    boolean itemadd(List<ExamineDetail> examineDetails);
+
 }

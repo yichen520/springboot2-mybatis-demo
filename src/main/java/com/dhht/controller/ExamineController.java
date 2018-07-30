@@ -54,6 +54,28 @@ public class ExamineController {
     }
 
     /**
+     *新增监督表配置
+
+     * @return
+     */
+    @Log("新增监督表配置")
+    @PostMapping("itemadd")
+    public JsonObjectBO itemadd( @RequestBody Map map){
+       List<ExamineDetail> examineDetails = (List<ExamineDetail>)map.get("examineDetails");
+        try {
+            if (minitorService.itemadd(examineDetails)){
+                return JsonObjectBO.success("新增监督检查表成功",null);
+            }else {
+                return JsonObjectBO.error("新增监督检查表失败");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.toString());
+        }
+
+    }
+
+    /**
      * 查询监督表配置
      * @param map 传入minitor类型（非必选）例如 1代表制作单位配置表等
      * @return
