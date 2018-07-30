@@ -67,19 +67,10 @@ public class MyTest {
     private SealDao sealDao;
 
 
-//    @Test
-//    public void Test() {
-//        List<String> list = new ArrayList<>();
-//        list.add("330100");
-//        list.add("330401");
-//        list.add("330402");
-//        list.add("330203");
-//        list.add("330212");
-//        List<DistrictMenus> districtMenus = districtService.selectDistrictByArray(list);
-//        for (DistrictMenus district : districtMenus) {
-//            System.out.println(district.toString());
-//        }
-//    }
+    @Test
+    public void Test() {
+            System.out.println("hello world");
+    }
 //
 //    @Test
 //    public void Test1() {
