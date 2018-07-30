@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,21 +42,16 @@ public class NoticeController {
      * @return
      */
     @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
-    public JsonObjectBO upload( @RequestParam("file") MultipartFile[] multipartFiles, HttpServletRequest httpServletRequest){
+    public JsonObjectBO upload( @RequestParam("file") MultipartFile multipartFiles, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         List<File> fileList = new ArrayList<>();
-        if(multipartFiles.length>=10){
-            return JsonObjectBO.error("请选择少于十个文件");
-        }
         try {
-           for(int i =0;i<multipartFiles.length;i++){
-                File file = fileService.insertFile(httpServletRequest,multipartFiles[i]);
+                File file = fileService.insertFile(httpServletRequest,multipartFiles);
                if(file==null){
                    return JsonObjectBO.error("文件上传失败");
                }else {
                    fileList.add(file);
                }
-           }
            jsonObject.put("file",fileList);
            return JsonObjectBO.success("文件上传成功",jsonObject);
         }catch (Exception e){
@@ -71,8 +67,13 @@ public class NoticeController {
      */
     @RequestMapping(value = "/insert")
     public JsonObjectBO insert(@RequestBody Notice notice,HttpServletRequest httpServletRequest){
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        return ResultUtil.getResult(noticeService.insert(notice,user));
+        try {
+            User user = (User)httpServletRequest.getSession().getAttribute("user");
+            return ResultUtil.getResult(noticeService.insert(notice,user));
+        }catch (Exception e){
+            return JsonObjectBO.exception("添加失败");
+        }
+
     }
 
     /**
@@ -167,6 +168,21 @@ public class NoticeController {
     public JsonObjectBO deleteNotice(@RequestBody Map map){
         String id = (String)map.get("id");
         return ResultUtil.getResult(noticeService.delete(id));
+    }
+
+
+    /**
+     * 修改公告
+     * @param notice
+     * @return
+     */
+    @RequestMapping(value = "/update")
+    public JsonObjectBO updateNotice(@RequestBody Notice notice){
+        try {
+            return ResultUtil.getResult(noticeService.update(notice));
+        }catch (Exception e ){
+            return JsonObjectBO.exception("修改失败！");
+        }
     }
 
 }

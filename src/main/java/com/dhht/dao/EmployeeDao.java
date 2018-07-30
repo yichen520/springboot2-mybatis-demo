@@ -4,6 +4,7 @@ import com.dhht.model.Employee;
 
 import java.util.List;
 
+import com.dhht.model.MakeDepartmentSimple;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -46,6 +47,10 @@ public interface EmployeeDao {
     int updateMakeDepartment(@Param("id") String id,@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
     List<Employee> selectAllByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
+
+    List<Employee> selectEmployeeInfo(@Param("name") String name, @Param("status") int status, @Param("list") List<MakeDepartmentSimple> departmentSimples);
+
+    List<Employee> selectAllEmployeeInfo(@Param("name") String name,@Param("list") List<MakeDepartmentSimple> departmentSimples);
 
     //---------------统计部分--------------------//
     int countAllEmployee(@Param("districtId") String districtId);

@@ -2,11 +2,7 @@ package com.dhht.service.employee.Impl;
 
 import com.dhht.dao.EmployeeDao;
 import com.dhht.dao.UserDao;
-import com.dhht.model.Employee;
-
-import com.dhht.model.MakeDepartmentSimple;
-import com.dhht.model.RecordDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 
 import com.dhht.service.employee.EmployeeService;
 
@@ -22,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -314,6 +311,37 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int updateMakeDepartment(String id, String code) {
         return employeeDao.updateMakeDepartment(id,code);
+    }
+
+    /**
+     * 查询模块查询从业人员信息
+     * @param code
+     * @param status
+     * @param name
+     * @return
+     */
+    @Override
+    public List selectEmployeeInfo(String code, int status, String name,String districtId) {
+        List<Employee> employees = new ArrayList<>();
+        List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(districtId,"","01");
+        if(code==null||code==""){
+            if(status==1){
+                employees = employeeDao.selectEmployeeInfo(name,0,makedepartments);
+            }else if(status==2){
+                employees = employeeDao.selectEmployeeInfo(name,1,makedepartments);
+            }else {
+                employees = employeeDao.selectAllEmployeeInfo(name,makedepartments);
+            }
+        }else {
+            if(status==1){
+                employees = employeeDao.selectWorkEmployee(code,name);
+            }else if(status==2){
+                employees = employeeDao.selectDeleteEmployee(code,name);
+            }else {
+                employees = employeeDao.selectAllByDepartmentCode(code);
+            }
+        }
+        return employees;
     }
 
 

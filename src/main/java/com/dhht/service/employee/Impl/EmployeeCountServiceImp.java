@@ -49,6 +49,9 @@ public class EmployeeCountServiceImp implements EmployeeCountService{
      */
     public List<DistrictMenus> getDistrictList(String district){
         List<DistrictMenus> list = districtService.selectOneDistrict(district);
+        if(list.get(0).getChildren()==null){
+            return list;
+        }
         return list.get(0).getChildren();
     }
 

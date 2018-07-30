@@ -84,14 +84,14 @@ public class UseDepartmentController {
         String name = (String)map.get("name");
         String districtId = (String)map.get("districtId");
         String departmentStatus = (String)map.get("status");
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        String localDistrictId = user.getDistrictId();
+//        User user = (User)httpServletRequest.getSession().getAttribute("user");
+//        String localDistrictId = user.getDistrictId();
 
 
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");
         try{
-        JsonObjectBO jsonObjectBO = useDepartmentService.find(localDistrictId,code, name, districtId, departmentStatus, pageNum, pageSize);
+        JsonObjectBO jsonObjectBO = useDepartmentService.find("330000",code, name, districtId, departmentStatus, pageNum, pageSize);
         return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -169,11 +169,10 @@ public class UseDepartmentController {
     @Log("获取区域列表")
     @RequestMapping(value = "/districtInfo")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
         List<DistrictMenus> districtMenus = new ArrayList<>();
         try {
-            districtMenus = districtService.selectOneDistrict(user.getDistrictId());
+            districtMenus = districtService.selectOneDistrict("330000");
             jsonObject.put("districtMenus",districtMenus);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){

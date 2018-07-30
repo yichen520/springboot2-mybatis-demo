@@ -41,4 +41,6 @@ public interface EmployeeService {
     List<Employee> operationByDepartmentCode(String code);
 
     int updateMakeDepartment(String id,String code);
+
+    List selectEmployeeInfo(String code,int status,String name,String districtId);
 }
