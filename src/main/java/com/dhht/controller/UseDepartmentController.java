@@ -84,14 +84,12 @@ public class UseDepartmentController {
         String name = (String)map.get("name");
         String districtId = (String)map.get("districtId");
         String departmentStatus = (String)map.get("status");
-//        User user = (User)httpServletRequest.getSession().getAttribute("user");
-//        String localDistrictId = user.getDistrictId();
-
-
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");
+        User user = (User)httpServletRequest.getSession().getAttribute("User");
+        String localDistrictId = user.getDistrictId();
         try{
-        JsonObjectBO jsonObjectBO = useDepartmentService.find("330000",code, name, districtId, departmentStatus, pageNum, pageSize);
+        JsonObjectBO jsonObjectBO = useDepartmentService.find(localDistrictId,code, name, districtId, departmentStatus, pageNum, pageSize);
         return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -145,7 +143,6 @@ public class UseDepartmentController {
     @RequestMapping(value = "/showMore")
     public JsonObjectBO selectDetailById(@RequestBody Map map){
         String id = (String)map.get("id");
-
         UseDepartment useDepartment = new UseDepartment();
         JSONObject jsonObject = new JSONObject();
         try{
@@ -171,8 +168,10 @@ public class UseDepartmentController {
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         List<DistrictMenus> districtMenus = new ArrayList<>();
+        User user = (User)httpServletRequest.getSession().getAttribute("User");
+        String localDistrictId = user.getDistrictId();
         try {
-            districtMenus = districtService.selectOneDistrict("330000");
+            districtMenus = districtService.selectOneDistrict(localDistrictId);
             jsonObject.put("districtMenus",districtMenus);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
