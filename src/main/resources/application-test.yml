@@ -53,17 +53,17 @@ spring:
           pool-prepared-statements: false
           max-pool-prepared-statement-per-connection-size: 20
 
-    redis:
-       database: 0
-       host: 127.0.0.1
-       port: 6379
-       password:
-       jedis:
-         pool:
-           max-idle: 8
-           max-wait: -1
-           max-active: 8
-       timeout: 10000
+#    redis:
+#       database: 0
+#       host: 127.0.0.1
+#       port: 6379
+#       password:
+#       jedis:
+#         pool:
+#           max-idle: 8
+#           max-wait: -1
+#           max-active: 8
+#       timeout: 10000
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -89,12 +89,12 @@ logging:
     com:
       dhht:
         dao: debug
-    root: INFO
-      org:
-        springframework:
-          web: DEBUG
-  mybatis: ERROR
-    file: dhht.log
+#    root: INFO
+#      org:
+#        springframework:
+#          web: DEBUG
+#  mybatis: ERROR
+#    file: dhht.log
 
 
 

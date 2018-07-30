@@ -6,7 +6,7 @@
 	<groupId>com.dhht</groupId>
 	<artifactId>springboot2-mybatis-demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>springboot2-mybatis-demo</name>
 	<description>Demo project for Spring Boot</description>
@@ -56,11 +56,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-			<!--<scope>provided</scope>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<!--Spring 配置加载工具-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

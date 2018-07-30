@@ -41,4 +41,23 @@ public interface UseDepartmentDao {
 
     UseDepartment selectDetailById(@Param("id") String id);
 
+    //统计部分
+    int countAllDepartment(@Param("districtId") String districtId);
+
+    int countDelDepartment(@Param("districtId") String districtId);
+
+    int countWorkDepartment(@Param("districtId") String districtId);
+
+    int countAddByStartTime(@Param("districtId") String districtId,@Param("startTime") String startTime);
+
+    int countAddByEndTime(@Param("districtId") String districtId,@Param("endTime") String endTime);
+
+    int countAddByTime(@Param("districtId") String districtId,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    int countDelByStartTime(@Param("districtId") String districtId,@Param("startTime") String startTime);
+
+    int countDelByEndTime(@Param("districtId") String districtId,@Param("endTime") String endTime);
+
+    int countDelByTime(@Param("districtId") String districtId,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
 }

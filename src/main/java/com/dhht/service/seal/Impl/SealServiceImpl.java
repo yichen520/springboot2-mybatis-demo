@@ -80,19 +80,20 @@ public class SealServiceImpl implements SealService {
      * @param operatorCertificateCode
      * @param operatorCertificateType
      * @param operatorPhoto
-     * @param
+     * @param idCardScanner
      * @param proxy
      * @return
      */
     @Override
     public int sealRecord(Seal seal, User user, String districtId, String operatorTelphone,
                           String operatorName, String operatorCertificateCode, String operatorCertificateType,
-                          String operatorPhoto, String PositiveIdCardScanner, String ReverseIdCardScanner,  String proxy) {
+                          String operatorPhoto, String idCardScanner, String proxy) {
+
 
         String sealcode = createRandomCode(districtId);
         List<Seal> list = sealDao.selectByCodeAndType(seal.getUseDepartmentCode());
         if (list.size() != 0) {
-            return ResultUtil.isFail;    //该公司的法务印章已经存在
+            return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
         }
         seal.setSealCode(sealcode);
         UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
@@ -138,13 +139,7 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setSealCode(sealcode);
         sealMaterial.setType("02");  //02为身份证扫描件
-        sealMaterial.setFilePath(PositiveIdCardScanner);
-        sealDao.insertSealMaterial(sealMaterial);
-        sealDao.insertSealMaterial(sealMaterial);
-        sealMaterial.setId(UUIDUtil.generate());
-        sealMaterial.setSealCode(sealcode);
-        sealMaterial.setType("02");  //02为身份证扫描件
-        sealMaterial.setFilePath(ReverseIdCardScanner);
+        sealMaterial.setFilePath(idCardScanner);
         sealDao.insertSealMaterial(sealMaterial);
         if (proxy != null) {
             sealMaterial.setId(UUIDUtil.generate());
@@ -376,6 +371,7 @@ public class SealServiceImpl implements SealService {
             sealGetPerson.setGetpersonType(sealOperationRecord.getOperatorCertificateType());
             c = sealDao.insertSealGetperson(sealGetPerson);
         }else{
+            sealGetPerson.setId(UUIDUtil.generate());
             c = sealDao.insertSealGetperson(sealGetPerson);
         }
         SealMaterial sealMaterial = new SealMaterial();
@@ -454,7 +450,6 @@ public class SealServiceImpl implements SealService {
     /**
      * 印章注销
      * @param user
-     * @param
      * @param operatorPhoto
      * @param proxy
      * @param businessScanner

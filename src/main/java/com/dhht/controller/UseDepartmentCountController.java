@@ -1,15 +1,13 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Count;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
-import com.dhht.service.employee.EmployeeCountService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.dhht.service.useDepartment.UseDepartmentCountService;
+import com.dhht.service.useDepartment.UseDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,45 +18,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * create by fyc 2018/7/24
+ */
 @RestController
-@RequestMapping(value = "count/employee")
-public class EmployeeCountController {
+@RequestMapping(value = "/count/useDepartment")
+public class UseDepartmentCountController {
 
     @Autowired
-    private EmployeeCountService employeeCountService;
+    private UseDepartmentCountService departmentCountService;
     @Autowired
     private DistrictService districtService;
 
-    private static Logger logger = LoggerFactory.getLogger(EmployeeCountController.class);
-
     /**
-     * 数据展示接口
+     * 使用单位统计列表
      * @param map
      * @param httpServletRequest
      * @return
      */
     @RequestMapping(value = "/info")
-    @Log("获取从业人员统计列表")
     public JsonObjectBO info(@RequestBody Map map, HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        String districtId = (String)map.get("districtId");
         String startTime = (String)map.get("startTime");
         String endTime = (String)map.get("endTime");
-        String district = (String)map.get("districtId");
-        User user =(User) httpServletRequest.getSession().getAttribute("user");
 
         JSONObject jsonObject = new JSONObject();
+        List<Count> list = new ArrayList<>();
 
-        try {
-            if(district==null) {
-                List<Count> counts = employeeCountService.countAllEmployee(user.getDistrictId(),startTime,endTime);
-                jsonObject.put("count",counts);
+        try{
+            if(districtId==""||districtId==null) {
+                list = departmentCountService.countAllUseDepartment(user.getDistrictId(),startTime,endTime);
             }else {
-                List<Count> counts = employeeCountService.countAllEmployee(district,startTime,endTime);
-                jsonObject.put("count",counts);
+                list = departmentCountService.countAllUseDepartment(districtId,startTime,endTime);
             }
-            return JsonObjectBO.success("查询",jsonObject);
+            jsonObject.put("departmentCount",list);
+            return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("获取统计信息失败！");
         }
     }
 
@@ -81,4 +78,3 @@ public class EmployeeCountController {
         }
     }
 }
-

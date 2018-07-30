@@ -8,6 +8,7 @@ import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public class SealController  {
             String useDepartmentCode =(String) map.get("useDepartmentCode");
             UseDepartment useDepartment =sealService.isrecord(useDepartmentCode);
             if (useDepartment == null){
-                return JsonObjectBO.error("改使用单位没有印章备案资格");
+                return JsonObjectBO.error("该使用单位没有印章备案资格");
             }else {
                 jsonObject.put("useDepartment",useDepartment);
                 return JsonObjectBO.success("查询成功",jsonObject);
@@ -281,7 +282,7 @@ public class SealController  {
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("异常数据！");
         }
     }
 

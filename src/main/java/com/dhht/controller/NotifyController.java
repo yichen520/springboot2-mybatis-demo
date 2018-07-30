@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,13 +41,11 @@ public class NotifyController {
     @RequestMapping(value = "/notifyTip")
     public JsonObjectBO newNotify(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
+        JSONObject jsonObject = new JSONObject();
         try {
             int i =  notifyService.countNewNotify(user.getId());
-            if(i==0){
-                return JsonObjectBO.ok("");
-            }else {
-                return JsonObjectBO.ok("您有 "+i+" 条新通知！");
-            }
+            jsonObject.put("notifyCount",i);
+            return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.exception("获取通知异常！");
         }
@@ -83,22 +82,14 @@ public class NotifyController {
      * @return
      */
     @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
-    public JsonObjectBO upload(@RequestParam("file") MultipartFile[] multipartFiles, javax.servlet.http.HttpServletRequest httpServletRequest){
+    public JsonObjectBO upload(@RequestParam("file") MultipartFile multipartFiles, javax.servlet.http.HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
-        List<File> files= new ArrayList<>();
-        if(multipartFiles.length>=10){
-            return JsonObjectBO.error("请选择少于十个文件");
-        }
         try {
-            for(int i =0;i<multipartFiles.length;i++){
-                File file = fileService.insertFile(httpServletRequest,multipartFiles[i]);
-                if(file==null){
-                    return JsonObjectBO.error("文件上传失败");
-                }else {
-                    files.add(file);
-                }
+            File file = fileService.insertFile(httpServletRequest,multipartFiles);
+            if(file==null){
+            return JsonObjectBO.error("文件上传失败");
             }
-            jsonObject.put("file",files);
+            jsonObject.put("file",file);
             return JsonObjectBO.success("文件上传成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.error("文件上传时发生错误");
@@ -137,14 +128,14 @@ public class NotifyController {
      */
     @RequestMapping(value = "/info")
     public JsonObjectBO selectNotifyByUserName(HttpServletRequest httpServletRequest,@RequestBody Map map){
-       // User user = (User)httpServletRequest.getSession().getAttribute("user");
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
 
         try {
             PageHelper.startPage(pageNum, pageSize);
-            PageInfo<Notify> pageInfo = new PageInfo<>(notifyService.selectNotifyBySendUser("12"));
+            PageInfo<Notify> pageInfo = new PageInfo<>(notifyService.selectNotifyBySendUser(user.getUserName()));
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
@@ -170,4 +161,5 @@ public class NotifyController {
             return JsonObjectBO.exception("获取角色失败！");
         }
     }
+
 }

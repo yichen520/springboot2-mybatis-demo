@@ -14,7 +14,7 @@ public interface NoticeService {
 
     int delete(String id);
 
-    int update(Map map);
+    int update(Notice notice);
 
     List<NoticeSimple> selectByNum(String district);
 
