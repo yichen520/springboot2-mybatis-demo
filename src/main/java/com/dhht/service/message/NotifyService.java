@@ -17,4 +17,6 @@ public interface NotifyService {
 
     List<Notify> selectNotifyBySendUser(String userName);
 
+    String notifyReadCount(String notifyId);
+
 }

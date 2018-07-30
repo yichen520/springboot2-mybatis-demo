@@ -25,9 +25,11 @@ public class Notify {
 
     private String districtId;
 
-    private String notifyFileUrl;
+    private String notifyFileUrls;
 
     private String recallResult;
+
+    private String notifyReadCount;
 
     private List<UserSimple> notifyUser;
 

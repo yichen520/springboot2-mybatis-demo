@@ -102,11 +102,12 @@ public class InformationController {
      */
     @Log("获取从业人员列表")
     @RequestMapping(value = "/employee")
-    public JsonObjectBO employeeInfo(@RequestBody Map map){
+    public JsonObjectBO employeeInfo(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
-        String name = (String)map.get("name");
         int status = (Integer) map.get("status");
+        String name = (String)map.get("name");
         String code = (String)map.get("code");
 
         PageHelper.startPage(pageNum,pageSize);
@@ -114,13 +115,7 @@ public class InformationController {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            if (status == 1) {
-                list = employeeService.selectWorkEmployee(code,name);
-            } else if (status == 2) {
-                list  = employeeService.selectDeleteEmployee(code,name);
-            } else {
-                list = employeeService.selectAllEmployee(code,name);
-            }
+            list = employeeService.selectEmployeeInfo(code,status,name,user.getDistrictId());
             PageInfo pageInfo = new PageInfo<>(list);
             jsonObject.put("employee",pageInfo);
         } catch (Exception e) {
@@ -176,7 +171,7 @@ public class InformationController {
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping(value = "/district/Info")
+    @RequestMapping(value = "/district")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
@@ -190,6 +185,22 @@ public class InformationController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     *制作单位菜单接口
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/districtMakeDepartment")
+    public JsonObjectBO selectMakeDepartmentByDistrict(HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        JSONObject jsonObject = new JSONObject();
 
-
+        try{
+            List<DistrictMenus> list = districtService.selectMakeDepartmentMenus(user.getDistrictId());
+            jsonObject.put("districtMenus",list);
+            return JsonObjectBO.success("菜单返回成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+    }
 }

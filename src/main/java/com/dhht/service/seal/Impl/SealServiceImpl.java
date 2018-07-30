@@ -89,10 +89,11 @@ public class SealServiceImpl implements SealService {
                           String operatorName, String operatorCertificateCode, String operatorCertificateType,
                           String operatorPhoto, String idCardScanner, String proxy) {
 
+
         String sealcode = createRandomCode(districtId);
         List<Seal> list = sealDao.selectByCodeAndType(seal.getUseDepartmentCode());
         if (list.size() != 0) {
-            return ResultUtil.isFail;    //该公司的法务印章已经存在
+            return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
         }
         seal.setSealCode(sealcode);
         UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
@@ -370,6 +371,7 @@ public class SealServiceImpl implements SealService {
             sealGetPerson.setGetpersonType(sealOperationRecord.getOperatorCertificateType());
             c = sealDao.insertSealGetperson(sealGetPerson);
         }else{
+            sealGetPerson.setId(UUIDUtil.generate());
             c = sealDao.insertSealGetperson(sealGetPerson);
         }
         SealMaterial sealMaterial = new SealMaterial();
@@ -448,7 +450,6 @@ public class SealServiceImpl implements SealService {
     /**
      * 印章注销
      * @param user
-     * @param seal
      * @param operatorPhoto
      * @param proxy
      * @param businessScanner

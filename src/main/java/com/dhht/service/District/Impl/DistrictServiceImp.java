@@ -6,18 +6,13 @@ import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.MakeDepartmentSimple;
-import com.dhht.model.Resource;
 import com.dhht.service.District.DistrictService;
 import com.dhht.util.StringUtil;
-import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 2018/6/15 create by fyc
@@ -32,6 +27,10 @@ public class DistrictServiceImp implements DistrictService{
     private MakedepartmentMapper makedepartmentMapper;
 
 
+    /**
+     * 查询所有区域
+     * @return
+     */
     @Override
     public List<DistrictMenus> selectAllDistrict() {
         List<DistrictMenus> list = findDistrictList(districtMapper.selectAllDistrict());
@@ -85,6 +84,8 @@ public class DistrictServiceImp implements DistrictService{
        setMakeDepartmentchildren(districtMenus,list);
         return districtMenus;
     }
+
+
 
     /**
      * 增加区域
@@ -256,7 +257,11 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
-    //查找地区子节点
+    /**
+     * 查找区域子节点
+     * @param parent
+     * @param districtMenus
+     */
     public void setAllChildren(List<DistrictMenus> parent,List<DistrictMenus> districtMenus){
         for (DistrictMenus districtMenu:parent) {
             List<DistrictMenus> list = findInList(districtMenus,districtMenu.getDistrictId());
@@ -289,8 +294,12 @@ public class DistrictServiceImp implements DistrictService{
     }
 
 
-
-    //在给定集合中根据parentID查找数据
+    /**
+     *在指定集合中查找区域
+     * @param districtMenus
+     * @param id
+     * @return
+     */
     public List<DistrictMenus> findInList(List<DistrictMenus> districtMenus,String id){
         List<DistrictMenus> list = new ArrayList<DistrictMenus>();
         for(DistrictMenus districtMenu:districtMenus){
@@ -302,7 +311,12 @@ public class DistrictServiceImp implements DistrictService{
     }
 
 
-    //在往地区菜单列表添加时判断是否重复
+    /**
+     * 判断是否重复
+     * @param id
+     * @param list
+     * @return
+     */
     public boolean isAdd(String id, List<DistrictMenus> list){
         if(list.isEmpty()){
             return true;
@@ -347,6 +361,10 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
+    @Override
+    public List<DistrictMenus> selectDistrictMakeDepartmentByArray(List<String> DistrictIds) {
+        return null;
+    }
 
 
 }

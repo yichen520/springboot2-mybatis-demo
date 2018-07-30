@@ -24,4 +24,8 @@ public interface NotifyReceiveDetailMapper {
     List<NotifyReceiveDetail> selectNotifyIdByUserId(@Param("receiveUserId") String receiveUserId);
 
     int isRead(@Param("readTime") Date time,@Param("receiveUserId") String receiveUserId);
+
+    Integer countReadById(@Param("nofityId") String nofityId);
+
+    Integer countAllById(@Param("nofityId") String nofityId);
 }
