@@ -48,7 +48,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         }
         String Id = UUIDUtil.generate();
         useDepartment.setId(Id);
-        useDepartment.setDepartmentStatus("01");//状态1为正常 0 为全部  2未注销
+        useDepartment.setDepartmentStatus("01");//状态1为正常 00 为全部  02为注销
         useDepartment.setIsDelete(false);
         useDepartment.setFlag(Id);
         useDepartment.setVersion(0);
@@ -84,13 +84,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
                     return JsonObjectBO.error("修改失败");
                 }
             }
-//        UseDepartment oldData = useDepartmentDao.selectById(useDepartment.getId());
-//        useDepartment.setVersion(useDepartment.getVersion()+1);
-//        useDepartment.setIsDelete(false);
-//        useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
-//        useDepartment.setId(UUIDUtil.generate());
-//        useDepartment.setDepartmentStatus(oldData.getDepartmentStatus());
-
 
     }
 

@@ -354,13 +354,14 @@ public class SealCountServiceImp implements SealCuontService {
         for (DistrictMenus districtId : districtIds) {
             List<SealCount> sealCount = new ArrayList<>();
             if (districtId.getChildren() != null) {   //表示这里是市
-                for (DistrictMenus districtchilrenId : districtId.getChildren()) {
+                for (DistrictMenus districtchilrenId : districtId.getChildren()) {   //遍历当前市下的区
 
                     List<Seal> seals = sealDao.selectByDistrictId(districtchilrenId.getDistrictId());
                     Set<String> set = new HashSet<>();
                     for (Seal seal : seals) {
                         set.add(seal.getSealTypeCode());
                     }
+
                     if (sealTypeCodes.size() != 0) {
                         for (String sealTypeCode : sealTypeCodes) {
                             String sealType = "";
@@ -393,6 +394,7 @@ public class SealCountServiceImp implements SealCuontService {
                                     sealType = "其他类型章";
                                     break;
                             }
+
                             SealCount Num = getStatusAndDistrictId(districtchilrenId.getDistrictId(), sealTypeCode, startTime, endTime);
                             newSealNum = Num.getNewSealNum();
                             lossSealNum = Num.getLossSealNum();
@@ -401,7 +403,7 @@ public class SealCountServiceImp implements SealCuontService {
                                 sealCount.add(new SealCount(districtchilrenId.getDistrictName(), sealType, newSealNum, lossSealNum, logoutSealNum));
                             }
                         }
-                    } else {
+                    } else {  //如果传入的sealtypecode为null
                         Iterator<String> iterator = set.iterator();
                         while (iterator.hasNext()) {
                             String sealTypeCode = iterator.next();
@@ -457,7 +459,7 @@ public class SealCountServiceImp implements SealCuontService {
         }
 
 
-        return sealCounts;
+        return getSum(sealCounts);
 
     }
 }

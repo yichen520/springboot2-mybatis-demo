@@ -32,5 +32,6 @@ public interface SealService {
    //印章注销
    int logout (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord);
 
+
 }
 
