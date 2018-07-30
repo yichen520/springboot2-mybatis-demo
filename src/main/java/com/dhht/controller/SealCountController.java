@@ -58,7 +58,7 @@ public class SealCountController {
      * @return
      */
     @RequestMapping(value = "/selectByDistrictId")
-    public JsonObjectBO selectByDistrictId(@RequestBody Map map){
+    public JsonObjectBO selectByDistrictId(@RequestBody Map map,HttpServletRequest httpServletRequest){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         List<String> districtIds = (List)map.get("districtIds");
@@ -67,8 +67,9 @@ public class SealCountController {
         String districtId = (String)map.get("districtId");
         String startTime = (String)map.get("startTime");
         String endTime = (String)map.get("endTime");
+        User user =(User) httpServletRequest.getSession(true).getAttribute("user");
         try {
-            List<SealCount> sealCounts = sealCuontService.countByDistrictId(districtIds, sealTypeCodes, Status,startTime, endTime);
+            List<SealCount> sealCounts = sealCuontService.countByDistrictId(user,districtIds, sealTypeCodes,startTime, endTime);
             jsonObject.put("sealCounts",sealCounts);
 
             return JsonObjectBO.success("查询",jsonObject);

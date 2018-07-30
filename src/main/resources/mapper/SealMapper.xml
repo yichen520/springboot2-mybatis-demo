@@ -386,19 +386,36 @@
   </select>
 
   <select id="countAddSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT count(id) from seal where district_id  LIKE  #{districtId}"%"  AND seal_type_code=#{sealTypeCode}
+    SELECT count(id) from seal where district_id  =  #{districtId} AND seal_type_code=#{sealTypeCode}
     AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
   <select id="countLossSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
 
-    SELECT count(id) from seal where district_id  like #{districtId}"%" AND seal_type_code=#{sealTypeCode}
+    SELECT count(id) from seal where district_id  = #{districtId} AND seal_type_code=#{sealTypeCode}
     AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
 
   <select id="countLogoutSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
-     SELECT count(id) from seal where district_id  like #{districtId}"%" AND seal_type_code=#{sealTypeCode}
+     SELECT count(id) from seal where district_id  = #{districtId}  AND seal_type_code=#{sealTypeCode}
+    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+  <select id="countAddSealByLikeDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT count(id) from seal where district_id  like #{districtId}"%" AND seal_type_code=#{sealTypeCode}
+    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+  <select id="countLossSealByLikeDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
+
+    SELECT count(id) from seal where district_id like #{districtId}"%" AND seal_type_code=#{sealTypeCode}
+    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+  </select>
+
+
+  <select id="countLogoutSealByLikeDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT count(id) from seal where district_id like #{districtId}"%" AND seal_type_code=#{sealTypeCode}
     AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
