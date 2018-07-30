@@ -142,12 +142,6 @@ public class SealServiceImpl implements SealService {
             sealMaterial.setType("02");  //02为身份证扫描件
             sealMaterial.setFilePath(PositiveIdCardScanner);
             sealDao.insertSealMaterial(sealMaterial);
-            sealDao.insertSealMaterial(sealMaterial);
-            sealMaterial.setId(UUIDUtil.generate());
-            sealMaterial.setSealCode(sealcode);
-            sealMaterial.setType("02");  //02为身份证扫描件
-            sealMaterial.setFilePath(ReverseIdCardScanner);
-            sealDao.insertSealMaterial(sealMaterial);
             if (proxy != null) {
                 sealMaterial.setId(UUIDUtil.generate());
                 sealMaterial.setSealCode(sealcode);
