@@ -231,11 +231,14 @@ public class UserLoginServiceImpl implements UserLoginService {
                 User currentUser1 = usersMapper.validateCurrentuser(userDomain.getUsername());
                 currentUser1.setPassword(null);
                 JSONObject jsonObject = new JSONObject();
+                String token= UUIDUtil.generate();
                 jsonObject.put("currentUser",currentUser1);
+                jsonObject.put("token",token);
                 List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
                 List<Resource> resources = resourceService.findResourceByRole(resourceId);
                 request.getSession().setAttribute("user", currentUser1);
                 request.getSession().setAttribute("resources", resources);
+                request.getSession().setAttribute("token", token);
                 return JsonObjectBO.success("登录成功",jsonObject);
             }else {
                 return JsonObjectBO.error("此用户不是app端用户");

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.FileInfosMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.FileInfos" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="file_ext" property="fileExt" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_memo" property="createMemo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, file_name, file_ext, file_path, create_time, create_memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from fileinfo
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from fileinfo
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.FileInfos" >
+    insert into fileinfo (id, file_name, file_ext, 
+      file_path, create_time, create_memo
+      )
+    values (#{id,jdbcType=CHAR}, #{fileName,jdbcType=VARCHAR}, #{fileExt,jdbcType=VARCHAR}, 
+      #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createMemo,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.FileInfos" >
+    insert into fileinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="fileExt != null" >
+        file_ext,
+      </if>
+      <if test="filePath != null" >
+        file_path,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createMemo != null" >
+        create_memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExt != null" >
+        #{fileExt,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createMemo != null" >
+        #{createMemo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.FileInfos" >
+    update fileinfo
+    <set >
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExt != null" >
+        file_ext = #{fileExt,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createMemo != null" >
+        create_memo = #{createMemo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.FileInfos" >
+    update fileinfo
+    set file_name = #{fileName,jdbcType=VARCHAR},
+      file_ext = #{fileExt,jdbcType=VARCHAR},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_memo = #{createMemo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>
