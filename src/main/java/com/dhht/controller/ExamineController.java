@@ -6,6 +6,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Examine;
 import com.dhht.model.ExamineDetail;
 import com.dhht.model.User;
+import com.dhht.model.pojo.ExamineItemsDetail;
 import com.dhht.service.examine.MinitorService;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +53,28 @@ public class ExamineController {
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception(e.toString());
         }
+    }
+
+    /**
+     *新增监督表配置
+
+     * @return
+     */
+    @Log("新增监督表配置")
+    @PostMapping("itemadd")
+    public JsonObjectBO itemadd( @RequestBody Map map){
+       List<ExamineDetail> examineDetails = (List<ExamineDetail>)map.get("examineDetails");
+        try {
+            if (minitorService.itemadd(examineDetails)){
+                return JsonObjectBO.success("新增监督检查表成功",null);
+            }else {
+                return JsonObjectBO.error("新增监督检查表失败");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.toString());
+        }
+
     }
 
     /**
@@ -89,8 +113,19 @@ public class ExamineController {
         String id = (String) map.get("id");
         try {
             List<ExamineDetail> examineDetails = minitorService.items(id);
+            List<ExamineItemsDetail> examineItemsDetails= new ArrayList<>();
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("examineDetails", examineDetails);
+            for (int i=0;i<examineDetails.size();i++){
+                ExamineItemsDetail examineItemsDetail = new ExamineItemsDetail();
+                examineItemsDetail.setKey(examineDetails.get(i).getId());
+                examineItemsDetail.setId(examineDetails.get(i).getId());
+                examineItemsDetail.setExamineTypeId(examineDetails.get(i).getExamineTypeId());
+                examineItemsDetail.setExamineItem(examineDetails.get(i).getExamineItem());
+                examineItemsDetail.setOrderValue(examineDetails.get(i).getOrderValue());
+                examineItemsDetails.add(examineItemsDetail);
+            }
+
+            jsonObject.put("examineDetails", examineItemsDetails);
             if (examineDetails !=null){
                 return JsonObjectBO.success("查询此表各检查项成功",jsonObject);
             }else {

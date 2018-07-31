@@ -4,36 +4,34 @@ import com.dhht.model.FastDFSFile;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.TrackerClient;
 import org.springframework.core.io.ClassPathResource;
-
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import java.io.*;
 
 public class FastDFSClient {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(FastDFSClient.class);
 
+    //加载fastdfs服务器配置属性
     static {
         try {
-            String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();;
+            String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();
             ClientGlobal.init(filePath);
         } catch (Exception e) {
-            logger.error("FastDFS Client Init Fail!",e);
+            logger.error("FastDFS Client Init Fail!", e);
         }
     }
 
     public static String[] upload(FastDFSFile file) {
-        logger.info("File Name: " + file.getName() + "File Length:" + file.getContent().length);
+        logger.info("FileInfo Name: " + file.getName() + "FileInfo Length:" + file.getContent().length);
 
         NameValuePair[] meta_list = new NameValuePair[1];
         meta_list[0] = new NameValuePair("author", file.getAuthor());
 
         long startTime = System.currentTimeMillis();
         String[] uploadResults = null;
-        StorageClient storageClient=null;
+        StorageClient storageClient = null;
         try {
             storageClient = getTrackerClient();
             uploadResults = storageClient.upload_file(file.getContent(), file.getExt(), meta_list);
@@ -44,7 +42,7 @@ public class FastDFSClient {
         }
         logger.info("upload_file time used:" + (System.currentTimeMillis() - startTime) + " ms");
 
-        if (uploadResults == null && storageClient!=null) {
+        if (uploadResults == null && storageClient != null) {
             logger.error("upload file fail, error code:" + storageClient.getErrorCode());
         }
         String groupName = uploadResults[0];
@@ -59,9 +57,9 @@ public class FastDFSClient {
             StorageClient storageClient = getTrackerClient();
             return storageClient.get_file_info(groupName, remoteFileName);
         } catch (IOException e) {
-            logger.error("IO Exception: Get File from Fast DFS failed", e);
+            logger.error("IO Exception: Get FileInfo from Fast DFS failed", e);
         } catch (Exception e) {
-            logger.error("Non IO Exception: Get File from Fast DFS failed", e);
+            logger.error("Non IO Exception: Get FileInfo from Fast DFS failed", e);
         }
         return null;
     }
@@ -73,9 +71,9 @@ public class FastDFSClient {
             InputStream ins = new ByteArrayInputStream(fileByte);
             return ins;
         } catch (IOException e) {
-            logger.error("IO Exception: Get File from Fast DFS failed", e);
+            logger.error("IO Exception: Get FileInfo from Fast DFS failed", e);
         } catch (Exception e) {
-            logger.error("Non IO Exception: Get File from Fast DFS failed", e);
+            logger.error("Non IO Exception: Get FileInfo from Fast DFS failed", e);
         }
         return null;
     }
@@ -102,19 +100,19 @@ public class FastDFSClient {
     }
 
     public static String getTrackerUrl() throws IOException {
-        return "http://"+getTrackerServer().getInetSocketAddress().getHostString()+":"+ClientGlobal.getG_tracker_http_port()+"/";
+        return "http://" + getTrackerServer().getInetSocketAddress().getHostString() + ":" + ClientGlobal.getG_tracker_http_port() + "/";
     }
 
 
     private static StorageClient getTrackerClient() throws IOException {
         TrackerServer trackerServer = getTrackerServer();
         StorageClient storageClient = new StorageClient(trackerServer, null);
-        return  storageClient;
+        return storageClient;
     }
 
     private static TrackerServer getTrackerServer() throws IOException {
         TrackerClient trackerClient = new TrackerClient();
         TrackerServer trackerServer = trackerClient.getConnection();
-        return  trackerServer;
+        return trackerServer;
     }
 }

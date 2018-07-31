@@ -7,8 +7,19 @@
     <result column="examine_item" jdbcType="VARCHAR" property="examineItem" />
     <result column="order_value" jdbcType="INTEGER" property="orderValue" />
   </resultMap>
+
+  <resultMap id="BaseKeyResultMap" type="com.dhht.model.pojo.ExamineItemsDetail">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="examine_type_id" jdbcType="CHAR" property="examineTypeId" />
+    <result column="examine_item" jdbcType="VARCHAR" property="examineItem" />
+    <result column="order_value" jdbcType="INTEGER" property="orderValue" />
+    <result column="key" jdbcType="VARCHAR" property="key" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, examine_type_id, examine_item, order_value
+  </sql>
+  <sql id="Base_KEY_Column_List">
+    id, examine_type_id, examine_item, order_value,id as key
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -20,6 +31,14 @@
   <select id="selectByExamineId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
+    from examine_type_detail
+    where examine_type_id = #{examineTypeId,jdbcType=CHAR}
+    ORDER BY order_value
+  </select>
+
+  <select id="selectByitemsWithKey" parameterType="java.lang.String" resultMap="BaseKeyResultMap">
+    select
+    <include refid="Base_KEY_Column_List" />
     from examine_type_detail
     where examine_type_id = #{examineTypeId,jdbcType=CHAR}
     ORDER BY order_value

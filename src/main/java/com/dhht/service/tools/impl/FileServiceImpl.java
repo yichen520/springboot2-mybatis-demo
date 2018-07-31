@@ -4,13 +4,14 @@ import com.dhht.common.CurrentUser;
 import com.dhht.common.FastDFSClient;
 import com.dhht.dao.FileMapper;
 import com.dhht.model.FastDFSFile;
-import com.dhht.model.File;
+import com.dhht.model.FileInfo;
 import com.dhht.model.User;
 import com.dhht.service.tools.FileService;
 import com.dhht.util.UUIDUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,12 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private FileMapper fileMapper;
 
+    @Value("${trackerPort}")
+    private String trackerPort;
+
+    @Value("${trackerServer}")
+    private String trackerServer;
+
     private static Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
     /**
@@ -34,10 +41,10 @@ public class FileServiceImpl implements FileService {
      * @return  返回的文件对象
      */
     @Override
-    public File insertFile(HttpServletRequest request,MultipartFile file) {
+    public FileInfo insertFile(HttpServletRequest request, MultipartFile file) {
         try {
             String path=saveFile(request,file);
-            File file1=new File();
+            FileInfo file1=new FileInfo();
             file1.setId(UUIDUtil.generate());
             file1.setCreateTime(new Date(System.currentTimeMillis()));
             file1.setFileName(file.getOriginalFilename());
@@ -45,6 +52,7 @@ public class FileServiceImpl implements FileService {
             User user = CurrentUser.currentUser(request.getSession());
             file1.setOperationRecordId(user.getRealName());
             fileMapper.insert(file1);
+            file1.setFilePath(trackerServer+trackerPort+path);
             return file1;
         }catch (Exception e) {
             logger.error("upload file failed",e);
@@ -119,7 +127,8 @@ public class FileServiceImpl implements FileService {
             logger.error("upload file failed,please upload again!");
         }
         //这是暴露出真实的文件服务器地址
-        String path=FastDFSClient.getTrackerUrl()+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
+        // FastDFSClient.getTrackerUrl()+fileAbsolutePath[0]+ "/"+
+        String path=fileAbsolutePath[1];
 
         //这是反向代理的真实tomcat的地址
        // String path="http://"+request.getLocalName()+"/"+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
@@ -128,7 +137,7 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public boolean insertLocal(File file) {
+    public boolean insertLocal(FileInfo file) {
          if(fileMapper.insert(file)==1){
              return true;
          }else {
@@ -154,7 +163,7 @@ public class FileServiceImpl implements FileService {
      * @return
      */
     @Override
-    public File selectByPath(String path) {
+    public FileInfo selectByPath(String path) {
         return fileMapper.selectByPath(path);
     }
 }

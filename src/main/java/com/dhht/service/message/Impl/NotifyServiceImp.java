@@ -14,7 +14,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * create by fye 2018/7/18
@@ -161,9 +160,9 @@ public class NotifyServiceImp implements NotifyService {
      * @param path
      * @return
      */
-    public List<File> selectFileByPath(String path){
+    public List<FileInfo> selectFileByPath(String path){
         String paths[] = StringUtil.toStringArray(path);
-        List<File> fileList = new ArrayList<>();
+        List<FileInfo> fileList = new ArrayList<>();
         for(int i=0;i<paths.length;i++){
             fileList.add(fileService.selectByPath(paths[i]));
         }

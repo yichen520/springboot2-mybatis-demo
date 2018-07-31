@@ -1,24 +1,23 @@
 package com.dhht.dao;
 
-import com.dhht.model.File;
-import com.dhht.model.FileExample;
-import java.util.List;
+import com.dhht.model.FileInfo;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FileMapper {
 
-    File selectByPath(@Param("path") String path);
+    FileInfo selectByPath(@Param("path") String path);
 
     int deleteByPrimaryKey(String id);
 
     int deleteByPrimaryPath(String filePath);
 
-    int insert(File record);
+    int insert(FileInfo record);
 
 
-    File selectByPrimaryKey(String id);
+    FileInfo selectByPrimaryKey(String id);
 
-    int updateByPrimaryKey(File record);
+    int updateByPrimaryKey(FileInfo record);
 }

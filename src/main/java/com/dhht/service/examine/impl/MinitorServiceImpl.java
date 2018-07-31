@@ -2,6 +2,7 @@ package com.dhht.service.examine.impl;
 
 import com.dhht.dao.*;
 import com.dhht.model.*;
+import com.dhht.model.pojo.ExamineItemsDetail;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.examine.MinitorService;
 import com.dhht.util.UUIDUtil;
@@ -27,9 +28,10 @@ public class MinitorServiceImpl implements MinitorService {
     private MakePunishRecordMapper makePunishRecordMapper;
     @Autowired
     private EmployeePunishRecordMapper employeePunishRecordMapper;
+
     @Override
-    public List<Examine> info(String districtId,String name,String remark) {
-      return   examineMapper.selectExamine(districtId,name,remark);
+    public List<Examine> info(String districtId, String name, String remark) {
+        return   examineMapper.selectExamine(districtId,name,remark);
     }
 
 
@@ -190,5 +192,22 @@ public class MinitorServiceImpl implements MinitorService {
             }
         }
         return examineCounts;
+    }
+
+    @Override
+    public boolean itemadd(List<ExamineDetail> examineDetails) {
+
+            for (int i = 0; i < examineDetails.size(); i++) {
+                if( examineDetails.get(i).getId()==null) {
+                    examineDetails.get(i).setId(UUIDUtil.generate());
+                    examineDetailMapper.insertSelective(examineDetails.get(i));
+                }
+            }
+            return true;
+    }
+
+    @Override
+    public List<ExamineItemsDetail> itemsWithKey(String id) {
+        return examineDetailMapper.selectByitemsWithKey(id);
     }
 }

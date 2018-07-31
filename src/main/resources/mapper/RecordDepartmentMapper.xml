@@ -84,4 +84,10 @@
     SELECT  count(1) FROM record_department WHERE department_code = #{code,jdbcType=VARCHAR} and is_delete = 0
   </select>
 
+  <select id="selectByDistrictIdVersion" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+  SELECT r.* from record_department r RIGHT JOIN(
+    select flag,MAX(version) as ver from record_department GROUP BY flag
+    )as b on r.flag=b.flag and  r.version=b.ver where department_address = #{localDistrictId}
+  </select>
 </mapper>

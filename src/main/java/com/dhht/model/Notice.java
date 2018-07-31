@@ -23,7 +23,7 @@ public class Notice {
 
     private String noticeFileUrls;
 
-    private List<File> files;
+    private List<FileInfo> files;
 
 
 }

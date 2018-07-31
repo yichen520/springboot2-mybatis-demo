@@ -42,4 +42,6 @@ public interface RecordDepartmentMapper {
 
    RecordDepartment selectByPhone(@Param("phone")String phone);
 
+    RecordDepartment selectByDistrictIdVersion(@Param("localDistrictId") String localDistrictId);
+
 }

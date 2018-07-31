@@ -1,8 +1,6 @@
 package com.dhht.common;
 
-import com.alibaba.fastjson.JSONObject;
 import com.dhht.model.User;
-
 import javax.servlet.http.HttpSession;
 
 public class CurrentUser {

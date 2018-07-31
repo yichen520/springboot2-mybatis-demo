@@ -273,7 +273,7 @@
 
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT * from use_department WHERE
-      `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%" AND is_delete = 0 limit 20
+      `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%" AND is_delete = 0 limit 0,20
   </select>
 
   <select id="selectDetailById" resultMap="BaseResultMap" parameterType="java.lang.String">

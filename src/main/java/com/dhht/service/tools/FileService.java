@@ -1,21 +1,19 @@
 package com.dhht.service.tools;
 
-import com.dhht.common.JsonObjectBO;
-import com.dhht.model.File;
+import com.dhht.model.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 
 public interface FileService {
-   File insertFile(HttpServletRequest request,MultipartFile file);
+   FileInfo insertFile(HttpServletRequest request, MultipartFile file);
 
    boolean deleteFile(String filePath);
 
-   boolean insertLocal(File file);
+   boolean insertLocal(FileInfo file);
 
    boolean deleteLocalFile(String filePath);
 
-   File selectByPath(String path);
+   FileInfo selectByPath(String path);
 
 }
