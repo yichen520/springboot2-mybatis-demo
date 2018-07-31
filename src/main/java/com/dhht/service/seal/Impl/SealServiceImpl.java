@@ -69,6 +69,8 @@ public class SealServiceImpl implements SealService {
     }
 
 
+
+
     /**
      * 印章备案
      *
@@ -80,85 +82,84 @@ public class SealServiceImpl implements SealService {
      * @param operatorCertificateCode
      * @param operatorCertificateType
      * @param operatorPhoto
-     * @param idCardScanner
+
      * @param proxy
      * @return
      */
-    @Override
-    public int sealRecord(Seal seal, User user, String districtId, String operatorTelphone,
-                          String operatorName, String operatorCertificateCode, String operatorCertificateType,
-                          String operatorPhoto, String idCardScanner, String proxy) {
+        @Override
+        public int sealRecord(Seal seal, User user, String districtId, String operatorTelphone,
+                String operatorName, String operatorCertificateCode, String operatorCertificateType,
+                String operatorPhoto, String PositiveIdCardScanner, String ReverseIdCardScanner,  String proxy) {
 
-
-        String sealcode = createRandomCode(districtId);
-        List<Seal> list = sealDao.selectByCodeAndType(seal.getUseDepartmentCode());
-        if (list.size() != 0) {
-            return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
-        }
-        seal.setSealCode(sealcode);
-        UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
-        if(useDepartment==null){
-            return ResultUtil.isFail;
-        }
-        String telphone = user.getTelphone();
-        Employee employee = employeeService.selectByPhone(telphone);
+            String sealcode = createRandomCode(districtId);
+            List<Seal> list = sealDao.selectByCodeAndType(seal.getUseDepartmentCode());
+            if (list.size() != 0) {
+                return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
+            }
+            seal.setSealCode(sealcode);
+            UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
+            if(useDepartment==null){
+                return ResultUtil.isFail;
+            }
+            String telphone = user.getTelphone();
+            Employee employee = employeeService.selectByPhone(telphone);
 //        String legalName = useDepartment.getLegalName();
 
-        seal.setId(UUIDUtil.generate());
-        seal.setSealName(useDepartment.getName());
-        seal.setSealStatusCode("04");
-        seal.setIsRecord(true);
-        seal.setRecordDate(DateUtil.getCurrentTime());
-        seal.setIsMake(false);
-        seal.setIsDeliver(false);
-        seal.setIsLoss(false);
-        seal.setIsPersonal(false);
-        seal.setIsLogout(false);
-        seal.setDistrictId(useDepartment.getDistrictId());
-        String useDepartmentCode = seal.getUseDepartmentCode();
+            seal.setId(UUIDUtil.generate());
+            seal.setSealName(useDepartment.getName());
+            seal.setSealStatusCode("04");
+            seal.setIsRecord(true);
+            seal.setRecordDate(DateUtil.getCurrentTime());
+            seal.setIsMake(false);
+            seal.setIsDeliver(false);
+            seal.setIsLoss(false);
+            seal.setIsPersonal(false);
+            seal.setIsLogout(false);
+            seal.setDistrictId(useDepartment.getDistrictId());
+            String useDepartmentCode = seal.getUseDepartmentCode();
 
-        //操作记录
-        SealOperationRecord sealOperationRecord = new SealOperationRecord();
-        sealOperationRecord.setId(UUIDUtil.generate());
-        sealOperationRecord.setSealCode(sealcode);
-        sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
-        sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
-        sealOperationRecord.setOperatorName(operatorName);          //经办人
-        sealOperationRecord.setOperatorTelphone(operatorTelphone);
-        sealOperationRecord.setOperatorCertificateCode(operatorCertificateCode);
-        sealOperationRecord.setOperatorCertificateType(operatorCertificateType);
-        sealOperationRecord.setFlag("01");
-        sealDao.insertSealOperationRecord(sealOperationRecord);
-        SealMaterial sealMaterial = new SealMaterial();
-        sealMaterial.setId(UUIDUtil.generate());
-        sealMaterial.setSealCode(sealcode);
-        sealMaterial.setType("01");  //01为用户照片
-        sealMaterial.setFilePath(operatorPhoto);
-        sealDao.insertSealMaterial(sealMaterial);
-        sealMaterial.setId(UUIDUtil.generate());
-        sealMaterial.setSealCode(sealcode);
-        sealMaterial.setType("02");  //02为身份证扫描件
-        sealMaterial.setFilePath(idCardScanner);
-        sealDao.insertSealMaterial(sealMaterial);
-        if (proxy != null) {
+            //操作记录
+            SealOperationRecord sealOperationRecord = new SealOperationRecord();
+            sealOperationRecord.setId(UUIDUtil.generate());
+            sealOperationRecord.setSealCode(sealcode);
+            sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
+            sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
+            sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+            sealOperationRecord.setOperatorName(operatorName);          //经办人
+            sealOperationRecord.setOperatorTelphone(operatorTelphone);
+            sealOperationRecord.setOperatorCertificateCode(operatorCertificateCode);
+            sealOperationRecord.setOperatorCertificateType(operatorCertificateType);
+            sealOperationRecord.setFlag("01");
+            sealDao.insertSealOperationRecord(sealOperationRecord);
+            SealMaterial sealMaterial = new SealMaterial();
             sealMaterial.setId(UUIDUtil.generate());
             sealMaterial.setSealCode(sealcode);
-            sealMaterial.setType("03");  //03为委托书
-            sealMaterial.setFilePath(proxy);
+            sealMaterial.setType("01");  //01为用户照片
+            sealMaterial.setFilePath(operatorPhoto);
             sealDao.insertSealMaterial(sealMaterial);
-        }
-        seal.setSealCode(sealcode);
-        seal.setIsRecord(true);
-        seal.setRecordDate(DateUtil.getCurrentTime());
-        int a = sealDao.insert(seal);
-        if (a > 0) {
-            return ResultUtil.isSuccess;
-        } else {
-            return ResultUtil.isFail;
-        }
+            sealMaterial.setId(UUIDUtil.generate());
+            sealMaterial.setSealCode(sealcode);
+            sealMaterial.setType("02");  //02为身份证扫描件
+            sealMaterial.setFilePath(PositiveIdCardScanner);
+            sealDao.insertSealMaterial(sealMaterial);
+            if (proxy != null) {
+                sealMaterial.setId(UUIDUtil.generate());
+                sealMaterial.setSealCode(sealcode);
+                sealMaterial.setType("03");  //03为委托书
+                sealMaterial.setFilePath(proxy);
+                sealDao.insertSealMaterial(sealMaterial);
+            }
+            seal.setSealCode(sealcode);
+            seal.setIsRecord(true);
+            seal.setRecordDate(DateUtil.getCurrentTime());
+            int a = sealDao.insert(seal);
+            if (a > 0) {
+                return ResultUtil.isSuccess;
+            } else {
+                return ResultUtil.isFail;
+            }
 
-    }
+        }
 
 
     /**
@@ -248,12 +249,8 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
-//        sealOperationRecord.setOperatorName("");          //经办人
-//        sealOperationRecord.setOperatorTelphone("");
-//        sealOperationRecord.setOperatorCertificateCode("");
-//        sealOperationRecord.setOperatorCrtificateType("");
         sealOperationRecord.setFlag(flag);
-        int c = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
 
         //把数据存入材料表中
         SealMaterial sealMaterial = new SealMaterial();
@@ -261,7 +258,7 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("04");  //04为电子印模数据文件
         sealMaterial.setFilePath(electronicSealURL);
-        int b = sealDao.insertSealMaterial(sealMaterial);
+        int insertSealMaterial1 = sealDao.insertSealMaterial(sealMaterial);
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("05");  //04为电子印模数据文件
@@ -269,8 +266,8 @@ public class SealServiceImpl implements SealService {
 
         seal1.setIsMake(true);
         seal1.setMakeDate(DateUtil.getCurrentTime());
-        int a = sealDao.updateByPrimaryKey(seal1);
-        if (a < 0 || b < 0 || c < 0) {
+        int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
+        if (insertSealOperationRecord1 < 0 || insertSealMaterial1 < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;
         } else {
             return ResultUtil.isSuccess;
@@ -311,16 +308,12 @@ public class SealServiceImpl implements SealService {
             sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
             sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
             sealOperationRecord.setFlag("03");//个人化
-//            sealOperationRecord.setOperatorName(operatorName);
-//            sealOperationRecord.setOperatorTelphone(operatorTelphone);
-//            sealOperationRecord.setOperatorCertificateCode(operatorCertificateCode);
-//            sealOperationRecord.setOperatorCrtificateType(operatorCrtificateType);
-            int a = sealDao.insertSealOperationRecord(sealOperationRecord);
+            int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
             seal1.setIsPersonal(true);
             seal1.setPersonalDate(DateUtil.getCurrentTime());
-            int b = sealDao.updateByPrimaryKey(seal1);
+            int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
             seal1.setSealOperationRecord(sealOperationRecord);
-            if (a < 0 || b < 0) {
+            if (insertSealOperationRecord1 < 0 || updateByPrimaryKey1 < 0) {
                 return ResultUtil.isFail;
             } else {
                 return ResultUtil.isSuccess;
@@ -358,10 +351,10 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setFlag("04");//交付
-        int a = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
         seal1.setIsDeliver(true);
         seal1.setDeliverDate(DateUtil.getCurrentTime());
-        int b = sealDao.updateByPrimaryKey(seal1);
+        int updateByPrimaryKey = sealDao.updateByPrimaryKey(seal1);
         if(sealGetPerson.getIsSame()){
             sealGetPerson.setId(UUIDUtil.generate());
             sealGetPerson.setGetDate(DateUtil.getCurrentTime());
@@ -382,7 +375,7 @@ public class SealServiceImpl implements SealService {
             sealMaterial.setFilePath(proxy);
             sealDao.insertSealMaterial(sealMaterial);
         }
-        if(c<0&&b<0&&c<0){
+        if(insertSealOperationRecord<0&&updateByPrimaryKey<0&&c<0){
             return false;
         }else{
             return true;
@@ -415,31 +408,31 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("01");
         sealMaterial.setFilePath(operatorPhoto);
-        int a =sealDao.insertSealMaterial(sealMaterial);
+        int insertSealMaterial01 =sealDao.insertSealMaterial(sealMaterial);
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("03");
         sealMaterial.setFilePath(proxy);
-        int b =sealDao.insertSealMaterial(sealMaterial);
+        int insertSealMaterial03 =sealDao.insertSealMaterial(sealMaterial);
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("06");
         sealMaterial.setFilePath(businessScanner);
-        int c =sealDao.insertSealMaterial(sealMaterial);
+        int insertSealMaterial06 =sealDao.insertSealMaterial(sealMaterial);
         seal1.setIsLoss(true);
         seal1.setLossDate(DateUtil.getCurrentTime());
         RecordDepartment recordDepartment = recordDepartmentMapper.selectByCode(recordCode);
         seal1.setRecordDepartmentCode(recordCode);
         seal1.setRecordDepartmentName(recordDepartment.getDepartmentName());
-        int d =sealDao.updateByPrimaryKey(seal1);
+        int updateByPrimaryKey =sealDao.updateByPrimaryKey(seal1);
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealCode);
         sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setFlag("05");//挂失
-        int e =sealDao.insertSealOperationRecord(sealOperationRecord);
-        if(a>0&&b>0&&c>0&&d>0&&e>0){
+        int insertSealOperationRecord05 =sealDao.insertSealOperationRecord(sealOperationRecord);
+        if(insertSealMaterial01>0&&insertSealMaterial03>0&&insertSealMaterial06>0&&updateByPrimaryKey>0&&insertSealOperationRecord05>0){
             return ResultUtil.isSuccess;
         }else{
             return ResultUtil.isFail;
@@ -471,28 +464,28 @@ public class SealServiceImpl implements SealService {
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("01");
         sealMaterial.setFilePath(operatorPhoto);
-        int a =sealDao.insertSealMaterial(sealMaterial);
+        int insertSealMaterial01 =sealDao.insertSealMaterial(sealMaterial);
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("03");
         sealMaterial.setFilePath(proxy);
-        int b =sealDao.insertSealMaterial(sealMaterial);
+        int insertSealMaterial03 =sealDao.insertSealMaterial(sealMaterial);
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setType("06");
         sealMaterial.setFilePath(businessScanner);
-        int c =sealDao.insertSealMaterial(sealMaterial);
+        int insertSealMaterial06 =sealDao.insertSealMaterial(sealMaterial);
         seal1.setIsLogout(true);
         seal1.setLossDate(DateUtil.getCurrentTime());
-        int d =sealDao.updateByPrimaryKey(seal1);
+        int updateByPrimaryKey =sealDao.updateByPrimaryKey(seal1);
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealCode);
         sealOperationRecord.setDateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setFlag("06");//挂失
-        int e =sealDao.insertSealOperationRecord(sealOperationRecord);
-        if(a>0&&b>0&&c>0&&d>0&&e>0){
+        int insertSealOperationRecord06 =sealDao.insertSealOperationRecord(sealOperationRecord);
+        if(insertSealMaterial01>0&&insertSealMaterial03>0&&insertSealMaterial06>0&&updateByPrimaryKey>0&&insertSealOperationRecord06>0){
             return ResultUtil.isSuccess;
         }else{
             return ResultUtil.isFail;

@@ -96,20 +96,20 @@ public class SealController  {
         String operatorCertificateCode = sealOperator.getSealOperationRecord().getOperatorCertificateCode();
         String operatorCertificateType = sealOperator.getSealOperationRecord().getOperatorCertificateType();
         String operatorPhoto = sealOperator.getOperatorPhoto();
-//        String idCardScanner = sealOperator.getIdCardScanner();
         String PositiveIdCardScanner = sealOperator.getPositiveIdCardScanner();//身份证正面扫描件
-
         String ReverseIdCardScanner = sealOperator.getReverseIdCardScanner();//身份证反面扫描件
-
         String proxy =  sealOperator.getProxy();
         Seal seal = sealOperator.getSeal();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try{
             int a = sealService.sealRecord(seal,user,districtId,operatorTelphone,operatorName,operatorCertificateCode,operatorCertificateType,operatorPhoto,PositiveIdCardScanner,ReverseIdCardScanner,proxy);
 
-        if(a==2) {
+        if(a==ResultUtil.isSuccess) {
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("添加成功");
+        }else if(a==ResultUtil.isHaveSeal){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("法定章已经存在");
         }else{
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("添加失败");
@@ -205,7 +205,7 @@ public class SealController  {
         String id = sealOperator.getId();
         try {
             int a = sealService.sealPersonal(id, user);
-            if (a < 0) {
+            if (a==ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("个人化失败");
             } else {
@@ -230,7 +230,6 @@ public class SealController  {
     public JsonObjectBO deliver (HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user =(User) httpServletRequest.getSession(true).getAttribute("user");
-//        Seal seal = sealOperator.getSeal();
         String id = sealOperator.getId();
         String proxy =  sealOperator.getProxy();
         SealGetPerson sealGetPerson = sealOperator.getSealGetPerson();
@@ -272,7 +271,7 @@ public class SealController  {
             String businessScanner = sealOperator.getBusinessScanner();
             String proxy = sealOperator.getProxy();
             int a = sealService.loss(user, id, operatorPhoto, proxy, businessScanner, sealOperationRecord, recordCode);
-            if (a < 0) {
+            if (a==ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("挂失失败");
             } else {
@@ -282,7 +281,7 @@ public class SealController  {
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception("异常数据！");
+            return JsonObjectBO.exception("异常数据！ ");
         }
     }
 
@@ -307,7 +306,7 @@ public class SealController  {
         String businessScanner = sealOperator.getBusinessScanner();
         String proxy = sealOperator.getProxy();
         int a = sealService.logout(user,id,operatorPhoto,proxy,businessScanner,sealOperationRecord);
-        if(a<0){
+        if(a==ResultUtil.isFail){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("注销失败");
         }else{
