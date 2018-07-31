@@ -25,7 +25,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/sys/district")
-public class DistrictController implements InitializingBean
+public class DistrictController
+//        implements InitializingBean
 {
     @Autowired
     private DistrictService districtService;
@@ -35,20 +36,17 @@ public class DistrictController implements InitializingBean
     @Autowired
     private RedisTemplate redisTemplate;
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        List<DistrictMenus> district = districtService.selectAllDistrict();
-        if(district== null) {
-            return ;
-        }
-        if(!template.hasKey("District")){
-            template.opsForValue().append("District", JSON.toJSONString(district));
-        }
-//        else{
-//            template.delete("District");
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        List<DistrictMenus> district = districtService.selectAllDistrict();
+//        if(district== null) {
+//            return ;
 //        }
-
-    }
+//        if(!template.hasKey("District")){
+//            template.opsForValue().append("District", JSON.toJSONString(district));
+//        }
+//
+//    }
 
     /**
      * 查看所有区域
@@ -60,9 +58,9 @@ public class DistrictController implements InitializingBean
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-//        List<DistrictMenus> district = districtService.selectAllDistrict();
-        String districts = template.opsForValue().get("District");
-        List<DistrictMenus> district = JSON.parseArray(districts,DistrictMenus.class);
+        List<DistrictMenus> district = districtService.selectAllDistrict();
+//        String districts = template.opsForValue().get("District");
+//        List<DistrictMenus> district = JSON.parseArray(districts,DistrictMenus.class);
         jsonObject.put("District",district);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
@@ -95,11 +93,6 @@ public class DistrictController implements InitializingBean
         return jsonObjectBO;
     }
 
-    /**
-     * 根据用户查询区域
-     * @param httpServletRequest
-     * @return
-     */
     @RequestMapping(value = "/select")
     public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest){
        User user = (User) httpServletRequest.getSession().getAttribute("user");
@@ -107,7 +100,9 @@ public class DistrictController implements InitializingBean
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         List<DistrictMenus> district = districtService.selectOneDistrict(user.getDistrict().getDistrictId());
-
+        for (DistrictMenus districts:district) {
+            System.out.println(districts.toString());
+        }
         jsonObject.put("District",district);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);
