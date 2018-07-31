@@ -107,7 +107,7 @@ public class SyncDataToOutService {
 //
 //		byte[] imgData = null;
 //		try {
-//			imgData = FileUtils.fileToBytes(new File(imgParentDir + "/" + imgPath));
+//			imgData = FileUtils.fileToBytes(new FileInfo(imgParentDir + "/" + imgPath));
 //		} catch (IOException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -136,7 +136,7 @@ public class SyncDataToOutService {
 //	 */
 //	private void writeJsonFile(Object dataObj) {
 //		String objJson = JSON.toJSONString(dataObj);
-//		File file = new File(tempFileDir + "/" + generateFileName());
+//		FileInfo file = new FileInfo(tempFileDir + "/" + generateFileName());
 //
 //		FileOutputStream fileOutputStream = null;
 //		FileChannel channel = null;

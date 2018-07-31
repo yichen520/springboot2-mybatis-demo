@@ -6,21 +6,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.File;
+import com.dhht.model.FileInfo;
 import com.dhht.model.User;
 import com.dhht.service.tools.FileService;
-import com.dhht.util.FileUtil;
 import com.dhht.util.UUIDUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ResourceUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -30,6 +31,9 @@ public class UploadController {
 
     @Autowired
     private FileService fileService;
+    @Value("FilePath")
+    private String filePath;
+
 
 
     private static Logger logger = LoggerFactory.getLogger(UploadController.class);
@@ -71,7 +75,7 @@ public class UploadController {
             return JsonObjectBO.error("请选择上传文件");
         }
         try {
-            File uploadFile =fileService.insertFile(request,file);
+            FileInfo uploadFile =fileService.insertFile(request,file);
             if(uploadFile!=null){
                 JSONObject jsonObject =new JSONObject();
                 jsonObject.put("file",uploadFile);
@@ -85,7 +89,7 @@ public class UploadController {
             return JsonObjectBO.exception("上传文件失败");
         }
     }
-    //上传到本地
+    //上传到本地，
     @Log("上传到本地")
     @RequestMapping(value="/uploadLocal",produces="application/json;charset=UTF-8")
     public JsonObjectBO uploadLocal(HttpServletRequest request,@RequestParam("file") MultipartFile file) {
@@ -94,17 +98,29 @@ public class UploadController {
         }
         try {
             String fileName = file.getOriginalFilename();
-            String path =ClassUtils.getDefaultClassLoader().getResource("").getPath();
+            String path =filePath  + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "_" + fileName;
+//            String path =ClassUtils.getDefaultClassLoader().getResource("").getPath();
             // String filePath = request.getServletContext().getRealPath("upload/");
-            FileUtil.uploadFile(file.getBytes(), path, fileName);
+//            FileUtil.uploadFile(file.getBytes(), path, fileName);
 
-            File file1=new File();
+            FileInfo file1=new FileInfo();
             file1.setId(UUIDUtil.generate());
             file1.setCreateTime(new Date(System.currentTimeMillis()));
-            file1.setFileName(file.getOriginalFilename());
+            file1.setFileName(path);
             file1.setFilePath(fileName);
             User user = CurrentUser.currentUser(request.getSession());
             file1.setOperationRecordId(user.getRealName());
+
+            File dest = new File(path);
+            //判断文件是否已经存在
+            if (dest.exists()) {
+                return JsonObjectBO.error("文件已存在");
+            }
+            //判断文件父目录是否存在
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdir();
+            }
+            file.transferTo(dest);
 
             if(fileService.insertLocal(file1)){
                 JSONObject jsonObject =new JSONObject();

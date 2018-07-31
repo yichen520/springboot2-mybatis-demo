@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.Date;
 @Data
-public class File {
+public class FileInfo {
     private String id;
 
     private String fileName;

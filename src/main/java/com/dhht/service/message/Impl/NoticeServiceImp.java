@@ -2,7 +2,7 @@ package com.dhht.service.message.Impl;
 
 
 import com.dhht.dao.NoticeMapper;
-import com.dhht.model.File;
+import com.dhht.model.FileInfo;
 import com.dhht.model.Notice;
 import com.dhht.model.NoticeSimple;
 import com.dhht.model.User;
@@ -17,7 +17,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * create by fyc 2018/7/16
@@ -63,7 +62,7 @@ public class NoticeServiceImp implements NoticeService{
         List<Notice> noticeList = noticeMapper.selectByUserName(userName);
         for (Notice notice:noticeList) {
             String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
-            List<File> fileList = new ArrayList<>();
+            List<FileInfo> fileList = new ArrayList<>();
             for(int i = 0;i<paths.length;i++){
                 fileList.add(fileService.selectByPath(paths[i]));
             }
@@ -145,7 +144,7 @@ public class NoticeServiceImp implements NoticeService{
     @Override
     public Notice selectNoticeDetail(String id) {
         Notice notice = noticeMapper.selectNoticeDetail(id);
-        List<File> fileList = new ArrayList<>();
+        List<FileInfo> fileList = new ArrayList<>();
         if(notice.getNoticeFileUrls()!=null){
             String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
             for(int i=0;i<paths.length;i++){

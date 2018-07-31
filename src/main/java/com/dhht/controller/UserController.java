@@ -204,14 +204,11 @@ public class UserController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String phone = (String)map.get("telphone");
         try{
-        if (userPasswordService.getCheckCode(phone)==1){
-            jsonObjectBO.setMessage("获取验证码成功");
-            jsonObjectBO.setCode(1);
+        if (userPasswordService.getCheckCode(phone)== 2){
+            return JsonObjectBO.success("获取验证码成功",null);
         }else{
-            jsonObjectBO.setMessage("获取验证码成功");
-            jsonObjectBO.setCode(-1);
+            return  JsonObjectBO.error("获取验证码失败");
         }
-        return jsonObjectBO;
         }
         catch (Exception e) {
             logger.error(e.getMessage(),e);

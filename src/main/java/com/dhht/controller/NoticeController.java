@@ -2,8 +2,7 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.File;
-import com.dhht.model.Makedepartment;
+import com.dhht.model.FileInfo;
 import com.dhht.model.Notice;
 import com.dhht.model.User;
 import com.dhht.service.message.NoticeService;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +42,9 @@ public class NoticeController {
     @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
     public JsonObjectBO upload( @RequestParam("file") MultipartFile multipartFiles, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
-        List<File> fileList = new ArrayList<>();
+        List<FileInfo> fileList = new ArrayList<>();
         try {
-                File file = fileService.insertFile(httpServletRequest,multipartFiles);
+                FileInfo file = fileService.insertFile(httpServletRequest,multipartFiles);
                if(file==null){
                    return JsonObjectBO.error("文件上传失败");
                }else {
