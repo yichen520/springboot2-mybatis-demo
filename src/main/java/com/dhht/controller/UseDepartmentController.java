@@ -10,6 +10,7 @@ import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,8 +87,9 @@ public class UseDepartmentController {
         String departmentStatus = (String)map.get("status");
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");
-        User user = (User)httpServletRequest.getSession().getAttribute("User");
-        String localDistrictId = user.getDistrictId();
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+
+        String localDistrictId = StringUtil.DistrictUtil(user.getDistrictId())[0]+"0000";
         try{
         JsonObjectBO jsonObjectBO = useDepartmentService.find(localDistrictId,code, name, districtId, departmentStatus, pageNum, pageSize);
         return jsonObjectBO;
@@ -168,8 +170,8 @@ public class UseDepartmentController {
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         List<DistrictMenus> districtMenus = new ArrayList<>();
-        User user = (User)httpServletRequest.getSession().getAttribute("User");
-        String localDistrictId = user.getDistrictId();
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        String localDistrictId = StringUtil.DistrictUtil(user.getDistrictId())[0]+"0000";
         try {
             districtMenus = districtService.selectOneDistrict(localDistrictId);
             jsonObject.put("districtMenus",districtMenus);
