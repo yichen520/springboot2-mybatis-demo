@@ -12,7 +12,7 @@ public class ExamineDetail {
 
     private Integer orderValue;
 
-    private String key;
+
 
 
 }

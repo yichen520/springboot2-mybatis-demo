@@ -2,6 +2,7 @@ package com.dhht.service.examine.impl;
 
 import com.dhht.dao.*;
 import com.dhht.model.*;
+import com.dhht.model.pojo.ExamineItemsDetail;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.examine.MinitorService;
 import com.dhht.util.UUIDUtil;
@@ -203,5 +204,10 @@ public class MinitorServiceImpl implements MinitorService {
                 }
             }
             return true;
+    }
+
+    @Override
+    public List<ExamineItemsDetail> itemsWithKey(String id) {
+        return examineDetailMapper.selectByitemsWithKey(id);
     }
 }
