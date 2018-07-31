@@ -8,7 +8,7 @@
     <result column="order_value" jdbcType="INTEGER" property="orderValue" />
   </resultMap>
 
-  <resultMap id="BaseKeyResultMap" type="com.dhht.model.ExamineItemsDetail">
+  <resultMap id="BaseKeyResultMap" type="com.dhht.model.pojo.ExamineItemsDetail">
     <id column="id" jdbcType="CHAR" property="id" />
     <result column="examine_type_id" jdbcType="CHAR" property="examineTypeId" />
     <result column="examine_item" jdbcType="VARCHAR" property="examineItem" />
