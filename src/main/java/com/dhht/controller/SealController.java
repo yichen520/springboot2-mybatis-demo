@@ -259,18 +259,20 @@ public class SealController  {
     @RequestMapping("/loss")
     public JsonObjectBO loss (HttpServletRequest httpServletRequest,@RequestBody SealOperator sealOperator) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        User user =(User) httpServletRequest.getSession(true).getAttribute("user");
-        String telphone = user.getTelphone();
+
         try {
-            Employee employee = employeeService.selectByPhone(telphone);
-            String recordCode = employee.getOfficeCode();
+            User user =(User) httpServletRequest.getSession(true).getAttribute("user");
+            String telphone = user.getTelphone();
+//            Employee employee = employeeService.selectByPhone(telphone);
+//            String recordCode = employee.getOfficeCode();
+            String localDistrictId = user.getDistrictId();
 //            Seal seal = sealOperator.getSeal();
             String id = sealOperator.getId();
             SealOperationRecord sealOperationRecord = sealOperator.getSealOperationRecord();
             String operatorPhoto = sealOperator.getOperatorPhoto();
             String businessScanner = sealOperator.getBusinessScanner();
             String proxy = sealOperator.getProxy();
-            int a = sealService.loss(user, id, operatorPhoto, proxy, businessScanner, sealOperationRecord, recordCode);
+            int a = sealService.loss(user, id, operatorPhoto, proxy, businessScanner, sealOperationRecord, localDistrictId);
             if (a==ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("挂失失败");
@@ -281,7 +283,7 @@ public class SealController  {
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception("异常数据！ ");
+            return JsonObjectBO.exception(e.getMessage());
         }
     }
 

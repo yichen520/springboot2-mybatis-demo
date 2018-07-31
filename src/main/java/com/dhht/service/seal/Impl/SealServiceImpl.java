@@ -390,11 +390,11 @@ public class SealServiceImpl implements SealService {
      * @param proxy
      * @param businessScanner
      * @param sealOperationRecord
-     * @param recordCode
+     * @param localDistrictId
      * @return
      */
     @Override
-    public int  loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode){
+    public int  loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String localDistrictId){
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("05");
         if(seal1.getIsLoss()){
@@ -421,8 +421,8 @@ public class SealServiceImpl implements SealService {
         int insertSealMaterial06 =sealDao.insertSealMaterial(sealMaterial);
         seal1.setIsLoss(true);
         seal1.setLossDate(DateUtil.getCurrentTime());
-        RecordDepartment recordDepartment = recordDepartmentMapper.selectByCode(recordCode);
-        seal1.setRecordDepartmentCode(recordCode);
+        RecordDepartment recordDepartment = recordDepartmentMapper.selectByDistrictIdVersion(localDistrictId);
+        seal1.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
         seal1.setRecordDepartmentName(recordDepartment.getDepartmentName());
         int updateByPrimaryKey =sealDao.updateByPrimaryKey(seal1);
         sealOperationRecord.setId(UUIDUtil.generate());
