@@ -111,6 +111,9 @@ public class ExamineController {
         String id = (String) map.get("id");
         try {
             List<ExamineDetail> examineDetails = minitorService.items(id);
+            for (int i= 0;i<examineDetails.size();i++){
+                examineDetails.get(i).setKey(examineDetails.get(i).getId());
+            }
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("examineDetails", examineDetails);
             if (examineDetails !=null){

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.*;
@@ -18,20 +17,20 @@ import java.util.*;
 @Transactional
 public class MinitorServiceImpl implements MinitorService {
 
-    @Resource
+    @Autowired
     private ExamineDetailMapper examineDetailMapper;
-    @Resource
+    @Autowired
     private ExamineMapper examineMapper;
-    @Resource
+    @Autowired
     private DistrictService districtService;
-    @Resource
+    @Autowired
     private MakePunishRecordMapper makePunishRecordMapper;
-    @Resource
+    @Autowired
     private EmployeePunishRecordMapper employeePunishRecordMapper;
-    @Resource
+
     @Override
-    public List<Examine> info(String districtId,String name,String remark) {
-      return   examineMapper.selectExamine(districtId,name,remark);
+    public List<Examine> info(String districtId, String name, String remark) {
+        return   examineMapper.selectExamine(districtId,name,remark);
     }
 
 

@@ -333,7 +333,7 @@ public class SealController  {
             return JsonObjectBO.error("请选择上传文件");
         }
         try {
-            File uploadFile =fileService.insertFile(request,file);
+            FileInfo uploadFile =fileService.insertFile(request,file);
             if(uploadFile!=null){
                 JSONObject jsonObject =new JSONObject();
                 jsonObject.put("file",uploadFile);
