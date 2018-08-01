@@ -491,6 +491,19 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isFail;
         }
     }
+
+    /**
+     *查看详情
+     */
+    @Override
+    public Seal selectDetailById(String id) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        String useDepartmentCode = seal.getUseDepartmentCode();
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);
+        seal.setUseDepartment(useDepartment);
+        return seal;
+    }
+
     }
 
 

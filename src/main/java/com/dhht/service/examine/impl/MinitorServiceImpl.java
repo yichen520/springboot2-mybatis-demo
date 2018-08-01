@@ -35,6 +35,11 @@ public class MinitorServiceImpl implements MinitorService {
     }
 
 
+    /**
+     * 添加检查
+     * @param examine
+     * @return
+     */
     @Override
     public boolean add(Examine examine) {
         examine.setId(UUIDUtil.generate());
@@ -50,6 +55,11 @@ public class MinitorServiceImpl implements MinitorService {
       return true;
     }
 
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
     @Override
     public boolean delete(String id) {
 
@@ -64,6 +74,11 @@ public class MinitorServiceImpl implements MinitorService {
         }
     }
 
+    /**
+     * 更新
+     * @param examine
+     * @return
+     */
     @Override
     public boolean update(Examine examine) {
         if (examineMapper.updateByPrimaryKeySelective(examine)== 1){
@@ -73,11 +88,21 @@ public class MinitorServiceImpl implements MinitorService {
         }
     }
 
+    /**
+     * 获得检查项
+     * @param id
+     * @return
+     */
     @Override
     public List<ExamineDetail> items(String id) {
         return examineDetailMapper.selectByExamineId(id);
     }
 
+    /**
+     * 删除检查项
+     * @param id
+     * @return
+     */
     @Override
     public boolean itemdelete(String id)  {
 
@@ -88,6 +113,11 @@ public class MinitorServiceImpl implements MinitorService {
             }
     }
 
+    /**
+     * 更新检查项
+     * @param examineDetail
+     * @return
+     */
     @Override
     public boolean itemupdate(ExamineDetail examineDetail) {
         if (examineDetailMapper.updateByPrimaryKeySelective(examineDetail)== 1){
@@ -97,6 +127,11 @@ public class MinitorServiceImpl implements MinitorService {
         }
     }
 
+    /**
+     * 获取检查表格
+     * @param districtId
+     * @return
+     */
     @Override
     public List<Examine> selectExamineForm(String districtId) {
         String dis1 = districtId.substring(0,2)+"0000";
@@ -104,6 +139,12 @@ public class MinitorServiceImpl implements MinitorService {
         return examineMapper.selectExamineForm(dis1,dis2,districtId);
     }
 
+    /**
+     * 检查统计
+     * @param map
+     * @param httpServletRequest
+     * @return
+     */
     @Override
     public List<ExamineCount> countExamine(Map map, HttpServletRequest httpServletRequest) {
         String month = (String)map.get("month");
@@ -134,6 +175,12 @@ public class MinitorServiceImpl implements MinitorService {
         return examineCounts;
     }
 
+    /**
+     * 处罚统计
+     * @param map
+     * @param httpServletRequest
+     * @return
+     */
     @Override
     public List<ExamineCount> countPunish(Map map, HttpServletRequest httpServletRequest) {
         String month = (String)map.get("month");
@@ -146,7 +193,9 @@ public class MinitorServiceImpl implements MinitorService {
         }
         List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
         List<ExamineCount> examineCounts = new ArrayList<>();
+        int countAllSum=0;
         for (DistrictMenus districtId : districtIds) {
+            int countSum=0;
             if (districtId.getChildren() != null){
                 for (DistrictMenus districtchilrenId : districtId.getChildren()) {
                     ExamineCount examineCount = makePunishRecordMapper.selectPunishCountByDistrict(districtchilrenId.getDistrictId(),month);
@@ -155,15 +204,23 @@ public class MinitorServiceImpl implements MinitorService {
                     }
                 }
             }
-            String dis = districtId.getDistrictId().substring(0,4);
-            ExamineCount examineCount =makePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
-            if (examineCount.getCountNum()!=0){
-                examineCounts.add(examineCount);
-            }
+//            String dis = districtId.getDistrictId().substring(0,4);
+//            ExamineCount examineCount =makePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
+            countAllSum = countAllSum + countSum;
+            ExamineCount examineCount = new ExamineCount(districtId.getDistrictName()+"(小计)",countSum);
+            examineCounts.add(examineCount);
         }
+        ExamineCount all = new ExamineCount("总计",countAllSum);
+        examineCounts.add(all);
         return examineCounts;
     }
 
+    /**
+     * 从业人员处罚统计
+     * @param map
+     * @param httpServletRequest
+     * @return
+     */
     @Override
     public List<ExamineCount> countemployeePunish(Map map, HttpServletRequest httpServletRequest) {
         String month = (String)map.get("month");
@@ -176,31 +233,35 @@ public class MinitorServiceImpl implements MinitorService {
         }
         List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
         List<ExamineCount> examineCounts = new ArrayList<>();
+        int countAllSum =  0;
         for (DistrictMenus districtId : districtIds) {
+            int countSum = 0 ;
             if (districtId.getChildren() != null){
                 for (DistrictMenus districtchilrenId : districtId.getChildren()) {
                     ExamineCount examineCount = employeePunishRecordMapper.selectPunishCountByDistrict(districtchilrenId.getDistrictId(),month);
                     if (examineCount.getCountNum()!=0){
+                        countSum = countSum+examineCount.getCountNum();
                         examineCounts.add(examineCount);
                     }
                 }
             }
-            String dis = districtId.getDistrictId().substring(0,4);
-            ExamineCount examineCount =employeePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
-            if (examineCount.getCountNum()!=0){
-                examineCounts.add(examineCount);
-            }
+//            String dis = districtId.getDistrictId().substring(0,4);
+//            ExamineCount examineCount =employeePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
+              countAllSum = countAllSum + countSum;
+              ExamineCount examineCount = new ExamineCount(districtId.getDistrictName()+"(小计)",countSum);
+              examineCounts.add(examineCount);
         }
+        ExamineCount all = new ExamineCount("总计",countAllSum);
+        examineCounts.add(all);
         return examineCounts;
     }
 
     @Override
     public boolean itemadd(List<ExamineDetail> examineDetails) {
-
-            for (int i = 0; i < examineDetails.size(); i++) {
-                if( examineDetails.get(i).getId()==null) {
-                    examineDetails.get(i).setId(UUIDUtil.generate());
-                    examineDetailMapper.insertSelective(examineDetails.get(i));
+            for (ExamineDetail examineDetail : examineDetails) {
+                if( examineDetail.getId()==null) {
+                    examineDetail.setId(UUIDUtil.generate());
+                    examineDetailMapper.insertSelective(examineDetail);
                 }
             }
             return true;
