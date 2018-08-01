@@ -182,8 +182,9 @@ public class SealCountServiceImp implements SealCuontService {
      * @param districtIds
      * @return
      */
-    public List<String> getMakeDepartmentCode(List<String> districtIds) {
+    public List<String> getMakeDepartmentCode(User user,List<String> districtIds) {
         List<String> makeDepartmentCode = new ArrayList<>();
+        if(districtIds!=null){
         for (String id : districtIds) {                //遍历传入的districtId
             String districtId1[] = StringUtil.DistrictUtil(id);
             String districtId = null;
@@ -198,9 +199,14 @@ public class SealCountServiceImp implements SealCuontService {
                 makeDepartmentCode.addAll(a);
             } else {
                 districtId = id;
-                List<String> a = sealDao.selectLikeDistrictId(districtId);
+                List<String> a = sealDao.selectDistrictId(districtId);
                 makeDepartmentCode.addAll(a);
             }
+        }
+        }else{
+            String districts = user.getDistrictId().substring(0, 2);
+            List<String> a = sealDao.selectLikeDistrictId(districts);
+            makeDepartmentCode.addAll(a);
         }
         return makeDepartmentCode;
     }
@@ -216,12 +222,12 @@ public class SealCountServiceImp implements SealCuontService {
      */
 
     @Override
-    public List<SealCount> countByDepartment(List<String> districtIds, List<String> sealTypeCodes, String startTime, String endTime) {
+    public List<SealCount> countByDepartment(User user,List<String> districtIds, List<String> sealTypeCodes, String startTime, String endTime) {
         int newSealNum = 0;
         int lossSealNum = 0;
         int logoutSealNum = 0;
         List<SealCount> counts = new ArrayList<>();
-        List<String> makeDepartmentCodes = getMakeDepartmentCode(districtIds);
+        List<String> makeDepartmentCodes = getMakeDepartmentCode(user,districtIds);
 
         for (String makeDepartmentCode : makeDepartmentCodes) { //根据传入的code进行遍历
             List<SealCount> count = new ArrayList<>();
@@ -235,7 +241,7 @@ public class SealCountServiceImp implements SealCuontService {
             Iterator<String> iterator = set.iterator();
             while (iterator.hasNext()) {
                 String sealTypeCode = iterator.next();  //每个seal中的所有的sealtypecode的集合
-                if (sealTypeCodes.size() != 0) {
+                if (sealTypeCodes!=null||sealTypeCodes.size()!=0 ) {
                     for (String sealTypeCode1 : sealTypeCodes) {
                         if (sealTypeCode.equals(sealTypeCode1)) {
                             String sealType = "";
@@ -347,7 +353,8 @@ public class SealCountServiceImp implements SealCuontService {
         if (districts == null) { //如果传入的为空  则传入的是当前区域的
             String str = user.getDistrictId().substring(0, 2);
             districts = new ArrayList<String>();
-            districts.add(str + "0000");
+           districts.add(str + "0000");
+//            districts.add(str);
         }
         List<DistrictMenus> districtIds = districtService.selectDistrictByArray(districts);
         List<SealCount> sealCounts = new ArrayList<>();
@@ -362,7 +369,7 @@ public class SealCountServiceImp implements SealCuontService {
                         set.add(seal.getSealTypeCode());
                     }
 
-                    if (sealTypeCodes.size() != 0) {
+                    if (sealTypeCodes!=null&&sealTypeCodes.size()!=0 ) {
                         for (String sealTypeCode : sealTypeCodes) {
                             String sealType = "";
                             switch (sealTypeCode) {
