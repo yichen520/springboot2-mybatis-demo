@@ -5,12 +5,14 @@ import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.Examine;
 import com.dhht.model.ExamineDetail;
+import com.dhht.model.ExamineDetailList;
 import com.dhht.model.User;
 import com.dhht.model.pojo.ExamineItemsDetail;
 import com.dhht.service.examine.MinitorService;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -62,10 +65,9 @@ public class ExamineController {
      */
     @Log("新增监督表配置")
     @PostMapping("itemadd")
-    public JsonObjectBO itemadd( @RequestBody Map map){
-       List<ExamineDetail> examineDetails = (List<ExamineDetail>)map.get("examineDetails");
+    public JsonObjectBO itemadd(@RequestBody ExamineDetailList examineDetails){
         try {
-            if (minitorService.itemadd(examineDetails)){
+            if (minitorService.itemadd(examineDetails.getExamineDetails())){
                 return JsonObjectBO.success("新增监督检查表成功",null);
             }else {
                 return JsonObjectBO.error("新增监督检查表失败");
