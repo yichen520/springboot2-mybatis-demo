@@ -9,7 +9,7 @@ import java.util.List;
 public interface SealCuontService {
      
     //按照刻制企业
-    List<SealCount> countByDepartment(List<String>  districtIds, List<String> sealTypeCodes, String startTime, String endTime);
+    List<SealCount> countByDepartment(User user,List<String>  districtIds, List<String> sealTypeCodes, String startTime, String endTime);
 
     //按照区域
     List<SealCount> countByDistrictId(User user, List<String> districts, List<String> sealTypeCodes, String startTime, String endTime);
