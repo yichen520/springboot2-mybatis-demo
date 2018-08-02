@@ -10,6 +10,7 @@ import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,12 +85,11 @@ public class UseDepartmentController {
         String name = (String)map.get("name");
         String districtId = (String)map.get("districtId");
         String departmentStatus = (String)map.get("status");
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        String localDistrictId = user.getDistrictId();
-
-
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+
+        String localDistrictId = StringUtil.DistrictUtil(user.getDistrictId())[0]+"0000";
         try{
         JsonObjectBO jsonObjectBO = useDepartmentService.find(localDistrictId,code, name, districtId, departmentStatus, pageNum, pageSize);
         return jsonObjectBO;
@@ -145,7 +145,6 @@ public class UseDepartmentController {
     @RequestMapping(value = "/showMore")
     public JsonObjectBO selectDetailById(@RequestBody Map map){
         String id = (String)map.get("id");
-
         UseDepartment useDepartment = new UseDepartment();
         JSONObject jsonObject = new JSONObject();
         try{
@@ -169,11 +168,12 @@ public class UseDepartmentController {
     @Log("获取区域列表")
     @RequestMapping(value = "/districtInfo")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
         List<DistrictMenus> districtMenus = new ArrayList<>();
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        String localDistrictId = StringUtil.DistrictUtil(user.getDistrictId())[0]+"0000";
         try {
-            districtMenus = districtService.selectOneDistrict(user.getDistrictId());
+            districtMenus = districtService.selectOneDistrict(localDistrictId);
             jsonObject.put("districtMenus",districtMenus);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){

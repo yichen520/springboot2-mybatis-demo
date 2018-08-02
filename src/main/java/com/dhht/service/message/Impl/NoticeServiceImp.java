@@ -2,7 +2,7 @@ package com.dhht.service.message.Impl;
 
 
 import com.dhht.dao.NoticeMapper;
-import com.dhht.model.File;
+import com.dhht.model.FileInfo;
 import com.dhht.model.Notice;
 import com.dhht.model.NoticeSimple;
 import com.dhht.model.User;
@@ -17,7 +17,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * create by fyc 2018/7/16
@@ -40,28 +39,16 @@ public class NoticeServiceImp implements NoticeService{
      */
     @Override
     public int insert(Notice notice,User user) {
-        StringBuffer stringBuffer = new StringBuffer();
-        try {
-            notice.setId(UUIDUtil.generate());
-            notice.setCreateTime(DateUtil.getCurrentTime());
-            notice.setDistrictId(user.getDistrictId());
-            notice.setSendRealname(user.getRealName());
-            notice.setSendUsername(user.getUserName());
-            List<File> fileList = notice.getFiles();
-            for (File file:fileList) {
-                String path =file.getFilePath();
-                stringBuffer.append(path+";");
-            }
-            notice.setNoticeFileUrl(stringBuffer.toString());
-            int i = noticeMapper.insert(notice);
-            if (i == 1) {
-                return ResultUtil.isSuccess;
-            } else {
-                return ResultUtil.isFail;
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            return ResultUtil.isException;
+        notice.setId(UUIDUtil.generate());
+        notice.setCreateTime(DateUtil.getCurrentTime());
+        notice.setDistrictId(user.getDistrictId());
+        notice.setSendRealname(user.getRealName());
+        notice.setSendUsername(user.getUserName());
+        int i = noticeMapper.insert(notice);
+        if (i == 1) {
+            return ResultUtil.isSuccess;
+        } else {
+            return ResultUtil.isFail;
         }
     }
 
@@ -74,8 +61,8 @@ public class NoticeServiceImp implements NoticeService{
     public List<Notice> selectByUserName(String userName) {
         List<Notice> noticeList = noticeMapper.selectByUserName(userName);
         for (Notice notice:noticeList) {
-            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrl());
-            List<File> fileList = new ArrayList<>();
+            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
+            List<FileInfo> fileList = new ArrayList<>();
             for(int i = 0;i<paths.length;i++){
                 fileList.add(fileService.selectByPath(paths[i]));
             }
@@ -97,8 +84,8 @@ public class NoticeServiceImp implements NoticeService{
         if(n!=1){
             return ResultUtil.isFail;
         }
-        if(notice.getNoticeFileUrl()!=null) {
-            String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrl());
+        if(notice.getNoticeFileUrls()!=null) {
+            String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrls());
             if (deleteFile(paths) == ResultUtil.isFail) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isFail;
@@ -110,39 +97,18 @@ public class NoticeServiceImp implements NoticeService{
 
     /**
      * 更新公告
-     * @param map
+     * @param notice
      * @return
      */
     @Override
-    public int update(Map map) {
-        Notice notice = noticeMapper.selectById((String) map.get("id"));
-        StringBuffer stringBuffer = new StringBuffer();
-        String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrl());
-        if(map.get("file")==null){
-            notice.setNoticeTitle((String) map.get("content"));
-            notice.setNoticeContent((String)map.get("title"));
-          if(noticeMapper.update(notice)==1){
-              return ResultUtil.isSuccess;
-          }else {
-              return ResultUtil.isFail;
-          }
-        }else {
-            if(deleteFile(paths)==ResultUtil.isFail){
-                return ResultUtil.isFail;
-            }
-            List<File> fileList = (List<File>) map.get("file");
-            for (File file: fileList) {
-                stringBuffer.append(file.getFilePath()+";");
-            }
-            notice.setNoticeTitle((String) map.get("content"));
-            notice.setNoticeContent((String)map.get("title"));
-            notice.setNoticeFileUrl(stringBuffer.toString());
-            if(noticeMapper.update(notice)==1){
-                return ResultUtil.isSuccess;
-            }else {
-                return ResultUtil.isFail;
-            }
-        }
+    public int update(Notice notice) {
+       int i = noticeMapper.update(notice);
+       if(i==1){
+           return ResultUtil.isSuccess;
+       }else {
+           return ResultUtil.isFail;
+       }
+
     }
 
     /**
@@ -178,9 +144,9 @@ public class NoticeServiceImp implements NoticeService{
     @Override
     public Notice selectNoticeDetail(String id) {
         Notice notice = noticeMapper.selectNoticeDetail(id);
-        List<File> fileList = new ArrayList<>();
-        if(notice.getNoticeFileUrl()!=null){
-            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrl());
+        List<FileInfo> fileList = new ArrayList<>();
+        if(notice.getNoticeFileUrls()!=null){
+            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
             for(int i=0;i<paths.length;i++){
                 fileList.add(fileService.selectByPath(paths[i]));
             }

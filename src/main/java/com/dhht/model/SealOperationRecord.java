@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class SealOperationRecord {
+
     private String id;
 
     private String sealCode;

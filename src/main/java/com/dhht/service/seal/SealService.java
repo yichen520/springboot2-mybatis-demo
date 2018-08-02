@@ -12,7 +12,7 @@ public interface SealService {
    int insert(Seal seal);
 
    //印章备案
-   int sealRecord(Seal seal, User user, String districtId, String operatorTelphone, String operatorName, String operatorCertificateCode, String operatorCertificateType, String operatorPhoto, String idCardScanner, String proxy);
+   int sealRecord(Seal seal, User user, String districtId, String operatorTelphone, String operatorName, String operatorCertificateCode, String operatorCertificateType, String operatorPhoto,String PositiveIdCardScanner, String ReverseIdCardScanner, String proxy);
 
    //印章主界面
    PageInfo<Seal> sealInfo( String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
@@ -27,10 +27,15 @@ public interface SealService {
    boolean deliver(User user,String id,SealGetPerson sealGetPerson,String proxy);
 
    //印章挂失
-   int loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String recordCode);
+   int loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String localDistrictId);
 
    //印章注销
    int logout (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord);
+
+   //详情查看
+    Seal selectDetailById(String id);
+
+
 
 }
 

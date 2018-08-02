@@ -44,6 +44,10 @@ public interface SealDao {
 
     int countLogoutSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
+    List<String> selectLikeDistrictId(@Param("districtId")String districtId);
+
+    List<String> selectDistrictId(@Param("districtId")String districtId);
+
     List<Seal> selectByDistrictId(@Param("districtId")String districtId);
 
     int countAddSealByDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
@@ -52,5 +56,11 @@ public interface SealDao {
 
     int countLogoutSealByDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
-    List<SealDistrict> countByDistrictId(List<DistrictMenus> districtIds,String  sealTypeCode,String  startTime, String endTime);
+    int countAddSealByLikeDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    int countLossSealByLikeDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    int countLogoutSealByLikeDistrictId(@Param("districtId") String districtId,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    List<SealDistrict> countByDistrictId(List<DistrictMenus> districtIds);
 }

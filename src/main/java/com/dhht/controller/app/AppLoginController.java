@@ -30,7 +30,11 @@ public class AppLoginController {
     @Log("app登录")
    @RequestMapping(value ="app/login", method = RequestMethod.POST)
    public JsonObjectBO login(HttpServletRequest request,@RequestBody UserDomain userDomain){
-          return   userLoginService.validateAppUser(request, userDomain);
+        try {
+            return   userLoginService.validateAppUser(request, userDomain);
+        } catch (Exception e) {
+            return JsonObjectBO.exception(e.toString());
+        }
    }
 
     @Log("退出登录")

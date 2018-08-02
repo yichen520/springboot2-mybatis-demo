@@ -3,6 +3,7 @@ package com.dhht.service.examine;
 import com.dhht.model.Examine;
 import com.dhht.model.ExamineCount;
 import com.dhht.model.ExamineDetail;
+import com.dhht.model.pojo.ExamineItemsDetail;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -15,13 +16,16 @@ public interface MinitorService {
 
     boolean add(Examine examine);
 
-    List<Examine> info();
+    List<Examine> info(String districtId,String name,String remark);
 
     boolean delete(String id);
 
     boolean update(Examine examine);
 
     List<ExamineDetail> items(String id);
+
+    List<ExamineItemsDetail> itemsWithKey(String id);
+
 
     boolean itemdelete (String id);
 
@@ -34,5 +38,7 @@ public interface MinitorService {
     List<ExamineCount> countPunish(Map map, HttpServletRequest httpServletRequest);
 
     List<ExamineCount> countemployeePunish(Map map, HttpServletRequest httpServletRequest);
+
+    boolean itemadd(List<ExamineDetail> examineDetails);
 
 }

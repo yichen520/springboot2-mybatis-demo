@@ -14,7 +14,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * create by fye 2018/7/18
@@ -36,7 +35,6 @@ public class NotifyServiceImp implements NotifyService {
      */
     @Override
     public int insertNotify(Notify notify, User user) {
-        StringBuffer stringBuffer = new StringBuffer();
         try{
             notify.setId(UUIDUtil.generate());
             notify.setSendUsername(user.getUserName());
@@ -44,12 +42,7 @@ public class NotifyServiceImp implements NotifyService {
             notify.setNotifyContent(notify.getNotifyContent());
             notify.setNotifyTitle(notify.getNotifyTitle());
             notify.setCreateTime(DateUtil.getCurrentTime());
-            if(notify.getFiles().size()>0) {
-                for (File file : notify.getFiles()) {
-                    stringBuffer.append(file.getFilePath() + ";");
-                }
-                notify.setNotifyFileUrl(stringBuffer.toString());
-            }
+            notify.setDistrictId(user.getDistrictId());
             if(notifyMapper.insert(notify)==0){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isFail;
@@ -67,6 +60,7 @@ public class NotifyServiceImp implements NotifyService {
             }
             return ResultUtil.isSuccess;
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return ResultUtil.isException;
         }
     }
@@ -82,7 +76,7 @@ public class NotifyServiceImp implements NotifyService {
         try {
             int n = notifyMapper.recallNotify(id, DateUtil.getCurrentTime(), result);
             int r = notifyReceiveDetailMapper.deleteByNotifyId(id);
-            if (n == 1 && r == 1) {
+            if (n == 1 && r != 0) {
                 return ResultUtil.isSuccess;
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -113,8 +107,8 @@ public class NotifyServiceImp implements NotifyService {
         List<NotifyReceiveDetail> notifyIds = notifyReceiveDetailMapper.selectNotifyIdByUserId(receiveUserId);
         List<Notify> notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
-            if(notify.getNotifyFileUrl()!=null) {
-                notify.setFiles(selectFileByPath(notify.getNotifyFileUrl()));
+            if(notify.getNotifyFileUrls()!=null) {
+                notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
             }
         }
         try {
@@ -135,11 +129,30 @@ public class NotifyServiceImp implements NotifyService {
     public List<Notify> selectNotifyBySendUser(String userName) {
         List<Notify> notifies = notifyMapper.selectNotifyBySendUser(userName);
         for (Notify notify:notifies){
-                if(notify.getNotifyFileUrl()!=null) {
-                    notify.setFiles(selectFileByPath(notify.getNotifyFileUrl()));
+                if(notify.getNotifyFileUrls()!=null) {
+                    notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
+                }
+                String result = notifyReadCount(notify.getId());
+                if(result.equals("0/0")) {
+                    notify.setNotifyReadCount("已撤回！");
+                }else {
+                    notify.setNotifyReadCount(notifyReadCount(notify.getId()));
                 }
             }
         return notifies;
+    }
+
+    /**
+     * 统计
+     * @param notifyId
+     * @return
+     */
+    @Override
+    public String notifyReadCount(String notifyId) {
+        Integer readCount = notifyReceiveDetailMapper.countReadById(notifyId);
+        Integer allCount = notifyReceiveDetailMapper.countAllById(notifyId);
+        String result = readCount.toString()+"/"+ allCount.toString();
+        return result;
     }
 
     /**
@@ -147,9 +160,9 @@ public class NotifyServiceImp implements NotifyService {
      * @param path
      * @return
      */
-    public List<File> selectFileByPath(String path){
+    public List<FileInfo> selectFileByPath(String path){
         String paths[] = StringUtil.toStringArray(path);
-        List<File> fileList = new ArrayList<>();
+        List<FileInfo> fileList = new ArrayList<>();
         for(int i=0;i<paths.length;i++){
             fileList.add(fileService.selectByPath(paths[i]));
         }

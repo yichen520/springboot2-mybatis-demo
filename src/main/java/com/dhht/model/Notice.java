@@ -21,9 +21,9 @@ public class Notice {
 
     private String districtId;
 
-    private String noticeFileUrl;
+    private String noticeFileUrls;
 
-    private List<File> files;
+    private List<FileInfo> files;
 
 
 }
