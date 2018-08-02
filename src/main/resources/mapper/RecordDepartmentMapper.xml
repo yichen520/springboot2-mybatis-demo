@@ -87,6 +87,6 @@
   <select id="selectByDistrictIdVersion" parameterType="java.lang.String" resultMap="BaseResultMap">
   SELECT r.* from record_department r RIGHT JOIN(
     select flag,MAX(version) as ver from record_department GROUP BY flag
-    )as b on r.flag=b.flag and  r.version=b.ver where department_address = #{localDistrictId}
+    )as b on r.flag=b.flag and  r.version=b.ver where department_address = #{localDistrictId} and is_delete = 0
   </select>
 </mapper>
