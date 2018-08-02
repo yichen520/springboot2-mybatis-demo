@@ -17,6 +17,8 @@ public class JsonObjectBO {
     // 异常 失败
     public static final int FAIL = -1;
 
+    public static final int Token = 2;
+
 
     public JsonObjectBO(int code, String message, JSONObject data) {
         this.code = code;
@@ -49,6 +51,13 @@ public class JsonObjectBO {
     public static JsonObjectBO exception(String msg) {
         JsonObjectBO ResponseBo = new JsonObjectBO();
         ResponseBo.setCode(EXCEPTION);
+        ResponseBo.setMessage(msg);
+        return ResponseBo;
+    }
+
+    public static JsonObjectBO sessionLose(String msg) {
+        JsonObjectBO ResponseBo = new JsonObjectBO();
+        ResponseBo.setCode(Token);
         ResponseBo.setMessage(msg);
         return ResponseBo;
     }

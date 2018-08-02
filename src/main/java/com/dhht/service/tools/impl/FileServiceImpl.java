@@ -52,7 +52,7 @@ public class FileServiceImpl implements FileService {
             User user = CurrentUser.currentUser(request.getSession());
             file1.setOperationRecordId(user.getRealName());
             fileMapper.insert(file1);
-            file1.setFilePath(trackerServer+trackerPort+path);
+            file1.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+path);
             return file1;
         }catch (Exception e) {
             logger.error("upload file failed",e);

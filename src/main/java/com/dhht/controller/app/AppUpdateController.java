@@ -20,8 +20,9 @@ public class AppUpdateController {
 
     @Log("获取最新版本app")
     @RequestMapping(value ="app/versionupdate")
-    public JsonObjectBO versionupdate(){
+    public JsonObjectBO versionupdate(HttpServletRequest request){
         try {
+
             APKVersion apkVersion = userLoginService.versionupdate();
             JSONObject jsonObject =new JSONObject();
             jsonObject.put("version",apkVersion);

@@ -36,9 +36,9 @@ public class Springboot2MybatisDemoApplication extends SpringBootServletInitiali
 	public MultipartConfigElement multipartConfigElement() {
 		MultipartConfigFactory factory = new MultipartConfigFactory();
 		//单个文件最大
-		factory.setMaxFileSize("20480KB"); //KB,MB
+		factory.setMaxFileSize("50480KB"); //KB,MB
 		/// 设置总上传数据总大小
-		factory.setMaxRequestSize("204800KB");
+		factory.setMaxRequestSize("504800KB");
 		return factory.createMultipartConfig();
 	}
 }

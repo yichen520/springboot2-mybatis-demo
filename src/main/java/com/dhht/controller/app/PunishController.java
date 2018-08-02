@@ -1,6 +1,8 @@
 package com.dhht.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Sync;
+import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.employee.EmployeeService;
@@ -62,8 +64,12 @@ public class PunishController {
      * @param httpServletRequest
      * @return
      */
+    @Sync(type="makedepartmentpunish")
     @RequestMapping(value = "/makedepartment/add")
     public JsonObjectBO punish(HttpServletRequest httpServletRequest,@RequestBody MakePunishRecord makePunishRecord){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
               if (punishService.insertPunish(user,makePunishRecord)){
@@ -83,6 +89,9 @@ public class PunishController {
      */
     @RequestMapping(value = "/makedepartment/find")
     public JsonObjectBO find(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
@@ -113,7 +122,10 @@ public class PunishController {
      * @return
      */
     @RequestMapping(value = "/employee/find")
-    public JsonObjectBO employee(@RequestBody Map map){
+    public JsonObjectBO employee(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         String departmentCode = (String) map.get("departmentCode");
         JSONObject jsonObject = new JSONObject();
         try {
@@ -133,6 +145,9 @@ public class PunishController {
      */
     @RequestMapping(value = "/employee/add")
     public JsonObjectBO employeeadd(HttpServletRequest httpServletRequest,@RequestBody EmployeePunishRecord employeePunish){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
             if (punishService.insertEmployeePunish(user,employeePunish)){
@@ -153,6 +168,9 @@ public class PunishController {
      */
     @RequestMapping(value = "/employee/info")
     public JsonObjectBO employeefind(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
@@ -181,7 +199,10 @@ public class PunishController {
      * 惩罚制作单位获取验证码
      */
     @RequestMapping(value = "/punishMakedepartmentCode")
-    public JsonObjectBO getCheckCode(@RequestBody Map map){
+    public JsonObjectBO getCheckCode(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String phone = (String)map.get("telphone");
         String departmentName = (String)map.get("departmentName");

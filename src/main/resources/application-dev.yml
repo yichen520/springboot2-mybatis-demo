@@ -120,7 +120,11 @@ notice:
   pageNum: 5
 
 #文件服务器地址
-trackerPort: 10.0.0.40
-trackerServer: 9000/
+trackerPort: 9000/
+trackerServer: 10.0.0.40
 
-filePath: "C:/temp/"
+file:
+ local:
+   root: C:/temp/
+
+filePath: C:/temp/

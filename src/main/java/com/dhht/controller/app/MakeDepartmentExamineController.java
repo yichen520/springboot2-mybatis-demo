@@ -1,6 +1,7 @@
 package com.dhht.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
@@ -54,6 +55,9 @@ public class MakeDepartmentExamineController {
     @RequestMapping(value = "/info")
     public JsonObjectBO info(@RequestBody Map map, HttpServletRequest httpServletRequest){
         User user =(User)httpServletRequest.getSession().getAttribute("user");
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+          return   JsonObjectBO.sessionLose("session失效");
+        }
         String name = (String)map.get("name");
         JSONObject jsonObject = new JSONObject();
         List<MakeDepartmentSimple> list = new ArrayList<>();
@@ -74,6 +78,9 @@ public class MakeDepartmentExamineController {
     @RequestMapping(value = "/getexamineform")
     public JsonObjectBO punish(HttpServletRequest httpServletRequest){
         User user =(User)httpServletRequest.getSession().getAttribute("user");
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         String districtId = user.getDistrictId();
         try {
             List<Examine> survey = minitorService.selectExamineForm(districtId);
@@ -97,6 +104,9 @@ public class MakeDepartmentExamineController {
     @RequestMapping(value = "/punish")
     public JsonObjectBO punish(HttpServletRequest httpServletRequest,@RequestBody ExamineRecord examineRecord){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         try {
               if (recordDepartmentService.insertPunish(user,examineRecord)){
                   return JsonObjectBO.success("制作单位检查成功",null);
@@ -111,6 +121,9 @@ public class MakeDepartmentExamineController {
 
     @RequestMapping(value = "/getpunishinfo")
     public JsonObjectBO find(HttpServletRequest httpServletRequest, @RequestBody Map map){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
@@ -143,7 +156,10 @@ public class MakeDepartmentExamineController {
      * @return
      */
     @RequestMapping(value = "/examinedetail")
-    public JsonObjectBO examinedetail(@RequestBody Map map){
+    public JsonObjectBO examinedetail(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        if (!CurrentUser.validatetoken(httpServletRequest)){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         String id = (String)map.get("id");
         JSONObject jsonObject = new JSONObject();
         try {
