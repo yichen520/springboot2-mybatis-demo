@@ -5,6 +5,7 @@ import com.dhht.dao.ResourceMapper;
 import com.dhht.dao.SealDao;
 import com.dhht.dao.UseDepartmentDao;
 import com.dhht.model.*;
+import com.dhht.model.pojo.SealVo;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.seal.SealService;
@@ -498,8 +499,35 @@ public class SealServiceImpl implements SealService {
      *查看详情
      */
     @Override
-    public Seal selectDetailById(String id) {
+    public SealVo selectDetailById(String id) {
         Seal seal = sealDao.selectByPrimaryKey(id);
+        SealVo sealVo = new SealVo();
+        sealVo.setUseDepartmentName(seal.getUseDepartmentName());
+        sealVo.setUseDepartmentCode(seal.getUseDepartmentCode());
+        sealVo.setSealTypeCode(seal.getSealTypeCode());
+        sealVo.setSealStatusCode(seal.getSealStatusCode());
+        sealVo.setSealSpecification(seal.getSealSpecification());
+        sealVo.setSealSize(seal.getSealSize());
+        sealVo.setSealShapeCode(seal.getSealShapeCode());
+        sealVo.setSealRecordTypeCode(seal.getSealRecordTypeCode());
+        sealVo.setSealReason(seal.getSealReason());
+        sealVo.setSealName(seal.getSealName());
+        sealVo.setSealMakeTypeCode(seal.getSealMakeTypeCode());
+        sealVo.setSealCenterImage(seal.getSealCenterImage());
+        sealVo.setRemark(seal.getRemark());
+        sealVo.setRecordDepartmentName(seal.getRecordDepartmentName());
+        sealVo.setRecordDepartmentCode(seal.getRecordDepartmentCode());
+        sealVo.setMimeographDescription(seal.getMimeographDescription());
+        sealVo.setMaterialsCode(seal.getMaterialsCode());
+        sealVo.setMakeDepartmentName(seal.getMakeDepartmentName());
+        sealVo.setMakeDepartmentCode(seal.getMakeDepartmentCode());
+        sealVo.setIsRecord(seal.getIsRecord());
+        sealVo.setIsPersonal(seal.getIsPersonal());
+        sealVo.setIsMake(seal.getIsMake());
+        sealVo.setIsLoss(seal.getIsLoss());
+        sealVo.setIsLogout(seal.getIsLogout());
+        sealVo.setIsDeliver(seal.getIsDeliver());
+        sealVo.setDistrictId(seal.getDistrictId());
         String sealCode = seal.getSealCode();
         List<String> types = new ArrayList<>();
         types.add("01"); //照片
@@ -507,9 +535,9 @@ public class SealServiceImpl implements SealService {
         types.add("03"); //委托
         List<SealMaterial> sealMaterials = sealDao.selectSealMaterialByCode(sealCode,types);
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(sealCode);
-        seal.setSealOperationRecord(sealOperationRecord);
-
-        return seal;
+        sealVo.setSealOperationRecord(sealOperationRecord);
+        sealVo.setSealMaterials(sealMaterials);
+        return sealVo;
     }
 
     }

@@ -1,11 +1,13 @@
-package com.dhht.model;
+package com.dhht.model.pojo;
 
+import com.dhht.model.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
-public class Seal extends SealKey {
+public class SealVo extends SealKey {
 
 
     private String sealName;   //印章名称
@@ -71,13 +73,14 @@ public class Seal extends SealKey {
     private String sealReason; //印章原因
 
     private String districtId;  //区域id
-//
-//    private SealImage sealImage;    //印章图像
+
+    private SealImage sealImage;    //印章图像
 
     private SealOperationRecord sealOperationRecord;    //经办人等
-//
-//    private RecordDepartment recordDepartment;       //备案单位
 
+    private RecordDepartment recordDepartment;       //备案单位
+
+    private List<SealMaterial> sealMaterials;
 
 
 }
