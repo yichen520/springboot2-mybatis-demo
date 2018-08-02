@@ -222,7 +222,7 @@
 ////     * @param file
 ////     * @throws IOException
 ////     */
-////    public static void outputFile(File file) throws IOException {
+////    public static void outputFile(FileInfo file) throws IOException {
 ////        outputFile(file, "");
 ////    }
 ////
@@ -233,7 +233,7 @@
 ////     * @param file
 ////     * @throws IOException
 ////     */
-////    public static void outputFile(File file, String fileName) throws IOException {
+////    public static void outputFile(FileInfo file, String fileName) throws IOException {
 ////        if(file == null) {
 ////            file = getFileNoFoundFile();
 ////        }
@@ -272,7 +272,7 @@
 ////        toClient.close();
 ////    }
 ////
-////    private static File getFileNoFoundFile() {
+////    private static FileInfo getFileNoFoundFile() {
 ////        return ResourceUtils.getResourceFile("others/文件不存在.txt");
 ////    }
 ////

@@ -26,7 +26,7 @@ public class FastDFSClient {
     }
 
     public static String[] upload(FastDFSFile file) {
-        logger.info("File Name: " + file.getName() + "File Length:" + file.getContent().length);
+        logger.info("FileInfo Name: " + file.getName() + "FileInfo Length:" + file.getContent().length);
 
         NameValuePair[] meta_list = new NameValuePair[1];
         meta_list[0] = new NameValuePair("author", file.getAuthor());
@@ -59,9 +59,9 @@ public class FastDFSClient {
             StorageClient storageClient = getTrackerClient();
             return storageClient.get_file_info(groupName, remoteFileName);
         } catch (IOException e) {
-            logger.error("IO Exception: Get File from Fast DFS failed", e);
+            logger.error("IO Exception: Get FileInfo from Fast DFS failed", e);
         } catch (Exception e) {
-            logger.error("Non IO Exception: Get File from Fast DFS failed", e);
+            logger.error("Non IO Exception: Get FileInfo from Fast DFS failed", e);
         }
         return null;
     }
@@ -73,9 +73,9 @@ public class FastDFSClient {
             InputStream ins = new ByteArrayInputStream(fileByte);
             return ins;
         } catch (IOException e) {
-            logger.error("IO Exception: Get File from Fast DFS failed", e);
+            logger.error("IO Exception: Get FileInfo from Fast DFS failed", e);
         } catch (Exception e) {
-            logger.error("Non IO Exception: Get File from Fast DFS failed", e);
+            logger.error("Non IO Exception: Get FileInfo from Fast DFS failed", e);
         }
         return null;
     }
