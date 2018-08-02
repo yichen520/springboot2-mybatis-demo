@@ -270,7 +270,9 @@
       select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "01";
   </select>
 
-
+<select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
+        select * from seal_operation_record WHERE seal_code = #{sealCode} AND flag = "01";
+</select>
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
     INSERT INTO seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name,
       employee_id, operator_name,operator_certificate_code,
@@ -281,7 +283,12 @@
       #{operatorCertificateType},#{flag})
   </insert>
 
-
+<select id="selectSealMaterialByCode" resultType="com.dhht.model.SealMaterial">
+  SELECT `type`,file_path AS filePath FROM  seal_material WHERE seal_code = #{sealCode} and `type` IN
+  <foreach collection="types" open="(" close=")" separator="," item="type">
+   #{type}
+  </foreach>
+</select>
   <insert id="insertSealMaterial" parameterType="com.dhht.model.SealMaterial">
     INSERT INTO seal_material (id,seal_code,`type`,file_path)values(#{id},#{sealCode},#{type},#{filePath})
   </insert>

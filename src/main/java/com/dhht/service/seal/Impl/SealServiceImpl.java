@@ -93,8 +93,10 @@ public class SealServiceImpl implements SealService {
 
             String sealcode = createRandomCode(districtId);
             List<Seal> list = sealDao.selectByCodeAndType(seal.getUseDepartmentCode());
-            if (list.size() != 0) {
-                return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
+            if(seal.getSealTypeCode().equals("01")) {
+                if (list.size() != 0) {
+                    return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
+                }
             }
             seal.setSealCode(sealcode);
             UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
@@ -498,9 +500,15 @@ public class SealServiceImpl implements SealService {
     @Override
     public Seal selectDetailById(String id) {
         Seal seal = sealDao.selectByPrimaryKey(id);
-        String useDepartmentCode = seal.getUseDepartmentCode();
-        UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);
-        seal.setUseDepartment(useDepartment);
+        String sealCode = seal.getSealCode();
+        List<String> types = new ArrayList<>();
+        types.add("01"); //照片
+        types.add("02"); //身份证
+        types.add("03"); //委托
+        List<SealMaterial> sealMaterials = sealDao.selectSealMaterialByCode(sealCode,types);
+        SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(sealCode);
+        seal.setSealOperationRecord(sealOperationRecord);
+
         return seal;
     }
 
