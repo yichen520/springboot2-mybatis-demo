@@ -271,7 +271,8 @@
   </select>
 
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
-        select * from seal_operation_record WHERE seal_code = #{sealCode} AND flag = "01";
+        select operator_telphone as operatorTelphone,emplyee_name AS emplyeeName ,employee_id as employeeId,operator_name as operatorName,
+        operator_certificate_code as operatorCertificateCode ,operator_certificate_type as operatorCertificateType ,flag as flag FROM  seal_operation_record WHERE seal_code = #{sealCode} AND flag = "01";
 </select>
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
     INSERT INTO seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name,
