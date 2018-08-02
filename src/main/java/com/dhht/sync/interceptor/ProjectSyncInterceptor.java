@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.dhht.annotation.Sync;
+
 import com.dhht.common.JsonObjectBO;
+import com.dhht.model.Employee;
 import com.dhht.model.Resource;
+import com.dhht.model.SyncEntity;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.sync.service.SyncDataToOutService;

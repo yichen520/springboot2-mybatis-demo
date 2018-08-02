@@ -52,7 +52,7 @@ public class UseDepartmentCountController {
             }else {
                 list = departmentCountService.countAllUseDepartment(districtId,startTime,endTime);
             }
-            jsonObject.put("departmentCount",list);
+            jsonObject.put("count",list);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.exception("获取统计信息失败！");

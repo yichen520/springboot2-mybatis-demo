@@ -1,5 +1,6 @@
 package com.dhht.service.employee.Impl;
 
+import com.dhht.annotation.Sync;
 import com.dhht.dao.EmployeeDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.*;
@@ -70,6 +71,7 @@ public class EmployeeServiceImp implements EmployeeService {
             int u = userService.insert(setUserByType(employee, 1));
             int e = employeeDao.insert(employee);
             if (u==ResultUtil.isSend&&e==1) {
+                getSyncDate(employee,"Employee","insert");
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -388,4 +390,21 @@ public class EmployeeServiceImp implements EmployeeService {
         }
         return false;
     }
+
+
+    /**
+     * 数据同步
+     * @param object
+     * @param dataType
+     * @param operateType
+     * @return
+     */
+    @Sync
+     public SyncEntity getSyncDate(Object object,String dataType,String operateType){
+        SyncEntity syncEntity = new SyncEntity();
+        syncEntity.setObject(object);
+        syncEntity.setDataType(dataType);
+        syncEntity.setOperateType(operateType);
+        return syncEntity;
+     }
 }

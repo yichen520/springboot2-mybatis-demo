@@ -381,6 +381,10 @@
   <select id="selectLikeDistrictId"  resultType="java.lang.String">
      SELECT seal.make_department_code from seal where  district_id like #{districtId}"%" group by seal.make_department_code
   </select>
+
+  <select id="selectDistrictId"  resultType="java.lang.String">
+    SELECT seal.make_department_code from seal where  district_id = #{districtId} group by seal.make_department_code
+  </select>
   <select id="selectByDistrictId"  resultMap="BaseResultMap">
     SELECT * from seal where  district_id = #{districtId}
   </select>

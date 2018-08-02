@@ -81,7 +81,7 @@ public class Seal extends SealKey {
 
     private RecordDepartment recordDepartment;       //备案单位
 
-
+    private UseDepartment useDepartment;
 
 
 }

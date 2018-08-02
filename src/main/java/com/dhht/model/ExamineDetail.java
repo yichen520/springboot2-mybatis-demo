@@ -2,6 +2,8 @@ package com.dhht.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ExamineDetail {
     private String id;
@@ -11,8 +13,6 @@ public class ExamineDetail {
     private String examineItem;
 
     private Integer orderValue;
-
-
 
 
 }
