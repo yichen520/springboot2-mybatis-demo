@@ -57,20 +57,24 @@ public class SealCountServiceImp implements SealCuontService {
         int sealAdd = 0;
         int sealLoss = 0;
         int sealLogout = 0;
+        SealCount count = new SealCount();
         if(list.size()!=0) {
             for (SealCount counts : list) {
                 sealAdd = sealAdd + counts.getNewSealNum();
                 sealLoss = sealLoss + counts.getLossSealNum();
                 sealLogout = sealLogout + counts.getLogoutSealNum();
             }
-        }
-        SealCount count = new SealCount();
+
+
         count.setCountName("小计(" + list.get(0).getCountName() + ")");
         count.setSealType("");
         count.setNewSealNum(sealAdd);
         count.setLossSealNum(sealLoss);
         count.setLogoutSealNum(sealLogout);
         return count;
+        }else{
+            return count;
+        }
     }
 
     /**
@@ -205,7 +209,16 @@ public class SealCountServiceImp implements SealCuontService {
             }
         }
         }else{
-            String districtId = user.getDistrictId().substring(0,4);
+            String id = user.getDistrictId();
+            String districtIds1[] = StringUtil.DistrictUtil(id);
+            String districtId = null;
+            if(districtIds1[1].equals("00")&&districtIds1[2].equals("00")){
+                districtId = districtIds1[0];
+            }else if(!districtIds1[1].equals("00")&&districtIds1[2].equals("00")){
+                districtId = districtIds1[0]+districtIds1[1];
+            }else {
+                districtId = id;
+            }
             List<String> a = sealDao.selectLikeDistrictId(districtId);
             makeDepartmentCode.addAll(a);
         }
@@ -229,11 +242,10 @@ public class SealCountServiceImp implements SealCuontService {
         int logoutSealNum = 0;
         List<SealCount> counts = new ArrayList<>();
         List<String> makeDepartmentCodes = getMakeDepartmentCode(user,districtIds);
-        if(makeDepartmentCodes.size()!=0&&makeDepartmentCodes!=null) {
+        if(makeDepartmentCodes.size()!=0 && makeDepartmentCodes!=null) {
             for (String makeDepartmentCode : makeDepartmentCodes) { //根据传入的code进行遍历
                 List<SealCount> count = new ArrayList<>();
                 String countName = makedepartmentMapper.selectByDepartmentCode(makeDepartmentCode).getDepartmentName(); //更加code查找name
-//            sealCount.setCountName(countName);  //存入count对象
                 List<Seal> seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode); //根据code查找seal中的所有印章
                 Set<String> set = new HashSet<>();
                 for (Seal seal : seals) {
@@ -286,7 +298,7 @@ public class SealCountServiceImp implements SealCuontService {
                                 }
                             }
                         }
-                    } else { //当前端输入当type不存在当时候
+                    } else { //当前端输入type不存在当时候
                         String sealType = "";
                         switch (sealTypeCode) {
 
@@ -328,9 +340,10 @@ public class SealCountServiceImp implements SealCuontService {
                         }
                     }
                 }
+                if(count.size()!=0) {
                 count.add(subtotal(count));//把小计放入队列
-                counts.addAll(count);
-
+                    counts.addAll(count);
+                }
             }
         }
         return getSum(counts);
