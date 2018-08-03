@@ -1,6 +1,7 @@
 package com.dhht.service.seal;
 
 import com.dhht.model.*;
+import com.dhht.model.pojo.SealVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public interface SealService {
    int logout (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord);
 
    //详情查看
-    Seal selectDetailById(String id);
+   SealVo selectDetailById(String id);
 
 
 

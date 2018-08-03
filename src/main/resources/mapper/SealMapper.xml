@@ -100,7 +100,7 @@
     record_department_code, record_department_name, make_department_code, make_department_name, 
     seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
     seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
     select 
@@ -270,7 +270,10 @@
       select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "01";
   </select>
 
-
+<select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
+        select operator_telphone as operatorTelphone,emplyee_name AS emplyeeName ,employee_id as employeeId,operator_name as operatorName,
+        operator_certificate_code as operatorCertificateCode ,operator_certificate_type as operatorCertificateType ,flag as flag FROM  seal_operation_record WHERE seal_code = #{sealCode} AND flag = "01";
+</select>
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
     INSERT INTO seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name,
       employee_id, operator_name,operator_certificate_code,
@@ -281,7 +284,12 @@
       #{operatorCertificateType},#{flag})
   </insert>
 
-
+<select id="selectSealMaterialByCode" resultType="com.dhht.model.SealMaterial">
+  SELECT `type`,file_path AS filePath FROM  seal_material WHERE seal_code = #{sealCode} and `type` IN
+  <foreach collection="types" open="(" close=")" separator="," item="type">
+   #{type}
+  </foreach>
+</select>
   <insert id="insertSealMaterial" parameterType="com.dhht.model.SealMaterial">
     INSERT INTO seal_material (id,seal_code,`type`,file_path)values(#{id},#{sealCode},#{type},#{filePath})
   </insert>

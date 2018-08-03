@@ -114,7 +114,7 @@
     )as b on a.flag = b.fa and  a.version=b.ver
     where department_code = #{departmentCode,jdbcType=VARCHAR}
   </select>
-  
+
   <select id="selectByLegalTephone" resultMap="SimpleResultMap" parameterType="java.lang.String">
     select
     <include refid="Simple_Column_list" />
