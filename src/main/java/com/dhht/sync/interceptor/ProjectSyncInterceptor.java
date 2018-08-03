@@ -42,8 +42,10 @@ public class ProjectSyncInterceptor {
 	@AfterReturning(value = "sync()", returning = "rtv")
 	public void saveProject(JoinPoint joinPoint, Object rtv) throws Throwable {
 		Sync sync=  getAnnotationLog(joinPoint);
-		String projectStr =JSON.toJSONString(rtv, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
-		syncDataToOutService.saveResult(sync.DataType(), sync.OperateType(),JsonObjectBO.SUCCESS,projectStr);
+		if (rtv !=null){
+            String projectStr =JSON.toJSONString(rtv, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
+            syncDataToOutService.saveResult(sync.DataType(), sync.OperateType(),JsonObjectBO.SUCCESS,projectStr);
+        }
 	}
 
 	/**
