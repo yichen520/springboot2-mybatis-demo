@@ -55,12 +55,12 @@
       postal_code = #{postalCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
-
+  <!--SELECT * from record_department as a RIGHT JOIN(-->
+  <!--select flag,MAX(version) as ver from record_department GROUP BY flag-->
+  <!--)as b on a.flag=b.flag and  a.version=b.ver where department_address = #{districtId}-->
 
   <select id="selectBydistrict" resultMap="BaseResultMap">
-     SELECT * from record_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from record_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where department_address = #{districtId}
+   SELECT * from record_department  where department_address =#{districtId} and is_delete= 0
   </select>
   <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"></include> FROM record_department WHERE department_code = #{departmentCode,jdbcType=VARCHAR} and is_delete = 0

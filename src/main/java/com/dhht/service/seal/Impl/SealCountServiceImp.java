@@ -197,15 +197,18 @@ public class SealCountServiceImp implements SealCuontService {
                 districtId = districtId1[0];
                 List<String> a = sealDao.selectLikeDistrictId(districtId);
                 makeDepartmentCode.addAll(a);
+                makeDepartmentCode.remove(null);
 
             } else if (!districtId1[1].equals("00") && districtId1[2].equals("00")) {
                 districtId = districtId1[0] + districtId1[1];
                 List<String> a = sealDao.selectLikeDistrictId(districtId);
                 makeDepartmentCode.addAll(a);
+                makeDepartmentCode.remove(null);
             } else {
                 districtId = id;
                 List<String> a = sealDao.selectDistrictId(districtId);
                 makeDepartmentCode.addAll(a);
+                makeDepartmentCode.remove(null);
             }
         }
         }else{
@@ -221,6 +224,7 @@ public class SealCountServiceImp implements SealCuontService {
             }
             List<String> a = sealDao.selectLikeDistrictId(districtId);
             makeDepartmentCode.addAll(a);
+            makeDepartmentCode.remove(null);
         }
         return makeDepartmentCode;
     }

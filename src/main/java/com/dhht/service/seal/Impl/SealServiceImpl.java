@@ -115,7 +115,7 @@ public class SealServiceImpl implements SealService {
 //            MakeDepartmentSimple makedepartment = makeDepartmentService.selectByLegalTephone(telphone);
 //        String legalName = useDepartment.getLegalName();
             MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(employee.getEmployeeDepartmentCode());
-            RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(employee.getDistrictId());
+            RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(districtId);
             String makeDepartmentCode = makedepartment.getDepartmentCode();
             String makeDepartmentName = makedepartment.getDepartmentName();
            if(makedepartment==null ||recordDepartment==null){
@@ -293,6 +293,7 @@ public class SealServiceImpl implements SealService {
 
         seal1.setIsMake(true);
         seal1.setMakeDate(DateUtil.getCurrentTime());
+//        seal1.setDistrictId(seal1.getDistrictId());
         int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
         if (insertSealOperationRecord1 < 0 || insertSealMaterial1 < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;

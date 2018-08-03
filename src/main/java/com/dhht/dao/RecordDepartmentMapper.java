@@ -44,6 +44,6 @@ public interface RecordDepartmentMapper {
 
     RecordDepartment selectByDistrictIdVersion(@Param("localDistrictId") String localDistrictId);
 
-   RecordDepartment selectBydistrict(@Param("districtId") String districtId);
+    RecordDepartment selectBydistrict(@Param("districtId") String districtId);
 
 }
