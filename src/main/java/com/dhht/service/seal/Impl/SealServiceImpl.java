@@ -7,6 +7,8 @@ import com.dhht.dao.UseDepartmentDao;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
 import com.dhht.service.employee.EmployeeService;
+import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.DateUtil;
@@ -36,10 +38,16 @@ public class SealServiceImpl implements SealService {
     @Autowired
     private UseDepartmentDao useDepartmentDao;
 
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
+
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
         return useDepartmentDao.selectByCode(useDepartmentCode);
     }
+
 
 
 
@@ -104,8 +112,15 @@ public class SealServiceImpl implements SealService {
             }
             String telphone = user.getTelphone();
             Employee employee = employeeService.selectByPhone(telphone);
+//            MakeDepartmentSimple makedepartment = makeDepartmentService.selectByLegalTephone(telphone);
 //        String legalName = useDepartment.getLegalName();
-
+            MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(employee.getEmployeeDepartmentCode());
+            RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(employee.getDistrictId());
+            String makeDepartmentCode = makedepartment.getDepartmentCode();
+            String makeDepartmentName = makedepartment.getDepartmentName();
+           if(makedepartment==null ||recordDepartment==null){
+               return ResultUtil.isFail;
+           }
             seal.setId(UUIDUtil.generate());
             seal.setSealName(useDepartment.getName());
             seal.setSealStatusCode("04");
@@ -117,7 +132,13 @@ public class SealServiceImpl implements SealService {
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
             seal.setDistrictId(useDepartment.getDistrictId());
+            seal.setMakeDepartmentCode(makeDepartmentCode);
+            seal.setMakeDepartmentName(makeDepartmentName);
+            seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
+            seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
+
             String useDepartmentCode = seal.getUseDepartmentCode();
+
 
             //操作记录
             SealOperationRecord sealOperationRecord = new SealOperationRecord();
