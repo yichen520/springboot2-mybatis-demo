@@ -425,6 +425,9 @@ public class SealServiceImpl implements SealService {
         seal1.setIsLoss(true);
         seal1.setLossDate(DateUtil.getCurrentTime());
         RecordDepartment recordDepartment = recordDepartmentMapper.selectByDistrictIdVersion(localDistrictId);
+        if(recordDepartment==null){
+            return ResultUtil.isFail;
+        }
         seal1.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
         seal1.setRecordDepartmentName(recordDepartment.getDepartmentName());
         int updateByPrimaryKey =sealDao.updateByPrimaryKey(seal1);
