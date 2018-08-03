@@ -49,7 +49,9 @@ public class FileServiceImpl implements FileService {
             file1.setCreateTime(new Date(System.currentTimeMillis()));
             file1.setFileName(file.getOriginalFilename());
             file1.setFilePath(path);
+
             User user = CurrentUser.currentUser(request.getSession());
+
             file1.setOperationRecordId(user.getRealName());
             fileMapper.insert(file1);
             file1.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+path);

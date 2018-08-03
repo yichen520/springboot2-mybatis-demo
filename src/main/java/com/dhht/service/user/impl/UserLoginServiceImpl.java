@@ -1,6 +1,7 @@
 package com.dhht.service.user.impl;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.UploadController;
@@ -17,12 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 崔杨 on 2017/8/16.
@@ -53,10 +56,15 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Autowired
     private RoleResourceDao roleResourceDao;
+
+    @Autowired
+    private StringRedisTemplate template;
     @Value("${loginError.Time}")
     private long loginErrorTime ;
     @Value("${loginError.Date}")
    private long loginErrorDate;
+    @Value("${expireTime}")
+    private long expireTime;
 
     /**
      * 6位简单密码
@@ -215,6 +223,9 @@ public class UserLoginServiceImpl implements UserLoginService {
 
                 return JsonObjectBO.error("账号密码错误,你还可以输入");
             }
+            if (currentUser==null){
+                return JsonObjectBO.error("账号密码错误,请重新输入");
+            }
             if (user.getIsLocked()){
                 return JsonObjectBO.error("该用户已被锁定，请联系管理员！");
             }else {
@@ -234,11 +245,13 @@ public class UserLoginServiceImpl implements UserLoginService {
                 String token= UUIDUtil.generate();
                 jsonObject.put("currentUser",currentUser1);
                 jsonObject.put("token",token);
-                List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
-                List<Resource> resources = resourceService.findResourceByRole(resourceId);
-                request.getSession().setAttribute("user", currentUser1);
-                request.getSession().setAttribute("resources", resources);
-                request.getSession().setAttribute("token", token);
+//                List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
+//                List<Resource> resources = resourceService.findResourceByRole(resourceId);
+//                request.getSession().setAttribute("user", currentUser1);
+//                request.getSession().setAttribute("resources", resources);
+//                request.getSession().setAttribute("token", token);
+
+                template.opsForValue().set(token, JSON.toJSONString(currentUser1),expireTime,TimeUnit.SECONDS);
                 return JsonObjectBO.success("登录成功",jsonObject);
             }else {
                 return JsonObjectBO.error("此用户不是app端用户");
@@ -298,4 +311,23 @@ public class UserLoginServiceImpl implements UserLoginService {
             return false;
         }
     }
+
+    @Override
+    public JsonObjectBO checkAPPPhoneAndIDCard(SMSCode smsCode) {
+        Long nowtime =System.currentTimeMillis();
+
+        SMSCode sms = smsCodeDao.getSms(smsCode.getPhone());
+        if (sms ==null){
+            return JsonObjectBO.error("请点击发送验证码");
+        }
+        if(!sms.getSmscode().equals(smsCode.getSmscode())){
+            return JsonObjectBO.error("验证码错误");
+        }
+        if(nowtime-sms.getLastTime()>300000){
+            return JsonObjectBO.error("验证码超时，请重新发送");
+        }
+        return JsonObjectBO.ok("效验通过");
+    }
+
+
 }

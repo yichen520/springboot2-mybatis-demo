@@ -25,8 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/sys/district")
-public class DistrictController
-//        implements InitializingBean
+public class DistrictController implements InitializingBean
 {
     @Autowired
     private DistrictService districtService;
@@ -36,17 +35,19 @@ public class DistrictController
     @Autowired
     private RedisTemplate redisTemplate;
 
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        List<DistrictMenus> district = districtService.selectAllDistrict();
-//        if(district== null) {
-//            return ;
-//        }
-//        if(!template.hasKey("District")){
-//            template.opsForValue().append("District", JSON.toJSONString(district));
-//        }
-//
-//    }
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        List<DistrictMenus> district = districtService.selectAllDistrict();
+        if(district== null) {
+            return ;
+        }
+        if(!template.hasKey("District")){
+            template.opsForValue().append("District", JSON.toJSONString(district));
+        }
+
+    }
+
+
 
     /**
      * 查看所有区域

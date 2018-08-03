@@ -1,5 +1,6 @@
 package com.dhht.service.recordDepartment.Impl;
 
+import com.dhht.annotation.Sync;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
 import com.dhht.model.*;
@@ -289,6 +290,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     }
 
     @Override
+    @Sync()
     public boolean insertPunish(User user, ExamineRecord examineRecord) {
             String id = UUIDUtil.generate();
             examineRecord.setId(id);

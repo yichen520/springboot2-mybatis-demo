@@ -37,32 +37,13 @@ public class ProjectSyncInterceptor {
 	private SyncDataToOutService syncDataToOutService;
 
 	@Pointcut("@annotation(com.dhht.annotation.Sync)")
-	public void webLog(){}
+	public void sync(){}
 
-	@AfterReturning(value = "webLog()", returning = "rtv")
+	@AfterReturning(value = "sync()", returning = "rtv")
 	public void saveProject(JoinPoint joinPoint, Object rtv) throws Throwable {
-		JsonObjectBO jsonObjectBO =(JsonObjectBO)rtv;
-		JSONObject jsonObject = jsonObjectBO.getData();
 		Sync sync=  getAnnotationLog(joinPoint);
-		String type = sync.type();
-		switch (type){
-			case "makedepartmentpunish":
-
-				break;
-
-			default:
-				break;
-		}
-
-
-
-		Resource resource = (Resource)jsonObject.get("resource");
-     	// 遍历jsonObject数据,添加到Map对象
-		String projectStr =JSON.toJSONString(resource, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
-
-
-
-		syncDataToOutService.saveResult(SyncDataType.PUNISHMAKEDEPARTMENT, SyncOperateType.SAVE,JsonObjectBO.SUCCESS,projectStr);
+		String projectStr =JSON.toJSONString(rtv, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
+		syncDataToOutService.saveResult(sync.DataType(), sync.OperateType(),JsonObjectBO.SUCCESS,projectStr);
 	}
 
 	/**

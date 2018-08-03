@@ -6,6 +6,8 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.APKVersion;
 import com.dhht.service.user.UserLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,11 @@ import java.util.Map;
 public class AppUpdateController {
     @Autowired
     private UserLoginService userLoginService;
+    @Autowired
+    private StringRedisTemplate template;
+
+    @Value("${expireTime}")
+    private long expireTime;
 
     @Log("获取最新版本app")
     @RequestMapping(value ="app/versionupdate")

@@ -1,19 +1,22 @@
 package com.dhht.controller.app;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.examine.MinitorService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.user.impl.UserLoginServiceImpl;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 2018/7/2 create by xzp
@@ -34,13 +38,16 @@ public class MakeDepartmentExamineController {
     private MakeDepartmentService makeDepartmentService;
 
     @Autowired
-    private DistrictService districtService;
-
-    @Autowired
     private MinitorService minitorService;
 
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+
+    @Autowired
+    private StringRedisTemplate template;
+
+    @Value("${expireTime}")
+    private long expireTime;
 
     private static Logger logger = LoggerFactory.getLogger(MakeDepartmentExamineController.class);
 
@@ -54,10 +61,11 @@ public class MakeDepartmentExamineController {
      */
     @RequestMapping(value = "/info")
     public JsonObjectBO info(@RequestBody Map map, HttpServletRequest httpServletRequest){
-        User user =(User)httpServletRequest.getSession().getAttribute("user");
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
           return   JsonObjectBO.sessionLose("session失效");
         }
+
         String name = (String)map.get("name");
         JSONObject jsonObject = new JSONObject();
         List<MakeDepartmentSimple> list = new ArrayList<>();
@@ -77,8 +85,8 @@ public class MakeDepartmentExamineController {
      */
     @RequestMapping(value = "/getexamineform")
     public JsonObjectBO punish(HttpServletRequest httpServletRequest){
-        User user =(User)httpServletRequest.getSession().getAttribute("user");
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         String districtId = user.getDistrictId();
@@ -103,8 +111,8 @@ public class MakeDepartmentExamineController {
      */
     @RequestMapping(value = "/punish")
     public JsonObjectBO punish(HttpServletRequest httpServletRequest,@RequestBody ExamineRecord examineRecord){
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         try {
@@ -121,14 +129,14 @@ public class MakeDepartmentExamineController {
 
     @RequestMapping(value = "/getpunishinfo")
     public JsonObjectBO find(HttpServletRequest httpServletRequest, @RequestBody Map map){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         String districtId = (String) map.get("districtId");
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
         if (districtId == null || districtId == ""){
              districtId = StringUtil.getDistrictId(user.getDistrictId());
         }else{
@@ -157,7 +165,8 @@ public class MakeDepartmentExamineController {
      */
     @RequestMapping(value = "/examinedetail")
     public JsonObjectBO examinedetail(HttpServletRequest httpServletRequest,@RequestBody Map map){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         String id = (String)map.get("id");
@@ -172,6 +181,17 @@ public class MakeDepartmentExamineController {
     }
 
 
+    public  User validatetoken(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("token");
+        if(template.hasKey(token)){
+            template.expire(token,expireTime,TimeUnit.SECONDS);
+            String user = template.opsForValue().get(token);
+            User currentUser =  JSON.parseObject(user,User.class);
+            return currentUser;
+        }else {
+            return null;
+        }
+    }
 
 
 

@@ -15,7 +15,7 @@ public class SyncDataType {
 	 public static final int USERDEPARTMENT = 3;//使用单位
 	 public static final int MAKEDEPARTMENT = 4;//制作单位
 	 public static final int RECORDDEPARTMENT = 5;//备案单位
-	 public static final int EXAMINE = 6;//监督检查
+	 public static final int EXAMINE = 1601;//监督检查
 	 public static final int PUNISHMAKEDEPARTMENT = 7;//制作单位惩罚
 	 public static final int PUNISHEMPLOYEE = 8;//从业人员惩罚
     /**

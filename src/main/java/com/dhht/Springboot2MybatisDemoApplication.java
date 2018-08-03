@@ -9,11 +9,13 @@ import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import javax.servlet.MultipartConfigElement;
 
 @SpringBootApplication
 @MapperScan("com.dhht.dao")
+@EnableAspectJAutoProxy(exposeProxy = true)
 @Configuration
 public class Springboot2MybatisDemoApplication extends SpringBootServletInitializer {
 

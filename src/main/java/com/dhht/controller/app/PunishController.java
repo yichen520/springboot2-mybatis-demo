@@ -1,17 +1,17 @@
 package com.dhht.controller.app;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.annotation.Sync;
-import com.dhht.common.CurrentUser;
+
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.employee.EmployeeService;
-import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.punish.PunishService;
-import com.dhht.service.recordDepartment.RecordDepartmentService;
-import com.dhht.service.tools.SmsSendService;
-import com.dhht.service.user.UserPasswordService;
-import com.dhht.util.ResultUtil;
+import com.dhht.service.user.UserLoginService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -19,14 +19,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 2018/7/2 create by xzp
@@ -36,7 +39,7 @@ import java.util.Map;
 public class PunishController {
 
     @Autowired
-    private MakeDepartmentService makeDepartmentService;
+    private UserLoginService userLoginService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -45,17 +48,14 @@ public class PunishController {
     private PunishService punishService;
 
     @Autowired
-    private RecordDepartmentService recordDepartmentService;
-
-    @Autowired
-    private SmsSendService smsSendService;
+    private StringRedisTemplate template;
 
     @Value("${sms.template.employeepunish}")
     private int employeepunish ;
     @Value("${sms.template.makedepartmentpunish}")
     private int makedepartmentpunish ;
-
-
+    @Value("${expireTime}")
+    private long expireTime;
 
     private static Logger logger = LoggerFactory.getLogger(PunishController.class);
 
@@ -64,13 +64,13 @@ public class PunishController {
      * @param httpServletRequest
      * @return
      */
-    @Sync(type="makedepartmentpunish")
+
     @RequestMapping(value = "/makedepartment/add")
     public JsonObjectBO punish(HttpServletRequest httpServletRequest,@RequestBody MakePunishRecord makePunishRecord){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
               if (punishService.insertPunish(user,makePunishRecord)){
                   return JsonObjectBO.success("制作单位惩罚成功",null);
@@ -89,14 +89,14 @@ public class PunishController {
      */
     @RequestMapping(value = "/makedepartment/find")
     public JsonObjectBO find(HttpServletRequest httpServletRequest,@RequestBody Map map){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         String districtId = (String) map.get("districtId");
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
         if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());
         }else{
@@ -123,7 +123,8 @@ public class PunishController {
      */
     @RequestMapping(value = "/employee/find")
     public JsonObjectBO employee(HttpServletRequest httpServletRequest,@RequestBody Map map){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         String departmentCode = (String) map.get("departmentCode");
@@ -145,10 +146,10 @@ public class PunishController {
      */
     @RequestMapping(value = "/employee/add")
     public JsonObjectBO employeeadd(HttpServletRequest httpServletRequest,@RequestBody EmployeePunishRecord employeePunish){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
             if (punishService.insertEmployeePunish(user,employeePunish)){
                 return JsonObjectBO.success("从业人员惩罚成功",null);
@@ -168,14 +169,14 @@ public class PunishController {
      */
     @RequestMapping(value = "/employee/info")
     public JsonObjectBO employeefind(HttpServletRequest httpServletRequest,@RequestBody Map map){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         String districtId = (String) map.get("districtId");
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
         if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());
         }else{
@@ -200,7 +201,8 @@ public class PunishController {
      */
     @RequestMapping(value = "/punishMakedepartmentCode")
     public JsonObjectBO getCheckCode(HttpServletRequest httpServletRequest,@RequestBody Map map){
-        if (!CurrentUser.validatetoken(httpServletRequest)){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -233,6 +235,29 @@ public class PunishController {
             return  JsonObjectBO.ok("获取验证码成功");
         }else{
             return JsonObjectBO.error("获取验证码失败");
+        }
+    }
+
+    @Log("处罚验证手机号")
+    @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
+    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
+        try {
+            return userLoginService.checkAPPPhoneAndIDCard(smsCode);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("发送短信发生异常");
+        }
+    }
+    public  User validatetoken(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("token");
+        if(template.hasKey(token)){
+            template.expire(token,expireTime,TimeUnit.SECONDS);
+            String user = template.opsForValue().get(token);
+            User currentUser =  JSON.parseObject(user,User.class);
+          return currentUser;
+        }else {
+            return null;
         }
     }
 

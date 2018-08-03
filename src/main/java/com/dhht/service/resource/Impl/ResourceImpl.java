@@ -5,7 +5,10 @@ import com.dhht.dao.ResourceMapper;
 import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.MenuUtil;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,11 +41,17 @@ public class ResourceImpl  implements ResourceService {
  //   }
 
     @Override
+
     public int insertResource(Resource resource) {
+        ((ResourceImpl) AopContext.currentProxy()).test();
         if(resource.getParentId()==""||resource.getParentId()==null){
             resource.setParentId("0");
         }
         return resourceMapper.insert(resource);
+    }
+    @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
+    public int test(){
+        return 3;
     }
 
     @Override
