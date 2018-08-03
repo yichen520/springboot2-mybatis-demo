@@ -70,8 +70,6 @@ public class SealServiceImpl implements SealService {
     }
 
 
-
-
     /**
      * 印章备案
      *
