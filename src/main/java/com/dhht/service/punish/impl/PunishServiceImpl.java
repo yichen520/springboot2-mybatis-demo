@@ -54,7 +54,8 @@ public class PunishServiceImpl implements PunishService {
             return true;
         }
     }
-    @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
+    //制作单位惩罚
+    @Sync(DataType =SyncDataType.PUNISHMAKEDEPARTMENT,OperateType = SyncOperateType.SAVE)
     public MakePunishRecord insertMakePunish(User user, MakePunishRecord makePunishRecord){
         RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(user.getTelphone());
         makePunishRecord.setId(UUIDUtil.generate());
@@ -75,8 +76,20 @@ public class PunishServiceImpl implements PunishService {
         return makePunishRecordMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
     }
 
+
     @Override
     public boolean insertEmployeePunish(User user, EmployeePunishRecord employeePunish) {
+        EmployeePunishRecord employeePunishRecord =  ((PunishServiceImpl) AopContext.currentProxy()).addEmployeePunish(user,employeePunish);
+        if ( employeePunishRecord==null){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    //从业人员惩罚进行内网同步
+    @Sync(DataType =SyncDataType.PUNISHEMPLOYEE,OperateType = SyncOperateType.SAVE)
+    public EmployeePunishRecord addEmployeePunish(User user, EmployeePunishRecord employeePunish){
         RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(user.getTelphone());
         employeePunish.setId(UUIDUtil.generate());
         employeePunish.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
@@ -85,9 +98,9 @@ public class PunishServiceImpl implements PunishService {
         employeePunish.setDistrictId(user.getDistrictId());
         employeePunish.setPunisherName(user.getUserName());
         if (employeePunishRecordMapper.insertSelective(employeePunish)== 1){
-            return true;
+            return employeePunish;
         }else {
-            return false;
+            return null;
         }
     }
 
