@@ -242,7 +242,7 @@ public class SealCountServiceImp implements SealCuontService {
         int logoutSealNum = 0;
         List<SealCount> counts = new ArrayList<>();
         List<String> makeDepartmentCodes = getMakeDepartmentCode(user,districtIds);
-        if(makeDepartmentCodes.size()!=0 && makeDepartmentCodes!=null) {
+        if(makeDepartmentCodes.size()!=0 || makeDepartmentCodes!=null) {
             for (String makeDepartmentCode : makeDepartmentCodes) { //根据传入的code进行遍历
                 List<SealCount> count = new ArrayList<>();
                 String countName = makedepartmentMapper.selectByDepartmentCode(makeDepartmentCode).getDepartmentName(); //更加code查找name
