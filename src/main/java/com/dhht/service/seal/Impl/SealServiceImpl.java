@@ -7,6 +7,8 @@ import com.dhht.dao.UseDepartmentDao;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
 import com.dhht.service.employee.EmployeeService;
+import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.DateUtil;
@@ -36,10 +38,16 @@ public class SealServiceImpl implements SealService {
     @Autowired
     private UseDepartmentDao useDepartmentDao;
 
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
+
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
         return useDepartmentDao.selectByCode(useDepartmentCode);
     }
+
 
 
 
@@ -68,8 +76,6 @@ public class SealServiceImpl implements SealService {
         //增加文件上传，操作记录和印章本身表
         return 1;
     }
-
-
 
 
     /**
@@ -106,8 +112,15 @@ public class SealServiceImpl implements SealService {
             }
             String telphone = user.getTelphone();
             Employee employee = employeeService.selectByPhone(telphone);
+//            MakeDepartmentSimple makedepartment = makeDepartmentService.selectByLegalTephone(telphone);
 //        String legalName = useDepartment.getLegalName();
-
+            MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(employee.getEmployeeDepartmentCode());
+            RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(employee.getDistrictId());
+            String makeDepartmentCode = makedepartment.getDepartmentCode();
+            String makeDepartmentName = makedepartment.getDepartmentName();
+           if(makedepartment==null ||recordDepartment==null){
+               return ResultUtil.isFail;
+           }
             seal.setId(UUIDUtil.generate());
             seal.setSealName(useDepartment.getName());
             seal.setSealStatusCode("04");
@@ -119,7 +132,13 @@ public class SealServiceImpl implements SealService {
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
             seal.setDistrictId(useDepartment.getDistrictId());
+            seal.setMakeDepartmentCode(makeDepartmentCode);
+            seal.setMakeDepartmentName(makeDepartmentName);
+            seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
+            seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
+
             String useDepartmentCode = seal.getUseDepartmentCode();
+
 
             //操作记录
             SealOperationRecord sealOperationRecord = new SealOperationRecord();
@@ -142,8 +161,13 @@ public class SealServiceImpl implements SealService {
             sealDao.insertSealMaterial(sealMaterial);
             sealMaterial.setId(UUIDUtil.generate());
             sealMaterial.setSealCode(sealcode);
-            sealMaterial.setType("02");  //02为身份证扫描件
+            sealMaterial.setType("07");  //07为身份证扫描件
             sealMaterial.setFilePath(PositiveIdCardScanner);
+            sealDao.insertSealMaterial(sealMaterial);
+            sealMaterial.setId(UUIDUtil.generate());
+            sealMaterial.setSealCode(sealcode);
+            sealMaterial.setType("08");  //08为身份证扫描件
+            sealMaterial.setFilePath(ReverseIdCardScanner);
             sealDao.insertSealMaterial(sealMaterial);
             if (proxy != null) {
                 sealMaterial.setId(UUIDUtil.generate());
@@ -505,41 +529,28 @@ public class SealServiceImpl implements SealService {
     public SealVo selectDetailById(String id) {
         Seal seal = sealDao.selectByPrimaryKey(id);
         SealVo sealVo = new SealVo();
-        sealVo.setUseDepartmentName(seal.getUseDepartmentName());
-        sealVo.setUseDepartmentCode(seal.getUseDepartmentCode());
-        sealVo.setSealTypeCode(seal.getSealTypeCode());
-        sealVo.setSealStatusCode(seal.getSealStatusCode());
-        sealVo.setSealSpecification(seal.getSealSpecification());
-        sealVo.setSealSize(seal.getSealSize());
-        sealVo.setSealShapeCode(seal.getSealShapeCode());
-        sealVo.setSealRecordTypeCode(seal.getSealRecordTypeCode());
-        sealVo.setSealReason(seal.getSealReason());
-        sealVo.setSealName(seal.getSealName());
-        sealVo.setSealMakeTypeCode(seal.getSealMakeTypeCode());
-        sealVo.setSealCenterImage(seal.getSealCenterImage());
-        sealVo.setRemark(seal.getRemark());
-        sealVo.setRecordDepartmentName(seal.getRecordDepartmentName());
-        sealVo.setRecordDepartmentCode(seal.getRecordDepartmentCode());
-        sealVo.setMimeographDescription(seal.getMimeographDescription());
-        sealVo.setMaterialsCode(seal.getMaterialsCode());
-        sealVo.setMakeDepartmentName(seal.getMakeDepartmentName());
-        sealVo.setMakeDepartmentCode(seal.getMakeDepartmentCode());
-        sealVo.setIsRecord(seal.getIsRecord());
-        sealVo.setIsPersonal(seal.getIsPersonal());
-        sealVo.setIsMake(seal.getIsMake());
-        sealVo.setIsLoss(seal.getIsLoss());
-        sealVo.setIsLogout(seal.getIsLogout());
-        sealVo.setIsDeliver(seal.getIsDeliver());
-        sealVo.setDistrictId(seal.getDistrictId());
+        sealVo.setSeal(seal);
         String sealCode = seal.getSealCode();
         List<String> types = new ArrayList<>();
         types.add("01"); //照片
-        types.add("02"); //身份证
+        types.add("07"); //身份证正面
+        types.add("08"); //身份证反面
         types.add("03"); //委托
         List<SealMaterial> sealMaterials = sealDao.selectSealMaterialByCode(sealCode,types);
+        for (SealMaterial sealMaterial:sealMaterials){
+            if(sealMaterial.getType().equals("01")){
+                sealVo.setOperationPhoto(sealMaterial.getFilePath());
+            }else if(sealMaterial.getType().equals("07")){
+                sealVo.setPositiveIdCardScanner(sealMaterial.getFilePath());
+            }else if(sealMaterial.getType().equals("08")){
+                sealVo.setReverseIdCardScanner(sealMaterial.getFilePath());
+            }else{
+                sealVo.setProxy(sealMaterial.getFilePath());
+            }
+        }
+
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(sealCode);
         sealVo.setSealOperationRecord(sealOperationRecord);
-        sealVo.setSealMaterials(sealMaterials);
         return sealVo;
     }
 
