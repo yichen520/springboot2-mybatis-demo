@@ -34,6 +34,11 @@
     nofity_id = #{nofityId,jdbcType=CHAR} AND is_read = 1
   </select>
 
+  <select id="countAllById" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT COUNT(id) FROM notify_receive_detail WHERE
+    nofity_id = #{nofityId,jdbcType=CHAR}
+  </select>
+
   <delete id="deleteByNotifyId" parameterType="java.lang.String" >
     delete from notify_receive_detail
     where notify_id = #{notifyId,jdbcType=CHAR}
