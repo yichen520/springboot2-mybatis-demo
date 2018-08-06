@@ -265,22 +265,45 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             return user;
         }
 
+    /**
+     * 历史记录查询
+      * @param flag
+     * @return
+     */
     @Override
     public List<RecordDepartment> showMore(String flag) {
         return recordDepartmentMapper.selectByFlag(flag);
     }
 
+    /**
+     * 根据电话查询备案单位
+     * @param phone
+     * @return
+     */
     @Override
     public RecordDepartment selectByPhone(String phone) {
        return recordDepartmentMapper.selectByPhone(phone);
     }
 
-
+    /**
+     * 惩罚查询
+     * @param makedepartmentName
+     * @param startTime
+     * @param endTime
+     * @param districtId
+     * @return
+     */
     @Override
     public List<ExamineRecord> findPunish(String makedepartmentName, String startTime, String endTime, String districtId) {
         return examineRecordMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
     }
 
+    /**
+     * 添加惩罚
+     * @param user
+     * @param examineRecord
+     * @return
+     */
     @Override
     public boolean insertPunish(User user, ExamineRecord examineRecord) {
         ExamineRecord employeePunishRecord =  ((RecordDepartmentServiceImp) AopContext.currentProxy()).addExamine(user,examineRecord);
@@ -292,7 +315,12 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     }
 
 
-    //检查惩罚进行内网同步
+    /**
+     * 检查同步到内网
+     * @param user
+     * @param examineRecord
+     * @return
+     */
     @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
     public ExamineRecord addExamine(User user, ExamineRecord examineRecord){
         String id = UUIDUtil.generate();

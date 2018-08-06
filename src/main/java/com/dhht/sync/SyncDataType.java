@@ -10,14 +10,14 @@ package com.dhht.sync;
 public class SyncDataType {
 
 	 public static final int EMPLOYEE  = 1001;//从业人员
-    public static final int EMPLOYEE_PHOTO  = 1002;//从业人员
+     public static final int EMPLOYEE_PHOTO  = 1002;//从业人员
 	 public static final int SEAL  = 1101;//印章
-	 public static final int USERDEPARTMENT = 3;//使用单位
-	 public static final int MAKEDEPARTMENT = 4;//制作单位
-	 public static final int RECORDDEPARTMENT = 5;//备案单位
+	 public static final int USERDEPARTMENT = 1201;//使用单位
+	 public static final int MAKEDEPARTMENT = 1301;//制作单位
+	 public static final int RECORDDEPARTMENT = 1401;//备案单位
 	 public static final int EXAMINE = 1601;//监督检查
-	 public static final int PUNISHMAKEDEPARTMENT = 7;//制作单位惩罚
-	 public static final int PUNISHEMPLOYEE = 8;//从业人员惩罚
+	 public static final int PUNISHMAKEDEPARTMENT = 1701;//制作单位惩罚
+	 public static final int PUNISHEMPLOYEE = 1801;//从业人员惩罚
     /**
      * 获取数据类型名
      * @param dataType
