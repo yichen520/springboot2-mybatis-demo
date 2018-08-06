@@ -23,7 +23,7 @@
   <select id="selectNotifyDetail" parameterType="java.util.List" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/> FROM notify WHERE id IN
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-         #{item.notifyId}
+         #{item.nofityId}
     </foreach>
   </select>
 

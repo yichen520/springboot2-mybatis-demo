@@ -376,7 +376,6 @@ public class SealServiceImpl implements SealService {
                 SyncEntity syncEntity1 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
                 return ResultUtil.isSuccess;
             }
-
         }
     }
 

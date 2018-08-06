@@ -69,7 +69,7 @@ public class NotifyController {
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception("获取详情发送异常");
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -130,10 +130,11 @@ public class NotifyController {
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
+        PageHelper.startPage(pageNum, pageSize);
 
         try {
-            PageHelper.startPage(pageNum, pageSize);
-            PageInfo<Notify> pageInfo = new PageInfo<>(notifyService.selectNotifyBySendUser(user.getUserName()));
+            List<Notify> list = notifyService.selectNotifyBySendUser(user.getUserName());
+            PageInfo<Notify> pageInfo = new PageInfo<>(list);
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){

@@ -53,7 +53,7 @@ public class NotifyServiceImp implements NotifyService {
             for (String id:notify.getNotifyUser()){
                 NotifyReceiveDetail notifyReceiveDetail = new NotifyReceiveDetail();
                 notifyReceiveDetail.setId(UUIDUtil.generate());
-                notifyReceiveDetail.setNotifyId(notify.getId());
+                notifyReceiveDetail.setNofityId(notify.getId());
                 //notifyReceiveDetail.setReceiveUserName(userSimple.getUserName());
                 notifyReceiveDetail.setReceiveUserId(id);
                 if( notifyReceiveDetailMapper.insert(notifyReceiveDetail)==0) {
@@ -108,6 +108,9 @@ public class NotifyServiceImp implements NotifyService {
     @Override
     public List<Notify> selectNotifyDetail(String receiveUserId) {
         List<NotifyReceiveDetail> notifyIds = notifyReceiveDetailMapper.selectNotifyIdByUserId(receiveUserId);
+        if(notifyIds.size()==0){
+            return new ArrayList<Notify>();
+        }
         List<Notify> notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
             if(notify.getNotifyFileUrls()!=null) {
