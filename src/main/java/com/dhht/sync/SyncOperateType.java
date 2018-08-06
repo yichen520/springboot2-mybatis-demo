@@ -11,6 +11,14 @@ public class SyncOperateType {
     public static final int SAVE = 1; //新增
     public static final int UPDATE = 2; //修改
     public static final int DELETE = 3; //删除
+    public static final int RECORD = 4; //备案
+    public static final int UPLOAD = 5; //印模上传
+    public static final int PERSONAL = 6; //个人化
+    public static final int DELIVER = 7; //交付
+    public static final int LOSS = 8; //挂失
+    public static final int LOGOUT = 9; //注销
+
+
 
 
 
@@ -40,18 +48,18 @@ public class SyncOperateType {
                 return "更新";
             case DELETE:
                 return "删除";
-            case RESET_PASSWORD:
-                return "重置密码";
-            case LOCK:
-                return "锁定";
-            case UNLOCK:
-                return "解锁";
-            case CHECK :
-                return "查询物流";
-            case IMPORT :
-                return "导入";
-            case REFRESH :
-                return "刷新";
+            case RECORD:
+                return "备案";
+            case UPLOAD:
+                return "印模上传";
+            case PERSONAL:
+                return "个人化";
+            case DELIVER :
+                return "交付";
+            case LOSS :
+                return "挂失";
+            case LOGOUT :
+                return "注销";
             case REALNAME :
                 return "实名认证";
             case AGREE :

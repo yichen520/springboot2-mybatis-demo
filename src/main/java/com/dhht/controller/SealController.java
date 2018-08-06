@@ -112,7 +112,10 @@ public class SealController {
             } else if (a == ResultUtil.isHaveSeal) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("法定章已经存在");
-            } else {
+            } else if(a==ResultUtil.isNoDepartment){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("备案单位或制作单位不存在");
+            }else {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("添加失败");
             }
