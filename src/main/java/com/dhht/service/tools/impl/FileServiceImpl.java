@@ -1,5 +1,6 @@
 package com.dhht.service.tools.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.dhht.common.CurrentUser;
 import com.dhht.common.FastDFSClient;
 import com.dhht.dao.FileMapper;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,8 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     private FileMapper fileMapper;
+    @Autowired
+    private StringRedisTemplate template;
 
     @Value("${trackerPort}")
     private String trackerPort;
@@ -49,9 +53,14 @@ public class FileServiceImpl implements FileService {
             file1.setCreateTime(new Date(System.currentTimeMillis()));
             file1.setFileName(file.getOriginalFilename());
             file1.setFilePath(path);
-
-            User user = CurrentUser.currentUser(request.getSession());
-
+            String token = request.getHeader("token");
+            User user ;
+            if (token!=null){
+                String token1 = template.opsForValue().get(token);
+                 user =  JSON.parseObject(token1,User.class);
+            }else {
+                 user = CurrentUser.currentUser(request.getSession());
+            }
             file1.setOperationRecordId(user.getRealName());
             fileMapper.insert(file1);
             file1.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+path);

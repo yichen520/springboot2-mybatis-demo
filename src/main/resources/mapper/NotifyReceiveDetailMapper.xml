@@ -44,8 +44,6 @@
     where notify_id = #{notifyId,jdbcType=CHAR}
   </delete>
 
-  
-
   <insert id="insert" parameterType="com.dhht.model.NotifyReceiveDetail" >
     insert into notify_receive_detail (id, nofity_id, receive_user_id, 
       receive_user_name, is_read, read_time

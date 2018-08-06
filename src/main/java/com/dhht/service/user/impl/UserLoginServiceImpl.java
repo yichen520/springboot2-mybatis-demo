@@ -65,6 +65,8 @@ public class UserLoginServiceImpl implements UserLoginService {
    private long loginErrorDate;
     @Value("${expireTime}")
     private long expireTime;
+    @Value("${smsexpireTime}")
+    private long smsexpireTime;
 
     /**
      * 6位简单密码
@@ -114,7 +116,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         if(!sms.getSmscode().equals(smsCode.getSmscode())){
             return JsonObjectBO.error("验证码错误");
         }
-        if(nowtime-sms.getLastTime()>300000){
+        if(nowtime-sms.getLastTime()>smsexpireTime){
             return JsonObjectBO.error("验证码超时，请重新发送");
         }
         return JsonObjectBO.ok("效验通过");

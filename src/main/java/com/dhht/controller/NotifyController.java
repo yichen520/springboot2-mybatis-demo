@@ -80,7 +80,7 @@ public class NotifyController {
      * @return
      */
     @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
-    public JsonObjectBO upload(@RequestParam("file") MultipartFile multipartFiles, javax.servlet.http.HttpServletRequest httpServletRequest){
+    public JsonObjectBO upload(@RequestParam("file") MultipartFile multipartFiles, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         try {
             FileInfo file = fileService.insertFile(httpServletRequest,multipartFiles);

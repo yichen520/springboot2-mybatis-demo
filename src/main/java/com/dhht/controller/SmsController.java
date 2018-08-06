@@ -30,7 +30,7 @@ public class SmsController {
     @Autowired
     private UserLoginService userLoginService;
 
-    private static Logger logger = LoggerFactory.getLogger(SmsController.class);
+    public static Logger logger = LoggerFactory.getLogger(SmsController.class);
 
     @Log("验证手机号")
     @RequestMapping(value ="checkPhone", method = RequestMethod.POST)

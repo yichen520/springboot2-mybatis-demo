@@ -1,18 +1,18 @@
 package com.dhht.service.make.Impl;
 
+import com.dhht.annotation.Sync;
 import com.dhht.dao.ExamineRecordDetailMapper;
 import com.dhht.dao.MakedepartmentMapper;
-import com.dhht.dao.UserDao;
 import com.dhht.model.*;
 import com.dhht.service.employee.EmployeeService;
-import com.dhht.service.tools.SmsSendService;
-import com.dhht.service.user.UserPasswordService;
+
 import com.dhht.service.user.UserService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.dhht.service.make.MakeDepartmentService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.apache.ibatis.annotations.Param;
+
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
-
 
 /**
  * 2018/7/2 create by fyc
@@ -89,8 +86,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
         User user =setUserByType(makedepartment,1);
         int m = makedepartmentMapper.insert(makedepartment);
-        int u = userService.insert(setUserByType(makedepartment,1));
+        int u = userService.insert(user);
         if(m==1&&u==ResultUtil.isSend){
+            SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
         }else if(u==1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -130,6 +128,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int e = setEmployeeByDepartment(employees, makedepartment, 2);
             int u = userService.update(user);
             if (m == 1 && u == 2 && e == 2) {
+                SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -165,6 +164,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e =setEmployeeByDepartment(employees,makedepartment,1);
             if(m==1&&e==2){
+                SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
                 return ResultUtil.isSuccess;
             }else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -176,6 +176,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e = setEmployeeByDepartment(employees,makedepartment,1);
             if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess) {
+                SyncEntity syncEntity = ((MakeDepartmentServiceImpl)AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
                 return ResultUtil.isSuccess;
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -361,8 +362,26 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return ResultUtil.isSuccess;
     }
 
+    /**
+     * 检查详情
+     * @param id
+     * @return
+     */
     @Override
     public List<ExamineRecordDetail> selectExamineDetailByID(String id) {
         return examineRecordDetailMapper.selectExamineDetailByID(id);
+    }
+
+    /**
+     * 数据同步
+     * @return
+     */
+    @Sync()
+    public SyncEntity getSyncData(Object object,int dataType,int operateType ){
+        SyncEntity syncEntity = new SyncEntity();
+        syncEntity.setObject(object);
+        syncEntity.setDataType(dataType);
+        syncEntity.setOperateType(operateType);
+        return syncEntity;
     }
 }

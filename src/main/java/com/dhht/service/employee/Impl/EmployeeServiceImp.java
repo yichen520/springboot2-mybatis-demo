@@ -2,7 +2,6 @@ package com.dhht.service.employee.Impl;
 
 import com.dhht.annotation.Sync;
 import com.dhht.dao.EmployeeDao;
-import com.dhht.dao.UserDao;
 import com.dhht.model.*;
 
 import com.dhht.service.employee.EmployeeService;
@@ -13,8 +12,6 @@ import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +79,6 @@ public class EmployeeServiceImp implements EmployeeService {
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isFail;
-
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -123,6 +119,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setId(UUIDUtil.generate());
             int e = employeeDao.insert(employee);
             if (u == 2 && e == 1) {
+                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -159,6 +156,7 @@ public class EmployeeServiceImp implements EmployeeService {
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
            if(e==1&&d==1){
+               SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            }else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -169,6 +167,7 @@ public class EmployeeServiceImp implements EmployeeService {
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
            if (u == ResultUtil.isSuccess && e == 1&&d==1) {
+               SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            } else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -218,7 +217,7 @@ public class EmployeeServiceImp implements EmployeeService {
         employee.setVersionTime(DateUtil.getCurrentTime());
         employee.setId(UUIDUtil.generate());
         return employeeDao.insert(employee);
-        }
+    }
 
     /**
      * 获取当前单位下所有版本的员工

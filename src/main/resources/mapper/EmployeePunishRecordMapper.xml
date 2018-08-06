@@ -81,6 +81,7 @@
     <if test="makedepartmentName != null" >
       and make_department_name like '%${makedepartmentName}%' or employee_name like '%${makedepartmentName}%'
     </if>
+    order by punish_time DESC
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from punish_record_employee

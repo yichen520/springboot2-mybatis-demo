@@ -205,7 +205,6 @@ public class PunishController {
         if (user == null){
             return   JsonObjectBO.sessionLose("session失效");
         }
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String phone = (String)map.get("telphone");
         String departmentName = (String)map.get("departmentName");
         String code = StringUtil.createRandomVcode();
@@ -222,16 +221,19 @@ public class PunishController {
 
     }
     /**
-     * 惩罚制作单位获取验证码
+     * 惩罚从业人员获取验证码
      */
     @RequestMapping(value = "/punishEmployeeCode")
-    public JsonObjectBO punishEmployeeCode(@RequestBody Map map){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+    public JsonObjectBO punishEmployeeCode(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
         String phone = (String)map.get("telphone");
         String code = StringUtil.createRandomVcode();
         ArrayList<String> params = new ArrayList<String>();
         params.add(code);
-        if (punishService.sendcode1(phone,makedepartmentpunish,params)){
+        if (punishService.sendcode1(phone,employeepunish,params)){
             return  JsonObjectBO.ok("获取验证码成功");
         }else{
             return JsonObjectBO.error("获取验证码失败");

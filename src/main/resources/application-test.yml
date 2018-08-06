@@ -127,3 +127,6 @@ filePath: C:/temp/
 
 #设置redis中token过期时间
 expireTime: 3600
+
+#设置短信过期时间，时间为5分钟
+smsexpireTime: 300000
