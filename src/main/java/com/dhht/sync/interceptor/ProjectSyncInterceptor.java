@@ -41,13 +41,18 @@ public class ProjectSyncInterceptor {
 
 	@AfterReturning(value = "sync()", returning = "rtv")
 	public void saveProject(JoinPoint joinPoint, Object rtv) throws Throwable {
-		Sync sync=  getAnnotationLog(joinPoint);
-		if (rtv !=null){
-			SyncEntity syncEntity = (SyncEntity)rtv;
-            String projectStr =JSON.toJSONString(syncEntity.getObject(), SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
-            syncDataToOutService.saveResult(syncEntity.getDataType(),syncEntity.getOperateType(),JsonObjectBO.SUCCESS,projectStr);
-        }
-	}
+        Sync sync = getAnnotationLog(joinPoint);
+        if (rtv != null) {
+			if (sync.DataType()!=0&&sync.OperateType()!=0) {
+				String projectStr = JSON.toJSONString(rtv, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
+				syncDataToOutService.saveResult(sync.DataType(), sync.OperateType(), JsonObjectBO.SUCCESS, projectStr);
+			} else {
+				SyncEntity syncEntity = (SyncEntity) rtv;
+				String projectStr = JSON.toJSONString(syncEntity.getObject(), SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
+				syncDataToOutService.saveResult(syncEntity.getDataType(), syncEntity.getOperateType(), JsonObjectBO.SUCCESS, projectStr);
+			}
+		}
+    }
 
 	/**
 	 * 是否存在注解，如果存在就获取
