@@ -53,17 +53,17 @@ spring:
           pool-prepared-statements: false
           max-pool-prepared-statement-per-connection-size: 20
 
-#    redis:
-#       database: 0
-#       host: 127.0.0.1
-#       port: 6379
-#       password:
-#       jedis:
-#         pool:
-#           max-idle: 8
-#           max-wait: -1
-#           max-active: 8
-#       timeout: 10000
+    redis:
+        database: 0
+        host: 10.0.0.44
+        port: 6379
+        password:
+        jedis:
+          pool:
+           max-idle: 8
+           max-wait: -1
+           max-active: 8
+        timeout: 10000
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -119,4 +119,11 @@ notice:
 trackerPort: 10.0.0.40
 trackerServer: 9000/
 
-filePath: "C:/temp/"
+file:
+ local:
+   root: C:/temp/
+
+filePath: C:/temp/
+
+#设置redis中token过期时间
+expireTime: 3600

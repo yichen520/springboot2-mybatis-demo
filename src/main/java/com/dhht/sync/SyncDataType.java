@@ -10,7 +10,7 @@ package com.dhht.sync;
 public class SyncDataType {
 
 	 public static final int EMPLOYEE  = 1001;//从业人员
-    public static final int EMPLOYEE_PHOTO  = 102;//从业人员
+    public static final int EMPLOYEE_PHOTO  = 1002;//从业人员
 	 public static final int SEAL  = 1101;//印章
 	 public static final int USERDEPARTMENT = 3;//使用单位
 	 public static final int MAKEDEPARTMENT = 4;//制作单位
