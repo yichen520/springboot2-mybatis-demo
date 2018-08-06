@@ -12,6 +12,7 @@ import com.dhht.model.User;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
+import com.dhht.util.DateUtil;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
@@ -85,7 +86,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
             } else {
                 useDepartment.setVersion(useDepartment.getVersion() + 1);
                 useDepartment.setIsDelete(false);
-                useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
+                useDepartment.setUpdateTime(DateUtil.getCurrentTime());
                 useDepartment.setId(UUIDUtil.generate());
                 useDepartment.setFlag(useDepartment1.getFlag());
                 useDepartment.setDepartmentStatus(useDepartment1.getDepartmentStatus());

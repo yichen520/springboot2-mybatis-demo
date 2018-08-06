@@ -559,7 +559,7 @@ public class SealServiceImpl implements SealService {
         sealMaterial2.setFilePath(businessScanner);
         int insertSealMaterial06 =sealDao.insertSealMaterial(sealMaterial2);
         seal1.setIsLogout(true);
-        seal1.setLossDate(DateUtil.getCurrentTime());
+        seal1.setLogoutDate(DateUtil.getCurrentTime());
         int updateByPrimaryKey =sealDao.updateByPrimaryKey(seal1);
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealCode(sealCode);
