@@ -381,7 +381,7 @@ public class SealCountServiceImp implements SealCuontService {
             List<SealCount> sealCount = new ArrayList<>();
             if (districtId.getChildren() != null) {   //表示这里是市
                 for (DistrictMenus districtchilrenId : districtId.getChildren()) {   //遍历当前市下的区
-
+                    String aaaa = districtchilrenId.getDistrictId();
                     List<Seal> seals = sealDao.selectByDistrictId(districtchilrenId.getDistrictId());
                     Set<String> set = new HashSet<>();
                     for (Seal seal : seals) {
