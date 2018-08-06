@@ -112,7 +112,10 @@ public class SealController {
             } else if (a == ResultUtil.isHaveSeal) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("法定章已经存在");
-            } else {
+            } else if(a==ResultUtil.isNoDepartment){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("备案单位或制作单位不存在");
+            }else {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("添加失败");
             }
@@ -147,7 +150,7 @@ public class SealController {
         int pageNum = sealOperator.getPageNum();
         int pageSize = sealOperator.getPageSize();
         try {
-            PageInfo<Seal> seal = sealService.sealInfo(useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
+            PageInfo<Seal> seal = sealService.sealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
