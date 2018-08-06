@@ -10,9 +10,12 @@ import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.UserService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +74,7 @@ public class EmployeeServiceImp implements EmployeeService {
             int u = userService.insert(setUserByType(employee, 1));
             int e = employeeDao.insert(employee);
             if (u==ResultUtil.isSend&&e==1) {
-                getSyncDate(employee,"Employee","insert");
+                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -399,8 +402,8 @@ public class EmployeeServiceImp implements EmployeeService {
      * @param operateType
      * @return
      */
-    @Sync
-     public SyncEntity getSyncDate(Object object,String dataType,String operateType){
+    @Sync()
+     public SyncEntity getSyncDate(Object object,int dataType,int operateType){
         SyncEntity syncEntity = new SyncEntity();
         syncEntity.setObject(object);
         syncEntity.setDataType(dataType);

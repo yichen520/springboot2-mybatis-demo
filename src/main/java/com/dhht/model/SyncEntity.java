@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class SyncEntity {
     private Object object;
-    private String dataType;
-    private String operateType;
+    private int dataType;
+    private int operateType;
 }

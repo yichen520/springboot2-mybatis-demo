@@ -43,8 +43,9 @@ public class ProjectSyncInterceptor {
 	public void saveProject(JoinPoint joinPoint, Object rtv) throws Throwable {
 		Sync sync=  getAnnotationLog(joinPoint);
 		if (rtv !=null){
-            String projectStr =JSON.toJSONString(rtv, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
-            syncDataToOutService.saveResult(sync.DataType(), sync.OperateType(),JsonObjectBO.SUCCESS,projectStr);
+			SyncEntity syncEntity = (SyncEntity)rtv;
+            String projectStr =JSON.toJSONString(syncEntity.getObject(), SerializerFeature.WriteDateUseDateFormat, SerializerFeature.DisableCircularReferenceDetect);
+            syncDataToOutService.saveResult(syncEntity.getDataType(),syncEntity.getOperateType(),JsonObjectBO.SUCCESS,projectStr);
         }
 	}
 
