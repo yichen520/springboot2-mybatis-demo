@@ -4,6 +4,7 @@ import com.dhht.dao.NotifyMapper;
 import com.dhht.dao.NotifyReceiveDetailMapper;
 import com.dhht.model.*;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.user.UserService;
 import com.dhht.util.*;
 import com.dhht.service.message.NotifyService;
 import com.dhht.util.ResultUtil;
@@ -27,6 +28,8 @@ public class NotifyServiceImp implements NotifyService {
     private NotifyReceiveDetailMapper notifyReceiveDetailMapper;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private UserService userService;
     /**
      * 写通知
      * @param notify
@@ -47,12 +50,12 @@ public class NotifyServiceImp implements NotifyService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isFail;
             }
-            for (UserSimple userSimple:notify.getNotifyUser()){
+            for (String id:notify.getNotifyUser()){
                 NotifyReceiveDetail notifyReceiveDetail = new NotifyReceiveDetail();
                 notifyReceiveDetail.setId(UUIDUtil.generate());
                 notifyReceiveDetail.setNotifyId(notify.getId());
-                notifyReceiveDetail.setReceiveUserName(userSimple.getUserName());
-                notifyReceiveDetail.setReceiveUserId(userSimple.getId());
+                //notifyReceiveDetail.setReceiveUserName(userSimple.getUserName());
+                notifyReceiveDetail.setReceiveUserId(id);
                 if( notifyReceiveDetailMapper.insert(notifyReceiveDetail)==0) {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResultUtil.isFail;
