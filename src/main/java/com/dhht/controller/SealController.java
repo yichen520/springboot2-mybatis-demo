@@ -150,7 +150,7 @@ public class SealController {
         int pageNum = sealOperator.getPageNum();
         int pageSize = sealOperator.getPageSize();
         try {
-            PageInfo<Seal> seal = sealService.sealInfo(useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
+            PageInfo<Seal> seal = sealService.sealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
