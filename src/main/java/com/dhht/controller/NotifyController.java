@@ -147,14 +147,15 @@ public class NotifyController {
      */
     @RequestMapping(value = "/roleUser")
     public JsonObjectBO getRoleUser(HttpServletRequest httpServletRequest){
-       // User user = (User)httpServletRequest.getSession().getAttribute("user");
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
 
         try{
-            List<Role> roles = roleService.getRoleUser("330000");
+            List<Role> roles = roleService.getRoleUser(user.getDistrictId());
             jsonObject.put("roleUser",roles);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
+            System.out.println(e.toString());
             return JsonObjectBO.exception("获取角色失败！");
         }
     }
