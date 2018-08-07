@@ -25,10 +25,11 @@
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
          #{item.nofityId}
     </foreach>
+    ORDER BY create_time DESC
   </select>
 
   <select id="selectNotifyBySendUser" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/> FROM notify WHERE send_username = #{userName,jdbcType=VARCHAR}
+    SELECT <include refid="Base_Column_List"/> FROM notify WHERE send_username = #{userName,jdbcType=VARCHAR} ORDER BY create_time DESC
   </select>
 
   <delete id="deleteById" parameterType="java.lang.String" >

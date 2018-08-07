@@ -9,10 +9,12 @@ import com.dhht.util.*;
 import com.dhht.service.message.NotifyService;
 import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +30,13 @@ public class NotifyServiceImp implements NotifyService {
     private NotifyReceiveDetailMapper notifyReceiveDetailMapper;
     @Autowired
     private FileService fileService;
-    @Autowired
-    private UserService userService;
+
+    @Value("${trackerPort}")
+    private String trackerPort;
+
+    @Value("${trackerServer}")
+    private String trackerServer;
+
     /**
      * 写通知
      * @param notify
@@ -170,7 +177,9 @@ public class NotifyServiceImp implements NotifyService {
         String paths[] = StringUtil.toStringArray(path);
         List<FileInfo> fileList = new ArrayList<>();
         for(int i=0;i<paths.length;i++){
-            fileList.add(fileService.selectByPath(paths[i]));
+            FileInfo file = fileService.selectByPath(paths[i]);
+            file.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+file.getFilePath());
+            fileList.add(file);
         }
         return fileList;
     }

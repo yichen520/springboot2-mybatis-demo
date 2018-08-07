@@ -49,7 +49,7 @@
       receive_user_name, is_read, read_time
       )
     values (#{id,jdbcType=CHAR}, #{nofityId,jdbcType=CHAR}, #{receiveUserId,jdbcType=VARCHAR}, 
-      #{receiveUserName,jdbcType=VARCHAR}, #{isRead,jdbcType=BIT}, #{readTime,jdbcType=TIMESTAMP}
+      #{receiveUserName,jdbcType=VARCHAR}, 0 , #{readTime,jdbcType=TIMESTAMP}
       )
   </insert>
 
