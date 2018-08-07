@@ -118,11 +118,12 @@ public class NotifyServiceImp implements NotifyService {
     @Override
     public PageInfo<Notify> selectNotifyDetail(String receiveUserId,int pageNum,int pageSize) {
         List<NotifyReceiveDetail> notifyIds = notifyReceiveDetailMapper.selectNotifyIdByUserId(receiveUserId);
-        if(notifyIds.size()==0){
-            return new PageInfo<Notify>();
-        }
+        List<Notify> notifies =new ArrayList<>();
         PageHelper.startPage(pageNum,pageSize);
-        List<Notify> notifies = notifyMapper.selectNotifyDetail(notifyIds);
+        if(notifyIds.size()==0){
+            return new PageInfo<Notify>(notifies);
+        }
+        notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
             if(notify.getNotifyFileUrls()!=null) {
                 notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
