@@ -52,7 +52,7 @@
       notify_file_url, recall_result)
     values (#{id,jdbcType=CHAR}, #{sendUsername,jdbcType=VARCHAR}, #{sendRealname,jdbcType=VARCHAR}, 
       #{notifyTitle,jdbcType=VARCHAR}, #{notifyContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isRecall,jdbcType=BIT}, #{recallTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR}, 
+      0, #{recallTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR},
       #{notifyFileUrls,jdbcType=VARCHAR}, #{recallResult,jdbcType=VARCHAR})
   </insert>
 

@@ -41,7 +41,7 @@
 
   <delete id="deleteByNotifyId" parameterType="java.lang.String" >
     delete from notify_receive_detail
-    where notify_id = #{nofityId,jdbcType=CHAR}
+    where nofity_id = #{notifyId,jdbcType=CHAR}
   </delete>
 
   <insert id="insert" parameterType="com.dhht.model.NotifyReceiveDetail" >
