@@ -61,12 +61,12 @@ public class NoticeServiceImp implements NoticeService{
     public List<Notice> selectByUserName(String userName) {
         List<Notice> noticeList = noticeMapper.selectByUserName(userName);
         for (Notice notice:noticeList) {
-            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
-            List<FileInfo> fileList = new ArrayList<>();
-            for(int i = 0;i<paths.length;i++){
-                fileList.add(fileService.selectByPath(paths[i]));
+            if (notice.getNoticeFileUrl()!=null) {
+                List<FileInfo> fileList = selectFileByPath(notice.getNoticeFileUrl());
+                if (fileList.size() > 0) {
+                    notice.setFiles(fileList);
+                }
             }
-            notice.setFiles(fileList);
         }
         return noticeList;
     }
@@ -84,8 +84,8 @@ public class NoticeServiceImp implements NoticeService{
         if(n!=1){
             return ResultUtil.isFail;
         }
-        if(notice.getNoticeFileUrls()!=null) {
-            String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrls());
+        if(notice.getNoticeFileUrl()!=null) {
+            String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrl());
             if (deleteFile(paths) == ResultUtil.isFail) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isFail;
@@ -145,8 +145,8 @@ public class NoticeServiceImp implements NoticeService{
     public Notice selectNoticeDetail(String id) {
         Notice notice = noticeMapper.selectNoticeDetail(id);
         List<FileInfo> fileList = new ArrayList<>();
-        if(notice.getNoticeFileUrls()!=null){
-            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
+        if(notice.getNoticeFileUrl()!=null){
+            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrl());
             for(int i=0;i<paths.length;i++){
                 fileList.add(fileService.selectByPath(paths[i]));
             }
@@ -170,6 +170,19 @@ public class NoticeServiceImp implements NoticeService{
          return ResultUtil.isSuccess;
      }
 
-
-
+    /**
+     * 查找文件列表
+     * @param noticeFileUrls
+     * @return
+     */
+     public List<FileInfo> selectFileByPath(String noticeFileUrls) {
+         String paths[] = StringUtil.toStringArray(noticeFileUrls);
+         List<FileInfo> fileList = new ArrayList<>();
+         if (paths.length>0) {
+             for (int i = 0; i < paths.length; i++) {
+                 fileList.add(fileService.selectByPath(paths[i]));
+             }
+         }
+         return fileList;
+     }
 }

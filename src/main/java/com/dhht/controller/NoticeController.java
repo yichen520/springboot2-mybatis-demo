@@ -82,19 +82,19 @@ public class NoticeController {
      */
     @RequestMapping(value = "/info")
     public JsonObjectBO info(HttpServletRequest httpServletRequest, @RequestBody Map map){
-       // User user = (User) httpServletRequest.getSession().getAttribute("user");
+         User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageNum = (Integer) map.get("pageNum");
         int pageSize = (Integer) map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum,pageSize);
 
         try{
-            List<Notice> list = noticeService.selectByUserName("12");
+            List<Notice> list = noticeService.selectByUserName(user.getUserName());
             PageInfo pageInfo = new PageInfo(list);
             jsonObject.put("message",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.error(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
