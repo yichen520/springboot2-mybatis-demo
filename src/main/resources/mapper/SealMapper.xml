@@ -397,7 +397,7 @@
     SELECT seal.make_department_code from seal where  district_id = #{districtId} group by seal.make_department_code
   </select>
 
-  <select id="selectByDistrictId"  resultMap="BaseResultMap">
+  <select id="selectByDistrictId"  resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT  <include refid="Base_Column_List" />
     from seal where  district_id = #{districtId}
   </select>
