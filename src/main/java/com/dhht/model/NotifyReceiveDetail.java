@@ -8,7 +8,7 @@ import java.util.Date;
 public class NotifyReceiveDetail {
     private String id;
 
-    private String notifyId;
+    private String nofityId;
 
     private String receiveUserId;
 

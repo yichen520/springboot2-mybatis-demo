@@ -175,6 +175,7 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public FileInfo selectByPath(String path) {
-        return fileMapper.selectByPath(path);
+        String httpPath = "http://"+trackerServer+":"+trackerPort+"group1/";
+        return fileMapper.selectByPath(path.replace(httpPath,""));
     }
 }

@@ -111,11 +111,15 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getRoleUser(String district) {
        String districtId = StringUtil.getDistrictId(district);
        List<Role> roles = roleDao.findAllRole();
-        for (Role role:roles) {
-            List<UserSimple> list = userDao.getRoleUser(districtId,role.getId());
-            role.setRoleUser(list);
-        }
-        return roles;
+       List<Role> roleList = new ArrayList<>();
+           for (Role role : roles) {
+               List<UserSimple> list = userDao.getRoleUser(districtId, role.getId());
+               if(list.size()>0) {
+                   role.setRoleUser(list);
+                   roleList.add(role);
+               }
+           }
+        return roleList;
     }
 
     //获取所有资源方法

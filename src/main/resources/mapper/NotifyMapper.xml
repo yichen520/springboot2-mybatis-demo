@@ -23,12 +23,13 @@
   <select id="selectNotifyDetail" parameterType="java.util.List" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/> FROM notify WHERE id IN
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-         #{item.notifyId}
+         #{item.nofityId}
     </foreach>
+    ORDER BY create_time DESC
   </select>
 
   <select id="selectNotifyBySendUser" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/> FROM notify WHERE send_username = #{userName,jdbcType=VARCHAR}
+    SELECT <include refid="Base_Column_List"/> FROM notify WHERE send_username = #{userName,jdbcType=VARCHAR} ORDER BY create_time DESC
   </select>
 
   <delete id="deleteById" parameterType="java.lang.String" >
@@ -51,7 +52,7 @@
       notify_file_url, recall_result)
     values (#{id,jdbcType=CHAR}, #{sendUsername,jdbcType=VARCHAR}, #{sendRealname,jdbcType=VARCHAR}, 
       #{notifyTitle,jdbcType=VARCHAR}, #{notifyContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isRecall,jdbcType=BIT}, #{recallTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR}, 
+      0, #{recallTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR},
       #{notifyFileUrls,jdbcType=VARCHAR}, #{recallResult,jdbcType=VARCHAR})
   </insert>
 

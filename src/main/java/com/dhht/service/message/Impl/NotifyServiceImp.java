@@ -8,11 +8,15 @@ import com.dhht.service.user.UserService;
 import com.dhht.util.*;
 import com.dhht.service.message.NotifyService;
 import com.dhht.util.ResultUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +32,13 @@ public class NotifyServiceImp implements NotifyService {
     private NotifyReceiveDetailMapper notifyReceiveDetailMapper;
     @Autowired
     private FileService fileService;
-    @Autowired
-    private UserService userService;
+
+    @Value("${trackerPort}")
+    private String trackerPort;
+
+    @Value("${trackerServer}")
+    private String trackerServer;
+
     /**
      * 写通知
      * @param notify
@@ -53,7 +62,7 @@ public class NotifyServiceImp implements NotifyService {
             for (String id:notify.getNotifyUser()){
                 NotifyReceiveDetail notifyReceiveDetail = new NotifyReceiveDetail();
                 notifyReceiveDetail.setId(UUIDUtil.generate());
-                notifyReceiveDetail.setNotifyId(notify.getId());
+                notifyReceiveDetail.setNofityId(notify.getId());
                 //notifyReceiveDetail.setReceiveUserName(userSimple.getUserName());
                 notifyReceiveDetail.setReceiveUserId(id);
                 if( notifyReceiveDetailMapper.insert(notifyReceiveDetail)==0) {
@@ -86,6 +95,7 @@ public class NotifyServiceImp implements NotifyService {
                 return ResultUtil.isFail;
             }
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return ResultUtil.isException;
         }
     }
@@ -106,8 +116,12 @@ public class NotifyServiceImp implements NotifyService {
      * @return
      */
     @Override
-    public List<Notify> selectNotifyDetail(String receiveUserId) {
+    public PageInfo<Notify> selectNotifyDetail(String receiveUserId,int pageNum,int pageSize) {
         List<NotifyReceiveDetail> notifyIds = notifyReceiveDetailMapper.selectNotifyIdByUserId(receiveUserId);
+        if(notifyIds.size()==0){
+            return new PageInfo<Notify>();
+        }
+        PageHelper.startPage(pageNum,pageSize);
         List<Notify> notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
             if(notify.getNotifyFileUrls()!=null) {
@@ -119,7 +133,7 @@ public class NotifyServiceImp implements NotifyService {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }finally {
-            return notifies;
+            return new PageInfo<>(notifies);
         }
     }
 
@@ -136,7 +150,7 @@ public class NotifyServiceImp implements NotifyService {
                     notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
                 }
                 String result = notifyReadCount(notify.getId());
-                if(result.equals("0/0")) {
+                if(notify.getIsRecall()) {
                     notify.setNotifyReadCount("已撤回！");
                 }else {
                     notify.setNotifyReadCount(notifyReadCount(notify.getId()));
@@ -154,7 +168,7 @@ public class NotifyServiceImp implements NotifyService {
     public String notifyReadCount(String notifyId) {
         Integer readCount = notifyReceiveDetailMapper.countReadById(notifyId);
         Integer allCount = notifyReceiveDetailMapper.countAllById(notifyId);
-        String result = readCount.toString()+"/"+ allCount.toString();
+        String result = "已读："+readCount.toString()+"  未读："+ (allCount-readCount);
         return result;
     }
 
@@ -167,7 +181,9 @@ public class NotifyServiceImp implements NotifyService {
         String paths[] = StringUtil.toStringArray(path);
         List<FileInfo> fileList = new ArrayList<>();
         for(int i=0;i<paths.length;i++){
-            fileList.add(fileService.selectByPath(paths[i]));
+            FileInfo file = fileService.selectByPath(paths[i]);
+            file.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+file.getFilePath());
+            fileList.add(file);
         }
         return fileList;
     }
