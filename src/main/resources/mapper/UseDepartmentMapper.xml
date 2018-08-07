@@ -250,6 +250,7 @@
       </if>
 
     </where>
+    order BY updateTime DESC
 
   </select>
 
@@ -278,7 +279,7 @@
 
   <select id="selectDetailById" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/>
-    from use_department where id = #{id}
+    from use_department where id = #{id} ORDER BY updateTime DESC
   </select>
 
   <!--统计部分-->

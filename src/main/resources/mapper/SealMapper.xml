@@ -397,8 +397,8 @@
     SELECT seal.make_department_code from seal where  district_id = #{districtId} group by seal.make_department_code
   </select>
 
-  <select id="selectByDistrictId"  resultMap="BaseResultMap">
-    SELECT  <include refid="Base_Column_List" />
+  <select id="selectByDistrictId"  resultType="com.dhht.model.Seal" parameterType="java.lang.String">
+    SELECT  seal_type_code AS sealTypeCode ,seal_code AS sealCode
     from seal where  district_id = #{districtId}
   </select>
 
@@ -410,13 +410,13 @@
   <select id="countLossSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
 
     SELECT count(id) from seal where district_id  = #{districtId} AND seal_type_code=#{sealTypeCode}
-    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+    AND is_record = true AND is_make = true AND is_loss =true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
 
   <select id="countLogoutSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
      SELECT count(id) from seal where district_id  = #{districtId}  AND seal_type_code=#{sealTypeCode}
-    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout=true AND make_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
   <select id="countAddSealByLikeDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
@@ -427,7 +427,7 @@
   <select id="countLossSealByLikeDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
 
     SELECT count(id) from seal where district_id like #{districtId}"%" AND seal_type_code=#{sealTypeCode}
-    AND is_record = true AND is_make = true AND is_loss!=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
+    AND is_record = true AND is_make = true AND is_loss=true AND is_logout!=true AND make_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
 
