@@ -155,6 +155,12 @@ public class UserLoginServiceImpl implements UserLoginService {
                     userDao.updateErrorTimes(userDomain.getUsername());
                     errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
                 }
+                if (errorTimes<1){
+                    map.put("status", "error");
+                    map.put("currentAuthority", "guest");
+                    map.put("message","该用户登录错误超过5次，请稍后重试！");
+                    return map;
+                }
                 map.put("status", "error");
                 map.put("currentAuthority","guest");
                 map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
@@ -215,15 +221,21 @@ public class UserLoginServiceImpl implements UserLoginService {
                 long  a = sdf.parse(sdf.format(new Date())).getTime();
                 long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
                 long m = a - b;
+                long errorTimes ;
                 //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
                 if (( m / (1000 * 60  )>loginErrorDate)){
                     userDao.updateErrorTimesZero(userDomain.getUsername());
-
+                    errorTimes = 4;
                 }else {
                     userDao.updateErrorTimes(userDomain.getUsername());
+                    errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
+                }
+                if (errorTimes > 0){
+                    return JsonObjectBO.error("账号密码错误,你还可以输入"+errorTimes+"次");
+                }else {
+                    return JsonObjectBO.error("该用户登录错误超过5次，请稍后重试！");
                 }
 
-                return JsonObjectBO.error("账号密码错误,你还可以输入");
             }
             if (currentUser==null){
                 return JsonObjectBO.error("账号密码错误,请重新输入");
