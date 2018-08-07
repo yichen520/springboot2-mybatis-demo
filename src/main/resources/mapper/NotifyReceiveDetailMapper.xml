@@ -41,7 +41,7 @@
 
   <delete id="deleteByNotifyId" parameterType="java.lang.String" >
     delete from notify_receive_detail
-    where notify_id = #{nofityId,jdbcType=CHAR}
+    where nofity_id = #{notifyId,jdbcType=CHAR}
   </delete>
 
   <insert id="insert" parameterType="com.dhht.model.NotifyReceiveDetail" >
@@ -49,7 +49,7 @@
       receive_user_name, is_read, read_time
       )
     values (#{id,jdbcType=CHAR}, #{nofityId,jdbcType=CHAR}, #{receiveUserId,jdbcType=VARCHAR}, 
-      #{receiveUserName,jdbcType=VARCHAR}, #{isRead,jdbcType=BIT}, #{readTime,jdbcType=TIMESTAMP}
+      #{receiveUserName,jdbcType=VARCHAR}, 0 , #{readTime,jdbcType=TIMESTAMP}
       )
   </insert>
 

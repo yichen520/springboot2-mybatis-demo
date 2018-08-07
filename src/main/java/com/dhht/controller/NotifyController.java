@@ -60,12 +60,10 @@ public class NotifyController {
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
-
-        PageHelper.startPage(pageNum,pageSize);
         JSONObject jsonObject = new JSONObject();
 
         try {
-            PageInfo<Notify> pageInfo = new PageInfo<>(notifyService.selectNotifyDetail(user.getId()));
+            PageInfo<Notify> pageInfo =notifyService.selectNotifyDetail(user.getId(),pageNum,pageSize);
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
