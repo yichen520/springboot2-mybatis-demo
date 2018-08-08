@@ -45,6 +45,25 @@
     SELECT <include refid="Base_Column_List"></include> FROM employee WHERE employee_department_code=#{employeeDepartmentCode}
   </select>
 
+  <select id="selectEmployeeInfo" resultMap="BaseResultMap" parameterType="java.lang.Object">
+    SELECT a.* from employee as a RIGHT JOIN(
+    select flag,MAX(version) as ver from employee GROUP BY flag
+    )as b on a.flag=b.flag and  a.version=b.ver where  is_delete = #{status,jdbcType=BIT}  AND employee_name LIKE  '%${name}%' AND
+    employee_department_code IN
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+    #{item.departmentCode}
+    </foreach>
+  </select>
+
+  <select id="selectAllEmployeeInfo" resultMap="BaseResultMap" parameterType="java.lang.Object">
+    SELECT a.* from employee as a RIGHT JOIN(
+    select flag,MAX(version) as ver from employee GROUP BY flag
+    )as b on a.flag=b.flag and  a.version=b.ver where employee_name LIKE  '%${name}%' AND employee_department_code IN
+     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item.departmentCode}
+     </foreach>
+  </select>
+
   
   <select id="operationByDepartmentCode" resultMap="BaseResultMap" parameterType="java.lang.String">
      SELECT a.* from employee as a RIGHT JOIN(
