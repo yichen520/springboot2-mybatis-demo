@@ -22,9 +22,17 @@ public class Employee {
 
     private String employeeNation;
 
+    private String familyDistrictId;
+
+    private String familyDistrictName;
+
     private String familyAddressDetail;
 
     private String nowAddressDetail;
+
+    private String nowDistrictId;
+
+    private String nowDistrictName;
 
     private String employeeImage;
 

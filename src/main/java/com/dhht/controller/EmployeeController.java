@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/sys/employee")
+@RequestMapping(value = "/make/employee")
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;

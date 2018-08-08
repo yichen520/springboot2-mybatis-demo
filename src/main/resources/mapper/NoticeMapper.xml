@@ -41,7 +41,7 @@
     SELECT
     <include refid="Base_Column_List" />
     from notice
-    where send_username = #{userName,jdbcType=VARCHAR} ORDER BY create_time DESC 
+    where send_username = #{userName,jdbcType=VARCHAR} ORDER BY create_time DESC
   </select>
   
   <select id="selectNoticeByNum" parameterType="java.lang.Object" resultMap="SimpleResultMap">

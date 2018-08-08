@@ -27,7 +27,7 @@ import java.util.Map;
  * 2018/7/2 create by fyc
  */
 @RestController
-@RequestMapping(value = "seal/makeDepartment")
+@RequestMapping(value = "make/makeDepartment")
 public class MakeDepartmentController {
 
     @Autowired
