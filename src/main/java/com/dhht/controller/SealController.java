@@ -142,8 +142,6 @@ public class SealController {
         JSONObject jsonObject = new JSONObject();
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
         String telphone = user.getTelphone();
-//        Employee employee = employeeService.selectByPhone(telphone);
-//        String recordCode = employee.getOfficeCode();
         String useDepartmentName = sealOperator.getSeal().getUseDepartmentName();
         String useDepartmentCode = sealOperator.getSeal().getUseDepartmentCode();
         String status = sealOperator.getSeal().getSealStatusCode();

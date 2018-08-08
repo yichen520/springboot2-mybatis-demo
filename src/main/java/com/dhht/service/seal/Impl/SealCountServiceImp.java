@@ -66,7 +66,7 @@ public class SealCountServiceImp implements SealCuontService {
             }
 
 
-        count.setCountName("小计(" + list.get(0).getCountName() + ")");
+        count.setCountName(list.get(0).getCountName());
         count.setSealType("");
         count.setNewSealNum(sealAdd);
         count.setLossSealNum(sealLoss);
@@ -99,7 +99,7 @@ public class SealCountServiceImp implements SealCuontService {
             }
         }
         SealCount count = new SealCount();
-        count.setCountName("小计(" + dis + ")");
+        count.setCountName(dis);
         count.setSealType("");
         count.setNewSealNum(sealAdd);
         count.setLossSealNum(sealLoss);
@@ -345,7 +345,7 @@ public class SealCountServiceImp implements SealCuontService {
                     }
                 }
                 if(count.size()!=0) {
-                count.add(subtotal(count));//把小计放入队列
+                count.add(0,subtotal(count));//把小计放入队列
                     counts.addAll(count);
                 }
             }
@@ -479,7 +479,7 @@ public class SealCountServiceImp implements SealCuontService {
 
             }
             String dis = districtId.getDistrictName();
-            sealCount.add(subtotal(dis,sealCount));//把小计放入队列
+            sealCount.add(0,subtotal(dis,sealCount));//把小计放入队列
             sealCounts.addAll(sealCount);
 
         }
