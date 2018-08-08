@@ -305,14 +305,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 break;
             case 2:
                 Makedepartment oldDate =makedepartmentMapper.selectDetailById(makedepartment.getId());
-                user = userService.findByTelphone(oldDate.getLegalTelphone());
+                user = userService.findByUserName("ZZDW"+oldDate.getLegalTelphone());
                 user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
                 user.setDistrictId(makedepartment.getDepartmentAddress());
                 user.setRealName(makedepartment.getDepartmentName());
                 user.setTelphone(makedepartment.getLegalTelphone());
                 break;
             case 3:
-                user = userService.findByTelphone(makedepartment.getLegalTelphone());
+                user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
                 break;
         }
         return user;

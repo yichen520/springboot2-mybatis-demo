@@ -148,6 +148,9 @@
         DELETE FROM sys_user WHERE telphone = #{telphone}
     </delete>
 
+    <delete id="deleteByUserName" parameterType="java.lang.String">
+        DELETE FROM sys_user WHERE user_name = #{userName}
+    </delete>
 
     <select id="findAllSuser" resultMap="queryForListMap">
         SELECT u.user_name,u.real_name,u.telphone,u.role_id,u.district_id,r.*,d.*

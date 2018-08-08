@@ -369,14 +369,14 @@ public class EmployeeServiceImp implements EmployeeService {
             //修改用户
             case 2:
                 Employee oldDate = employeeDao.selectById(employee.getId());
-                user = userService.findByTelphone(oldDate.getTelphone());
+                user = userService.findByUserName("YG"+oldDate.getTelphone());
                 user.setUserName("YG"+employee.getTelphone());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
                 break;
             case 3:
-                user = userService.findByTelphone(employee.getTelphone());
+                user = userService.findByUserName("YG"+employee.getTelphone());
         }
         return user;
     }

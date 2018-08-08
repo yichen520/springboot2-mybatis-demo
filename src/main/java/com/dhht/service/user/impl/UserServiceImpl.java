@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
      */
 
     public int insert(User user) {
-        User user1 = userDao.findByTelphone(user.getTelphone());
+        User user1 = userDao.findByUserName(user.getUserName());
         if (user1 != null) {
             return ResultUtil.isHave;                  //该用户已存在
         }
@@ -110,8 +110,8 @@ public class UserServiceImpl implements UserService {
         try {
             User user2 = userDao.findById(user.getId());
             ArrayList<String> params = new ArrayList<String>();
-            if (!user2.getTelphone().equals(user.getTelphone())) {
-                User user1 = userDao.findByTelphone(user.getTelphone());
+            if (!user2.getUserName().equals(user.getUserName())) {
+                User user1 = userDao.findByUserName(user.getUserName());
                 if (user1 != null) {
                     return ResultUtil.isHave;              //该用户已经存在
                 }
@@ -233,18 +233,18 @@ public class UserServiceImpl implements UserService {
     /**
      * 根据电话删除用户
      *
-     * @param phone
+     * @param userName
      * @return
      */
     @Override
-    public int deleteByTelphone(String phone) {
-        int i= userDao.deleteByTelphone(phone);
+    public int deleteByUserName(String userName) {
+        int i= userDao.deleteByUserName(userName);
         return i;
     }
 
     @Override
-    public User findByTelphone(String phone) {
-        return userDao.findByTelphone(phone);
+    public User findByUserName(String userName) {
+        return userDao.findByUserName(userName);
     }
 
 
