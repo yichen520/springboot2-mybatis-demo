@@ -133,7 +133,7 @@ public class NoticeController {
             jsonObject.put("notice",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("获取列表失败！");
         }
     }
 

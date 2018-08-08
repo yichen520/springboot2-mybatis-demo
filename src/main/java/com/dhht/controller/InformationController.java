@@ -131,13 +131,10 @@ public class InformationController {
         String name = (String)map.get("name");
         String code = (String)map.get("code");
 
-        PageHelper.startPage(pageNum,pageSize);
-        List<Employee> list = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
 
         try {
-            list = employeeService.selectEmployeeInfo(code,status,name,user.getDistrictId());
-            PageInfo pageInfo = new PageInfo<>(list);
+            PageInfo pageInfo= employeeService.selectEmployeeInfo(code,status,name,user.getDistrictId(),pageNum,pageSize);
             jsonObject.put("employee",pageInfo);
         } catch (Exception e) {
             return JsonObjectBO.exception(e.getMessage());

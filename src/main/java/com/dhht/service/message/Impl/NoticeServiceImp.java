@@ -187,8 +187,10 @@ public class NoticeServiceImp implements NoticeService{
          if (paths.length>0) {
              for (int i = 0; i < paths.length; i++) {
                  FileInfo fileInfo =fileService.selectByPath(paths[i]);
-                 fileInfo.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+fileInfo.getFilePath());
-                 fileList.add(fileInfo);
+                 if(fileInfo!=null) {
+                     fileInfo.setFilePath("http://" + trackerServer + ":" + trackerPort + "group1/" + fileInfo.getFilePath());
+                     fileList.add(fileInfo);
+                 }
              }
          }
          return fileList;

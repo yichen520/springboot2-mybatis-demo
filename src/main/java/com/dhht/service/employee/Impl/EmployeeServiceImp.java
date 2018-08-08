@@ -12,6 +12,8 @@ import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -325,9 +327,10 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public List selectEmployeeInfo(String code, int status, String name,String districtId) {
+    public PageInfo selectEmployeeInfo(String code, int status, String name, String districtId,int pageNum,int pageSize) {
         List<Employee> employees = new ArrayList<>();
         List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(districtId,"","01");
+        PageHelper.startPage(pageNum,pageSize);
         if(code==null||code==""){
             if(status==1){
                 employees = employeeDao.selectEmployeeInfo(name,0,makedepartments);
@@ -345,7 +348,8 @@ public class EmployeeServiceImp implements EmployeeService {
                 employees = employeeDao.selectAllByDepartmentCode(code);
             }
         }
-        return employees;
+        PageInfo pageInfo = new PageInfo(employees);
+        return pageInfo;
     }
 
 
