@@ -252,7 +252,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                     user = userService.findByUserName("BADW"+oldDate.getTelphone());
                     user.setUserName("BADW"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
-                    //user.setRoleId("BADW");
+                    user.setRoleId("BADW");
                     user.setTelphone(recordDepartment.getTelphone());
                     user.setDistrictId(recordDepartment.getDepartmentAddress());
                     break;
