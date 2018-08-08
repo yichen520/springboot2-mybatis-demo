@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
      */
 
     public int insert(User user) {
-        if(user.getRoleId().equals("ZZDW")||user.getRoleId().equals("CYRY")) {
+        if(user.getRoleId().equals("CYRY")) {
             User user1 = userDao.findByUserName(user.getUserName());
             if (user1 != null) {
                 return ResultUtil.isHave;                  //该用户已存在
