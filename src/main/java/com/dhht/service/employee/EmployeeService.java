@@ -42,5 +42,5 @@ public interface EmployeeService {
 
     int updateMakeDepartment(String id,String code);
 
-    List selectEmployeeInfo(String code,int status,String name,String districtId);
+    PageInfo selectEmployeeInfo(String code,int status,String name,String districtId,int pageNum,int pageSize);
 }
