@@ -7,6 +7,7 @@ import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.seal.SealService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -36,6 +37,8 @@ public class InformationController {
     private UseDepartmentService useDepartmentService;
     @Autowired
     private DistrictService districtService;
+    @Autowired
+    private SealService sealService;
 
     private static Logger logger = LoggerFactory.getLogger(InformationController.class);
 
@@ -147,6 +150,37 @@ public class InformationController {
         }
     }
 
+    /**
+     * 印章信息
+     *
+     * @param httpServletRequest
+     * @param sealOperator
+     * @return
+     */
+    @Log("印章信息")
+    @RequestMapping("/seal")
+    public JsonObjectBO seal(HttpServletRequest httpServletRequest, @RequestBody SealOperator sealOperator) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+        String telphone = user.getTelphone();
+        String useDepartmentName = sealOperator.getSeal().getUseDepartmentName();
+        String useDepartmentCode = sealOperator.getSeal().getUseDepartmentCode();
+        String status = sealOperator.getSeal().getSealStatusCode();
+        int pageNum = sealOperator.getPageNum();
+        int pageSize = sealOperator.getPageSize();
+        try {
+            PageInfo<Seal> seal = sealService.seal(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
+            jsonObject.put("seal", seal);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("查询成功");
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.toString());
+        }
+    }
     /**
      * 查询使用单位详情
      * @param map

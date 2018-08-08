@@ -25,7 +25,7 @@ public interface SealService {
    int sealPersonal(String id,User user);
 
    //印章交付
-   boolean deliver(User user,String id,SealGetPerson sealGetPerson,String proxy);
+   boolean deliver(User user,String id,SealGetPerson sealGetPerson,String proxy,String operatorPhoto, String PositiveIdCardScanner, String ReverseIdCardScanner);
 
    //印章挂失
    int loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String localDistrictId);
@@ -35,6 +35,8 @@ public interface SealService {
 
    //详情查看
    SealVo selectDetailById(String id);
+
+   PageInfo<Seal> seal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
 
 

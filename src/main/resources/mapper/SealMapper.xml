@@ -321,6 +321,9 @@
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
       </if>
+      <if test="districtId !=null and districtId!=''">
+        AND district_id like #{districtId}"%"
+      </if>
     </where>
   </select>
 
