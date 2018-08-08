@@ -110,8 +110,8 @@ public class UserServiceImpl implements UserService {
         try {
             User user2 = userDao.findById(user.getId());
             ArrayList<String> params = new ArrayList<String>();
-            if (!user2.getTelphone().equals(user.getTelphone())) {
-                User user1 = userDao.findByTelphone(user.getTelphone());
+            if (!user2.getUserName().equals(user.getUserName())) {
+                User user1 = userDao.findByUserName(user.getUserName());
                 if (user1 != null) {
                     return ResultUtil.isHave;              //该用户已经存在
                 }

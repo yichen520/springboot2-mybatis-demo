@@ -349,7 +349,6 @@ public class SealServiceImpl implements SealService {
         }
         String flag="03";
         String sealCode = seal1.getSealCode();
-        System.out.print(sealCode);
         //根据用户找到对应的从业人员
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
