@@ -95,6 +95,23 @@ public class InformationController {
         }
     }
 
+    @Log("制作单位历史")
+    @RequestMapping(value = "/makeDepartmentHistory")
+    public JsonObjectBO makeDepartmentHistory(@RequestBody Map map){
+        String flag = (String)map.get("flag");
+        List<Makedepartment> result = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            result = makeDepartmentService.selectHistory(flag);
+            jsonObject.put("makeDepartment",result);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+
+    }
+
     /**
      * 管理员查询从业人员
      * @param map
