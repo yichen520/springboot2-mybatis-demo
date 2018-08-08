@@ -71,9 +71,16 @@ public class UserServiceImpl implements UserService {
      */
 
     public int insert(User user) {
-        User user1 = userDao.findByUserName(user.getUserName());
-        if (user1 != null) {
-            return ResultUtil.isHave;                  //该用户已存在
+        if(user.getRoleId().equals("CYRY")) {
+            User user1 = userDao.findByUserName(user.getUserName());
+            if (user1 != null) {
+                return ResultUtil.isHave;                  //该用户已存在
+            }
+        }else{
+            User user2 = userDao.findByTelphone(user.getTelphone());
+            if(user2!=null){
+                return ResultUtil.isHave;                   //该用户已存在
+            }
         }
         user.setId(UUIDUtil.generate());
 //        user.setUserName("GLY"+user.getTelphone());
@@ -99,6 +106,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+
     /**
      * 修改用户
      *
@@ -107,35 +115,56 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public int update(User user) {
-        try {
-            User user2 = userDao.findById(user.getId());
-            ArrayList<String> params = new ArrayList<String>();
-            if (!user2.getUserName().equals(user.getUserName())) {
-                User user1 = userDao.findByUserName(user.getUserName());
-                if (user1 != null) {
+        User user1 = userDao.findById(user.getId());
+        ArrayList<String> params = new ArrayList<>();
+        if(user.getRoleId().equals("ZZDW")||user.getRoleId().equals("CYRY")){  //判断是否是制作单位或者从业人员
+            if(!user1.getUserName().equals(user.getUserName())){
+                User user2 = userDao.findByUserName(user.getUserName());
+                if(user2!=null){
+                    return ResultUtil.isHave;
+                }
+                Integer a = userDao.update(user);
+                if(a<0){
+                    return ResultUtil.isFail;
+                }else{
+                    params.add(user1.getUserName());
+                    params.add(user.getUserName());
+                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);
+                    return ResultUtil.isSuccess;
+                }
+            }else {
+                Integer a = userDao.update(user);
+                if(a<0){
+                    return ResultUtil.isFail;
+                }else{
+                    return ResultUtil.isSuccess;
+                }
+            }
+        }else{
+            if (!user1.getTelphone().equals(user.getTelphone())) {
+                User user3 = userDao.findByTelphone(user.getTelphone());
+                if (user3 != null) {
                     return ResultUtil.isHave;              //该用户已经存在
                 }
 //                user.setUserName(user.getTelphone());
                 Integer a = userDao.update(user);
-                if (a != 1) {
+                if (a <0) {
                     return ResultUtil.isFail;             //修改失败
                 } else {
-                    params.add(user2.getUserName());
+                    params.add(user1.getUserName());
                     params.add(user.getUserName());
                     smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);
                     return ResultUtil.isSuccess;             //修改成功
                 }
             } else {
                 Integer a = userDao.update(user);
-                if (a != 1) {
+                if (a <0) {
                     return ResultUtil.isFail;             //修改失败
                 } else {
 
                     return ResultUtil.isSuccess;          //修改成功
                 }
             }
-        } catch (Exception e) {
-            return ResultUtil.isException;                   //出现异常
         }
 
     }

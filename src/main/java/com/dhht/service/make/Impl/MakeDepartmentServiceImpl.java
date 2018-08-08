@@ -306,6 +306,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             case 2:
                 Makedepartment oldDate =makedepartmentMapper.selectDetailById(makedepartment.getId());
                 user = userService.findByUserName("ZZDW"+oldDate.getLegalTelphone());
+                user.setRoleId("ZZDW");
                 user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
                 user.setDistrictId(makedepartment.getDepartmentAddress());
                 user.setRealName(makedepartment.getDepartmentName());
