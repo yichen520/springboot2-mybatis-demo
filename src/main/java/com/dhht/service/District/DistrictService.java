@@ -26,4 +26,6 @@ public interface DistrictService {
     List<DistrictMenus> selectDistrictByArray(List<String> DistrictIds);
 
     List<DistrictMenus> selectDistrictMakeDepartmentByArray(List<String> DistrictIds);
+
+    String selectByDistrictId(String districtId);
 }

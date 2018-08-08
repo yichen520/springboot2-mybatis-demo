@@ -134,10 +134,13 @@ public class InformationController {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            PageInfo pageInfo= employeeService.selectEmployeeInfo(code,status,name,user.getDistrictId(),pageNum,pageSize);
+            if(code==null||code==""){
+                code = user.getDistrictId();
+            }
+            PageInfo pageInfo= employeeService.selectEmployeeInfo(code,status,name,pageNum,pageSize);
             jsonObject.put("employee",pageInfo);
         } catch (Exception e) {
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
         return JsonObjectBO.success("查询成功", jsonObject);
     }

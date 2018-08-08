@@ -226,7 +226,7 @@ public class DistrictServiceImp implements DistrictService{
     }
 
     /**
-     *
+     *查找父节点
      * @param list
      * @return
      */
@@ -364,6 +364,18 @@ public class DistrictServiceImp implements DistrictService{
     @Override
     public List<DistrictMenus> selectDistrictMakeDepartmentByArray(List<String> DistrictIds) {
         return null;
+    }
+
+    /**
+     * 返回区域名字
+     * @param districtId
+     * @return
+     */
+    @Override
+    public String selectByDistrictId(String districtId) {
+        District district = districtMapper.selectByDistrictId(districtId);
+        String districtName = district.getProvinceName()+"/"+district.getCityName()+"/"+district.getDistrictName();
+        return districtName;
     }
 
 
