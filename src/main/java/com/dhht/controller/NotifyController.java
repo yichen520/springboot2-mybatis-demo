@@ -38,14 +38,15 @@ public class NotifyController {
      */
     @RequestMapping(value = "/notifyTip")
     public JsonObjectBO newNotify(HttpServletRequest httpServletRequest){
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        JSONObject jsonObject = new JSONObject();
         try {
+            User user = (User)httpServletRequest.getSession().getAttribute("user");
+            JSONObject jsonObject = new JSONObject();
+
             int i =  notifyService.countNewNotify(user.getId());
             jsonObject.put("notifyCount",i);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception("获取通知异常！");
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
