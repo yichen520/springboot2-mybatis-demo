@@ -29,10 +29,13 @@ import java.util.List;
 public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
+
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+
     @Autowired
     private ExamineRecordMapper examineRecordMapper;
+
     @Autowired
     private ExamineRecordDetailMapper examineRecordDetailMapper;
 
