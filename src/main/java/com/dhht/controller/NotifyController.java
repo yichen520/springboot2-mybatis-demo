@@ -136,7 +136,7 @@ public class NotifyController {
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("获取通知数据失败！");
         }
     }
 
@@ -155,8 +155,8 @@ public class NotifyController {
             jsonObject.put("roleUser",roles);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            System.out.println(e.toString());
-            return JsonObjectBO.exception("获取角色失败！");
+            //System.out.println(e.toString());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
