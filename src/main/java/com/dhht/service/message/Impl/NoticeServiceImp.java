@@ -111,6 +111,7 @@ public class NoticeServiceImp implements NoticeService{
        notice.setSendUsername(oldDate.getSendUsername());
        notice.setSendRealname(oldDate.getSendRealname());
        notice.setCreateTime(oldDate.getCreateTime());
+       notice.setDistrictId(oldDate.getDistrictId());
        int i = noticeMapper.update(notice);
        if(i==1){
            return ResultUtil.isSuccess;

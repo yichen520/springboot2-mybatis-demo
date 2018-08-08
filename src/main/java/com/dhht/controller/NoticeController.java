@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.FileInfo;
 import com.dhht.model.Notice;
+import com.dhht.model.NoticeSimple;
 import com.dhht.model.User;
 import com.dhht.service.message.NoticeService;
 import com.dhht.service.tools.FileService;
@@ -124,10 +125,11 @@ public class NoticeController {
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
+        PageHelper.startPage(pageNum,pageSize);
 
         try {
-            PageHelper.startPage(pageNum,pageSize);
-            PageInfo<Notice> pageInfo = new PageInfo(noticeService.selectNoticeList(user.getDistrictId()));
+            List<NoticeSimple> notices = noticeService.selectNoticeList(user.getDistrictId());
+            PageInfo<NoticeSimple> pageInfo = new PageInfo(notices);
             jsonObject.put("notice",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){

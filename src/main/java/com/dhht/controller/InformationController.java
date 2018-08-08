@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,6 +99,22 @@ public class InformationController {
         }
     }
 
+    @Log("制作单位历史")
+    @RequestMapping(value = "/makeDepartmentHistory")
+    public JsonObjectBO makeDepartmentHistory(@RequestBody Map map){
+        String flag = (String)map.get("flag");
+        List<Makedepartment> result = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            result = makeDepartmentService.selectHistory(flag);
+            jsonObject.put("makeDepartment",result);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
     /**
      * 管理员查询从业人员
      * @param map
@@ -125,6 +142,27 @@ public class InformationController {
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功", jsonObject);
+    }
+
+    /**
+     * 从业人员查询历史记录
+     * @param map
+     * @return
+     */
+    @Log("查询历史记录")
+    @RequestMapping(value = "/employeeHistory")
+    public JsonObjectBO showHistory(@RequestBody Map map) {
+        String flag = (String) map.get("flag");
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            List<Employee> list = employeeService.seletHistory(flag);
+            jsonObject.put("history", list);
+            return JsonObjectBO.success("查询成功", jsonObject);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
     }
 
     /**
@@ -197,6 +235,24 @@ public class InformationController {
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e ){
             return JsonObjectBO.exception("获取使用单位详情失败！");
+        }
+    }
+
+    /**
+     * 查看使用单位历史
+     * @param map
+     * @return
+     */
+    @Log("查看历史")
+    @RequestMapping(value = "/useDepartmentHistory" , method = RequestMethod.POST)
+    public JsonObjectBO showMore(@RequestBody Map map){
+        String flag = (String)map.get("flag");
+        try {
+            JsonObjectBO jsonObjectBO = useDepartmentService.showHistory(flag);
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
