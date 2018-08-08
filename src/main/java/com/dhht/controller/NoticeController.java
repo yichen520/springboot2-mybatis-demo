@@ -42,15 +42,12 @@ public class NoticeController {
     @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
     public JsonObjectBO upload( @RequestParam("file") MultipartFile multipartFiles, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
-        List<FileInfo> fileList = new ArrayList<>();
         try {
                 FileInfo file = fileService.insertFile(httpServletRequest,multipartFiles);
                if(file==null){
                    return JsonObjectBO.error("文件上传失败");
-               }else {
-                   fileList.add(file);
                }
-           jsonObject.put("file",fileList);
+           jsonObject.put("file",file);
            return JsonObjectBO.success("文件上传成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.error("文件上传时发生错误");
@@ -71,7 +68,6 @@ public class NoticeController {
         }catch (Exception e){
             return JsonObjectBO.exception("添加失败");
         }
-
     }
 
     /**
@@ -82,19 +78,19 @@ public class NoticeController {
      */
     @RequestMapping(value = "/info")
     public JsonObjectBO info(HttpServletRequest httpServletRequest, @RequestBody Map map){
-       // User user = (User) httpServletRequest.getSession().getAttribute("user");
+         User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageNum = (Integer) map.get("pageNum");
         int pageSize = (Integer) map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum,pageSize);
 
         try{
-            List<Notice> list = noticeService.selectByUserName("12");
+            List<Notice> list = noticeService.selectByUserName(user.getUserName());
             PageInfo pageInfo = new PageInfo(list);
             jsonObject.put("message",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.error(e.getMessage());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
