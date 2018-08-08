@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
+import com.dhht.model.pojo.SealVo;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
@@ -210,6 +211,30 @@ public class InformationController {
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("查询成功");
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.toString());
+        }
+    }
+
+    /**
+     * 查看印章详情
+     *
+     * @param map
+     * @return
+     */
+    @Log("查看印章详情")
+    @RequestMapping(value = "sealDetail")
+    public JsonObjectBO selectDetailById(@RequestBody Map map) {
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String id = (String) map.get("id");
+        try {
+            SealVo sealVo = sealService.selectDetailById(id);
+            jsonObject.put("sealVo", sealVo);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setData(jsonObject);
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
