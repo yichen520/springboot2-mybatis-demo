@@ -26,6 +26,7 @@ public class UseDepartment {
     private String legalCountry;//国籍
     //    private String departmentAddress;//单位地址
     private String districtId;
+    private String districtName;
     private String address;//省市区详细地址
     private String telphone;//联系电话
     private String postalCode;//邮政编码

@@ -127,6 +127,7 @@ public class MakeDepartmentController {
     public JsonObjectBO insert(@RequestBody Makedepartment makedepartment){
         int result ;
         try {
+//           makedepartment.s
             result = makeDepartmentService.insert(makedepartment);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException d){

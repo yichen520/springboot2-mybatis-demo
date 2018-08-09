@@ -15,11 +15,12 @@
     <result column="version" jdbcType="INTEGER" property="version"/>
     <result column="flag" jdbcType="VARCHAR" property="flag"/>
     <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List">
     id,department_code, department_name, principal_name, principal_id, department_address,
-    department_address_detail, telphone, postal_code,is_delete,flag,updateTime,version
+    department_address_detail, telphone, postal_code,is_delete,flag,updateTime,version,operator
   </sql>
 
   <select id="selectAllRecordDepartment" resultMap="BaseResultMap">
@@ -37,9 +38,9 @@
 
 
   <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
-    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete,version,flag,updateTime)
+    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete,version,flag,updateTime,operator)
     VALUES (#{id,jdbcType=CHAR},#{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},#{principalName,jdbcType=VARCHAR},#{principalId,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR},
-    #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0, #{version,jdbcType=INTEGER},#{flag,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+    #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0, #{version,jdbcType=INTEGER},#{flag,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{operator,jdbcType=VARCHAR})
   </insert>
 
   <update id="updateById" parameterType="com.dhht.model.RecordDepartment">

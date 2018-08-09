@@ -37,4 +37,7 @@ public interface DistrictMapper {
     //查找指定Id的区域
     List<District> selectById(@Param("id") String id);
 
+    //根据区一级id获取全部区域属性
+    District selectByDistrictId(@Param("districtId") String districtId);
+
 }

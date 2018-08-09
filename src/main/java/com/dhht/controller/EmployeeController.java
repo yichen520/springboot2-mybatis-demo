@@ -50,9 +50,9 @@ public class EmployeeController {
     public JsonObjectBO selectAllEmployee(HttpServletRequest httpServletRequest) {
         //String id = (String)map.get("districtId");
         JSONObject jsonObject = new JSONObject();
-        //User user = (User) httpServletRequest.getSession().getAttribute("user");
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
         try {
-            List<DistrictMenus> list = districtService.selectMakeDepartmentMenus("330000");
+            List<DistrictMenus> list = districtService.selectMakeDepartmentMenus(user.getDistrictId());
             jsonObject.put("menus", list);
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {

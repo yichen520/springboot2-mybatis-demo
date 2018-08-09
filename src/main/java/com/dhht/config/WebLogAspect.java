@@ -86,7 +86,7 @@ public class WebLogAspect {
         }else {
             sysLog.setLogUser(users.getRealName());
         }
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         sysLog.setLogTime(dateStr);
         sysLog.setLogResult("发生异常");
         logDao.saveLog(sysLog);

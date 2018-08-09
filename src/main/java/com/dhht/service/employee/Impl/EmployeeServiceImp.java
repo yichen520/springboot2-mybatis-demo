@@ -330,11 +330,15 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public PageInfo selectEmployeeInfo(String code, int status, String name, String districtId,int pageNum,int pageSize) {
+    public PageInfo selectEmployeeInfo(String code, int status, String name, int pageNum,int pageSize) {
         List<Employee> employees = new ArrayList<>();
-        List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(districtId,"","01");
-        PageHelper.startPage(pageNum,pageSize);
-        if(code==null||code==""){
+
+        if(code.length()==6){
+            List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(code,"","01");
+            if(makedepartments.size()==0){
+                return new PageInfo(employees);
+            }
+            PageHelper.startPage(pageNum,pageSize);
             if(status==1){
                 employees = employeeDao.selectEmployeeInfo(name,0,makedepartments);
             }else if(status==2){
