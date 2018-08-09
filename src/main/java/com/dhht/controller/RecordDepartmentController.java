@@ -115,31 +115,31 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
-//    @RequestMapping(value = "/showhistory")
-//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-//        String flag = (String)map.get("flag");
-//        JSONObject jsonObject = new JSONObject();
-//        try{
-//                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
-//                jsonObject.put("recordDepartments",recordDepartments);
-//        }catch (Exception e ){
-//            return JsonObjectBO.exception(e.getMessage());
-//        }
-//        return JsonObjectBO.success("查询成功",jsonObject);
-//    }
-
     @RequestMapping(value = "/showhistory")
     public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
         String flag = (String)map.get("flag");
         JSONObject jsonObject = new JSONObject();
         try{
-            List<CommonHistoryVO> recordDepartments= recordDepartmentService.showHistory(flag);
-            jsonObject.put("recordDepartments",recordDepartments);
+                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
+                jsonObject.put("recordDepartments",recordDepartments);
         }catch (Exception e ){
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
+
+//    @RequestMapping(value = "/showhistory")
+//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+//        String flag = (String)map.get("flag");
+//        JSONObject jsonObject = new JSONObject();
+//        try{
+//            List<CommonHistoryVO> recordDepartments= recordDepartmentService.showHistory(flag);
+//            jsonObject.put("recordDepartments",recordDepartments);
+//        }catch (Exception e ){
+//            return JsonObjectBO.exception(e.getMessage());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
     /**
      * 添加备案单位
      * @param recordDepartment

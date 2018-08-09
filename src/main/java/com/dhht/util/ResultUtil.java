@@ -50,7 +50,7 @@ public class ResultUtil {
             case 13:
                 return JsonObjectBO.error("已经使用的社会统一信用编码");
             case 14:
-                return JsonObjectBO.error("请现在该区域下添加备案单位");
+                return JsonObjectBO.error("请先在该区域下添加备案单位");
             case 15:
                 return JsonObjectBO.error("法定专用章印章信息重复");
             case 16:

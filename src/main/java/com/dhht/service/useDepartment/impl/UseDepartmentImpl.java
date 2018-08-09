@@ -190,7 +190,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     @Override
     public JsonObjectBO showHistory(String flag) {
-        List<UseDepartment> list = useDepartmentDao.selectByFlag(flag);
+        List<UseDepartment> list =setDistrictName(useDepartmentDao.selectByFlag(flag));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("useDepartment",list);
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -217,6 +217,21 @@ public class UseDepartmentImpl implements UseDepartmentService {
     public List<UseDepartment> selectUseDepartment(String useDepartmentName) {
         List<UseDepartment> useDepartment = useDepartmentDao.selectByName(useDepartmentName);
         return useDepartment;
+    }
+
+    /**
+     * 设置区域名字
+     * @param list
+     * @return
+     */
+    public List<UseDepartment> setDistrictName(List<UseDepartment> list){
+        for(UseDepartment useDepartment:list){
+            if(useDepartment.getDistrictId()!=null){
+                String districtName = districtService.selectByDistrictId(useDepartment.getDistrictId());
+                useDepartment.setDistrictName(districtName);
+            }
+        }
+        return list;
     }
     
 
