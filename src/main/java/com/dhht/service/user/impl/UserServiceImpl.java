@@ -64,35 +64,30 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 添加用户
-     *
-     * @param user
+     * 增加用户
+     * @param telphone
+     * @param roleId
+     * @param realName
+     * @param districtId
      * @return
      */
-
-    public int insert(User user) {
-        if(user.getRoleId().equals("CYRY")) {
-            User user1 = userDao.findByUserName(user.getUserName());
-            if (user1 != null) {
-                return ResultUtil.isHave;                  //该用户已存在
-            }
-        }else{
-            User user2 = userDao.findByTelphone(user.getTelphone());
-            if(user2!=null){
-                return ResultUtil.isHave;                   //该用户已存在
-            }
+    public int insert(String telphone,String roleId,String realName,String districtId){
+        String userName = roleId+telphone;
+        if(findByUserName(userName)!=null){
+            return ResultUtil.isHave;
         }
+        User user = new User();
         user.setId(UUIDUtil.generate());
-//        user.setUserName("GLY"+user.getTelphone());
         String code = createRandomVcode();
         String password = MD5Util.toMd5(code);
+        user.setUserName(userName);
+        user.setRoleId(roleId);
         user.setPassword(password);
-         // user.setRoleId("GLY");
         Integer a = userDao.addUser(user);
         ArrayList<String> params = new ArrayList<String>();
         params.add(user.getUserName());
         params.add(code);
-        Boolean b = smsSendService.sendSingleMsgByTemplate(user.getTelphone(),userCode,params);
+        Boolean b = smsSendService.sendSingleMsgByTemplate(telphone,userCode,params);
         if(b){
             return ResultUtil.isSend;
         }else if(!b){
@@ -107,67 +102,57 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
     /**
      * 修改用户
-     *
-     * @param user
+     * @param oldTelPhone
+     * @param telPhone
+     * @param roleId
+     * @param realName
+     * @param districtId
      * @return
      */
     @Override
-    public int update(User user) {
-        User user1 = userDao.findById(user.getId());
-        ArrayList<String> params = new ArrayList<>();
-        if(user.getRoleId().equals("ZZDW")||user.getRoleId().equals("CYRY")){  //判断是否是制作单位或者从业人员
-            if(!user1.getUserName().equals(user.getUserName())){
-                User user2 = userDao.findByUserName(user.getUserName());
-                if(user2!=null){
-                    return ResultUtil.isHave;
+    public int update(String oldTelPhone,String telPhone,String roleId,String realName,String districtId){
+        try {
+            String oldUserName = roleId + oldTelPhone;
+            String userName = roleId + telPhone;
+            User userSave = findByUserName(oldUserName);
+            userSave.setDistrictId(districtId);
+            userSave.setRealName(realName);
+            userSave.setTelphone(telPhone);
+            userSave.setUserName(userName);
+            userSave.setRoleId(roleId);
+            ArrayList<String> params = new ArrayList<>();
+            if (!oldTelPhone.equals(telPhone)) {
+                User user = findByUserName(userName);
+                if (user != null) {
+                    return ResultUtil.isHave;//用户已经存在
                 }
-                Integer a = userDao.update(user);
-                if(a<0){
+
+                Integer a = userDao.update(userSave);
+                if (a < 0) {
                     return ResultUtil.isFail;
-                }else{
-                    params.add(user1.getUserName());
-                    params.add(user.getUserName());
-                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);
-                    return ResultUtil.isSuccess;
-                }
-            }else {
-                Integer a = userDao.update(user);
-                if(a<0){
-                    return ResultUtil.isFail;
-                }else{
-                    return ResultUtil.isSuccess;
-                }
-            }
-        }else{
-            if (!user1.getTelphone().equals(user.getTelphone())) {
-                User user3 = userDao.findByTelphone(user.getTelphone());
-                if (user3 != null) {
-                    return ResultUtil.isHave;              //该用户已经存在
-                }
-//                user.setUserName(user.getTelphone());
-                Integer a = userDao.update(user);
-                if (a <0) {
-                    return ResultUtil.isFail;             //修改失败
                 } else {
-                    params.add(user1.getUserName());
-                    params.add(user.getUserName());
-                    smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newUserName,params);
-                    return ResultUtil.isSuccess;             //修改成功
+                    params.add(oldUserName);
+                    params.add(userName);
+                    smsSendService.sendSingleMsgByTemplate(userSave.getTelphone(), newUserName, params);
+                    return ResultUtil.isSuccess;
                 }
+
             } else {
-                Integer a = userDao.update(user);
-                if (a <0) {
-                    return ResultUtil.isFail;             //修改失败
+                Integer a = userDao.update(userSave);
+                if (a < 0) {
+                    return ResultUtil.isFail;
                 } else {
-
-                    return ResultUtil.isSuccess;          //修改成功
+                    return ResultUtil.isSuccess;
                 }
             }
+         }catch (Exception e){
+            return ResultUtil.isException;
         }
-
     }
+
 
 
 
@@ -260,14 +245,14 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据电话删除用户
-     *
-     * @param userName
+     * 根据userName删除
+     * @param roleId
+     * @param telphone
      * @return
      */
     @Override
-    public int deleteByUserName(String userName) {
-        int i= userDao.deleteByUserName(userName);
+    public int deleteByUserName(String roleId, String telphone) {
+        int i= userDao.deleteByUserName(roleId+telphone);
         return i;
     }
 
@@ -276,6 +261,10 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUserName(userName);
     }
 
+    @Override
+    public User findById(String Id){
+        return userDao.findById(Id);
+    }
 
     @Override
     public int delete(String id) {

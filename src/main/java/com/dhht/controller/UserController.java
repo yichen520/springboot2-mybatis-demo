@@ -57,10 +57,8 @@ public class UserController {
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO add(@RequestBody User user){
 
-        user.setRoleId("GLY");
-        user.setUserName("GLY"+user.getTelphone());
         try {
-            return ResultUtil.getResult(userService.insert(user));
+            return ResultUtil.getResult(userService.insert(user.getTelphone(),"GLY",user.getRealName(),user.getDistrictId()));
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
@@ -76,10 +74,9 @@ public class UserController {
     @Log("修改用户")
     @RequestMapping(value ="/update",method = RequestMethod.POST)
     public JsonObjectBO update(@RequestBody User user){
-        user.setUserName("GLY"+user.getTelphone());
-        user.setRoleId("GLY");
+        User user1 = userService.findById(user.getId());
         try {
-            return ResultUtil.getResult(userService.update(user));
+            return ResultUtil.getResult(userService.update(user1.getTelphone(),user.getTelphone(),"GLY",user.getRealName(),user.getDistrictId()));
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());

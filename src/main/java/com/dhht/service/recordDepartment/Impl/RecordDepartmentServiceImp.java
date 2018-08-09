@@ -128,7 +128,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         recordDepartment.setFlag(UUIDUtil.generate10());
         recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
-        int u = userService.insert(user);
+        int u = userService.insert(user.getTelphone(),user.getRoleId(),user.getRealName(),user.getDistrictId());
         if(r==1&&u==ResultUtil.isSend){
             return ResultUtil.isSuccess;
         }else if(u==ResultUtil.isHave){
@@ -170,7 +170,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 }
             }
             int r = recordDepartmentMapper.deleteById(id);
-            int u = userService.deleteByUserName("BADW"+recordDepartment.getTelphone());
+            int u = userService.deleteByUserName("BADW",recordDepartment.getTelphone());
             if (r + u == 2) {
                 return ResultUtil.isSuccess;
             }else {
@@ -191,6 +191,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public int updateById(RecordDepartment recordDepartment) {
         try {
+            RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
+            int u = userService.update(oldDate.getTelphone(),recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress()); // 自己看
             int d = recordDepartmentMapper.deleteById(recordDepartment.getId());
             if(d==0){
                 return ResultUtil.isError;
@@ -198,14 +200,15 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             if(recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
                 return ResultUtil.isHave;
             }
-            int u = userService.update(setUserByType(recordDepartment, 2));
+
+
             recordDepartmentMapper.deleteById(recordDepartment.getId());
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
             recordDepartment.setIsDelete(true);
             recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
             recordDepartment.setId(UUIDUtil.generate());
             int r = recordDepartmentMapper.insert(recordDepartment);
-            if (r + u == 3) {
+            if (r==1&&u==ResultUtil.isSuccess) {
                 return ResultUtil.isSuccess;
             }else if(u==1){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
