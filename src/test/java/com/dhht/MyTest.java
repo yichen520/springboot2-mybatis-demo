@@ -11,20 +11,14 @@ import com.dhht.service.make.MakeDepartmentCuontService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.message.NoticeService;
 import com.dhht.service.message.NotifyService;
-import com.dhht.service.police.PoliceService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.RoleService;
 import com.dhht.service.user.UserService;
-import com.dhht.util.StringUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,8 +32,6 @@ public class MyTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PoliceService policeService;
     @Autowired
     private RecordPoliceMapper recordPoliceMapper;
 
@@ -69,7 +61,8 @@ public class MyTest {
 
     @Test
     public void Test() {
-            System.out.println("hello world");
+       String str =  districtService.selectByDistrictId("330402");
+       System.out.println(str);
     }
 //
 //    @Test
