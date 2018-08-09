@@ -129,9 +129,10 @@ public class NotifyController {
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
-        PageHelper.startPage(pageNum, pageSize);
+
 
         try {
+            PageHelper.startPage(pageNum, pageSize);
             List<Notify> list = notifyService.selectNotifyBySendUser(user.getUserName());
             PageInfo<Notify> pageInfo = new PageInfo<>(list);
             jsonObject.put("notify",pageInfo);

@@ -218,11 +218,12 @@ public class SealServiceImpl implements SealService {
     @Override
     public PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
 
-        PageHelper.startPage(pageNum, pageSize);
+
         String telphone = user.getTelphone();
         if(telphone==null){
             return null;
         }
+        PageHelper.startPage(pageNum, pageSize);
         Employee employee = employeeService.selectByPhone(telphone);
 //        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(employee.getEmployeeDepartmentCode());
 //        String makeDepartmentCode = makedepartment.getDepartmentCode();
@@ -644,7 +645,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public PageInfo<Seal> seal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
 
-        PageHelper.startPage(pageNum, pageSize);
+
         String id = user.getDistrictId();
         String districtIds[] = StringUtil.DistrictUtil(id);
         String districtId = null;
@@ -667,6 +668,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsRecord(true);
             seal.setIsMake(true);
 //            seal.setRecordDepartmentCode(recordCode);
+            PageHelper.startPage(pageNum, pageSize);
             list = sealDao.selectByCodeAndName(seal);
         } else if (status.equals("02")) {
             seal.setIsRecord(true);
