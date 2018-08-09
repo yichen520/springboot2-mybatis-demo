@@ -11,7 +11,6 @@ import com.dhht.service.make.MakeDepartmentCuontService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.message.NoticeService;
 import com.dhht.service.message.NotifyService;
-import com.dhht.service.police.PoliceService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.RoleService;
 import com.dhht.service.user.UserService;
@@ -38,8 +37,7 @@ public class MyTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PoliceService policeService;
+
     @Autowired
     private RecordPoliceMapper recordPoliceMapper;
 
