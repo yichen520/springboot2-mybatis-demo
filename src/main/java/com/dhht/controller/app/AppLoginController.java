@@ -9,6 +9,7 @@ import com.dhht.service.user.UserLoginService;
 import jdk.nashorn.internal.ir.Terminal;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,9 @@ public class AppLoginController {
     @Autowired
     private UserLoginService userLoginService;
 
+    @Autowired
+    private StringRedisTemplate template;
+
     @Log("app登录")
    @RequestMapping(value ="app/login", method = RequestMethod.POST)
    public JsonObjectBO login(HttpServletRequest request,@RequestBody UserDomain userDomain){
@@ -41,7 +45,8 @@ public class AppLoginController {
     @RequestMapping(value ="app/logout")
     public JsonObjectBO loginout(HttpServletRequest request){
         try {
-            request.getSession().invalidate();
+            String token = request.getHeader("token");
+            template.delete(token);
             return JsonObjectBO.success("退出登录成功",null);
         } catch (Exception e) {
             return JsonObjectBO.exception(e.toString());

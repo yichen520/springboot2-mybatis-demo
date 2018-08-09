@@ -9,7 +9,6 @@ import com.dhht.service.user.RoleService;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -38,14 +38,15 @@ public class NotifyController {
      */
     @RequestMapping(value = "/notifyTip")
     public JsonObjectBO newNotify(HttpServletRequest httpServletRequest){
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        JSONObject jsonObject = new JSONObject();
         try {
+            User user = (User)httpServletRequest.getSession().getAttribute("user");
+            JSONObject jsonObject = new JSONObject();
+
             int i =  notifyService.countNewNotify(user.getId());
             jsonObject.put("notifyCount",i);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception("获取通知异常！");
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -60,16 +61,14 @@ public class NotifyController {
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
-
-        PageHelper.startPage(pageNum,pageSize);
         JSONObject jsonObject = new JSONObject();
 
         try {
-            PageInfo<Notify> pageInfo = new PageInfo<>(notifyService.selectNotifyDetail(user.getId()));
+            PageInfo<Notify> pageInfo =notifyService.selectNotifyDetail(user.getId(),pageNum,pageSize);
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception("获取详情发送异常");
+            return JsonObjectBO.exception(e.toString());
         }
     }
 
@@ -80,7 +79,7 @@ public class NotifyController {
      * @return
      */
     @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
-    public JsonObjectBO upload(@RequestParam("file") MultipartFile multipartFiles, javax.servlet.http.HttpServletRequest httpServletRequest){
+    public JsonObjectBO upload(@RequestParam("file") MultipartFile multipartFiles, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         try {
             FileInfo file = fileService.insertFile(httpServletRequest,multipartFiles);
@@ -130,14 +129,15 @@ public class NotifyController {
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
+        PageHelper.startPage(pageNum, pageSize);
 
         try {
-            PageHelper.startPage(pageNum, pageSize);
-            PageInfo<Notify> pageInfo = new PageInfo<>(notifyService.selectNotifyBySendUser(user.getUserName()));
+            List<Notify> list = notifyService.selectNotifyBySendUser(user.getUserName());
+            PageInfo<Notify> pageInfo = new PageInfo<>(list);
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("获取通知数据失败！");
         }
     }
 
@@ -148,15 +148,16 @@ public class NotifyController {
      */
     @RequestMapping(value = "/roleUser")
     public JsonObjectBO getRoleUser(HttpServletRequest httpServletRequest){
-       // User user = (User)httpServletRequest.getSession().getAttribute("user");
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
 
         try{
-            List<Role> roles = roleService.getRoleUser("330000");
+            List<Role> roles = roleService.getRoleUser(user.getDistrictId());
             jsonObject.put("roleUser",roles);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception("获取角色失败！");
+            //System.out.println(e.toString());
+            return JsonObjectBO.exception(e.toString());
         }
     }
 

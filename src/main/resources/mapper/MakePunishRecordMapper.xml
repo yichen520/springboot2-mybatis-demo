@@ -83,6 +83,7 @@
     <if test="makedepartmentName != ''" >
       and make_department_name like '%${makedepartmentName}%'
     </if>
+    order by punish_time DESC
   </select>
 
   <insert id="insert" parameterType="com.dhht.model.MakePunishRecord" >

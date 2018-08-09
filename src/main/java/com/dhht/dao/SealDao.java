@@ -5,6 +5,7 @@ import com.dhht.model.*;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -36,6 +37,10 @@ public interface SealDao {
     int insertSealGetperson(SealGetPerson sealGetPerson);
 
     List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode);
+
+    List<SealMaterial> selectSealMaterialByCode(@Param("sealCode") String sealCode ,@Param("types") List<String> types);
+
+    SealOperationRecord selectOperationRecordByCode(@Param("sealCode")  String sealCode);
 
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("sealTypeCode")String sealTypeCode,@Param("startTime") String startTime,@Param("endTime") String endTime);

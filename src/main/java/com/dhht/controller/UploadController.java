@@ -7,7 +7,9 @@ import com.dhht.annotation.Log;
 import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.FileInfo;
+import com.dhht.model.FileInfos;
 import com.dhht.model.User;
+import com.dhht.service.tools.FileInfoService;
 import com.dhht.service.tools.FileService;
 import com.dhht.util.UUIDUtil;
 import org.slf4j.Logger;
@@ -33,6 +35,8 @@ public class UploadController {
     private FileService fileService;
     @Value("FilePath")
     private String filePath;
+    @Autowired
+    private FileInfoService localStoreFileService;
 
 
 
@@ -89,7 +93,6 @@ public class UploadController {
             return JsonObjectBO.exception("上传文件失败");
         }
     }
-    //上传到本地，
     @Log("上传到本地")
     @RequestMapping(value="/uploadLocal",produces="application/json;charset=UTF-8")
     public JsonObjectBO uploadLocal(HttpServletRequest request,@RequestParam("file") MultipartFile file) {
@@ -98,37 +101,14 @@ public class UploadController {
         }
         try {
             String fileName = file.getOriginalFilename();
-            String path =filePath  + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "_" + fileName;
-//            String path =ClassUtils.getDefaultClassLoader().getResource("").getPath();
-            // String filePath = request.getServletContext().getRealPath("upload/");
-//            FileUtil.uploadFile(file.getBytes(), path, fileName);
-
-            FileInfo file1=new FileInfo();
-            file1.setId(UUIDUtil.generate());
-            file1.setCreateTime(new Date(System.currentTimeMillis()));
-            file1.setFileName(path);
-            file1.setFilePath(fileName);
+            String fileName1 = fileName.substring(0,fileName.lastIndexOf("."));
+            String suffix = fileName.substring(fileName.lastIndexOf(".") );
             User user = CurrentUser.currentUser(request.getSession());
-            file1.setOperationRecordId(user.getRealName());
+            FileInfos fileinfo=  localStoreFileService.storeFile(file.getBytes(),fileName1,suffix,user.getRealName());
+            JSONObject jsonObject =new JSONObject();
+            jsonObject.put("file",fileinfo);
+            return JsonObjectBO.success("上传文件成功",jsonObject);
 
-            File dest = new File(path);
-            //判断文件是否已经存在
-            if (dest.exists()) {
-                return JsonObjectBO.error("文件已存在");
-            }
-            //判断文件父目录是否存在
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdir();
-            }
-            file.transferTo(dest);
-
-            if(fileService.insertLocal(file1)){
-                JSONObject jsonObject =new JSONObject();
-                jsonObject.put("file",fileName);
-                return JsonObjectBO.success("上传文件成功",jsonObject);
-            }else {
-                return JsonObjectBO.exception("上传文件失败");
-            }
         } catch (Exception e) {
             logger.error("upload file failed",e);
             logger.error(e.getMessage(), e);

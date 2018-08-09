@@ -1,7 +1,7 @@
 package com.dhht.service.employee.Impl;
 
+import com.dhht.annotation.Sync;
 import com.dhht.dao.EmployeeDao;
-import com.dhht.dao.UserDao;
 import com.dhht.model.*;
 
 import com.dhht.service.employee.EmployeeService;
@@ -9,9 +9,12 @@ import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.UserService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +73,7 @@ public class EmployeeServiceImp implements EmployeeService {
             int u = userService.insert(setUserByType(employee, 1));
             int e = employeeDao.insert(employee);
             if (u==ResultUtil.isSend&&e==1) {
+                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -77,7 +81,6 @@ public class EmployeeServiceImp implements EmployeeService {
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isFail;
-
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -118,6 +121,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setId(UUIDUtil.generate());
             int e = employeeDao.insert(employee);
             if (u == 2 && e == 1) {
+                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -154,6 +158,7 @@ public class EmployeeServiceImp implements EmployeeService {
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
            if(e==1&&d==1){
+               SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            }else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -164,6 +169,7 @@ public class EmployeeServiceImp implements EmployeeService {
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
            if (u == ResultUtil.isSuccess && e == 1&&d==1) {
+               SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            } else {
                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -213,7 +219,7 @@ public class EmployeeServiceImp implements EmployeeService {
         employee.setVersionTime(DateUtil.getCurrentTime());
         employee.setId(UUIDUtil.generate());
         return employeeDao.insert(employee);
-        }
+    }
 
     /**
      * 获取当前单位下所有版本的员工
@@ -321,10 +327,15 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public List selectEmployeeInfo(String code, int status, String name,String districtId) {
+    public PageInfo selectEmployeeInfo(String code, int status, String name, int pageNum,int pageSize) {
         List<Employee> employees = new ArrayList<>();
-        List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(districtId,"","01");
-        if(code==null||code==""){
+
+        if(code.length()==6){
+            List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(code,"","01");
+            if(makedepartments.size()==0){
+                return new PageInfo(employees);
+            }
+            PageHelper.startPage(pageNum,pageSize);
             if(status==1){
                 employees = employeeDao.selectEmployeeInfo(name,0,makedepartments);
             }else if(status==2){
@@ -341,7 +352,8 @@ public class EmployeeServiceImp implements EmployeeService {
                 employees = employeeDao.selectAllByDepartmentCode(code);
             }
         }
-        return employees;
+        PageInfo pageInfo = new PageInfo(employees);
+        return pageInfo;
     }
 
 
@@ -365,14 +377,14 @@ public class EmployeeServiceImp implements EmployeeService {
             //修改用户
             case 2:
                 Employee oldDate = employeeDao.selectById(employee.getId());
-                user = userService.findByTelphone(oldDate.getTelphone());
+                user = userService.findByUserName("YG"+oldDate.getTelphone());
                 user.setUserName("YG"+employee.getTelphone());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
                 break;
             case 3:
-                user = userService.findByTelphone(employee.getTelphone());
+                user = userService.findByUserName("YG"+employee.getTelphone());
         }
         return user;
     }
@@ -388,4 +400,21 @@ public class EmployeeServiceImp implements EmployeeService {
         }
         return false;
     }
+
+
+    /**
+     * 数据同步
+     * @param object
+     * @param dataType
+     * @param operateType
+     * @return
+     */
+    @Sync()
+     public SyncEntity getSyncDate(Object object,int dataType,int operateType){
+        SyncEntity syncEntity = new SyncEntity();
+        syncEntity.setObject(object);
+        syncEntity.setDataType(dataType);
+        syncEntity.setOperateType(operateType);
+        return syncEntity;
+     }
 }

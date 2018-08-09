@@ -87,7 +87,7 @@ public class AutoUploadTempFileToFtp implements InitializingBean{
 				}
 			}
 		});
-		//autoUploadThread.start();
+		autoUploadThread.start();
     }
 
 	

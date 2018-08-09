@@ -11,7 +11,7 @@
     <result column="is_recall" property="isRecall" jdbcType="BIT" />
     <result column="recall_time" property="recallTime" jdbcType="TIMESTAMP" />
     <result column="district_id" property="districtId" jdbcType="CHAR" />
-    <result column="notify_file_url" property="notifyFileUrl" jdbcType="VARCHAR" />
+    <result column="notify_file_url" property="notifyFileUrls" jdbcType="VARCHAR" />
     <result column="recall_result" property="recallResult" jdbcType="VARCHAR" />
   </resultMap>
 
@@ -23,12 +23,13 @@
   <select id="selectNotifyDetail" parameterType="java.util.List" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List"/> FROM notify WHERE id IN
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-         #{item.notifyId}
+         #{item.nofityId}
     </foreach>
+    ORDER BY create_time DESC
   </select>
 
   <select id="selectNotifyBySendUser" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/> FROM notify WHERE send_username = #{userName,jdbcType=VARCHAR}
+    SELECT <include refid="Base_Column_List"/> FROM notify WHERE send_username = #{userName,jdbcType=VARCHAR} ORDER BY create_time DESC
   </select>
 
   <delete id="deleteById" parameterType="java.lang.String" >
@@ -51,8 +52,8 @@
       notify_file_url, recall_result)
     values (#{id,jdbcType=CHAR}, #{sendUsername,jdbcType=VARCHAR}, #{sendRealname,jdbcType=VARCHAR}, 
       #{notifyTitle,jdbcType=VARCHAR}, #{notifyContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{isRecall,jdbcType=BIT}, #{recallTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR}, 
-      #{notifyFileUrl,jdbcType=VARCHAR}, #{recallResult,jdbcType=VARCHAR})
+      0, #{recallTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=CHAR},
+      #{notifyFileUrls,jdbcType=VARCHAR}, #{recallResult,jdbcType=VARCHAR})
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.Notify" >
@@ -65,7 +66,7 @@
       is_recall = #{isRecall,jdbcType=BIT},
       recall_time = #{recallTime,jdbcType=TIMESTAMP},
       district_id = #{districtId,jdbcType=CHAR},
-      notify_file_url = #{notifyFileUrl,jdbcType=VARCHAR},
+      notify_file_url = #{notifyFileUrls,jdbcType=VARCHAR},
       recall_result = #{recallResult,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>

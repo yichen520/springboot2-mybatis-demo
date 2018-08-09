@@ -46,6 +46,7 @@
     <if test="ip != null" >
       and ip like '%${ip}%'
     </if>
+    ORDER BY log_time desc
   </select>
 
 </mapper>

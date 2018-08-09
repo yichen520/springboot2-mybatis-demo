@@ -58,7 +58,7 @@ public class FtpManager implements InitializingBean {
 				}
 			}
 		});
-		//ftpAutoConnectThread.start();
+		ftpAutoConnectThread.start();
 		
 	}
 

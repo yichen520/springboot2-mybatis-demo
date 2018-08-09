@@ -27,7 +27,7 @@ import java.util.Map;
  * 2018/7/2 create by fyc
  */
 @RestController
-@RequestMapping(value = "seal/makeDepartment")
+@RequestMapping(value = "make/makeDepartment")
 public class MakeDepartmentController {
 
     @Autowired
@@ -55,9 +55,10 @@ public class MakeDepartmentController {
         Integer pageSize = (Integer) map.get("pageSize");
 
         JSONObject jsonObject = new JSONObject();
+        PageHelper.startPage(pageNum, pageSize);
         List<MakeDepartmentSimple> list = new ArrayList<>();
         try {
-            PageHelper.startPage(pageNum, pageSize);
+
             if(districtId==""||districtId==null) {
                  list = makeDepartmentService.selectInfo(user.getDistrictId(),name,status);
                  PageInfo<MakeDepartmentSimple> result = new PageInfo<>(list);

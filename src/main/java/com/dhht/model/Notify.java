@@ -31,7 +31,7 @@ public class Notify {
 
     private String notifyReadCount;
 
-    private List<UserSimple> notifyUser;
+    private List<String> notifyUser;
 
     private List<FileInfo> files;
 

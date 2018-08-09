@@ -52,12 +52,16 @@ public interface UserDao {
     int updateUnLock(@Param("id") String id);
 
     int updateErrorTimes(@Param("username") String username);
+
     int updateErrorTimesZero(@Param("username") String username);
 
    int updateUser(User users);
 
    //根据电话删除用户
     int deleteByTelphone(String telphone);
+
+    //根据用户名删除用户
+    int deleteByUserName(@Param("userName") String userName);
 
     List<User> findAll();
 

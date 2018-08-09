@@ -77,6 +77,7 @@ public class UserController {
     @RequestMapping(value ="/update",method = RequestMethod.POST)
     public JsonObjectBO update(@RequestBody User user){
         user.setUserName("GLY"+user.getTelphone());
+        user.setRoleId("GLY");
         try {
             return ResultUtil.getResult(userService.update(user));
         }catch (Exception e) {

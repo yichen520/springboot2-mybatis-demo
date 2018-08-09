@@ -75,7 +75,6 @@ public class ResourceController {
     }
 
    @Log("添加资源")
-   @Sync
     @RequestMapping(value = "/add")
     public JsonObjectBO insertResourcr(@RequestBody Resource resource){
         resource.setId(UUIDUtil.generate());

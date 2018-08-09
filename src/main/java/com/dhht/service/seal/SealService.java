@@ -1,6 +1,7 @@
 package com.dhht.service.seal;
 
 import com.dhht.model.*;
+import com.dhht.model.pojo.SealVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface SealService {
    int sealRecord(Seal seal, User user, String districtId, String operatorTelphone, String operatorName, String operatorCertificateCode, String operatorCertificateType, String operatorPhoto,String PositiveIdCardScanner, String ReverseIdCardScanner, String proxy);
 
    //印章主界面
-   PageInfo<Seal> sealInfo( String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
+   PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
    //印模上传
    int sealUpload(User user ,String id, String electronicSealURL, String sealScannerURL);
@@ -24,7 +25,7 @@ public interface SealService {
    int sealPersonal(String id,User user);
 
    //印章交付
-   boolean deliver(User user,String id,SealGetPerson sealGetPerson,String proxy);
+   boolean deliver(User user,String id,SealGetPerson sealGetPerson,String proxy,String operatorPhoto, String PositiveIdCardScanner, String ReverseIdCardScanner);
 
    //印章挂失
    int loss (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord,String localDistrictId);
@@ -33,7 +34,9 @@ public interface SealService {
    int logout (User user,String id, String operatorPhoto,  String proxy ,String businessScanner,SealOperationRecord sealOperationRecord);
 
    //详情查看
-    Seal selectDetailById(String id);
+   SealVo selectDetailById(String id);
+
+   PageInfo<Seal> seal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
 
 

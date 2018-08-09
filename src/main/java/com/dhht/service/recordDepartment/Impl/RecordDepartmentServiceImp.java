@@ -1,15 +1,16 @@
 package com.dhht.service.recordDepartment.Impl;
 
-import com.dhht.common.JsonObjectBO;
+import com.dhht.annotation.Sync;
 import com.dhht.dao.*;
 import com.dhht.model.*;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
-import com.dhht.service.tools.SmsSendService;
-import com.dhht.service.user.UserPasswordService;
 import com.dhht.service.user.UserService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +19,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
-import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 
 /**
  * 2018/6/26 create by fyc
@@ -31,14 +29,13 @@ import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
-    @Autowired
-    private PunishLogMapper punishLogMapper;
-    @Autowired
-    private OfficeCheckMapper officeCheckMapper;
+
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+
     @Autowired
     private ExamineRecordMapper examineRecordMapper;
+
     @Autowired
     private ExamineRecordDetailMapper examineRecordDetailMapper;
 
@@ -168,7 +165,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 }
             }
             int r = recordDepartmentMapper.deleteById(id);
-            int u = userService.deleteByTelphone(recordDepartment.getTelphone());
+            int u = userService.deleteByUserName("BADW"+recordDepartment.getTelphone());
             if (r + u == 2) {
                 return ResultUtil.isSuccess;
             }else {
@@ -255,60 +252,104 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                  //修改user
                 case 2:
                     RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-                    user = userService.findByTelphone(oldDate.getTelphone());
+                    user = userService.findByUserName("BADW"+oldDate.getTelphone());
                     user.setUserName("BADW"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
-                    //user.setRoleId("BADW");
+                    user.setRoleId("BADW");
                     user.setTelphone(recordDepartment.getTelphone());
                     user.setDistrictId(recordDepartment.getDepartmentAddress());
                     break;
                  //删除user
                 case 3:
-                    user = userService.findByTelphone(recordDepartment.getTelphone());
+                    user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
                 default:
                     break;
             }
             return user;
         }
 
+    /**
+     * 历史记录查询
+      * @param flag
+     * @return
+     */
     @Override
     public List<RecordDepartment> showMore(String flag) {
         return recordDepartmentMapper.selectByFlag(flag);
     }
 
+    /**
+     * 根据电话查询备案单位
+     * @param phone
+     * @return
+     */
     @Override
     public RecordDepartment selectByPhone(String phone) {
        return recordDepartmentMapper.selectByPhone(phone);
     }
 
-
-
+    /**
+     * 惩罚查询
+     * @param makedepartmentName
+     * @param startTime
+     * @param endTime
+     * @param districtId
+     * @return
+     */
     @Override
     public List<ExamineRecord> findPunish(String makedepartmentName, String startTime, String endTime, String districtId) {
         return examineRecordMapper.findPunish(makedepartmentName,startTime,endTime,districtId);
     }
 
+    /**
+     * 添加惩罚
+     * @param user
+     * @param examineRecord
+     * @return
+     */
     @Override
     public boolean insertPunish(User user, ExamineRecord examineRecord) {
-            String id = UUIDUtil.generate();
-            examineRecord.setId(id);
-            examineRecord.setExaminerName(user.getUserName());
-            RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(user.getTelphone());
-            examineRecord.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
-            examineRecord.setRecordDepartmentName(recordDepartment.getDepartmentName());
-            examineRecord.setExamineTime(DateUtil.getCurrentTime());
-            examineRecord.setDistrictId(user.getDistrictId());
-            examineRecordMapper.insertSelective(examineRecord);
-            List<ExamineRecordDetail> punishLogs = examineRecord.getExamineRecordDetails();
-            if(punishLogs!=null){
-                for (ExamineRecordDetail examineRecordDetail:punishLogs){
-                    examineRecordDetail.setId(UUIDUtil.generate());
-                    examineRecordDetail.setExamineRecordId(examineRecord.getId());
-                    examineRecordDetailMapper.insertSelective(examineRecordDetail);
-                }
-            }
-
+        ExamineRecord employeePunishRecord =  ((RecordDepartmentServiceImp) AopContext.currentProxy()).addExamine(user,examineRecord);
+        if ( employeePunishRecord==null){
+            return false;
+        }else {
             return true;
         }
+    }
+
+
+    /**
+     * 检查同步到内网
+     * @param user
+     * @param examineRecord
+     * @return
+     */
+    @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
+    public ExamineRecord addExamine(User user, ExamineRecord examineRecord){
+        String id = UUIDUtil.generate();
+        examineRecord.setId(id);
+        examineRecord.setExaminerName(user.getUserName());
+        RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(user.getTelphone());
+        examineRecord.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
+        examineRecord.setRecordDepartmentName(recordDepartment.getDepartmentName());
+        examineRecord.setExamineTime(DateUtil.getCurrentTime());
+        examineRecord.setDistrictId(user.getDistrictId());
+        examineRecordMapper.insertSelective(examineRecord);
+        List<ExamineRecordDetail> punishLogs = examineRecord.getExamineRecordDetails();
+        boolean flag = false;
+        if(punishLogs!=null){
+            for (ExamineRecordDetail examineRecordDetail:punishLogs){
+                examineRecordDetail.setId(UUIDUtil.generate());
+                examineRecordDetail.setExamineRecordId(examineRecord.getId());
+                examineRecordDetailMapper.insertSelective(examineRecordDetail);
+                flag = true;
+            }
+        }
+        if (flag){
+            return examineRecord;
+        }else {
+            return null;
+        }
+    }
 
 }

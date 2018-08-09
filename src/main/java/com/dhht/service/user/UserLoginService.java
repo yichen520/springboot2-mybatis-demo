@@ -33,6 +33,8 @@ public interface UserLoginService {
 
     boolean insertlog(HttpServletRequest request,Map map);
 
+    JsonObjectBO checkAPPPhoneAndIDCard(SMSCode smsCode);
+
 }
 
 

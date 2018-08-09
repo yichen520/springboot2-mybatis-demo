@@ -1,17 +1,23 @@
 package com.dhht.service.useDepartment.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Sync;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.Makedepartment;
+import com.dhht.model.SyncEntity;
 import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
+import com.dhht.util.DateUtil;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +59,15 @@ public class UseDepartmentImpl implements UseDepartmentService {
         useDepartment.setFlag(Id);
         useDepartment.setVersion(0);
         useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
-        useDepartmentDao.insert(useDepartment);
-        return JsonObjectBO.success("添加成功",null);
+        int useDepartmentResult = useDepartmentDao.insert(useDepartment);
+        if(useDepartmentResult<0){
+            return JsonObjectBO.error("添加失败");
+        }else{
+            SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.SAVE);
+            return JsonObjectBO.success("添加成功",null);
+        }
+
+
 
 
     }
@@ -73,12 +86,13 @@ public class UseDepartmentImpl implements UseDepartmentService {
             } else {
                 useDepartment.setVersion(useDepartment.getVersion() + 1);
                 useDepartment.setIsDelete(false);
-                useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
+                useDepartment.setUpdateTime(DateUtil.getCurrentTime());
                 useDepartment.setId(UUIDUtil.generate());
                 useDepartment.setFlag(useDepartment1.getFlag());
                 useDepartment.setDepartmentStatus(useDepartment1.getDepartmentStatus());
                 int r = useDepartmentDao.insert(useDepartment);
                 if (r == 1) {
+                    SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
                     return JsonObjectBO.success("修改成功", null);
                 } else {
                     return JsonObjectBO.error("修改失败");
@@ -175,6 +189,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         String id = useDepartment.getId();
         int a = useDepartmentDao.delete(id);
         if(a>0) {
+            SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.DELETE);
             return JsonObjectBO.success("删除成功", null);
         }else{
             return JsonObjectBO.error("删除失败");
@@ -216,5 +231,20 @@ public class UseDepartmentImpl implements UseDepartmentService {
         return useDepartment;
     }
 
+    /**
+     * 数据同步
+     * @param object
+     * @param dataType
+     * @param operateType
+     * @return
+     */
+    @Sync()
+    public SyncEntity getSyncDate(Object object, int dataType, int operateType){
+        SyncEntity syncEntity = new SyncEntity();
+        syncEntity.setObject(object);
+        syncEntity.setDataType(dataType);
+        syncEntity.setOperateType(operateType);
+        return syncEntity;
+    }
 
 }
