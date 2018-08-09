@@ -30,6 +30,11 @@ public class NoticeServiceImp implements NoticeService{
     private FileService fileService;
     @Value("${notice.pageNum}")
     private Integer pageNum;
+    @Value("${trackerPort}")
+    private String trackerPort;
+
+    @Value("${trackerServer}")
+    private String trackerServer;
 
     /**
      * 新增公告
@@ -61,12 +66,12 @@ public class NoticeServiceImp implements NoticeService{
     public List<Notice> selectByUserName(String userName) {
         List<Notice> noticeList = noticeMapper.selectByUserName(userName);
         for (Notice notice:noticeList) {
-            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
-            List<FileInfo> fileList = new ArrayList<>();
-            for(int i = 0;i<paths.length;i++){
-                fileList.add(fileService.selectByPath(paths[i]));
+            if (notice.getNoticeFileUrl()!=null) {
+                List<FileInfo> fileList = selectFileByPath(notice.getNoticeFileUrl());
+                if (fileList.size() > 0) {
+                    notice.setFiles(fileList);
+                }
             }
-            notice.setFiles(fileList);
         }
         return noticeList;
     }
@@ -84,8 +89,8 @@ public class NoticeServiceImp implements NoticeService{
         if(n!=1){
             return ResultUtil.isFail;
         }
-        if(notice.getNoticeFileUrls()!=null) {
-            String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrls());
+        if(notice.getNoticeFileUrl()!=null) {
+            String[] paths = StringUtil.toStringArray(notice.getNoticeFileUrl());
             if (deleteFile(paths) == ResultUtil.isFail) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isFail;
@@ -102,13 +107,17 @@ public class NoticeServiceImp implements NoticeService{
      */
     @Override
     public int update(Notice notice) {
+       Notice oldDate = noticeMapper.selectById(notice.getId());
+       notice.setSendUsername(oldDate.getSendUsername());
+       notice.setSendRealname(oldDate.getSendRealname());
+       notice.setCreateTime(oldDate.getCreateTime());
+       notice.setDistrictId(oldDate.getDistrictId());
        int i = noticeMapper.update(notice);
        if(i==1){
            return ResultUtil.isSuccess;
        }else {
            return ResultUtil.isFail;
        }
-
     }
 
     /**
@@ -145,11 +154,8 @@ public class NoticeServiceImp implements NoticeService{
     public Notice selectNoticeDetail(String id) {
         Notice notice = noticeMapper.selectNoticeDetail(id);
         List<FileInfo> fileList = new ArrayList<>();
-        if(notice.getNoticeFileUrls()!=null){
-            String paths[] = StringUtil.toStringArray(notice.getNoticeFileUrls());
-            for(int i=0;i<paths.length;i++){
-                fileList.add(fileService.selectByPath(paths[i]));
-            }
+        if(notice.getNoticeFileUrl()!=null){
+            fileList = selectFileByPath(notice.getNoticeFileUrl());
             notice.setFiles(fileList);
         }
         return notice;
@@ -170,6 +176,23 @@ public class NoticeServiceImp implements NoticeService{
          return ResultUtil.isSuccess;
      }
 
-
-
+    /**
+     * 查找文件列表
+     * @param noticeFileUrls
+     * @return
+     */
+     public List<FileInfo> selectFileByPath(String noticeFileUrls) {
+         String paths[] = StringUtil.toStringArray(noticeFileUrls);
+         List<FileInfo> fileList = new ArrayList<>();
+         if (paths.length>0) {
+             for (int i = 0; i < paths.length; i++) {
+                 FileInfo fileInfo =fileService.selectByPath(paths[i]);
+                 if(fileInfo!=null) {
+                     fileInfo.setFilePath("http://" + trackerServer + ":" + trackerPort + "group1/" + fileInfo.getFilePath());
+                     fileList.add(fileInfo);
+                 }
+             }
+         }
+         return fileList;
+     }
 }

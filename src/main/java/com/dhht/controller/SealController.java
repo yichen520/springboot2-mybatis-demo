@@ -142,8 +142,6 @@ public class SealController {
         JSONObject jsonObject = new JSONObject();
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
         String telphone = user.getTelphone();
-//        Employee employee = employeeService.selectByPhone(telphone);
-//        String recordCode = employee.getOfficeCode();
         String useDepartmentName = sealOperator.getSeal().getUseDepartmentName();
         String useDepartmentCode = sealOperator.getSeal().getUseDepartmentCode();
         String status = sealOperator.getSeal().getSealStatusCode();
@@ -240,9 +238,12 @@ public class SealController {
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
         String id = sealOperator.getId();
         String proxy = sealOperator.getProxy();
+        String operatorPhoto = sealOperator.getOperatorPhoto();
+        String positiveIdCardScanner = sealOperator.getPositiveIdCardScanner();//身份证正面扫描件
+        String reverseIdCardScanner = sealOperator.getReverseIdCardScanner();//身份证反面扫描件
         SealGetPerson sealGetPerson = sealOperator.getSealGetPerson();
         try {
-            boolean a = sealService.deliver(user, id, sealGetPerson, proxy);
+            boolean a = sealService.deliver(user, id, sealGetPerson, proxy,operatorPhoto,positiveIdCardScanner,reverseIdCardScanner);
             if (a) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("交付成功");

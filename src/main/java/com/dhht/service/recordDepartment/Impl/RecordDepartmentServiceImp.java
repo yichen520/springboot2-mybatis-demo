@@ -34,10 +34,13 @@ import java.util.List;
 public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private RecordDepartmentMapper recordDepartmentMapper;
+
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+
     @Autowired
     private ExamineRecordMapper examineRecordMapper;
+
     @Autowired
     private ExamineRecordDetailMapper examineRecordDetailMapper;
 
@@ -167,7 +170,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 }
             }
             int r = recordDepartmentMapper.deleteById(id);
-            int u = userService.deleteByTelphone(recordDepartment.getTelphone());
+            int u = userService.deleteByUserName("BADW"+recordDepartment.getTelphone());
             if (r + u == 2) {
                 return ResultUtil.isSuccess;
             }else {
@@ -254,16 +257,16 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                  //修改user
                 case 2:
                     RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-                    user = userService.findByTelphone(oldDate.getTelphone());
+                    user = userService.findByUserName("BADW"+oldDate.getTelphone());
                     user.setUserName("BADW"+recordDepartment.getTelphone());
                     user.setRealName(recordDepartment.getDepartmentName());
-                    //user.setRoleId("BADW");
+                    user.setRoleId("BADW");
                     user.setTelphone(recordDepartment.getTelphone());
                     user.setDistrictId(recordDepartment.getDepartmentAddress());
                     break;
                  //删除user
                 case 3:
-                    user = userService.findByTelphone(recordDepartment.getTelphone());
+                    user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
                 default:
                     break;
             }

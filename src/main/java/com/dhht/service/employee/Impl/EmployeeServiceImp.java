@@ -12,6 +12,8 @@ import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -325,10 +327,15 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public List selectEmployeeInfo(String code, int status, String name,String districtId) {
+    public PageInfo selectEmployeeInfo(String code, int status, String name, int pageNum,int pageSize) {
         List<Employee> employees = new ArrayList<>();
-        List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(districtId,"","01");
-        if(code==null||code==""){
+
+        if(code.length()==6){
+            List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(code,"","01");
+            if(makedepartments.size()==0){
+                return new PageInfo(employees);
+            }
+            PageHelper.startPage(pageNum,pageSize);
             if(status==1){
                 employees = employeeDao.selectEmployeeInfo(name,0,makedepartments);
             }else if(status==2){
@@ -345,7 +352,8 @@ public class EmployeeServiceImp implements EmployeeService {
                 employees = employeeDao.selectAllByDepartmentCode(code);
             }
         }
-        return employees;
+        PageInfo pageInfo = new PageInfo(employees);
+        return pageInfo;
     }
 
 
@@ -369,14 +377,14 @@ public class EmployeeServiceImp implements EmployeeService {
             //修改用户
             case 2:
                 Employee oldDate = employeeDao.selectById(employee.getId());
-                user = userService.findByTelphone(oldDate.getTelphone());
+                user = userService.findByUserName("YG"+oldDate.getTelphone());
                 user.setUserName("YG"+employee.getTelphone());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
                 break;
             case 3:
-                user = userService.findByTelphone(employee.getTelphone());
+                user = userService.findByUserName("YG"+employee.getTelphone());
         }
         return user;
     }
