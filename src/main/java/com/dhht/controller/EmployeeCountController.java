@@ -58,7 +58,7 @@ public class EmployeeCountController {
             return JsonObjectBO.success("查询",jsonObject);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("发生异常！");
         }
     }
 

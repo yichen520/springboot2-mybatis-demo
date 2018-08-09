@@ -57,7 +57,7 @@ public class EmployeeController {
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("菜单获取失败");
         }
     }
 
@@ -91,7 +91,7 @@ public class EmployeeController {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("发生异常！");
         }
         return JsonObjectBO.success("查询成功", jsonObject);
     }
@@ -142,7 +142,7 @@ public class EmployeeController {
             return ResultUtil.getResult(employeeService.updateEmployee(map));
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("修改失败");
         }
     }
 
@@ -161,7 +161,7 @@ public class EmployeeController {
             return ResultUtil.getResult(employeeService.deleteEmployee(id));
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("删除失败！");
         }
     }
 
@@ -182,7 +182,7 @@ public class EmployeeController {
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("发生异常！");
         }
     }
 

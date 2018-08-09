@@ -31,7 +31,7 @@ public class ExamineCountController {
                 jsonObject.put("count",counts);
             return JsonObjectBO.success("检查统计成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("查询失败");
         }
     }
     @RequestMapping(value = "punish/makedepartment")

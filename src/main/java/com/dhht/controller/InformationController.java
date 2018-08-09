@@ -185,7 +185,7 @@ public class InformationController {
         try{
             return useDepartmentService.find(user.getDistrictId(),code,name,districtId,status,pageNum,pageSize);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("发生异常！");
         }
     }
 
@@ -217,7 +217,7 @@ public class InformationController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("发生异常！");
         }
     }
 
@@ -241,7 +241,7 @@ public class InformationController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("发生异常！");
         }
     }
     /**
@@ -305,6 +305,7 @@ public class InformationController {
      * @param httpServletRequest
      * @return
      */
+    @Log("制作单位菜单")
     @RequestMapping(value = "/districtMakeDepartment")
     public JsonObjectBO selectMakeDepartmentByDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
@@ -315,7 +316,7 @@ public class InformationController {
             jsonObject.put("districtMenus",list);
             return JsonObjectBO.success("菜单返回成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("发生异常！");
         }
     }
 }
