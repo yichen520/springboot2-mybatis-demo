@@ -168,10 +168,10 @@ public class EmployeeServiceImp implements EmployeeService {
                return ResultUtil.isFail;
            }
        }else {
-           int u = userService.delete(user.getId());
+           int u = userService.deleteByUserName("CYRY",employee.getTelphone());
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if (u == ResultUtil.isSuccess && e == 1&&d==1) {
+           if (u == 1 && e == 1&&d==1) {
                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            } else {
@@ -371,7 +371,7 @@ public class EmployeeServiceImp implements EmployeeService {
         switch (type){
             //新增用户
             case 1:
-                user.setUserName("YG"+employee.getTelphone());
+                user.setUserName("CYRY"+employee.getTelphone());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
@@ -380,14 +380,14 @@ public class EmployeeServiceImp implements EmployeeService {
             //修改用户
             case 2:
                 Employee oldDate = employeeDao.selectById(employee.getId());
-                user = userService.findByUserName("YG"+oldDate.getTelphone());
-                user.setUserName("YG"+employee.getTelphone());
+                user = userService.findByUserName("CYRY"+oldDate.getTelphone());
+                user.setUserName("CYRY"+employee.getTelphone());
                 user.setRealName(employee.getEmployeeName());
                 user.setTelphone(employee.getTelphone());
                 user.setDistrictId(employee.getDistrictId());
                 break;
             case 3:
-                user = userService.findByUserName("YG"+employee.getTelphone());
+                user = userService.findByUserName("CYRY"+employee.getTelphone());
         }
         return user;
     }

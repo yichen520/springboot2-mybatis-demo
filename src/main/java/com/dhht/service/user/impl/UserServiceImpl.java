@@ -81,8 +81,11 @@ public class UserServiceImpl implements UserService {
         String code = createRandomVcode();
         String password = MD5Util.toMd5(code);
         user.setUserName(userName);
+        user.setTelphone(telphone);
         user.setRoleId(roleId);
         user.setPassword(password);
+        user.setDistrictId(districtId);
+        user.setRealName(realName);
         Integer a = userDao.addUser(user);
         ArrayList<String> params = new ArrayList<String>();
         params.add(user.getUserName());
