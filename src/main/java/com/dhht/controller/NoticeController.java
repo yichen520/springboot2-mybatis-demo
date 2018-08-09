@@ -125,9 +125,8 @@ public class NoticeController {
         int pageNum = (Integer)map.get("pageNum");
         int pageSize = (Integer)map.get("pageSize");
         JSONObject jsonObject = new JSONObject();
-        PageHelper.startPage(pageNum,pageSize);
-
         try {
+            PageHelper.startPage(pageNum,pageSize);
             List<NoticeSimple> notices = noticeService.selectNoticeList(user.getDistrictId());
             PageInfo<NoticeSimple> pageInfo = new PageInfo(notices);
             jsonObject.put("notice",pageInfo);

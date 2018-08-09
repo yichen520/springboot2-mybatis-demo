@@ -24,6 +24,7 @@ import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 2018/6/26 create by fyc
@@ -43,6 +44,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
 
     @Autowired
     private ExamineRecordDetailMapper examineRecordDetailMapper;
+
+    @Autowired
+    private OperatorRecordMapper operatorRecordMapper;
 
 
 
@@ -122,7 +126,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         if (recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
             return ResultUtil.isHave;
         }
-        recordDepartment.setId(UUIDUtil.generate());
+        String uuid =UUIDUtil.generate();
+        recordDepartment.setId(uuid);
         User user = setUserByType(recordDepartment,1);
         recordDepartment.setVersion(1);
         recordDepartment.setFlag(UUIDUtil.generate10());
@@ -130,6 +135,17 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userService.insert(user.getTelphone(),user.getRoleId(),user.getRealName(),user.getDistrictId());
         if(r==1&&u==ResultUtil.isSend){
+            OperatorRecord operatorRecord = new OperatorRecord();
+
+            operatorRecord.setId(UUIDUtil.generate());
+            operatorRecord.setOperateUserId(user.getId());
+            operatorRecord.setOperateUserRealname(user.getRealName());
+            operatorRecord.setOperateEntityId(uuid);
+            operatorRecord.setOperateEntityName("recordDepartment");
+            operatorRecord.setOperateType(SyncOperateType.SAVE);
+            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
+            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
+            operatorRecordMapper.insert(operatorRecord);
             return ResultUtil.isSuccess;
         }else if(u==ResultUtil.isHave){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -206,8 +222,13 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
             recordDepartment.setIsDelete(true);
             recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
-            recordDepartment.setId(UUIDUtil.generate());
+            String uuid = UUIDUtil.generate();
+            recordDepartment.setId(uuid);
             int r = recordDepartmentMapper.insert(recordDepartment);
+            //和上一次作比较
+            RecordDepartment newRecordDepartment = recordDepartmentMapper.selectById(uuid);
+            Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newRecordDepartment, new String[]{"id"});
+
             if (r==1&&u==ResultUtil.isSuccess) {
                 return ResultUtil.isSuccess;
             }else if(u==1){
