@@ -24,12 +24,14 @@ public class Makedepartment {
     private String departmentAddressDetail;
     private String telphone;
     private String postalCode;
+    private String businessLicenseUrl;
+    private String specialLicenseUrl;
+    private String legalDocumentUrl;
     private String departmentStatus;
     private int version;
     private String flag;
     private Date versionTime;
     private Date registerTime;
-
     private MakeDepartmentPunish makeDepartmentPunish;
     private List<Employee> employeeList;
     }

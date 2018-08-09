@@ -3,6 +3,7 @@ package com.dhht.util;
 
 
 import com.dhht.common.JsonObjectBO;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,13 @@ import java.util.regex.Pattern;
  *
  */
 public class StringUtil {
+
+
+    @Value("${trackerPort}")
+    public static String trackerPort;
+
+    @Value("${trackerServer}")
+    public static String trackerServer;
 	/**
 	 * 判断字符串是否为空
 	 * @param paramStr 待判断字符串
@@ -260,5 +268,26 @@ public class StringUtil {
             vcode = vcode + (int) (Math.random() * 9);
         }
         return vcode;
+    }
+
+    /**
+     * url处理类,返回完整的url
+     * @param url
+     * @return
+     */
+    public static String getAbsolutePath(String url){
+        String allUrl = "http://"+trackerServer+":"+trackerPort+"group1/"+url;
+        return allUrl;
+    }
+
+    /**
+     * 相对的路径
+     * @param url
+     * @return
+     */
+    public static String getRelativePath(String url){
+        String ftpUrl = "http://"+trackerServer+":"+trackerPort+"group1/";
+        String simpleUrl = url.replace(ftpUrl,"");
+        return simpleUrl;
     }
 }

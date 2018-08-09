@@ -149,7 +149,7 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int deleteEmployee(String id) {
        Employee employee = employeeDao.selectById(id);
-       User user = setUserByType(employee,3);
+       User uert = userService.findByUserName("CYRY"+employee.getTelphone());
        employee.setId(UUIDUtil.generate());
        employee.setLogoutOfficeCode(employee.getOfficeCode());
        employee.setLogoutOfficeName(employee.getOfficeName());
@@ -157,7 +157,7 @@ public class EmployeeServiceImp implements EmployeeService {
        employee.setVersion(employee.getVersion()+1);
        employee.setVersionTime(DateUtil.getCurrentTime());
 
-       if(user==null){
+       if(uert==null){
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
            if(e==1&&d==1){
@@ -171,7 +171,7 @@ public class EmployeeServiceImp implements EmployeeService {
            int u = userService.deleteByUserName("CYRY",employee.getTelphone());
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if (u == 1 && e == 1&&d==1) {
+           if (u==ResultUtil.isSuccess && e > 0&&d>0) {
                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            } else {
