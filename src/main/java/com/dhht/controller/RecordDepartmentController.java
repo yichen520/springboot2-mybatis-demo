@@ -1,11 +1,14 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.RecordDepartment;
 import com.dhht.model.User;
+import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.util.ResultUtil;
@@ -42,7 +45,7 @@ public class RecordDepartmentController {
      * @return
      */
     @RequestMapping(value = "/selectByRole")
-    public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest,@RequestBody Map map){
+    public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest, @RequestBody Map map){
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer)map.get("pageNum");
@@ -112,13 +115,26 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
+//    @RequestMapping(value = "/showhistory")
+//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+//        String flag = (String)map.get("flag");
+//        JSONObject jsonObject = new JSONObject();
+//        try{
+//                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
+//                jsonObject.put("recordDepartments",recordDepartments);
+//        }catch (Exception e ){
+//            return JsonObjectBO.exception(e.getMessage());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
+
     @RequestMapping(value = "/showhistory")
     public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
         String flag = (String)map.get("flag");
         JSONObject jsonObject = new JSONObject();
         try{
-                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
-                jsonObject.put("recordDepartments",recordDepartments);
+            List<CommonHistoryVO> recordDepartments= recordDepartmentService.showHistory(flag);
+            jsonObject.put("recordDepartments",recordDepartments);
         }catch (Exception e ){
             return JsonObjectBO.exception(e.getMessage());
         }
@@ -130,8 +146,10 @@ public class RecordDepartmentController {
      * @return
      */
     @RequestMapping(value = "/insert")
-    public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment){
+    public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        recordDepartment.setOperator(user.getRealName());
         try {
             result = recordDepartmentService.insert(recordDepartment);
             return ResultUtil.getResult(result);
@@ -187,9 +205,10 @@ public class RecordDepartmentController {
      * @return
      */
     @RequestMapping(value = "/update")
-    public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment){
+    public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
-
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        recordDepartment.setOperator(user.getRealName());
         try{
             result = recordDepartmentService.updateById(recordDepartment);
             return ResultUtil.getResult(result);

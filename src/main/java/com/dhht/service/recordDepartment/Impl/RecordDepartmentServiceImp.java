@@ -3,6 +3,9 @@ package com.dhht.service.recordDepartment.Impl;
 import com.dhht.annotation.Sync;
 import com.dhht.dao.*;
 import com.dhht.model.*;
+import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.DataHistory;
+import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
@@ -11,11 +14,13 @@ import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -276,6 +281,54 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Override
     public List<RecordDepartment> showMore(String flag) {
         return recordDepartmentMapper.selectByFlag(flag);
+    }
+    /**
+     * 历史记录查询
+     * @param flag
+     * @return
+     */
+    @Override
+    public List<CommonHistoryVO> showHistory(String flag) {
+        List<CommonHistoryVO> commonHistoryVOS =new ArrayList<>();
+        List<RecordDepartmentHistoryVO> recordDepartmentHistoryVOS=new ArrayList<>();
+        List<RecordDepartment> recordDepartments =recordDepartmentMapper.selectByFlag(flag);
+        for(RecordDepartment person:recordDepartments){
+            RecordDepartmentHistoryVO student=new RecordDepartmentHistoryVO();
+            BeanUtils.copyProperties(person, student);
+            recordDepartmentHistoryVOS.add(student);
+        }
+        for (int i=0;i<recordDepartmentHistoryVOS.size()-1;i++){
+            List<DataHistory> dataHistories =new ArrayList<>();
+            if (!recordDepartmentHistoryVOS.get(i).getDepartmentAddressDetail().equals(recordDepartmentHistoryVOS.get(i+1).getDepartmentAddressDetail())){
+                DataHistory dataHistorie = new DataHistory("departmentAddressDetail",recordDepartmentHistoryVOS.get(i).getDepartmentAddressDetail(),recordDepartmentHistoryVOS.get(i+1).getDepartmentAddressDetail());
+                dataHistories.add(dataHistorie);
+            }
+            if (!recordDepartmentHistoryVOS.get(i).getDepartmentCode().equals(recordDepartmentHistoryVOS.get(i+1).getDepartmentCode())){
+                DataHistory dataHistorie = new DataHistory("departmentCode",recordDepartmentHistoryVOS.get(i).getDepartmentCode(),recordDepartmentHistoryVOS.get(i+1).getDepartmentCode());
+               dataHistories.add(dataHistorie);
+            }
+            if (!recordDepartmentHistoryVOS.get(i).getDepartmentName().equals(recordDepartmentHistoryVOS.get(i+1).getDepartmentName())){
+                DataHistory dataHistorie = new DataHistory("departmentName",recordDepartmentHistoryVOS.get(i).getDepartmentName(),recordDepartmentHistoryVOS.get(i+1).getDepartmentName());
+                dataHistories.add(dataHistorie);
+            }
+            if (!recordDepartmentHistoryVOS.get(i).getPostalCode().equals(recordDepartmentHistoryVOS.get(i+1).getPostalCode())){
+                DataHistory dataHistorie = new DataHistory("postalCode",recordDepartmentHistoryVOS.get(i).getPostalCode(),recordDepartmentHistoryVOS.get(i+1).getPostalCode());
+                dataHistories.add(dataHistorie);
+            }
+            if (!recordDepartmentHistoryVOS.get(i).getPrincipalName().equals(recordDepartmentHistoryVOS.get(i+1).getPrincipalName())){
+                DataHistory dataHistorie = new DataHistory("principalName",recordDepartmentHistoryVOS.get(i).getPrincipalName(),recordDepartmentHistoryVOS.get(i+1).getPrincipalName());
+                dataHistories.add(dataHistorie);
+            }
+            if (!recordDepartmentHistoryVOS.get(i).getTelphone().equals(recordDepartmentHistoryVOS.get(i+1).getTelphone())){
+                DataHistory dataHistorie = new DataHistory("telphone",recordDepartmentHistoryVOS.get(i).getTelphone(),recordDepartmentHistoryVOS.get(i+1).getTelphone());
+                dataHistories.add(dataHistorie);
+            }
+            Date updateTime = recordDepartmentHistoryVOS.get(i+1).getUpdateTime();
+            String operator =  recordDepartmentHistoryVOS.get(i+1).getOperator();
+            CommonHistoryVO commonHistoryVO =new CommonHistoryVO(updateTime,operator,dataHistories);
+            commonHistoryVOS.add(commonHistoryVO);
+        }
+        return commonHistoryVOS;
     }
 
     /**
