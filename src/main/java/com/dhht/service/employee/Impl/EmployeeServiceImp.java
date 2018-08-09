@@ -70,7 +70,8 @@ public class EmployeeServiceImp implements EmployeeService {
             if (isInsert(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
             }
-            int u = userService.insert(setUserByType(employee, 1));
+
+            int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
             int e = employeeDao.insert(employee);
             if (u==ResultUtil.isSend&&e==1) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
@@ -96,7 +97,9 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int updateEmployee(Map map) {
         try {
+
             Employee employee = employeeDao.selectById((String) map.get("id"));
+            String oldTelphone = employee.getTelphone();
             int d = employeeDao.deleteById(employee.getId());
             if (d == 0) {
                 return ResultUtil.isError;
@@ -115,7 +118,7 @@ public class EmployeeServiceImp implements EmployeeService {
             if (isInsert(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
             }
-            int u = userService.update(setUserByType(employee, 2));
+            int u = userService.update(oldTelphone,employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
             employee.setVersion(employee.getVersion() + 1);
             employee.setVersionTime(DateUtil.getCurrentTime());
             employee.setId(UUIDUtil.generate());

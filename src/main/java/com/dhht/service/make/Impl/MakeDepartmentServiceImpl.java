@@ -86,7 +86,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
         User user =setUserByType(makedepartment,1);
         int m = makedepartmentMapper.insert(makedepartment);
-        int u = userService.insert(user);
+        int u = userService.insert(user.getTelphone(),user.getRoleId(),user.getRealName(),user.getDistrictId());
         if(m==1&&u==ResultUtil.isSend){
             SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
@@ -126,7 +126,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             }
             int m = makedepartmentMapper.insert(makedepartment);
             int e = setEmployeeByDepartment(employees, makedepartment, 2);
-            int u = userService.update(user);
+            int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
             if (m == 1 && u == 2 && e == 2) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;

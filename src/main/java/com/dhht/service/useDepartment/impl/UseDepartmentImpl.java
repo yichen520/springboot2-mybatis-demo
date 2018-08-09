@@ -155,7 +155,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
         return jsonObjectBO;
     }
 
-
     /**
      *根据区域查找用户
 
