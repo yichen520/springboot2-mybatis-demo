@@ -256,7 +256,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public int deleteByUserName(String roleId, String telphone) {
         int i= userDao.deleteByUserName(roleId+telphone);
-        return i;
+        if(i<0){
+            return ResultUtil.isFail;
+        }else{
+            return ResultUtil.isSuccess;
+        }
     }
 
     @Override
