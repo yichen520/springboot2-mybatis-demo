@@ -35,7 +35,7 @@
       and log_time &gt; #{startTime}
     </if>
     <if test="result != null" >
-      and log_result = #{result}
+      and log_result like '%${result}%'
     </if>
     <if test="name != null" >
       and log_user like '%${name}%'

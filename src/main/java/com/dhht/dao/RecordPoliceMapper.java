@@ -27,6 +27,6 @@ public interface RecordPoliceMapper {
 
     RecordPolice selectById(String id);
 
-    RecordPolice selectByTelphone(String telphone);
+    RecordPolice phone(String telphone);
 
 }

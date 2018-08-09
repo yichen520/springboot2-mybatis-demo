@@ -1,35 +1,22 @@
-package com.dhht.model;
+package com.dhht.model.pojo;
 
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class RecordDepartment {
-
-    private String id;
-
+public class RecordDepartmentHistoryVO {
     private String departmentCode;
 
     private String departmentName;
 
     private String principalName;
 
-    private String principalId;
-
-    private String departmentAddress;
-
     private String departmentAddressDetail;
 
     private String telphone;
 
     private String postalCode;
-
-    private Boolean isDelete;
-
-    private int version;
-
-    private String flag;
 
     private Date updateTime;
 
