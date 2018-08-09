@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8085
 
 #超级管理员账号密码
 
@@ -125,11 +125,9 @@ trackerServer: 10.0.0.40
 
 file:
  local:
-   root: /Users/imac_dhht/temp/
+   root: C:/temp/
 
-
-filePath: /Users/imac_dhht/temp/
-
+filePath: C:/temp/
 
 #设置redis中token过期时间
 expireTime: 3600
