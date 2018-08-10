@@ -20,11 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.crypto.Data;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 2018/6/26 create by fyc
@@ -47,6 +45,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
 
     @Autowired
     private OperatorRecordMapper operatorRecordMapper;
+
+    @Autowired
+    private OperatorRecordDetailMapper operatorRecordDetailMapper;
 
 
 
@@ -119,27 +120,29 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @return
      */
     @Override
-    public int insert(RecordDepartment recordDepartment) {
+    public int insert(RecordDepartment recordDepartment,HttpServletRequest httpServletRequest) {
         if(isInsert(recordDepartment)){
             return ResultUtil.isDistrict;
         }
         if (recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
             return ResultUtil.isHave;
         }
+        User user1 = (User)httpServletRequest.getSession().getAttribute("user");
         String uuid =UUIDUtil.generate();
         recordDepartment.setId(uuid);
         User user = setUserByType(recordDepartment,1);
         recordDepartment.setVersion(1);
-        recordDepartment.setFlag(UUIDUtil.generate10());
+        String flag = UUIDUtil.generate10();
+        recordDepartment.setFlag(flag);
         recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userService.insert(user.getTelphone(),user.getRoleId(),user.getRealName(),user.getDistrictId());
         if(r==1&&u==ResultUtil.isSend){
             OperatorRecord operatorRecord = new OperatorRecord();
-
+            operatorRecord.setFlag(flag);
             operatorRecord.setId(UUIDUtil.generate());
-            operatorRecord.setOperateUserId(user.getId());
-            operatorRecord.setOperateUserRealname(user.getRealName());
+            operatorRecord.setOperateUserId(user1.getId());
+            operatorRecord.setOperateUserRealname(user1.getRealName());
             operatorRecord.setOperateEntityId(uuid);
             operatorRecord.setOperateEntityName("recordDepartment");
             operatorRecord.setOperateType(SyncOperateType.SAVE);
@@ -205,10 +208,12 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @return
      */
     @Override
-    public int updateById(RecordDepartment recordDepartment) {
+    public int updateById(HttpServletRequest httpServletRequest, RecordDepartment recordDepartment) {
         try {
+            User user = (User)httpServletRequest.getSession().getAttribute("user");
+            recordDepartment.setOperator(user.getRealName());
             RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-            int u = userService.update(oldDate.getTelphone(),recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress()); // 自己看
+            int u = userService.update(oldDate.getTelphone(),recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress());
             int d = recordDepartmentMapper.deleteById(recordDepartment.getId());
             if(d==0){
                 return ResultUtil.isError;
@@ -217,7 +222,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 return ResultUtil.isHave;
             }
 
-
             recordDepartmentMapper.deleteById(recordDepartment.getId());
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
             recordDepartment.setIsDelete(true);
@@ -225,9 +229,36 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             String uuid = UUIDUtil.generate();
             recordDepartment.setId(uuid);
             int r = recordDepartmentMapper.insert(recordDepartment);
-            //和上一次作比较
+
+            //增加操作记录
+            OperatorRecord operatorRecord = new OperatorRecord();
+            String operatorRecordId = UUIDUtil.generate();
+            operatorRecord.setFlag(recordDepartment.getFlag());
+            operatorRecord.setId(operatorRecordId);
+            operatorRecord.setOperateUserId(user.getId());
+            operatorRecord.setOperateUserRealname(user.getRealName());
+            operatorRecord.setOperateEntityId(uuid);
+            operatorRecord.setOperateEntityName("recordDepartment");
+            operatorRecord.setOperateType(SyncOperateType.UPDATE);
+            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.UPDATE));
+            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
+            operatorRecordMapper.insert(operatorRecord);
+
+            //和上一次作比较  然后比较不同
             RecordDepartment newRecordDepartment = recordDepartmentMapper.selectById(uuid);
-            Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newRecordDepartment, new String[]{"id"});
+            Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newRecordDepartment, new String[]{"id","principalId","departmentAddress","isDelete","version","operator","updateTime"});
+            Set<String> keySet = compareResult.keySet();
+            for(String key : keySet){
+                List<Object> list = compareResult.get(key);
+                OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+                operatorRecordDetail.setId(UUIDUtil.generate());
+                operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+                operatorRecordDetail.setNewValue(list.get(1).toString());
+                operatorRecordDetail.setOldValue(list.get(0).toString());
+//                operatorRecordDetail.setPropertyComment();
+                operatorRecordDetail.setPropertyName(key);
+               operatorRecordDetailMapper.insert(operatorRecordDetail);
+            }
 
             if (r==1&&u==ResultUtil.isSuccess) {
                 return ResultUtil.isSuccess;
@@ -353,6 +384,12 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             commonHistoryVOS.add(commonHistoryVO);
         }
         return commonHistoryVOS;
+    }
+
+    @Override
+    public List<OperatorRecord> showRecordHistory(String flag) {
+        List<OperatorRecord> operatorRecords =  operatorRecordMapper.selectOperatorRecordByFlag(flag);
+        return operatorRecords;
     }
 
     /**

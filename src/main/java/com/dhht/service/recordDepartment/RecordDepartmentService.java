@@ -1,13 +1,11 @@
 package com.dhht.service.recordDepartment;
 
-import com.dhht.model.ExamineRecord;
-import com.dhht.model.OfficeCheck;
-import com.dhht.model.RecordDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
 import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface RecordDepartmentService {
@@ -17,17 +15,19 @@ public interface RecordDepartmentService {
 
     PageInfo<RecordDepartment> selectAllRecordDepartMent(int pageSize,int pageNum);
 
-    int insert(RecordDepartment recordDepartment);
+    int insert(RecordDepartment recordDepartment,HttpServletRequest httpServletRequest);
 
     RecordDepartment selectByCode(String code);
 
     int deleteById(String id);
 
-    int updateById(RecordDepartment recordDepartment);
+    int updateById(HttpServletRequest httpServletRequest,RecordDepartment recordDepartment);
 
     List<RecordDepartment> showMore(String flag);
 
     List<CommonHistoryVO> showHistory(String flag);
+
+    List<OperatorRecord> showRecordHistory(String flag);
 
 
     RecordDepartment selectByPhone(String phone);

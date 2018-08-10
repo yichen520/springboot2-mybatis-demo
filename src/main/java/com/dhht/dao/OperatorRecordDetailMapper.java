@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 import com.dhht.model.OperatorRecordDetail;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface OperatorRecordDetailMapper {
     int deleteByPrimaryKey(String id);
 

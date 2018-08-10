@@ -3,6 +3,8 @@ package com.dhht.model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
+
 @Data
 public class OperatorRecord {
     private String id;
@@ -17,9 +19,14 @@ public class OperatorRecord {
 
     private String operateEntityComment;
 
-    private int operateType;
+    private Integer operateType;
 
     private String operateTypeName;
 
     private Date operateTime;
+
+    private String flag;
+
+    private List<OperatorRecordDetail> operatorRecordDetails;
+
 }

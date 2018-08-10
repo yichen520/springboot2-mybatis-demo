@@ -3,10 +3,7 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.District;
-import com.dhht.model.DistrictMenus;
-import com.dhht.model.RecordDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
 import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.District.DistrictService;
@@ -36,7 +33,6 @@ public class RecordDepartmentController {
     @Autowired
     private DistrictService districtService;
 
-    //private JSONObject jsonObject = new JSONObject();
 
     /**
      * 根据角色获取备案单位
@@ -111,23 +107,29 @@ public class RecordDepartmentController {
     }
 
     /**
-     * 展示备案单位的列表
+     *这是最开始的版本，显示所有的记录
      * @param map
      * @return
      */
-    @RequestMapping(value = "/showhistory")
-    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-        String flag = (String)map.get("flag");
-        JSONObject jsonObject = new JSONObject();
-        try{
-                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
-                jsonObject.put("recordDepartments",recordDepartments);
-        }catch (Exception e ){
-            return JsonObjectBO.exception(e.getMessage());
-        }
-        return JsonObjectBO.success("查询成功",jsonObject);
-    }
+//    @RequestMapping(value = "/showhistory")
+//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+//        String flag = (String)map.get("flag");
+//        JSONObject jsonObject = new JSONObject();
+//        try{
+//                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
+//                jsonObject.put("recordDepartments",recordDepartments);
+//        }catch (Exception e ){
+//            return JsonObjectBO.exception(e.getMessage());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
 
+    /**
+     * 这是循环比较两条记录的不同，然后将比较的字段不同的结果放在实体类
+     * @param map
+     * @param httpServletRequest
+     * @return
+     */
 //    @RequestMapping(value = "/showhistory")
 //    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
 //        String flag = (String)map.get("flag");
@@ -140,6 +142,25 @@ public class RecordDepartmentController {
 //        }
 //        return JsonObjectBO.success("查询成功",jsonObject);
 //    }
+
+    /**
+     * 这是从表中取出比较的结果
+     * @param map
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/showhistory")
+    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        String flag = (String)map.get("flag");
+        JSONObject jsonObject = new JSONObject();
+        try{
+            List<OperatorRecord> recordDepartments= recordDepartmentService.showRecordHistory(flag);
+            jsonObject.put("recordDepartments",recordDepartments);
+        }catch (Exception e ){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
     /**
      * 添加备案单位
      * @param recordDepartment
@@ -148,10 +169,9 @@ public class RecordDepartmentController {
     @RequestMapping(value = "/insert")
     public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        recordDepartment.setOperator(user.getRealName());
+
         try {
-            result = recordDepartmentService.insert(recordDepartment);
+            result = recordDepartmentService.insert(recordDepartment,httpServletRequest);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException exception){
             return JsonObjectBO.error("该编号已经存在");
@@ -207,10 +227,8 @@ public class RecordDepartmentController {
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        recordDepartment.setOperator(user.getRealName());
         try{
-            result = recordDepartmentService.updateById(recordDepartment);
+            result = recordDepartmentService.updateById(httpServletRequest,recordDepartment);
             return ResultUtil.getResult(result);
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
