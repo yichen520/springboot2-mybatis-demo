@@ -66,7 +66,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public Makedepartment selectDetailById(String id) {
         Makedepartment makedepartment = makedepartmentMapper.selectDetailById(id);
-        return makedepartment;
+        return setFileUrlByType(makedepartment,2);
     }
 
     /**
@@ -84,9 +84,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setFlag(UUIDUtil.generate());
         makedepartment.setVersion(1);
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
-        User user =setUserByType(makedepartment,1);
-        int m = makedepartmentMapper.insert(makedepartment);
-        int u = userService.insert(user.getTelphone(),user.getRoleId(),user.getRealName(),user.getDistrictId());
+        int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
+        int u = userService.insert(makedepartment.getTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
         if(m==1&&u==ResultUtil.isSend){
             SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
@@ -114,7 +113,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 return 5;
             }
 
-            User user = setUserByType(makedepartment, 2);
+            User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
             makedepartment.setId(UUIDUtil.generate());
             makedepartment.setVersionTime(DateUtil.getCurrentTime());
             makedepartment.setFlag(makedepartment.getFlag());
@@ -124,7 +123,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isHaveCode;
             }
-            int m = makedepartmentMapper.insert(makedepartment);
+            int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
             int e = setEmployeeByDepartment(employees, makedepartment, 2);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
             if (m == 1 && u == 2 && e == 2) {
@@ -158,7 +157,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         List<Employee> employees = employeeService.selectAllByDepartmentCode(makedepartment.getDepartmentCode());
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
-        User user = setUserByType(makedepartment,3);
+        User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
         if(user==null){
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
@@ -173,7 +172,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         }else {
             int u = userService.delete(user.getId());
             makedepartment.setId(UUIDUtil.generate());
-            int m = makedepartmentMapper.deleteById(makedepartment);
+            int m = makedepartmentMapper.deleteById(setFileUrlByType(makedepartment,1));
             int e = setEmployeeByDepartment(employees,makedepartment,1);
             if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl)AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
@@ -215,6 +214,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public MakeDepartmentSimple selectByDepartmentCode(String code) {
         return makedepartmentMapper.selectByDepartmentCode(code);
     }
+
+
 
     /**
      * 根据法人手机号获取备案单位的编号
@@ -286,38 +287,38 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         }
         return list;
     }
-    /**
-     * 设置user
-     * @param makedepartment
-     * @param type
-     * @return
-     */
-    public User setUserByType(Makedepartment makedepartment,int type){
-        User user = new User();
-        switch (type){
-            case 1:
-                user.setId(UUIDUtil.generate());
-                user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
-                user.setRoleId("ZZDW");
-                user.setDistrictId(makedepartment.getDepartmentAddress());
-                user.setRealName(makedepartment.getDepartmentName());
-                user.setTelphone(makedepartment.getLegalTelphone());
-                break;
-            case 2:
-                Makedepartment oldDate =makedepartmentMapper.selectDetailById(makedepartment.getId());
-                user = userService.findByUserName("ZZDW"+oldDate.getLegalTelphone());
-                user.setRoleId("ZZDW");
-                user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
-                user.setDistrictId(makedepartment.getDepartmentAddress());
-                user.setRealName(makedepartment.getDepartmentName());
-                user.setTelphone(makedepartment.getLegalTelphone());
-                break;
-            case 3:
-                user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
-                break;
-        }
-        return user;
-    }
+//    /**
+//     * 设置user
+//     * @param makedepartment
+//     * @param type
+//     * @return
+//     */
+//    public User setUserByType(Makedepartment makedepartment,int type){
+//        User user = new User();
+//        switch (type){
+//            case 1:
+//                user.setId(UUIDUtil.generate());
+//                user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
+//                user.setRoleId("ZZDW");
+//                user.setDistrictId(makedepartment.getDepartmentAddress());
+//                user.setRealName(makedepartment.getDepartmentName());
+//                user.setTelphone(makedepartment.getLegalTelphone());
+//                break;
+//            case 2:
+//                Makedepartment oldDate =makedepartmentMapper.selectDetailById(makedepartment.getId());
+//                user = userService.findByUserName("ZZDW"+oldDate.getLegalTelphone());
+//                user.setRoleId("ZZDW");
+//                user.setUserName("ZZDW"+makedepartment.getLegalTelphone());
+//                user.setDistrictId(makedepartment.getDepartmentAddress());
+//                user.setRealName(makedepartment.getDepartmentName());
+//                user.setTelphone(makedepartment.getLegalTelphone());
+//                break;
+//            case 3:
+//                user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
+//                break;
+//        }
+//        return user;
+//    }
 
     /**
      * 判断是否有重复Code
@@ -372,6 +373,43 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public List<ExamineRecordDetail> selectExamineDetailByID(String id) {
         return examineRecordDetailMapper.selectExamineDetailByID(id);
     }
+
+    /**
+     * 设置url字段
+     * @param makedepartment
+     * @return
+     */
+    public Makedepartment setFileUrlByType(Makedepartment makedepartment,int type){
+        String businessLicenseUrl = makedepartment.getBusinessLicenseUrl();
+        String specialLicenseUrl = makedepartment.getSpecialLicenseUrl();
+        String legalDocumentUrl = makedepartment.getLegalDocumentUrl();
+        switch (type) {
+            case 1:
+                if (businessLicenseUrl != null) {
+                    makedepartment.setBusinessLicenseUrl(StringUtil.getRelativePath(businessLicenseUrl));
+                }
+                if (specialLicenseUrl != null) {
+                    makedepartment.setSpecialLicenseUrl(StringUtil.getRelativePath(specialLicenseUrl));
+                }
+                if (legalDocumentUrl != null) {
+                    makedepartment.setLegalDocumentUrl(StringUtil.getRelativePath(legalDocumentUrl));
+                }
+            case 2:
+                if (businessLicenseUrl != null) {
+                    makedepartment.setBusinessLicenseUrl(StringUtil.getAbsolutePath(businessLicenseUrl));
+                }
+                if (specialLicenseUrl != null) {
+                    makedepartment.setSpecialLicenseUrl(StringUtil.getAbsolutePath(specialLicenseUrl));
+                }
+                if (legalDocumentUrl != null) {
+                    makedepartment.setLegalDocumentUrl(StringUtil.getAbsolutePath(legalDocumentUrl));
+                }
+             default:
+                 break;
+        }
+        return makedepartment;
+    }
+
 
     /**
      * 数据同步

@@ -106,7 +106,7 @@ public class SealServiceImpl implements SealService {
 
             String sealcode = createRandomCode(districtId);
             List<Seal> list = sealDao.selectByCodeAndType(seal.getUseDepartmentCode());
-            if(seal.getSealTypeCode().equals("01")) {
+            if(seal.getSealTypeCode().equals("05")) {
                 if (list.size() != 0) {
                     return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
                 }

@@ -25,6 +25,9 @@
     <result column="flag" property="flag" jdbcType="CHAR"/>
     <result column="version_time" property="versionTime" jdbcType="VARCHAR"/>
     <result column="register_time" property="registerTime" jdbcType="TIMESTAMP"/>
+    <result column="business_license_url" property="businessLicenseUrl" jdbcType="VARCHAR"/>
+    <result column="special_license_url" property="specialLicenseUrl" jdbcType="VARCHAR"/>
+    <result column="legal_document_url" property="legalDocumentUrl" jdbcType="VARCHAR"/>
     <association property="makeDepartmentPunish"  resultMap="makeDepartmentPunishResultMap" javaType="com.dhht.model.MakeDepartmentPunish"></association>
     <!--<collection property="employee" resultMap="employeeResultMap" javaType="com.dhht.model.Employee"></collection>-->
   </resultMap>
@@ -104,7 +107,7 @@
     id,department_code,  department_name, department_nation_name, department_english_name,
     department_english_ahhr, department_type, legal_name, legal_id, legal_id_type,
     legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail, 
-    telphone, postal_code,  department_status,version,flag,version_time,register_time
+    telphone, postal_code,  department_status,version,flag,version_time,register_time,business_license_url,special_license_url,legal_document_url
   </sql>
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
     select
@@ -134,7 +137,8 @@
       legal_englishsurname, legal_englishname,
       legal_telphone, department_address, department_address_detail,
       telphone, postal_code,department_status,
-      version,flag,version_time,register_time,delete_status
+      version,flag,version_time,register_time,delete_status,
+      business_license_url,special_license_url,legal_document_url
       )
     values (#{id,jdbcType=VARCHAR},#{departmentCode,jdbcType=VARCHAR},  #{departmentName,jdbcType=VARCHAR},
       #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR},
@@ -143,7 +147,8 @@
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR},
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR},
       #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},'03',
-      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP},1
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP},1,
+      #{businessLicenseUrl,jdbcType=VARCHAR},#{specialLicenseUrl,jdbcType=VARCHAR},#{legalDocumentUrl,jdbcType=VARCHAR}
       )
   </insert>
 
@@ -161,7 +166,7 @@
       legal_telphone, department_address, department_address_detail, 
       telphone, postal_code,
       version,flag,version_time,register_time,
-      department_status
+      department_status, business_license_url,special_license_url,legal_document_url
       )
     values (#{id,jdbcType=VARCHAR},#{departmentCode,jdbcType=VARCHAR},  #{departmentName,jdbcType=VARCHAR},
       #{departmentNationName,jdbcType=VARCHAR}, #{departmentEnglishName,jdbcType=VARCHAR}, 
@@ -170,7 +175,8 @@
       #{legalEnglishsurname,jdbcType=VARCHAR}, #{legalEnglishname,jdbcType=VARCHAR}, 
       #{legalTelphone,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR}, #{departmentAddressDetail,jdbcType=VARCHAR}, 
       #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR},
-      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP},'01'
+      #{version,jdbcType=NUMERIC},#{flag,jdbcType=VARCHAR},#{versionTime,jdbcType=TIMESTAMP},#{registerTime,jdbcType=TIMESTAMP},'01',
+      #{businessLicenseUrl,jdbcType=VARCHAR},#{specialLicenseUrl,jdbcType=VARCHAR},#{legalDocumentUrl,jdbcType=VARCHAR}
       )
   </insert>
 

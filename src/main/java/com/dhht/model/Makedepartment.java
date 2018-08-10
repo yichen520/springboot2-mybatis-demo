@@ -26,7 +26,7 @@ public class Makedepartment {
     private String postalCode;
     private String businessLicenseUrl;
     private String specialLicenseUrl;
-    private String legalDocumentUrl;
+    private String legalDocumentUrl;//
     private String departmentStatus;
     private int version;
     private String flag;
