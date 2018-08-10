@@ -191,7 +191,8 @@ public class MinitorServiceImpl implements MinitorService {
 //            String str = user.getDistrictId().substring(0,2);
 //            list=new ArrayList<String>();
 //            list.add(str+"0000");
-            String str = user.getRoleId();
+            String str = user.getDistrictId();
+            list = new ArrayList<>();
             list.add(str);
         }
         List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);

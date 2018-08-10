@@ -39,6 +39,18 @@ public class ExamineCountController {
             return JsonObjectBO.exception("查询失败");
         }
     }
+
+    @RequestMapping(value = "examine/makeDepartment")
+    public JsonObjectBO examinemakeDepartment(@RequestBody Map map, HttpServletRequest httpServletRequest){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<ExamineCount> counts = minitorService.countExamine(map,httpServletRequest);
+            jsonObject.put("count",counts);
+            return JsonObjectBO.success("检查统计成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("查询失败");
+        }
+    }
     @RequestMapping(value = "punish/makeDepartment")
     public JsonObjectBO punishmakedepartmentinfo(@RequestBody Map map, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
