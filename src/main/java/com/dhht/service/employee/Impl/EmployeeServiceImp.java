@@ -123,7 +123,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setVersionTime(DateUtil.getCurrentTime());
             employee.setId(UUIDUtil.generate());
             int e = employeeDao.insert(employee);
-            if (u == 2 && e == 1) {
+            if (u == ResultUtil.isSuccess && e == 1) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -149,7 +149,7 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public int deleteEmployee(String id) {
        Employee employee = employeeDao.selectById(id);
-       User uert = userService.findByUserName("CYRY"+employee.getTelphone());
+       User user = userService.findByUserName("CYRY"+employee.getTelphone());
        employee.setId(UUIDUtil.generate());
        employee.setLogoutOfficeCode(employee.getOfficeCode());
        employee.setLogoutOfficeName(employee.getOfficeName());
@@ -157,7 +157,7 @@ public class EmployeeServiceImp implements EmployeeService {
        employee.setVersion(employee.getVersion()+1);
        employee.setVersionTime(DateUtil.getCurrentTime());
 
-       if(uert==null){
+       if(user==null){
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
            if(e==1&&d==1){
@@ -360,37 +360,37 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
 
-    /**
-     * 设置用户
-     * @param employee
-     * @param type
-     * @return
-     */
-    public User setUserByType(Employee employee, int type){
-        User user = new User();
-        switch (type){
-            //新增用户
-            case 1:
-                user.setUserName("CYRY"+employee.getTelphone());
-                user.setRealName(employee.getEmployeeName());
-                user.setTelphone(employee.getTelphone());
-                user.setDistrictId(employee.getDistrictId());
-                user.setRoleId("CYRY");
-                break;
-            //修改用户
-            case 2:
-                Employee oldDate = employeeDao.selectById(employee.getId());
-                user = userService.findByUserName("CYRY"+oldDate.getTelphone());
-                user.setUserName("CYRY"+employee.getTelphone());
-                user.setRealName(employee.getEmployeeName());
-                user.setTelphone(employee.getTelphone());
-                user.setDistrictId(employee.getDistrictId());
-                break;
-            case 3:
-                user = userService.findByUserName("CYRY"+employee.getTelphone());
-        }
-        return user;
-    }
+//    /**
+//     * 设置用户
+//     * @param employee
+//     * @param type
+//     * @return
+//     */
+//    public User setUserByType(Employee employee, int type){
+//        User user = new User();
+//        switch (type){
+//            //新增用户
+//            case 1:
+//                user.setUserName("CYRY"+employee.getTelphone());
+//                user.setRealName(employee.getEmployeeName());
+//                user.setTelphone(employee.getTelphone());
+//                user.setDistrictId(employee.getDistrictId());
+//                user.setRoleId("CYRY");
+//                break;
+//            //修改用户
+//            case 2:
+//                Employee oldDate = employeeDao.selectById(employee.getId());
+//                user = userService.findByUserName("CYRY"+oldDate.getTelphone());
+//                user.setUserName("CYRY"+employee.getTelphone());
+//                user.setRealName(employee.getEmployeeName());
+//                user.setTelphone(employee.getTelphone());
+//                user.setDistrictId(employee.getDistrictId());
+//                break;
+//            case 3:
+//                user = userService.findByUserName("CYRY"+employee.getTelphone());
+//        }
+//        return user;
+//    }
 
     /**
      * 判断身份证号是否是否重复

@@ -128,24 +128,23 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         }
         String uuid =UUIDUtil.generate();
         recordDepartment.setId(uuid);
-        User user = setUserByType(recordDepartment,1);
+        //User user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
         recordDepartment.setVersion(1);
         recordDepartment.setFlag(UUIDUtil.generate10());
         recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
-        int u = userService.insert(user.getTelphone(),user.getRoleId(),user.getRealName(),user.getDistrictId());
+        int u = userService.insert(recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress());
         if(r==1&&u==ResultUtil.isSend){
-            OperatorRecord operatorRecord = new OperatorRecord();
-
-            operatorRecord.setId(UUIDUtil.generate());
-            operatorRecord.setOperateUserId(user.getId());
-            operatorRecord.setOperateUserRealname(user.getRealName());
-            operatorRecord.setOperateEntityId(uuid);
-            operatorRecord.setOperateEntityName("recordDepartment");
-            operatorRecord.setOperateType(SyncOperateType.SAVE);
-            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
-            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-            operatorRecordMapper.insert(operatorRecord);
+//            OperatorRecord operatorRecord = new OperatorRecord();
+//            operatorRecord.setId(UUIDUtil.generate());
+//            operatorRecord.setOperateUserId(user.getId());
+//            operatorRecord.setOperateUserRealname(user.getRealName());
+//            operatorRecord.setOperateEntityId(uuid);
+//            operatorRecord.setOperateEntityName("recordDepartment");
+//            operatorRecord.setOperateType(SyncOperateType.SAVE);
+//            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
+//            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
+//            operatorRecordMapper.insert(operatorRecord);
             return ResultUtil.isSuccess;
         }else if(u==ResultUtil.isHave){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -176,7 +175,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     public int deleteById(String id) {
         RecordDepartment recordDepartment = recordDepartmentMapper.selectById(id);
         try {
-            User user = setUserByType(recordDepartment,3);
+            User user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
             if(user ==null){
                 int re = recordDepartmentMapper.deleteById(id);
                 if(re==1) {
@@ -187,7 +186,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             }
             int r = recordDepartmentMapper.deleteById(id);
             int u = userService.deleteByUserName("BADW",recordDepartment.getTelphone());
-            if (r + u == 2) {
+            if (r >0&&u==ResultUtil.isSuccess) {
                 return ResultUtil.isSuccess;
             }else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -228,7 +227,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             //和上一次作比较
             RecordDepartment newRecordDepartment = recordDepartmentMapper.selectById(uuid);
             Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newRecordDepartment, new String[]{"id"});
-
             if (r==1&&u==ResultUtil.isSuccess) {
                 return ResultUtil.isSuccess;
             }else if(u==1){
@@ -242,7 +240,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isException;
         }
-        //return true;
     }
 
     /**
@@ -260,42 +257,42 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     }
 
 
-        /**
-         * 设置User
-         * @param recordDepartment
-         * @param type
-         * @return
-         */
-        public User setUserByType (RecordDepartment recordDepartment,int type){
-            User user = new User();
-            switch (type) {
-                //添加user
-                case 1:
-                    user.setId(UUIDUtil.generate());
-                    user.setUserName("BADW"+recordDepartment.getTelphone());
-                    user.setRealName(recordDepartment.getDepartmentName());
-                    user.setRoleId("BADW");
-                    user.setTelphone(recordDepartment.getTelphone());
-                    user.setDistrictId(recordDepartment.getDepartmentAddress());
-                    break;
-                 //修改user
-                case 2:
-                    RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-                    user = userService.findByUserName("BADW"+oldDate.getTelphone());
-                    user.setUserName("BADW"+recordDepartment.getTelphone());
-                    user.setRealName(recordDepartment.getDepartmentName());
-                    user.setRoleId("BADW");
-                    user.setTelphone(recordDepartment.getTelphone());
-                    user.setDistrictId(recordDepartment.getDepartmentAddress());
-                    break;
-                 //删除user
-                case 3:
-                    user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
-                default:
-                    break;
-            }
-            return user;
-        }
+//        /**
+//         * 设置User
+//         * @param recordDepartment
+//         * @param type
+//         * @return
+//         */
+//        public User setUserByType (RecordDepartment recordDepartment,int type){
+//            User user = new User();
+//            switch (type) {
+//                //添加user
+//                case 1:
+//                    user.setId(UUIDUtil.generate());
+//                    user.setUserName("BADW"+recordDepartment.getTelphone());
+//                    user.setRealName(recordDepartment.getDepartmentName());
+//                    user.setRoleId("BADW");
+//                    user.setTelphone(recordDepartment.getTelphone());
+//                    user.setDistrictId(recordDepartment.getDepartmentAddress());
+//                    break;
+//                 //修改user
+//                case 2:
+//                    RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
+//                    user = userService.findByUserName("BADW"+oldDate.getTelphone());
+//                    user.setUserName("BADW"+recordDepartment.getTelphone());
+//                    user.setRealName(recordDepartment.getDepartmentName());
+//                    user.setRoleId("BADW");
+//                    user.setTelphone(recordDepartment.getTelphone());
+//                    user.setDistrictId(recordDepartment.getDepartmentAddress());
+//                    break;
+//                 //删除user
+//                case 3:
+//                    user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
+//                default:
+//                    break;
+//            }
+//            return user;
+//        }
 
     /**
      * 历史记录查询
