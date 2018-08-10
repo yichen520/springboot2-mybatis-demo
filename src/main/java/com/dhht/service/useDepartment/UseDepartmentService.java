@@ -4,6 +4,7 @@ import com.dhht.common.JsonObjectBO;
 
 import com.dhht.model.UseDepartment;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public interface UseDepartmentService {
 
-    JsonObjectBO insert(UseDepartment useDepartment);
+    JsonObjectBO insert(UseDepartment useDepartment,HttpServletRequest httpServletRequest);
 
     JsonObjectBO update(UseDepartment useDepartment);
 

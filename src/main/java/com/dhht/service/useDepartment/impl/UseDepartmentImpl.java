@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public JsonObjectBO insert(UseDepartment useDepartment) {
+    public JsonObjectBO insert(UseDepartment useDepartment,HttpServletRequest httpServletRequest) {
         String code = useDepartment.getCode();
         if(useDepartmentDao.selectByCode(code)!=null){
             return JsonObjectBO.error("该单位已经存在");
