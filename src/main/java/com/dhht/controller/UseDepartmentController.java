@@ -43,9 +43,9 @@ public class UseDepartmentController {
      */
     @Log("添加用户")
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
-    public JsonObjectBO insert(@RequestBody UseDepartment useDepartment){
+    public JsonObjectBO insert(@RequestBody UseDepartment useDepartment,HttpServletRequest httpServletRequest){
         try{
-        JsonObjectBO jsonObjectBO = useDepartmentService.insert(useDepartment);
+        JsonObjectBO jsonObjectBO = useDepartmentService.insert(useDepartment,httpServletRequest);
         return jsonObjectBO;}
         catch (Exception e){
             logger.error(e.getMessage(),e);

@@ -28,7 +28,7 @@ public class ExamineCountController {
     @Autowired
     private DistrictService districtService;
 
-    @RequestMapping(value = "examine/info")
+    @RequestMapping(value = "examine/makeDepartment/info")
     public JsonObjectBO examineinfo(@RequestBody Map map, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         try {
@@ -39,7 +39,9 @@ public class ExamineCountController {
             return JsonObjectBO.exception("查询失败");
         }
     }
-    @RequestMapping(value = "punish/makeDepartment")
+
+
+    @RequestMapping(value = "punish/makeDepartment/info")
     public JsonObjectBO punishmakedepartmentinfo(@RequestBody Map map, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         try {
@@ -51,7 +53,7 @@ public class ExamineCountController {
         }
     }
 
-    @RequestMapping(value = "punish/employee")
+    @RequestMapping(value = "punish/employee/info")
     public JsonObjectBO punishemployeeinfo(@RequestBody Map map, HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
         try {
@@ -86,7 +88,6 @@ public class ExamineCountController {
     public JsonObjectBO selectmakedepartmentDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
-
         try {
             List<DistrictMenus> districtMenus =districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("district",districtMenus);
@@ -95,11 +96,10 @@ public class ExamineCountController {
             return JsonObjectBO.exception("获取区域失败");
         }
     }
-    @RequestMapping(value = "examine/district")
+    @RequestMapping(value = "examine/makeDepartment/district")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
-
         try {
             List<DistrictMenus> districtMenus =districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("district",districtMenus);

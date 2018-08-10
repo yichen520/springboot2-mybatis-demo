@@ -151,9 +151,8 @@ public class MinitorServiceImpl implements MinitorService {
         List<String>  list =(List<String>)map.get("districts");
         User user= (User)httpServletRequest.getSession().getAttribute("user");
         if (list == null){
-//            String str = user.getDistrictId().substring(0,2);
-//            list=new ArrayList<String>();
-            String str = user.getRoleId();
+            String str = user.getDistrictId();
+            list =new ArrayList<>();
             list.add(str);
         }
         List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
@@ -191,7 +190,8 @@ public class MinitorServiceImpl implements MinitorService {
 //            String str = user.getDistrictId().substring(0,2);
 //            list=new ArrayList<String>();
 //            list.add(str+"0000");
-            String str = user.getRoleId();
+            String str = user.getDistrictId();
+            list = new ArrayList<>();
             list.add(str);
         }
         List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
@@ -230,10 +230,9 @@ public class MinitorServiceImpl implements MinitorService {
         List<String>  list =(List<String>)map.get("districts");
         User user= (User)httpServletRequest.getSession().getAttribute("user");
         if (list == null){
-//            String str = user.getDistrictId().substring(0,2);
-//            list=new ArrayList<String>();
-//            list.add(str+"0000");
-            String str = user.getRoleId();
+
+            String str = user.getDistrictId();
+            list = new ArrayList<>();
             list.add(str);
         }
         List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
