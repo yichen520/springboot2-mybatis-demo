@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhht.dao.OperatorRecordMapper">
+  <resultMap id="BaseResultMap" type="com.dhht.model.OperatorRecord">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="operate_user_id" jdbcType="VARCHAR" property="operateUserId" />
+    <result column="operate_user_realname" jdbcType="VARCHAR" property="operateUserRealname" />
+    <result column="operate_entity_id" jdbcType="CHAR" property="operateEntityId" />
+    <result column="operate_entity_name" jdbcType="VARCHAR" property="operateEntityName" />
+    <result column="operate_entity_comment" jdbcType="VARCHAR" property="operateEntityComment" />
+    <result column="operate_type" jdbcType="INTEGER" property="operateType" />
+    <result column="operate_type_name" jdbcType="VARCHAR" property="operateTypeName" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+  </resultMap>
+
+  <resultMap id="OperatorResultMap" type="com.dhht.model.OperatorRecord">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="operate_user_id" jdbcType="VARCHAR" property="operateUserId" />
+    <result column="operate_user_realname" jdbcType="VARCHAR" property="operateUserRealname" />
+    <result column="operate_entity_id" jdbcType="CHAR" property="operateEntityId" />
+    <result column="operate_entity_name" jdbcType="VARCHAR" property="operateEntityName" />
+    <result column="operate_entity_comment" jdbcType="VARCHAR" property="operateEntityComment" />
+    <result column="operate_type" jdbcType="INTEGER" property="operateType" />
+    <result column="operate_type_name" jdbcType="VARCHAR" property="operateTypeName" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <collection ofType="com.dhht.model.OperatorRecordDetail" property="operatorRecordDetails">
+      <result column="oid" jdbcType="VARCHAR" property="id" />
+      <result column="entity_operate_record_id" jdbcType="VARCHAR" property="entityOperateRecordId" />
+      <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+      <result column="property_comment" jdbcType="VARCHAR" property="propertyComment" />
+      <result column="old_value" jdbcType="VARCHAR" property="oldValue" />
+      <result column="new_value" jdbcType="VARCHAR" property="newValue" />
+    </collection>
+</resultMap>
+
+<sql id="Base_Column_List">
+ id, operate_user_id, operate_user_realname, operate_entity_id, operate_entity_name,
+ operate_entity_comment, operate_type, operate_type_name, operate_time,flag
+</sql>
+<select id="selectOperatorRecordByFlag" parameterType="java.lang.String" resultMap="OperatorResultMap">
+SELECT o.*,od.id as oid,od.entity_operate_record_id, od.new_value,od.old_value,od.property_comment,od.property_name from
+ operate_record o  JOIN operate_record_detail od
+on o.id=od.entity_operate_record_id
+ and o.flag = #{flag}
+</select>
+
+<select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+ select
+ <include refid="Base_Column_List" />
+ from operate_record
+ where id = #{id,jdbcType=CHAR}
+</select>
+<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+ delete from operate_record
+ where id = #{id,jdbcType=CHAR}
+</delete>
+<insert id="insert" parameterType="com.dhht.model.OperatorRecord">
+ insert into operate_record (id, operate_user_id, operate_user_realname,
+   operate_entity_id, operate_entity_name, operate_entity_comment,
+   operate_type, operate_type_name, operate_time,flag
+   )
+ values (#{id,jdbcType=CHAR}, #{operateUserId,jdbcType=VARCHAR}, #{operateUserRealname,jdbcType=VARCHAR},
+   #{operateEntityId,jdbcType=CHAR}, #{operateEntityName,jdbcType=VARCHAR}, #{operateEntityComment,jdbcType=VARCHAR},
+   #{operateType,jdbcType=INTEGER}, #{operateTypeName,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP},#{flag,jdbcType=VARCHAR}
+   )
+</insert>
+<insert id="insertSelective" parameterType="com.dhht.model.OperatorRecord">
+ insert into operate_record
+ <trim prefix="(" suffix=")" suffixOverrides=",">
+   <if test="id != null">
+     id,
+   </if>
+   <if test="operateUserId != null">
+     operate_user_id,
+   </if>
+   <if test="operateUserRealname != null">
+     operate_user_realname,
+   </if>
+   <if test="operateEntityId != null">
+     operate_entity_id,
+   </if>
+   <if test="operateEntityName != null">
+     operate_entity_name,
+   </if>
+   <if test="operateEntityComment != null">
+     operate_entity_comment,
+   </if>
+   <if test="operateType != null">
+     operate_type,
+   </if>
+   <if test="operateTypeName != null">
+     operate_type_name,
+   </if>
+   <if test="operateTime != null">
+     operate_time,
+   </if>
+ </trim>
+ <trim prefix="values (" suffix=")" suffixOverrides=",">
+   <if test="id != null">
+     #{id,jdbcType=CHAR},
+   </if>
+   <if test="operateUserId != null">
+     #{operateUserId,jdbcType=VARCHAR},
+   </if>
+   <if test="operateUserRealname != null">
+     #{operateUserRealname,jdbcType=VARCHAR},
+   </if>
+   <if test="operateEntityId != null">
+     #{operateEntityId,jdbcType=CHAR},
+   </if>
+   <if test="operateEntityName != null">
+     #{operateEntityName,jdbcType=VARCHAR},
+   </if>
+   <if test="operateEntityComment != null">
+     #{operateEntityComment,jdbcType=VARCHAR},
+   </if>
+   <if test="operateType != null">
+     #{operateType,jdbcType=INTEGER},
+   </if>
+   <if test="operateTypeName != null">
+     #{operateTypeName,jdbcType=VARCHAR},
+   </if>
+   <if test="operateTime != null">
+     #{operateTime,jdbcType=TIMESTAMP},
+   </if>
+ </trim>
+</insert>
+<update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.OperatorRecord">
+ update operate_record
+ <set>
+   <if test="operateUserId != null">
+     operate_user_id = #{operateUserId,jdbcType=VARCHAR},
+   </if>
+   <if test="operateUserRealname != null">
+     operate_user_realname = #{operateUserRealname,jdbcType=VARCHAR},
+   </if>
+   <if test="operateEntityId != null">
+     operate_entity_id = #{operateEntityId,jdbcType=CHAR},
+   </if>
+   <if test="operateEntityName != null">
+     operate_entity_name = #{operateEntityName,jdbcType=VARCHAR},
+   </if>
+   <if test="operateEntityComment != null">
+     operate_entity_comment = #{operateEntityComment,jdbcType=VARCHAR},
+   </if>
+   <if test="operateType != null">
+     operate_type = #{operateType,jdbcType=INTEGER},
+   </if>
+   <if test="operateTypeName != null">
+     operate_type_name = #{operateTypeName,jdbcType=VARCHAR},
+   </if>
+   <if test="operateTime != null">
+     operate_time = #{operateTime,jdbcType=TIMESTAMP},
+   </if>
+ </set>
+ where id = #{id,jdbcType=CHAR}
+</update>
+<update id="updateByPrimaryKey" parameterType="com.dhht.model.OperatorRecord">
+ update operate_record
+ set operate_user_id = #{operateUserId,jdbcType=VARCHAR},
+   operate_user_realname = #{operateUserRealname,jdbcType=VARCHAR},
+   operate_entity_id = #{operateEntityId,jdbcType=CHAR},
+   operate_entity_name = #{operateEntityName,jdbcType=VARCHAR},
+   operate_entity_comment = #{operateEntityComment,jdbcType=VARCHAR},
+   operate_type = #{operateType,jdbcType=INTEGER},
+   operate_type_name = #{operateTypeName,jdbcType=VARCHAR},
+   operate_time = #{operateTime,jdbcType=TIMESTAMP}
+ where id = #{id,jdbcType=CHAR}
+</update>
+</mapper>

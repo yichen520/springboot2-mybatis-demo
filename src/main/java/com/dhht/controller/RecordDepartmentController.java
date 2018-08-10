@@ -1,11 +1,11 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.District;
-import com.dhht.model.DistrictMenus;
-import com.dhht.model.RecordDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
+import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.util.ResultUtil;
@@ -33,7 +33,6 @@ public class RecordDepartmentController {
     @Autowired
     private DistrictService districtService;
 
-    //private JSONObject jsonObject = new JSONObject();
 
     /**
      * 根据角色获取备案单位
@@ -42,7 +41,7 @@ public class RecordDepartmentController {
      * @return
      */
     @RequestMapping(value = "/selectByRole")
-    public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest,@RequestBody Map map){
+    public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest, @RequestBody Map map){
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         int pageSize = (Integer) map.get("pageSize");
         int pageNum = (Integer)map.get("pageNum");
@@ -108,8 +107,46 @@ public class RecordDepartmentController {
     }
 
     /**
-     * 展示备案单位的列表
+     *这是最开始的版本，显示所有的记录
      * @param map
+     * @return
+     */
+//    @RequestMapping(value = "/showhistory")
+//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+//        String flag = (String)map.get("flag");
+//        JSONObject jsonObject = new JSONObject();
+//        try{
+//                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
+//                jsonObject.put("recordDepartments",recordDepartments);
+//        }catch (Exception e ){
+//            return JsonObjectBO.exception(e.getMessage());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
+
+    /**
+     * 这是循环比较两条记录的不同，然后将比较的字段不同的结果放在实体类
+     * @param map
+     * @param httpServletRequest
+     * @return
+     */
+//    @RequestMapping(value = "/showhistory")
+//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+//        String flag = (String)map.get("flag");
+//        JSONObject jsonObject = new JSONObject();
+//        try{
+//            List<CommonHistoryVO> recordDepartments= recordDepartmentService.showHistory(flag);
+//            jsonObject.put("recordDepartments",recordDepartments);
+//        }catch (Exception e ){
+//            return JsonObjectBO.exception(e.getMessage());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
+
+    /**
+     * 这是从表中取出比较的结果
+     * @param map
+     * @param httpServletRequest
      * @return
      */
     @RequestMapping(value = "/showhistory")
@@ -117,8 +154,8 @@ public class RecordDepartmentController {
         String flag = (String)map.get("flag");
         JSONObject jsonObject = new JSONObject();
         try{
-                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
-                jsonObject.put("recordDepartments",recordDepartments);
+            List<OperatorRecord> recordDepartments= recordDepartmentService.showRecordHistory(flag);
+            jsonObject.put("recordDepartments",recordDepartments);
         }catch (Exception e ){
             return JsonObjectBO.exception(e.getMessage());
         }
@@ -130,10 +167,11 @@ public class RecordDepartmentController {
      * @return
      */
     @RequestMapping(value = "/insert")
-    public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment){
+    public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
+
         try {
-            result = recordDepartmentService.insert(recordDepartment);
+            result = recordDepartmentService.insert(recordDepartment,httpServletRequest);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException exception){
             return JsonObjectBO.error("该编号已经存在");
@@ -187,11 +225,10 @@ public class RecordDepartmentController {
      * @return
      */
     @RequestMapping(value = "/update")
-    public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment){
+    public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
-
         try{
-            result = recordDepartmentService.updateById(recordDepartment);
+            result = recordDepartmentService.updateById(httpServletRequest,recordDepartment);
             return ResultUtil.getResult(result);
         }catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());

@@ -66,7 +66,7 @@ public class SealCountServiceImp implements SealCuontService {
             }
 
 
-        count.setCountName(list.get(0).getCountName());
+        count.setCountName("小计"+"("+list.get(0).getCountName()+")");
         count.setSealType("");
         count.setNewSealNum(sealAdd);
         count.setLossSealNum(sealLoss);
@@ -99,7 +99,7 @@ public class SealCountServiceImp implements SealCuontService {
             }
         }
         SealCount count = new SealCount();
-        count.setCountName(dis);
+        count.setCountName("小计"+"("+dis+")");
         count.setSealType("");
         count.setNewSealNum(sealAdd);
         count.setLossSealNum(sealLoss);
@@ -264,31 +264,22 @@ public class SealCountServiceImp implements SealCuontService {
                                 String sealType = "";
                                 switch (sealTypeCode) {
                                     case "01":
-                                        sealType = "法定名称章";
+                                        sealType = "单位专用章";
                                         break;
                                     case "02":
                                         sealType = "财务专用章";
                                         break;
                                     case "03":
-                                        sealType = "发票专用章";
+                                        sealType = "税务专用章";
                                         break;
                                     case "04":
                                         sealType = "合同专用章";
                                         break;
                                     case "05":
-                                        sealType = "法人代表专用章";
+                                        sealType = "法人代表人名章";
                                         break;
                                     case "06":
-                                        sealType = "公章";
-                                        break;
-                                    case "07":
-                                        sealType = "内设机构章";
-                                        break;
-                                    case "08":
-                                        sealType = "分支机构章";
-                                        break;
-                                    case "99":
-                                        sealType = "其他类型章";
+                                        sealType = "其他类型印章";
                                         break;
                                 }
 
@@ -307,31 +298,22 @@ public class SealCountServiceImp implements SealCuontService {
                         switch (sealTypeCode) {
 
                             case "01":
-                                sealType = "法定名称章";
+                                sealType = "单位专用章";
                                 break;
                             case "02":
                                 sealType = "财务专用章";
                                 break;
                             case "03":
-                                sealType = "发票专用章";
+                                sealType = "税务专用章";
                                 break;
                             case "04":
                                 sealType = "合同专用章";
                                 break;
                             case "05":
-                                sealType = "法人代表专用章";
+                                sealType = "法人代表人名章";
                                 break;
                             case "06":
-                                sealType = "公章";
-                                break;
-                            case "07":
-                                sealType = "内设机构章";
-                                break;
-                            case "08":
-                                sealType = "分支机构章";
-                                break;
-                            case "99":
-                                sealType = "其他类型章";
+                                sealType = "其他类型印章";
                                 break;
                         }
                         SealCount Num = getStatus(makeDepartmentCode, sealTypeCode, startTime, endTime);
@@ -345,7 +327,7 @@ public class SealCountServiceImp implements SealCuontService {
                     }
                 }
                 if(count.size()!=0) {
-                count.add(0,subtotal(count));//把小计放入队列
+                count.add(subtotal(count));//把小计放入队列
                     counts.addAll(count);
                 }
             }
@@ -393,31 +375,22 @@ public class SealCountServiceImp implements SealCuontService {
                             String sealType = "";
                             switch (sealTypeCode) {
                                 case "01":
-                                    sealType = "法定名称章";
+                                    sealType = "单位专用章";
                                     break;
                                 case "02":
                                     sealType = "财务专用章";
                                     break;
                                 case "03":
-                                    sealType = "发票专用章";
+                                    sealType = "税务专用章";
                                     break;
                                 case "04":
                                     sealType = "合同专用章";
                                     break;
                                 case "05":
-                                    sealType = "法人代表专用章";
+                                    sealType = "法人代表人名章";
                                     break;
                                 case "06":
-                                    sealType = "公章";
-                                    break;
-                                case "07":
-                                    sealType = "内设机构章";
-                                    break;
-                                case "08":
-                                    sealType = "分支机构章";
-                                    break;
-                                case "99":
-                                    sealType = "其他类型章";
+                                    sealType = "其他类型印章";
                                     break;
                             }
 
@@ -436,31 +409,22 @@ public class SealCountServiceImp implements SealCuontService {
                             String sealType = "";
                             switch (sealTypeCode) {
                                 case "01":
-                                    sealType = "法定名称章";
+                                    sealType = "单位专用章";
                                     break;
                                 case "02":
                                     sealType = "财务专用章";
                                     break;
                                 case "03":
-                                    sealType = "发票专用章";
+                                    sealType = "税务专用章";
                                     break;
                                 case "04":
                                     sealType = "合同专用章";
                                     break;
                                 case "05":
-                                    sealType = "法人代表专用章";
+                                    sealType = "法人代表人名章";
                                     break;
                                 case "06":
-                                    sealType = "公章";
-                                    break;
-                                case "07":
-                                    sealType = "内设机构章";
-                                    break;
-                                case "08":
-                                    sealType = "分支机构章";
-                                    break;
-                                case "99":
-                                    sealType = "其他类型章";
+                                    sealType = "其他类型印章";
                                     break;
                             }
                             SealCount Num = getStatusAndDistrictId(districtchilrenId.getDistrictId(), sealTypeCode, startTime, endTime);
@@ -479,7 +443,7 @@ public class SealCountServiceImp implements SealCuontService {
 
             }
             String dis = districtId.getDistrictName();
-            sealCount.add(0,subtotal(dis,sealCount));//把小计放入队列
+            sealCount.add(subtotal(dis,sealCount));//把小计放入队列
             sealCounts.addAll(sealCount);
 
         }

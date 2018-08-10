@@ -7,6 +7,7 @@ import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.FileService;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class MakeDepartmentController {
 
     @Autowired
     private DistrictService districtService;
+
+    @Autowired
+    private FileService fileService;
 
     private static Logger logger = LoggerFactory.getLogger(MakeDepartmentController.class);
 
@@ -127,6 +133,7 @@ public class MakeDepartmentController {
     public JsonObjectBO insert(@RequestBody Makedepartment makedepartment){
         int result ;
         try {
+//           makedepartment.s
             result = makeDepartmentService.insert(makedepartment);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException d){
@@ -181,6 +188,7 @@ public class MakeDepartmentController {
      * @param httpServletRequest
      * @return
      */
+    @Log("获取区域列表")
     @RequestMapping(value = "/districtInfo")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
@@ -198,13 +206,12 @@ public class MakeDepartmentController {
 
 
 
-
-
     /**
      * 制作单位处罚记录查询
      * @param map
      * @return
      */
+    @Log("制作单位处罚记录查询")
     @RequestMapping(value = "/selectPunish")
     public JsonObjectBO selectPunish(@RequestBody Map map){
         String makeDepartmentName = (String)map.get("MakeDepartmentName");
@@ -226,4 +233,30 @@ public class MakeDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 文件上传接口
+     * @param request
+     * @param file
+     * @return
+     */
+    @Log("制作单位文件上传")
+    @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
+    public JsonObjectBO headFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return JsonObjectBO.error("请选择上传文件");
+        }
+        try {
+            FileInfo uploadFile = fileService.insertFile(request, file);
+            if (uploadFile != null) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("file", uploadFile);
+                return JsonObjectBO.success("头像上传成功", jsonObject);
+            } else {
+                return JsonObjectBO.error("头像上传失败");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("头像文件失败");
+        }
+    }
 }

@@ -57,9 +57,9 @@
 			<scope>test</scope>
 		</dependency>
 		<!--<dependency>-->
-			<!--<groupId>org.springframework.boot</groupId>-->
-			<!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-			<!--<scope>provided</scope>-->
+		<!--<groupId>org.springframework.boot</groupId>-->
+		<!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
+		<!--<scope>provided</scope>-->
 		<!--</dependency>-->
 		<!--Spring 配置加载工具-->
 		<dependency>
@@ -113,19 +113,19 @@
 			<version>1.1.9</version>
 		</dependency>
 		<!--<dependency>-->
-			<!--<groupId>de.codecentric</groupId>-->
-			<!--<artifactId>spring-boot-admin-server</artifactId>-->
-			<!--<version>1.5.4</version>-->
+		<!--<groupId>de.codecentric</groupId>-->
+		<!--<artifactId>spring-boot-admin-server</artifactId>-->
+		<!--<version>1.5.4</version>-->
 		<!--</dependency>-->
 		<!--<dependency>-->
-			<!--<groupId>de.codecentric</groupId>-->
-			<!--<artifactId>spring-boot-admin-server-ui</artifactId>-->
-			<!--<version>1.5.4</version>-->
+		<!--<groupId>de.codecentric</groupId>-->
+		<!--<artifactId>spring-boot-admin-server-ui</artifactId>-->
+		<!--<version>1.5.4</version>-->
 		<!--</dependency>-->
 		<!--<dependency>-->
-			<!--<groupId>de.codecentric</groupId>-->
-			<!--<artifactId>spring-boot-admin-starter-client</artifactId>-->
-			<!--<version>1.5.4</version>-->
+		<!--<groupId>de.codecentric</groupId>-->
+		<!--<artifactId>spring-boot-admin-starter-client</artifactId>-->
+		<!--<version>1.5.4</version>-->
 		<!--</dependency>-->
 		<dependency>
 			<groupId>com.vaadin.external.google</groupId>
@@ -151,8 +151,8 @@
 			<version>1.27</version>
 		</dependency>
 		<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>

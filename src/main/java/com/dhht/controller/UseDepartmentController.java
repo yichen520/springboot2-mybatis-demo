@@ -88,7 +88,6 @@ public class UseDepartmentController {
         int pageNum = (int) map.get("pageNum");
         int pageSize = (int) map.get("pageSize");
         User user = (User)httpServletRequest.getSession().getAttribute("user");
-
         String localDistrictId = StringUtil.DistrictUtil(user.getDistrictId())[0]+"0000";
         try{
         JsonObjectBO jsonObjectBO = useDepartmentService.find(localDistrictId,code, name, districtId, departmentStatus, pageNum, pageSize);
@@ -155,7 +154,6 @@ public class UseDepartmentController {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
         }
-
     }
 
 
@@ -180,6 +178,5 @@ public class UseDepartmentController {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
         }
-
     }
 }

@@ -15,9 +15,6 @@ import java.util.Map;
  * Created by 崔杨 on 2018/4/19.
  */
 public interface UserService  {
-    int insert(User user);
-
-    int update(User user);
 
     int delete(String id);
 
@@ -25,11 +22,15 @@ public interface UserService  {
 
     PageInfo<User> selectByDistrict(String id,int pageSum,int pageNum);
 
-    int deleteByUserName(String userName);
+    int deleteByUserName(String roleId, String telphone);
 
     User findByUserName(String userName);
 
+    int insert(String telphone,String roleId,String realName,String districtId);
 
+    int update(String oldTelPhone,String telPhone,String roleId,String realName,String districtId);
+
+    User findById(String Id);
 
 }
 

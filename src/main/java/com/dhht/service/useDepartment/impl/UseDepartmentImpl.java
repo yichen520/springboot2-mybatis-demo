@@ -9,6 +9,7 @@ import com.dhht.model.Makedepartment;
 import com.dhht.model.SyncEntity;
 import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
+import com.dhht.service.District.DistrictService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
@@ -39,6 +40,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
     private UserDao userDao;
     @Autowired
     private UseDepartmentDao useDepartmentDao;
+    @Autowired
+    private DistrictService districtService;
 
 
     /**
@@ -119,46 +122,27 @@ public class UseDepartmentImpl implements UseDepartmentService {
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("查询成功");
+            return jsonObjectBO;
         } else if(districtId != null){
-            String districtIds[] = StringUtil.DistrictUtil(districtId);
-            if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
-                list = useDepartmentDao.find(code,districtIds[0],name,departmentStatus);
-                PageInfo<UseDepartment> result = new PageInfo<>(list);
-                jsonObject.put("useDepartment", result);
-                jsonObjectBO.setData(jsonObject);
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("查询成功");
-            }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
-                list = useDepartmentDao.find(code,districtIds[0] + districtIds[1],name,departmentStatus);
-                PageInfo<UseDepartment> result = new PageInfo<>(list);
-                jsonObject.put("useDepartment", result);
-                jsonObjectBO.setData(jsonObject);
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("查询成功");
-            }else if (!districtIds[1].equals("00")&&!districtIds[2].equals("00")){
-                list = useDepartmentDao.find(code,districtId,name,departmentStatus);
-                PageInfo<UseDepartment> result = new PageInfo<>(list);
-                jsonObject.put("useDepartment", result);
-                jsonObjectBO.setData(jsonObject);
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("查询成功");
-            }
+            String districtIds = StringUtil.getDistrictId(districtId);
+            list = useDepartmentDao.find(code,districtIds,name,departmentStatus);
         }
         else {
              list = useDepartmentDao.find(code,districtId,name,departmentStatus);
-            PageInfo<UseDepartment> result = new PageInfo<>(list);
-            jsonObject.put("useDepartment", result);
-            jsonObjectBO.setData(jsonObject);
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("查询成功");
         }
+        for (UseDepartment useDepartment:list) {
+            useDepartment.setDistrictName(districtService.selectByDistrictId(useDepartment.getDistrictId()));
+        }
+        PageInfo<UseDepartment> result = new PageInfo<>(list);
+        jsonObject.put("useDepartment", result);
+        jsonObjectBO.setData(jsonObject);
+        jsonObjectBO.setCode(1);
+        jsonObjectBO.setMessage("查询成功");
         return jsonObjectBO;
     }
 
-
     /**
      *根据区域查找用户
-
      * @param id
      * @param pageSize
      * @param pageNum
@@ -166,6 +150,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     public PageInfo<UseDepartment> selectByDistrict(String id,String departmentStatus,int pageNum, int pageSize) {
         List<UseDepartment> list = new ArrayList<UseDepartment>();
+        PageHelper.startPage(pageNum, pageSize, false);
         String districtIds[] = StringUtil.DistrictUtil(id);
         if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
             list = useDepartmentDao.find(null,districtIds[0],null,departmentStatus);
@@ -174,7 +159,9 @@ public class UseDepartmentImpl implements UseDepartmentService {
         } else {
             list = useDepartmentDao.find(null,id,null,departmentStatus);
         }
-        PageHelper.startPage(pageNum, pageSize, false);
+        for (UseDepartment useDepartment:list) {
+            useDepartment.setDistrictName(districtService.selectByDistrictId(useDepartment.getDistrictId()));
+        }
         PageInfo<UseDepartment> result = new PageInfo(list);
         return result;
     }
@@ -203,7 +190,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     @Override
     public JsonObjectBO showHistory(String flag) {
-        List<UseDepartment> list = useDepartmentDao.selectByFlag(flag);
+        List<UseDepartment> list =setDistrictName(useDepartmentDao.selectByFlag(flag));
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("useDepartment",list);
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -217,6 +204,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public UseDepartment selectDetailById(String id) {
         UseDepartment useDepartment = useDepartmentDao.selectDetailById(id);
+        useDepartment.setDistrictName(districtService.selectByDistrictId(useDepartment.getDistrictId()));
         return useDepartment;
     }
 
@@ -230,6 +218,22 @@ public class UseDepartmentImpl implements UseDepartmentService {
         List<UseDepartment> useDepartment = useDepartmentDao.selectByName(useDepartmentName);
         return useDepartment;
     }
+
+    /**
+     * 设置区域名字
+     * @param list
+     * @return
+     */
+    public List<UseDepartment> setDistrictName(List<UseDepartment> list){
+        for(UseDepartment useDepartment:list){
+            if(useDepartment.getDistrictId()!=null){
+                String districtName = districtService.selectByDistrictId(useDepartment.getDistrictId());
+                useDepartment.setDistrictName(districtName);
+            }
+        }
+        return list;
+    }
+    
 
     /**
      * 数据同步
