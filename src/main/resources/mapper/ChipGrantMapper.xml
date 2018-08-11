@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.ChipGrantMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.ChipGrant" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="chip_apply_id" property="chipApplyId" jdbcType="CHAR" />
+    <result column="chip_code_start" property="chipCodeStart" jdbcType="VARCHAR" />
+    <result column="chip_code_end" property="chipCodeEnd" jdbcType="VARCHAR" />
+    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="grant_num" property="grantNum" jdbcType="INTEGER" />
+    <result column="grant_time" property="grantTime" jdbcType="TIMESTAMP" />
+    <result column="granter_id" property="granterId" jdbcType="CHAR" />
+    <result column="granter" property="granter" jdbcType="VARCHAR" />
+    <result column="grant_way" property="grantWay" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, chip_apply_id, chip_code_start, chip_code_end, receiver, grant_num, grant_time, 
+    granter_id, granter, grant_way, memo, record_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from chip_grant
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from chip_grant
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.ChipGrant" >
+    insert into chip_grant (id, chip_apply_id, chip_code_start, 
+      chip_code_end, receiver, grant_num, 
+      grant_time, granter_id, granter, 
+      grant_way, memo, record_time
+      )
+    values (#{id,jdbcType=CHAR}, #{chipApplyId,jdbcType=CHAR}, #{chipCodeStart,jdbcType=VARCHAR}, 
+      #{chipCodeEnd,jdbcType=VARCHAR}, #{receiver,jdbcType=VARCHAR}, #{grantNum,jdbcType=INTEGER}, 
+      #{grantTime,jdbcType=TIMESTAMP}, #{granterId,jdbcType=CHAR}, #{granter,jdbcType=VARCHAR}, 
+      #{grantWay,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{recordTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.ChipGrant" >
+    insert into chip_grant
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="chipApplyId != null" >
+        chip_apply_id,
+      </if>
+      <if test="chipCodeStart != null" >
+        chip_code_start,
+      </if>
+      <if test="chipCodeEnd != null" >
+        chip_code_end,
+      </if>
+      <if test="receiver != null" >
+        receiver,
+      </if>
+      <if test="grantNum != null" >
+        grant_num,
+      </if>
+      <if test="grantTime != null" >
+        grant_time,
+      </if>
+      <if test="granterId != null" >
+        granter_id,
+      </if>
+      <if test="granter != null" >
+        granter,
+      </if>
+      <if test="grantWay != null" >
+        grant_way,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="recordTime != null" >
+        record_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="chipApplyId != null" >
+        #{chipApplyId,jdbcType=CHAR},
+      </if>
+      <if test="chipCodeStart != null" >
+        #{chipCodeStart,jdbcType=VARCHAR},
+      </if>
+      <if test="chipCodeEnd != null" >
+        #{chipCodeEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="receiver != null" >
+        #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="grantNum != null" >
+        #{grantNum,jdbcType=INTEGER},
+      </if>
+      <if test="grantTime != null" >
+        #{grantTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="granterId != null" >
+        #{granterId,jdbcType=CHAR},
+      </if>
+      <if test="granter != null" >
+        #{granter,jdbcType=VARCHAR},
+      </if>
+      <if test="grantWay != null" >
+        #{grantWay,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="recordTime != null" >
+        #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.ChipGrant" >
+    update chip_grant
+    <set >
+      <if test="chipApplyId != null" >
+        chip_apply_id = #{chipApplyId,jdbcType=CHAR},
+      </if>
+      <if test="chipCodeStart != null" >
+        chip_code_start = #{chipCodeStart,jdbcType=VARCHAR},
+      </if>
+      <if test="chipCodeEnd != null" >
+        chip_code_end = #{chipCodeEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="receiver != null" >
+        receiver = #{receiver,jdbcType=VARCHAR},
+      </if>
+      <if test="grantNum != null" >
+        grant_num = #{grantNum,jdbcType=INTEGER},
+      </if>
+      <if test="grantTime != null" >
+        grant_time = #{grantTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="granterId != null" >
+        granter_id = #{granterId,jdbcType=CHAR},
+      </if>
+      <if test="granter != null" >
+        granter = #{granter,jdbcType=VARCHAR},
+      </if>
+      <if test="grantWay != null" >
+        grant_way = #{grantWay,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="recordTime != null" >
+        record_time = #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.ChipGrant" >
+    update chip_grant
+    set chip_apply_id = #{chipApplyId,jdbcType=CHAR},
+      chip_code_start = #{chipCodeStart,jdbcType=VARCHAR},
+      chip_code_end = #{chipCodeEnd,jdbcType=VARCHAR},
+      receiver = #{receiver,jdbcType=VARCHAR},
+      grant_num = #{grantNum,jdbcType=INTEGER},
+      grant_time = #{grantTime,jdbcType=TIMESTAMP},
+      granter_id = #{granterId,jdbcType=CHAR},
+      granter = #{granter,jdbcType=VARCHAR},
+      grant_way = #{grantWay,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      record_time = #{recordTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>
