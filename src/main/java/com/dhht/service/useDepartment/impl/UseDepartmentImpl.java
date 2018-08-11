@@ -133,9 +133,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
                     operatorRecordDetail.setPropertyName(key);
                     operatorRecordDetailMapper.insert(operatorRecordDetail);
                 }
-
-
-
                 if (r == 1) {
                     SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
                     return JsonObjectBO.success("修改成功", null);
@@ -143,7 +140,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
                     return JsonObjectBO.error("修改失败");
                 }
             }
-
     }
 
     /**

@@ -4,11 +4,9 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.DistrictMenus;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.UseDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
+import com.dhht.service.tools.ShowHistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageInfo;
@@ -33,6 +31,9 @@ public class UseDepartmentController {
 
     @Autowired
     private DistrictService districtService;
+
+    @Autowired
+    private ShowHistoryService showHistoryService;
 
     private static Logger logger = LoggerFactory.getLogger(UseDepartmentController.class);
 
@@ -127,8 +128,10 @@ public class UseDepartmentController {
     public JsonObjectBO showMore(@RequestBody Map map){
         String flag = (String)map.get("flag");
         try {
-            JsonObjectBO jsonObjectBO = useDepartmentService.showHistory(flag);
-            return jsonObjectBO;
+            List<OperatorRecord> operatorRecords = showHistoryService.showUpdteHistory(flag);
+            JSONObject jsonObject= new JSONObject();
+            jsonObject.put("operatorRecords",operatorRecords);
+            return JsonObjectBO.success("查询历史成功",jsonObject);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
