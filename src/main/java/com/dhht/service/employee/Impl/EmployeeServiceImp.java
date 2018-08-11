@@ -84,7 +84,7 @@ public class EmployeeServiceImp implements EmployeeService {
                 return ResultUtil.isFail;
             }
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e.toString());
             return ResultUtil.isError;
         }
     }

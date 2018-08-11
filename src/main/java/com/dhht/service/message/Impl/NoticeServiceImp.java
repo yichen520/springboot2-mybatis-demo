@@ -28,8 +28,8 @@ public class NoticeServiceImp implements NoticeService{
     private NoticeMapper noticeMapper;
     @Autowired
     private FileService fileService;
-    @Value("${notice.pageNum}")
-    private Integer pageNum;
+//    @Value("${notice.pageNum}")
+//    private Integer pageNum;
     @Value("${trackerPort}")
     private String trackerPort;
 
@@ -129,7 +129,7 @@ public class NoticeServiceImp implements NoticeService{
         String districtIds[] = StringUtil.DistrictUtil(district);
         String cityId = districtIds[0]+districtIds[1]+"00";
         String provinceId = districtIds[0]+"00"+"00";
-        return noticeMapper.selectNoticeByNum(pageNum,cityId,provinceId);
+        return noticeMapper.selectNoticeByNum(cityId,provinceId);
     }
 
     /**

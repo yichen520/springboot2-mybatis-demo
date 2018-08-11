@@ -49,8 +49,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private OperatorRecordDetailMapper operatorRecordDetailMapper;
 
-
-
     @Autowired
     private UserService userService;
 
@@ -385,6 +383,11 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         return commonHistoryVOS;
     }
 
+    /**
+     * 展示历史
+     * @param flag
+     * @return
+     */
     @Override
     public List<OperatorRecord> showRecordHistory(String flag) {
         List<OperatorRecord> operatorRecords =  operatorRecordMapper.selectOperatorRecordByFlag(flag);

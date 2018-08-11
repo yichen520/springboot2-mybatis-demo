@@ -1,6 +1,7 @@
 package com.dhht.service.make;
 
 import com.dhht.model.*;
+import com.dhht.model.pojo.CommonHistoryVO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -10,11 +11,11 @@ public interface MakeDepartmentService {
 
      Makedepartment selectDetailById(String id);
 
-     int insert(Makedepartment makedepartment);
+     int insert(Makedepartment makedepartment,User user);
 
-     int update(Makedepartment makedepartment);
+     int update(Makedepartment makedepartment,User user);
 
-     int deleteById(String id);
+     int deleteById(String id,User user);
 
      List<Makedepartment> selectHistory(String flag);
 
@@ -27,4 +28,6 @@ public interface MakeDepartmentService {
      List<Makedepartment> selectPunish(String MakeDepartmentName,String startTime,String endTime,String districtId,String localDistrictId);
 
      List<ExamineRecordDetail> selectExamineDetailByID(String id);
+
+     List<OperatorRecord> showUpdteHistory(String flag);
 }

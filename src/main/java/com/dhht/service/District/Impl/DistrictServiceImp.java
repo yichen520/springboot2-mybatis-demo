@@ -362,6 +362,19 @@ public class DistrictServiceImp implements DistrictService{
     }
 
     @Override
+    public String district(String districtId){
+        String district[] =  StringUtil.DistrictUtil(districtId);
+        if (district[1].equals("00")  && district[2].equals("00")) {
+            return district[0]+"0000";
+        }else if(!district[1].equals("00")&&district[2].equals("00")){
+           return district[0]+district[1]+"00";
+        }else{
+            return districtId;
+        }
+
+    }
+
+    @Override
     public List<DistrictMenus> selectDistrictMakeDepartmentByArray(List<String> DistrictIds) {
         return null;
     }

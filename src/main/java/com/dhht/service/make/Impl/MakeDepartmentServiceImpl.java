@@ -3,7 +3,10 @@ package com.dhht.service.make.Impl;
 import com.dhht.annotation.Sync;
 import com.dhht.dao.ExamineRecordDetailMapper;
 import com.dhht.dao.MakedepartmentMapper;
+import com.dhht.dao.OperatorRecordDetailMapper;
+import com.dhht.dao.OperatorRecordMapper;
 import com.dhht.model.*;
+import com.dhht.model.pojo.CommonHistoryVO;
 import com.dhht.service.employee.EmployeeService;
 
 import com.dhht.service.user.UserService;
@@ -18,10 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 2018/7/2 create by fyc
@@ -38,6 +40,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private OperatorRecordMapper operatorRecordMapper;
+    @Autowired
+    private OperatorRecordDetailMapper operatorRecordDetailMapper;
 
     @Autowired
     private EmployeeService employeeService;
@@ -75,7 +81,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      * @return
      */
     @Override
-    public int insert(Makedepartment makedepartment) {
+    public int insert(Makedepartment makedepartment,User updateUser) {
         if(isInsert(makedepartment)){
             return ResultUtil.isHaveCode;
         }
@@ -84,12 +90,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setFlag(UUIDUtil.generate());
         makedepartment.setVersion(1);
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
+        OperatorRecord operatorRecord = setOperatorRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),SyncOperateType.SAVE);
         int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
-        int u = userService.insert(makedepartment.getTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-        if(m==1&&u==ResultUtil.isSend){
+        int u = userService.insert(makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
+        int o = operatorRecordMapper.insert(operatorRecord);
+        if(m==1&&u==ResultUtil.isSend&&o>0){
             SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
-        }else if(u==1) {
+        }else if(u==ResultUtil.isHave) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isHave;
         }else {
@@ -104,7 +112,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      * @return
      */
     @Override
-    public int update(Makedepartment makedepartment) {
+    public int update(Makedepartment makedepartment,User updateUser) {
         try {
             Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
             List<Employee> employees = employeeService.selectAllByDepartmentCode(oldDate.getDepartmentCode());
@@ -112,8 +120,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             if (d == 0) {
                 return 5;
             }
-
-            User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
+            //User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
             makedepartment.setId(UUIDUtil.generate());
             makedepartment.setVersionTime(DateUtil.getCurrentTime());
             makedepartment.setFlag(makedepartment.getFlag());
@@ -123,10 +130,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isHaveCode;
             }
+            OperatorRecord operatorRecord = setOperatorRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),SyncOperateType.UPDATE);
+            OperatorRecordDetail operatorRecordDetail = compareData(makedepartment,oldDate,operatorRecord.getId());
+            int o = operatorRecordMapper.insert(operatorRecord);
+            int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
             int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
             int e = setEmployeeByDepartment(employees, makedepartment, 2);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-            if (m == 1 && u == 2 && e == 2) {
+            if (m == 1 && u == ResultUtil.isSuccess&& e == 2&&o>0&&od>0) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -137,7 +148,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 return ResultUtil.isError;
             }
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isException;
         }
@@ -149,7 +160,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      * @return
      */
     @Override
-    public int deleteById(String id) {
+    public int deleteById(String id,User updateUser) {
         Makedepartment makedepartment = makedepartmentMapper.selectDetailById(id);
         if(makedepartmentMapper.deleteHistoryByID(id)==0){
             return ResultUtil.isError;
@@ -158,11 +169,13 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
         User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
+        OperatorRecord operatorRecord = setOperatorRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),SyncOperateType.DELETE);
         if(user==null){
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
             int e =setEmployeeByDepartment(employees,makedepartment,1);
-            if(m==1&&e==2){
+            int o = operatorRecordMapper.insert(operatorRecord);
+            if(m==1&&e==2&&o>0){
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
                 return ResultUtil.isSuccess;
             }else {
@@ -172,9 +185,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         }else {
             int u = userService.delete(user.getId());
             makedepartment.setId(UUIDUtil.generate());
-            int m = makedepartmentMapper.deleteById(setFileUrlByType(makedepartment,1));
+            int m = makedepartmentMapper.deleteById(makedepartment);
             int e = setEmployeeByDepartment(employees,makedepartment,1);
-            if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess) {
+            int o = operatorRecordMapper.insert(operatorRecord);
+            if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess&&o>0) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl)AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
                 return ResultUtil.isSuccess;
             } else {
@@ -193,6 +207,23 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public List<Makedepartment> selectHistory(String flag) {
         List<Makedepartment> makedepartments = makedepartmentMapper.selectByFlag(flag);
         return makedepartments;
+    }
+
+    /**
+     * 新版查询
+     * @param flag
+     * @return
+     */
+    @Override
+    public List<OperatorRecord> showUpdteHistory(String flag) {
+        List<OperatorRecord> operatorRecords =  operatorRecordMapper.selectByFlag(flag);
+        for(OperatorRecord operatorRecord : operatorRecords){
+            List<OperatorRecordDetail> operatorRecordDetails = operatorRecordDetailMapper.selectByOperateId(operatorRecord.getId());
+            if(operatorRecordDetails.size()>0){
+                operatorRecord.setOperatorRecordDetails(operatorRecordDetails);
+            }
+        }
+        return operatorRecords;
     }
 
     /**
@@ -374,6 +405,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return examineRecordDetailMapper.selectExamineDetailByID(id);
     }
 
+
     /**
      * 设置url字段
      * @param makedepartment
@@ -410,6 +442,48 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return makedepartment;
     }
 
+
+
+    /**
+     * 数据操作类的设定
+     * @return
+     */
+    public OperatorRecord setOperatorRecord(User user,String flag,String uuid,int type){
+        OperatorRecord operatorRecord = new OperatorRecord();
+        operatorRecord.setFlag(flag);
+        operatorRecord.setId(UUIDUtil.generate());
+        operatorRecord.setOperateUserId(user.getId());
+        operatorRecord.setOperateUserRealname(user.getRealName());
+        operatorRecord.setOperateEntityId(uuid);
+        operatorRecord.setOperateEntityName("makeDepartment");
+        operatorRecord.setOperateType(type);
+        operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(type));
+        operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
+        return operatorRecord;
+    }
+
+    /**
+     * 修改时比较数据
+     * @param newData
+     * @param oldDate
+     * @param operatorRecordId
+     * @return
+     */
+    public OperatorRecordDetail compareData(Makedepartment newData,Makedepartment oldDate,String operatorRecordId) {
+        String ignore[] = new String[]{"id", "departmentStatus", "deleteStatus", "version", "flag", "versionTime", "registerTime"};
+        Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newData, ignore);
+        Set<String> keySet = compareResult.keySet();
+        OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+        for (String key : keySet) {
+            List<Object> list = compareResult.get(key);
+            operatorRecordDetail.setId(UUIDUtil.generate());
+            operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+            operatorRecordDetail.setNewValue(list.get(1).toString());
+            operatorRecordDetail.setOldValue(list.get(0).toString());
+            operatorRecordDetail.setPropertyName(key);
+        }
+        return operatorRecordDetail;
+    }
 
     /**
      * 数据同步
