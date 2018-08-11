@@ -157,21 +157,25 @@ public class MinitorServiceImpl implements MinitorService {
         }
         List<DistrictMenus> districtIds =  districtService.selectDistrictByArray(list);
         List<ExamineCount> examineCounts = new ArrayList<>();
+
+        int countAllSum=0;
         for (DistrictMenus districtId : districtIds) {
+            int countSum=0;
             if (districtId.getChildren() != null){
                 for (DistrictMenus districtchilrenId : districtId.getChildren()) {
-                    ExamineCount examineCount = examineMapper.selectExamineCountByDistrict(districtchilrenId.getDistrictId(),month);
+                    ExamineCount examineCount = examineMapper.selectExamineCountByCityDistrict(districtchilrenId.getDistrictId(),month);
                     if (examineCount.getCountNum()!=0){
+                        countSum = countSum+examineCount.getCountNum();
                         examineCounts.add(examineCount);
                     }
                 }
             }
-            String dis = districtId.getDistrictId().substring(0,4);
-            ExamineCount examineCount = examineMapper.selectExamineCountByCityDistrict(dis,month);
-            if (examineCount.getCountNum()!=0){
-                examineCounts.add(examineCount);
-            }
+            countAllSum = countAllSum + countSum;
+            ExamineCount examineCount = new ExamineCount(districtId.getDistrictName()+"(小计)",countSum);
+            examineCounts.add(examineCount);
         }
+        ExamineCount all = new ExamineCount("总计",countAllSum);
+        examineCounts.add(all);
         return examineCounts;
     }
 
@@ -187,9 +191,6 @@ public class MinitorServiceImpl implements MinitorService {
         List<String>  list =(List<String>)map.get("districts");
         User user= (User)httpServletRequest.getSession().getAttribute("user");
         if (list == null){
-//            String str = user.getDistrictId().substring(0,2);
-//            list=new ArrayList<String>();
-//            list.add(str+"0000");
             String str = user.getDistrictId();
             list = new ArrayList<>();
             list.add(str);
@@ -203,12 +204,11 @@ public class MinitorServiceImpl implements MinitorService {
                 for (DistrictMenus districtchilrenId : districtId.getChildren()) {
                     ExamineCount examineCount = makePunishRecordMapper.selectPunishCountByDistrict(districtchilrenId.getDistrictId(),month);
                     if (examineCount.getCountNum()!=0){
+                        countSum = countSum+examineCount.getCountNum();
                         examineCounts.add(examineCount);
                     }
                 }
             }
-//            String dis = districtId.getDistrictId().substring(0,4);
-//            ExamineCount examineCount =makePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
             countAllSum = countAllSum + countSum;
             ExamineCount examineCount = new ExamineCount(districtId.getDistrictName()+"(小计)",countSum);
             examineCounts.add(examineCount);
@@ -249,8 +249,7 @@ public class MinitorServiceImpl implements MinitorService {
                     }
                 }
             }
-//            String dis = districtId.getDistrictId().substring(0,4);
-//            ExamineCount examineCount =employeePunishRecordMapper.selectPunishCountByCityDistrict(dis,month);
+
               countAllSum = countAllSum + countSum;
               ExamineCount examineCount = new ExamineCount(districtId.getDistrictName()+"(小计)",countSum);
               examineCounts.add(examineCount);
