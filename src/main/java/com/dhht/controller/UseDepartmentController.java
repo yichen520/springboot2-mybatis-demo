@@ -62,9 +62,9 @@ public class UseDepartmentController {
      */
     @Log("使用单位修改")
     @RequestMapping(value = "/update" , method = RequestMethod.POST)
-    public JsonObjectBO update(@RequestBody UseDepartment useDepartment){
+    public JsonObjectBO update(@RequestBody UseDepartment useDepartment,HttpServletRequest httpServletRequest){
         try {
-        JsonObjectBO jsonObjectBO = useDepartmentService.update(useDepartment);
+        JsonObjectBO jsonObjectBO = useDepartmentService.update(useDepartment,httpServletRequest);
         return jsonObjectBO;
         }
         catch (Exception e){

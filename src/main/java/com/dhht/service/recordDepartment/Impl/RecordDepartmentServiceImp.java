@@ -130,7 +130,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         User user1 = (User)httpServletRequest.getSession().getAttribute("user");
         String uuid =UUIDUtil.generate();
         recordDepartment.setId(uuid);
-        //User user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
         recordDepartment.setVersion(1);
         String flag = UUIDUtil.generate10();
         recordDepartment.setFlag(flag);
@@ -138,16 +137,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userService.insert(recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress());
         if(r==1&&u==ResultUtil.isSend){
-//            OperatorRecord operatorRecord = new OperatorRecord();
-//            operatorRecord.setId(UUIDUtil.generate());
-//            operatorRecord.setOperateUserId(user.getId());
-//            operatorRecord.setOperateUserRealname(user.getRealName());
-//            operatorRecord.setOperateEntityId(uuid);
-//            operatorRecord.setOperateEntityName("recordDepartment");
-//            operatorRecord.setOperateType(SyncOperateType.SAVE);
-//            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
-//            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-//            operatorRecordMapper.insert(operatorRecord);
             OperatorRecord operatorRecord = new OperatorRecord();
             operatorRecord.setFlag(flag);
             operatorRecord.setId(UUIDUtil.generate());
@@ -231,7 +220,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             if(recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
                 return ResultUtil.isHave;
             }
-
 
             recordDepartmentMapper.deleteById(recordDepartment.getId());
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
