@@ -12,12 +12,16 @@ import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 /**
  * Created by imac_dhht on 2018/8/11.
  */
+@Service(value = "chipApplyServiceImpl")
+@Transactional
 public class ChipApplyServiceImpl implements ChipApplyService {
 
     @Autowired
