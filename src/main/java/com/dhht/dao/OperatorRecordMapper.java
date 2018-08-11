@@ -21,4 +21,6 @@ public interface OperatorRecordMapper {
     int updateByPrimaryKeySelective(OperatorRecord record);
 
     int updateByPrimaryKey(OperatorRecord record);
+
+    List<OperatorRecord> selectByFlag(@Param("flag") String flag);
 }

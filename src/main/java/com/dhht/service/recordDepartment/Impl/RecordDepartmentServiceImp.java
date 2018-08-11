@@ -49,8 +49,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private OperatorRecordDetailMapper operatorRecordDetailMapper;
 
-
-
     @Autowired
     private UserService userService;
 
@@ -138,16 +136,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userService.insert(recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress());
         if(r==1&&u==ResultUtil.isSend){
-//            OperatorRecord operatorRecord = new OperatorRecord();
-//            operatorRecord.setId(UUIDUtil.generate());
-//            operatorRecord.setOperateUserId(user.getId());
-//            operatorRecord.setOperateUserRealname(user.getRealName());
-//            operatorRecord.setOperateEntityId(uuid);
-//            operatorRecord.setOperateEntityName("recordDepartment");
-//            operatorRecord.setOperateType(SyncOperateType.SAVE);
-//            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
-//            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-//            operatorRecordMapper.insert(operatorRecord);
             OperatorRecord operatorRecord = new OperatorRecord();
             operatorRecord.setFlag(flag);
             operatorRecord.setId(UUIDUtil.generate());
@@ -397,6 +385,11 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         return commonHistoryVOS;
     }
 
+    /**
+     * 展示历史
+     * @param flag
+     * @return
+     */
     @Override
     public List<OperatorRecord> showRecordHistory(String flag) {
         List<OperatorRecord> operatorRecords =  operatorRecordMapper.selectOperatorRecordByFlag(flag);
