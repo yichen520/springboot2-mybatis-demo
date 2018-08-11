@@ -128,7 +128,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         User user1 = (User)httpServletRequest.getSession().getAttribute("user");
         String uuid =UUIDUtil.generate();
         recordDepartment.setId(uuid);
-        //User user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
         recordDepartment.setVersion(1);
         String flag = UUIDUtil.generate10();
         recordDepartment.setFlag(flag);
@@ -219,7 +218,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             if(recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
                 return ResultUtil.isHave;
             }
-
 
             recordDepartmentMapper.deleteById(recordDepartment.getId());
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
