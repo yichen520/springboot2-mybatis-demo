@@ -46,6 +46,10 @@ on o.id=od.entity_operate_record_id
  and o.flag = #{flag}
 </select>
 
+ <select id="selectByFlag" parameterType="java.lang.String" resultMap="OperatorResultMap">
+   SELECT <include refid="Base_Column_List"/> FROM operate_record WHERE flag = #{flag,jdbcType=VARCHAR} ORDER BY operate_time DESC
+ </select>
+
 <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
  select
  <include refid="Base_Column_List" />

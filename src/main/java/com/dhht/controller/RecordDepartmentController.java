@@ -111,25 +111,25 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
-//    @RequestMapping(value = "/showhistory")
-//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-//        String flag = (String)map.get("flag");
-//        JSONObject jsonObject = new JSONObject();
-//        try{
-//                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
-//                jsonObject.put("recordDepartments",recordDepartments);
-//        }catch (Exception e ){
-//            return JsonObjectBO.exception(e.getMessage());
-//        }
-//        return JsonObjectBO.success("查询成功",jsonObject);
-//    }
-
-    /**
-     * 这是循环比较两条记录的不同，然后将比较的字段不同的结果放在实体类
-     * @param map
-     * @param httpServletRequest
-     * @return
-     */
+    @RequestMapping(value = "/showhistory")
+    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        String flag = (String)map.get("flag");
+        JSONObject jsonObject = new JSONObject();
+        try{
+                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
+                jsonObject.put("recordDepartments",recordDepartments);
+        }catch (Exception e ){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+//
+//    /**
+//     * 这是循环比较两条记录的不同，然后将比较的字段不同的结果放在实体类
+//     * @param map
+//     * @param httpServletRequest
+//     * @return
+//     */
 //    @RequestMapping(value = "/showhistory")
 //    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
 //        String flag = (String)map.get("flag");
@@ -149,18 +149,18 @@ public class RecordDepartmentController {
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping(value = "/showhistory")
-    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-        String flag = (String)map.get("flag");
-        JSONObject jsonObject = new JSONObject();
-        try{
-            List<OperatorRecord> recordDepartments= recordDepartmentService.showRecordHistory(flag);
-            jsonObject.put("recordDepartments",recordDepartments);
-        }catch (Exception e ){
-            return JsonObjectBO.exception(e.getMessage());
-        }
-        return JsonObjectBO.success("查询成功",jsonObject);
-    }
+//    @RequestMapping(value = "/showhistory")
+//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+//        String flag = (String)map.get("flag");
+//        JSONObject jsonObject = new JSONObject();
+//        try{
+//            List<OperatorRecord> recordDepartments= recordDepartmentService.showRecordHistory(flag);
+//            jsonObject.put("recordDepartments",recordDepartments);
+//        }catch (Exception e ){
+//            return JsonObjectBO.exception(e.getMessage());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
     /**
      * 添加备案单位
      * @param recordDepartment
