@@ -210,7 +210,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
-     * 新版查询
+     * 新版查询历史
      * @param flag
      * @return
      */

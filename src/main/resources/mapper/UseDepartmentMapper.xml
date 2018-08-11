@@ -36,8 +36,6 @@
     <result column="registered_capital" property="registeredCapital" />
     <result column="business_licence_scanning" property="businessLicenceScanning" />
     <result column="special_business_licence_scanning" property="specialBusinessLicenceScanning" />
-    <result column="legal_idcard_scanning" property="legalIdcardScanning" />
-
   </resultMap>
 
 
@@ -89,7 +87,7 @@
     district_id, address,
     telphone, postal_code, department_status,
     department_certificate, department_certificate_type,is_delete,version,flag,updateTime,found_date,start_date,
-    end_date,registration_department,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning,legal_englishsurname,legal_englishname
+    end_date,registration_department,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning,legal_englishsurname,legal_englishname,
     )
     values (#{id,jdbcType=CHAR},#{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},
     #{nationName,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR},
@@ -100,8 +98,7 @@
     #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
     #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,#{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate}
     ,#{startDate},#{endDate},#{registrationDepartment},#{managementRange},#{registeredCapital},#{businessLicenceScanning}
-    ,#{specialBusinessLicenceScanning},#{legalIdcardScanning},#{legalEnglishsurname},#{legalEnglishname}
-
+    ,#{specialBusinessLicenceScanning},#{legalIdcardScanning},#{legalEnglishsurname},#{legalEnglishname},
     )
   </insert>
 

@@ -46,7 +46,7 @@
   
   <select id="selectNoticeByNum" parameterType="java.lang.Object" resultMap="SimpleResultMap">
     SELECT  <include refid="Simple_Column_list"/>
-    from notice  WHERE district_id LIKE '${cityId}%' OR  district_id LIKE '${provinceId}%' ORDER BY create_time LIMIT 0,#{pageNum}
+    from notice  WHERE district_id LIKE '${cityId}%' OR  district_id LIKE '${provinceId}%' ORDER BY create_time LIMIT 0,5
   </select>
 
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
