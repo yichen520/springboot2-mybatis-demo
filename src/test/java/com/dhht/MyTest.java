@@ -14,7 +14,6 @@ import com.dhht.service.message.NotifyService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.RoleService;
 import com.dhht.service.user.UserService;
-import com.dhht.util.StringUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +65,11 @@ public class MyTest {
 
 
     @Test
-    public void Test() {
-            System.out.println("hello world");
+    public void Test1() {
+        System.out.println("");
     }
+
+
 //
 //    @Test
 //    public void Test1() {
