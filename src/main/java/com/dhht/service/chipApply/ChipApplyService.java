@@ -9,9 +9,9 @@ import java.util.Date;
  */
 public interface ChipApplyService {
 
-    int apply(Integer chipNum,Date getTime,String address,String memo,User user);  //申请
+    int apply(Integer chipNum,String getTime,String address,String memo,User user);  //申请
 
 
-    int grant(String chipApplyId, Integer grantNum, Date grantTime, String chipCodeStart, String chipCodeEnd, String receiver, String grantWay ,String granter,String memo);//发放
+    int grant(String chipApplyId, Integer grantNum, String grantTime,String chipCodeStart, String chipCodeEnd, String receiver, String grantWay ,String granter,String memo);//发放
 
 }

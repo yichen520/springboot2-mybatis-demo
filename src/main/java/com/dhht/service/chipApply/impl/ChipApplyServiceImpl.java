@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -44,26 +45,31 @@ public class ChipApplyServiceImpl implements ChipApplyService {
      * @return
      */
     @Override
-    public int apply(Integer chipNum, Date getTime, String address, String memo,User user) {
-        ChipApply chipApply = new ChipApply();
-        String telphone = user.getTelphone();
-        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByLegalTephone(telphone);
-        if(makeDepartmentSimple==null){
-            return ResultUtil.isNoDepartment;
-        }
-        chipApply.setId(UUIDUtil.generate());
-        chipApply.setAddress(address);
-        chipApply.setChipNum(chipNum);
-        chipApply.setGetTime(getTime);
-        chipApply.setMemo(memo);
-        chipApply.setApplyTime(DateUtil.getCurrentTime());
-        chipApply.setMakeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
-        chipApply.setMakeDepartmentName(makeDepartmentSimple.getDepartmentName());
-        int applyResult = chipApplyMapper.insert(chipApply);
-        if(applyResult<0){
-            return ResultUtil.isFail;
-        }else{
-            return ResultUtil.isSuccess;
+    public int apply(Integer chipNum, String getTime, String address, String memo,User user) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            ChipApply chipApply = new ChipApply();
+            String telphone = user.getTelphone();
+            MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByLegalTephone(telphone);
+            if (makeDepartmentSimple == null) {
+                return ResultUtil.isNoDepartment;
+            }
+            chipApply.setId(UUIDUtil.generate());
+            chipApply.setAddress(address);
+            chipApply.setChipNum(chipNum);
+            chipApply.setGetTime(sdf.parse(getTime));
+            chipApply.setMemo(memo);
+            chipApply.setApplyTime(DateUtil.getCurrentTime());
+            chipApply.setMakeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
+            chipApply.setMakeDepartmentName(makeDepartmentSimple.getDepartmentName());
+            int applyResult = chipApplyMapper.insert(chipApply);
+            if (applyResult < 0) {
+                return ResultUtil.isFail;
+            } else {
+                return ResultUtil.isSuccess;
+            }
+        }catch (Exception e){
+            return ResultUtil.isException;
         }
 
     }
@@ -82,25 +88,30 @@ public class ChipApplyServiceImpl implements ChipApplyService {
      * @return
      */
     @Override
-    public int grant(String chipApplyId, Integer grantNum, Date grantTime, String chipCodeStart, String chipCodeEnd, String receiver, String grantWay ,String granter,String memo) {
-        ChipGrant chipGrant = new ChipGrant();
-        chipGrant.setId(UUIDUtil.generate());
-        chipGrant.setMemo(memo);
-        chipGrant.setChipApplyId(chipApplyId);
-        chipGrant.setGrantNum(grantNum);
-        chipGrant.setGrantTime(grantTime);
-        chipGrant.setChipCodeStart(chipCodeStart);
-        chipGrant.setChipCodeEnd(chipCodeEnd);
-        chipGrant.setReceiver(receiver);
-        chipGrant.setGranter(granter);
-        chipGrant.setGrantWay(grantWay);
-        chipGrant.setGranterId(UUIDUtil.generate());
-        chipGrant.setRecordTime(DateUtil.getCurrentTime());
-        int chipGrantResult = chipGrantMapper.insert(chipGrant);
-        if(chipGrantResult<0){
-            return ResultUtil.isFail;
-        }else{
-            return ResultUtil.isSuccess;
+    public int grant(String chipApplyId, Integer grantNum, String grantTime, String chipCodeStart, String chipCodeEnd, String receiver, String grantWay ,String granter,String memo) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            ChipGrant chipGrant = new ChipGrant();
+            chipGrant.setId(UUIDUtil.generate());
+            chipGrant.setMemo(memo);
+            chipGrant.setChipApplyId(chipApplyId);
+            chipGrant.setGrantNum(grantNum);
+            chipGrant.setGrantTime(sdf.parse(grantTime));
+            chipGrant.setChipCodeStart(chipCodeStart);
+            chipGrant.setChipCodeEnd(chipCodeEnd);
+            chipGrant.setReceiver(receiver);
+            chipGrant.setGranter(granter);
+            chipGrant.setGrantWay(grantWay);
+            chipGrant.setGranterId(UUIDUtil.generate());
+            chipGrant.setRecordTime(DateUtil.getCurrentTime());
+            int chipGrantResult = chipGrantMapper.insert(chipGrant);
+            if (chipGrantResult < 0) {
+                return ResultUtil.isFail;
+            } else {
+                return ResultUtil.isSuccess;
+            }
+        }catch (Exception e){
+            return ResultUtil.isException;
         }
     }
 }

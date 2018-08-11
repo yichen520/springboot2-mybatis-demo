@@ -45,11 +45,10 @@ public class ChipApplyController {
     public JsonObjectBO chipApply(HttpServletRequest httpServletRequest, @RequestBody Map map){
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
         try {
             User user = (User) httpServletRequest.getSession().getAttribute("user");
             Integer chipNum = (Integer) map.get("chipNum");
-            Date getTime = (Date) map.get("getTime");
+            String getTime = (String) map.get("getTime");
             String address = (String) map.get("address");
             String memo = (String) map.get("meomo");
             int a = chipApplyService.apply(chipNum, getTime, address, memo, user);
@@ -59,7 +58,10 @@ public class ChipApplyController {
             } else if (a == ResultUtil.isNoDepartment) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("制作单位不存在");
-            } else {
+            } else if(a==ResultUtil.isException) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("出现异常");
+            }else {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("申请通过");
             }
@@ -75,11 +77,10 @@ public class ChipApplyController {
     @RequestMapping(value = "/chipGrant",method = RequestMethod.POST)
     public JsonObjectBO chipGrant(HttpServletRequest httpServletRequest, @RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
         try {
             String chipApplyId = (String)map.get("chipApplyId");
             Integer grantNum = (Integer)map.get("grantNum");
-            Date grantTime = (Date)map.get("grantTime");
+            String grantTime = (String) map.get("grantTime");
             String chipCodeStart = (String)map.get("chipCodeStart");
             String chipCodeEnd = (String)map.get("chipCodeEnd");
             String receiver = (String)map.get("receiver");
@@ -90,7 +91,10 @@ public class ChipApplyController {
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("发放失败");
-            }  else {
+            } else if(a==ResultUtil.isException) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("出现异常");
+            } else {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("发放通过");
             }
