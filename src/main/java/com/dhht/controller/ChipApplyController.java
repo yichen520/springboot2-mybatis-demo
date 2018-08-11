@@ -3,7 +3,6 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.DistrictMenus;
 import com.dhht.model.User;
 import com.dhht.service.chipApply.ChipApplyService;
 import com.dhht.util.ResultUtil;
