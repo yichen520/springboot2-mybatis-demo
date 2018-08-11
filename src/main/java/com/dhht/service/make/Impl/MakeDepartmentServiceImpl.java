@@ -84,9 +84,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setFlag(UUIDUtil.generate());
         makedepartment.setVersion(1);
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
-        User user =setUserByType(makedepartment,1);
+        User user =new User();
         int m = makedepartmentMapper.insert(makedepartment);
-        int u = userService.insert(user.getTelphone(),user.getRoleId(),user.getRealName(),user.getDistrictId());
+        int u = userService.insert(makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
         if(m==1&&u==ResultUtil.isSend){
             SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
