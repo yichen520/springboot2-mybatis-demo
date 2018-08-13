@@ -3,16 +3,16 @@ package com.dhht.service.useDepartment.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Sync;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.dao.OperatorRecordDetailMapper;
+import com.dhht.dao.OperatorRecordMapper;
 import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.UserDao;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.SyncEntity;
-import com.dhht.model.UseDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
+import com.dhht.util.CompareFieldsUtil;
 import com.dhht.util.DateUtil;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
@@ -25,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by imac_dhht on 2018/6/12.
@@ -38,7 +35,9 @@ import java.util.List;
 public class UseDepartmentImpl implements UseDepartmentService {
 
     @Autowired
-    private UserDao userDao;
+    private OperatorRecordMapper operatorRecordMapper;
+    @Autowired
+    private OperatorRecordDetailMapper operatorRecordDetailMapper;
     @Autowired
     private UseDepartmentDao useDepartmentDao;
     @Autowired
@@ -56,6 +55,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         if(useDepartmentDao.selectByCode(code)!=null){
             return JsonObjectBO.error("该单位已经存在");
         }
+        User user1 = (User)httpServletRequest.getSession().getAttribute("user");
         String Id = UUIDUtil.generate();
         useDepartment.setId(Id);
         useDepartment.setDepartmentStatus("01");//状态1为正常 00 为全部  02为注销
@@ -67,13 +67,20 @@ public class UseDepartmentImpl implements UseDepartmentService {
         if(useDepartmentResult<0){
             return JsonObjectBO.error("添加失败");
         }else{
+            OperatorRecord operatorRecord = new OperatorRecord();
+            operatorRecord.setFlag(Id);
+            operatorRecord.setId(UUIDUtil.generate());
+            operatorRecord.setOperateUserId(user1.getId());
+            operatorRecord.setOperateUserRealname(user1.getRealName());
+            operatorRecord.setOperateEntityId(Id);
+            operatorRecord.setOperateEntityName("UseDepartment");
+            operatorRecord.setOperateType(SyncOperateType.SAVE);
+            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
+            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
+            operatorRecordMapper.insert(operatorRecord);
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.SAVE);
             return JsonObjectBO.success("添加成功",null);
         }
-
-
-
-
     }
 
     /**
@@ -82,19 +89,50 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public JsonObjectBO update(UseDepartment useDepartment) {
+    public JsonObjectBO update(UseDepartment useDepartment,HttpServletRequest httpServletRequest) {
             useDepartmentDao.deleteById(useDepartment.getId());
-            UseDepartment useDepartment1 = useDepartmentDao.selectById(useDepartment.getId());
-            if (useDepartment1 == null) {
+            UseDepartment oldUseDepartment = useDepartmentDao.selectById(useDepartment.getId());
+            if (oldUseDepartment == null) {
                 return JsonObjectBO.error("修改失败");
             } else {
                 useDepartment.setVersion(useDepartment.getVersion() + 1);
                 useDepartment.setIsDelete(false);
                 useDepartment.setUpdateTime(DateUtil.getCurrentTime());
-                useDepartment.setId(UUIDUtil.generate());
-                useDepartment.setFlag(useDepartment1.getFlag());
-                useDepartment.setDepartmentStatus(useDepartment1.getDepartmentStatus());
+                String uuid = UUIDUtil.generate();
+                useDepartment.setId(uuid);
+                useDepartment.setFlag(oldUseDepartment.getFlag());
+                useDepartment.setDepartmentStatus(oldUseDepartment.getDepartmentStatus());
                 int r = useDepartmentDao.insert(useDepartment);
+                //增加操作记录
+                User user = (User)httpServletRequest.getSession().getAttribute("user");
+                OperatorRecord operatorRecord = new OperatorRecord();
+                String operatorRecordId = UUIDUtil.generate();
+                operatorRecord.setFlag(oldUseDepartment.getFlag());
+                operatorRecord.setId(operatorRecordId);
+                operatorRecord.setOperateUserId(user.getId());
+                operatorRecord.setOperateUserRealname(user.getRealName());
+                operatorRecord.setOperateEntityId(uuid);
+                operatorRecord.setOperateEntityName("UseDepartment");
+                operatorRecord.setOperateType(SyncOperateType.UPDATE);
+                operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.UPDATE));
+                operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
+                operatorRecordMapper.insert(operatorRecord);
+
+                //和上一次作比较  然后比较不同
+                UseDepartment newUseDepartment =useDepartmentDao.selectById(uuid);
+                Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldUseDepartment, newUseDepartment, new String[]{"id","departmentAddress","isDelete","version","operator","updateTime"});
+                Set<String> keySet = compareResult.keySet();
+                for(String key : keySet){
+                    List<Object> list = compareResult.get(key);
+                    OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+                    operatorRecordDetail.setId(UUIDUtil.generate());
+                    operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+                    operatorRecordDetail.setNewValue(list.get(1).toString());
+                    operatorRecordDetail.setOldValue(list.get(0).toString());
+//                operatorRecordDetail.setPropertyComment();
+                    operatorRecordDetail.setPropertyName(key);
+                    operatorRecordDetailMapper.insert(operatorRecordDetail);
+                }
                 if (r == 1) {
                     SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
                     return JsonObjectBO.success("修改成功", null);
@@ -102,7 +140,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
                     return JsonObjectBO.error("修改失败");
                 }
             }
-
     }
 
     /**

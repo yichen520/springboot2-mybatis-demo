@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 2018/6/15 create by fyc
  */
-@Service(value = "DistrictService")
+@Service(value = "districtService")
 @Transactional
 public class DistrictServiceImp implements DistrictService{
     @Autowired
