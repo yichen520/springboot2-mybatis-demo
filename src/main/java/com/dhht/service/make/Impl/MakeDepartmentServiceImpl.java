@@ -135,9 +135,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int o = operatorRecordMapper.insert(operatorRecord);
             int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
             int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
-            int e = setEmployeeByDepartment(employees, makedepartment, 2);
+            //int e = setEmployeeByDepartment(employees, makedepartment, 2);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-            if (m == 1 && u == ResultUtil.isSuccess&& e == 2&&o>0&&od>0) {
+            if (m == 1 && u == ResultUtil.isSuccess&&o>0&&od>0) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -148,7 +148,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 return ResultUtil.isError;
             }
         }catch (Exception e){
-            //System.out.println(e.getMessage());
+            e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isException;
         }
@@ -173,7 +173,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         if(user==null){
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e =setEmployeeByDepartment(employees,makedepartment,1);
+            int e =setEmployeeByDepartment(employees,makedepartment,updateUser);
             int o = operatorRecordMapper.insert(operatorRecord);
             if(m==1&&e==2&&o>0){
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
@@ -186,7 +186,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int u = userService.delete(user.getId());
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e = setEmployeeByDepartment(employees,makedepartment,1);
+            int e = setEmployeeByDepartment(employees,makedepartment,updateUser);
             int o = operatorRecordMapper.insert(operatorRecord);
             if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess&&o>0) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl)AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
@@ -365,35 +365,21 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
-     * 对备案单位操作时同时操作从业人员
+     * 对制作单位操作时同时操作从业人员
      * @param employees
      * @return
      */
-    public int setEmployeeByDepartment(List<Employee> employees,Makedepartment makedepartment,int type) {
-        switch (type) {
-            //执行删除
-            case 1:
-                for (Employee emp : employees) {
-                    int e = employeeService.deleteEmployee(emp.getId());
-                    if (e != 2) {
-                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                        return ResultUtil.isError;
-                    }
-                }
-                return ResultUtil.isSuccess;
-            //执行修改
-            case 2:
-                for(Employee emp : employees){
-                    int e = employeeService.updateMakeDepartment(emp.getId(),makedepartment.getDepartmentCode());
-                    if(e==0) {
-                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                        return ResultUtil.isError;
-                    }
-                }
-                return ResultUtil.isSuccess;
+    public int setEmployeeByDepartment(List<Employee> employees,Makedepartment makedepartment,User user) {
+        for (Employee emp : employees) {
+            int e = employeeService.deleteEmployee(emp.getId(),user);
+            if (e != 2) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isError;
+            }
         }
         return ResultUtil.isSuccess;
     }
+
 
     /**
      * 检查详情
@@ -458,7 +444,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         operatorRecord.setOperateEntityName("makeDepartment");
         operatorRecord.setOperateType(type);
         operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(type));
-        operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
+        operatorRecord.setOperateTime(DateUtil.getCurrentTime());
         return operatorRecord;
     }
 
@@ -474,12 +460,25 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newData, ignore);
         Set<String> keySet = compareResult.keySet();
         OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+        if(keySet.size()==0){
+            operatorRecordDetail.setId(UUIDUtil.generate());
+            operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+            operatorRecordDetail.setPropertyName("无任何数据修改！");
+        }
         for (String key : keySet) {
             List<Object> list = compareResult.get(key);
             operatorRecordDetail.setId(UUIDUtil.generate());
             operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-            operatorRecordDetail.setNewValue(list.get(1).toString());
-            operatorRecordDetail.setOldValue(list.get(0).toString());
+            if(list.get(1)==null||list.get(1)==""||list.get(1).toString()==null||list.get(1).toString()==""){
+                operatorRecordDetail.setNewValue("未填写任何值！");
+            }else {
+                operatorRecordDetail.setNewValue(list.get(1).toString());
+            }
+            if(list.get(0)==null||list.get(0)==""||list.get(0).toString()==null||list.get(0).toString()==""){
+                operatorRecordDetail.setOldValue("未填写任何值！");
+            }else {
+                operatorRecordDetail.setOldValue(list.get(0).toString());
+            }
             operatorRecordDetail.setPropertyName(key);
         }
         return operatorRecordDetail;

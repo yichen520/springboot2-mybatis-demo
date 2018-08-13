@@ -99,7 +99,6 @@ public class EmployeeController {
 
     /**
      * 从业人员的添加
-     *
      * @param employee
      * @return
      */
@@ -137,9 +136,10 @@ public class EmployeeController {
      */
     @Log("修改从业人员")
     @RequestMapping(value = "/update")
-    public JsonObjectBO update(@RequestBody Map map) {
+    public JsonObjectBO update(@RequestBody Employee employee,HttpServletRequest httpServletRequest) {
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
-            return ResultUtil.getResult(employeeService.updateEmployee(map));
+            return ResultUtil.getResult(employeeService.updateEmployee(employee,user));
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("修改失败");
@@ -148,17 +148,16 @@ public class EmployeeController {
 
     /**
      * 删除从业人员
-     *
      * @param map
      * @return
      */
     @Log("删除从业人员")
     @RequestMapping(value = "/delete")
-    public JsonObjectBO delete(@RequestBody Map map) {
+    public JsonObjectBO delete(@RequestBody Map map,HttpServletRequest httpServletRequest) {
         String id = (String) map.get("id");
-
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
-            return ResultUtil.getResult(employeeService.deleteEmployee(id));
+            return ResultUtil.getResult(employeeService.deleteEmployee(id,user));
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("删除失败！");

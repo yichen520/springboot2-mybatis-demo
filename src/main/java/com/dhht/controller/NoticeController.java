@@ -109,7 +109,7 @@ public class NoticeController {
             jsonObject.put("message",noticeService.selectByNum(user.getDistrictId()));
             return JsonObjectBO.success("公告显示成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("一个未知异常，请刷新界面");
         }
     }
 

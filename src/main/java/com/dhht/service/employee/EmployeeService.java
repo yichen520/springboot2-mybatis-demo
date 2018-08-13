@@ -16,9 +16,9 @@ public interface EmployeeService {
 
     int insertEmployee(Employee employee, User user);
 
-    int updateEmployee(Map map);
+    int updateEmployee(Employee employee,User user);
 
-    int deleteEmployee(String id);
+    int deleteEmployee(String id,User user);
 
     Employee selectEmployeeByID(String employeeCode);
 
