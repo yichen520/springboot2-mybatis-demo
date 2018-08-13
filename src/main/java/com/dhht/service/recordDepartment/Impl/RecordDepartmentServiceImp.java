@@ -239,25 +239,36 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             operatorRecord.setOperateType(SyncOperateType.UPDATE);
             operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.UPDATE));
             operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-            operatorRecordMapper.insert(operatorRecord);
+            int o = operatorRecordMapper.insert(operatorRecord);
 
             //和上一次作比较  然后比较不同
             RecordDepartment newRecordDepartment = recordDepartmentMapper.selectById(uuid);
             Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newRecordDepartment, new String[]{"id","principalId","departmentAddress","isDelete","version","operator","updateTime"});
             Set<String> keySet = compareResult.keySet();
-            for(String key : keySet){
-                List<Object> list = compareResult.get(key);
-                OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+            OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+            if(keySet.size()==0){
                 operatorRecordDetail.setId(UUIDUtil.generate());
                 operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-                operatorRecordDetail.setNewValue(list.get(1).toString());
-                operatorRecordDetail.setOldValue(list.get(0).toString());
-//                operatorRecordDetail.setPropertyComment();
-                operatorRecordDetail.setPropertyName(key);
-               operatorRecordDetailMapper.insert(operatorRecordDetail);
+                operatorRecordDetail.setPropertyName("无任何数据修改！");
             }
-
-            if (r==1&&u==ResultUtil.isSuccess) {
+            for (String key : keySet) {
+                List<Object> list = compareResult.get(key);
+                operatorRecordDetail.setId(UUIDUtil.generate());
+                operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+                if(list.get(1)==null||list.get(1)==""){
+                    operatorRecordDetail.setNewValue("未填写任何值！");
+                }else {
+                    operatorRecordDetail.setNewValue(list.get(1).toString());
+                }
+                if(list.get(0)==null||list.get(0)==""){
+                    operatorRecordDetail.setOldValue("未填写任何值！");
+                }else {
+                    operatorRecordDetail.setOldValue(list.get(0).toString());
+                }
+                operatorRecordDetail.setPropertyName(key);
+            }
+            int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
+            if (r==1&&u==ResultUtil.isSuccess&&o>0&&od>0) {
                 return ResultUtil.isSuccess;
             }else if(u==1){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -270,7 +281,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isException;
         }
-        //return true;
     }
 
     /**

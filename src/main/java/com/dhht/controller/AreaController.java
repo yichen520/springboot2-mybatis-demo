@@ -24,7 +24,6 @@ public class AreaController {
     public JsonObjectBO getTrees(){
         //获取当前登录用户
         User user = new User();
-
         return null;
     }
 

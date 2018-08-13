@@ -109,6 +109,7 @@ public class EmployeeController {
         try {
             return ResultUtil.getResult(employeeService.insertEmployee(employee, user));
         } catch (Exception e) {
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("添加失败！");
         }
     }

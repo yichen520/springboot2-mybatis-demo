@@ -407,12 +407,12 @@ public class EmployeeServiceImp implements EmployeeService {
             List<Object> list = compareResult.get(key);
             operatorRecordDetail.setId(UUIDUtil.generate());
             operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-            if(list.get(1)==null||list.get(1)==""||list.get(1).toString()==null||list.get(1).toString()==""){
+            if(list.get(1)==null||list.get(1)==""){
                 operatorRecordDetail.setNewValue("未填写任何值！");
             }else {
                 operatorRecordDetail.setNewValue(list.get(1).toString());
             }
-            if(list.get(0)==null||list.get(0)==""||list.get(0).toString()==null||list.get(0).toString()==""){
+            if(list.get(0)==null||list.get(0)==""){
                 operatorRecordDetail.setOldValue("未填写任何值！");
             }else {
                 operatorRecordDetail.setOldValue(list.get(0).toString());
