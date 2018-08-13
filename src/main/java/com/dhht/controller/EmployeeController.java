@@ -91,7 +91,7 @@ public class EmployeeController {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception("发生异常！");
+            return JsonObjectBO.exception("获取从业人员列表失败！");
         }
         return JsonObjectBO.success("查询成功", jsonObject);
     }
@@ -109,7 +109,7 @@ public class EmployeeController {
         try {
             return ResultUtil.getResult(employeeService.insertEmployee(employee, user));
         } catch (Exception e) {
-            return JsonObjectBO.exception("发生异常！");
+            return JsonObjectBO.exception("添加失败！");
         }
     }
 
@@ -130,8 +130,7 @@ public class EmployeeController {
 
     /**
      * 修改从业人员
-     *
-     * @param map
+     * @param employee
      * @return
      */
     @Log("修改从业人员")
@@ -181,7 +180,7 @@ public class EmployeeController {
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception("发生异常！");
+            return JsonObjectBO.exception("查询历史记录失败！");
         }
     }
 

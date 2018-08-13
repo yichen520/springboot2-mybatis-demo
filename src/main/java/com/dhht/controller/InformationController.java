@@ -185,7 +185,8 @@ public class InformationController {
         try{
             return useDepartmentService.find(user.getDistrictId(),code,name,districtId,status,pageNum,pageSize);
         }catch (Exception e){
-            return JsonObjectBO.exception("发生异常！");
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("使用单位列表获取失败");
         }
     }
 
@@ -295,6 +296,7 @@ public class InformationController {
             districtMenus = districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("districtMenus",districtMenus);
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -316,7 +318,8 @@ public class InformationController {
             jsonObject.put("districtMenus",list);
             return JsonObjectBO.success("菜单返回成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception("发生异常！");
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("制作单位信息获取失败");
         }
     }
 }

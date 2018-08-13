@@ -57,15 +57,19 @@ public class DistrictController implements InitializingBean
     @RequestMapping(value = "/info",method = RequestMethod.GET)
     public JsonObjectBO selectAllDistrict(){
 
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-        List<DistrictMenus> district = districtService.selectAllDistrict();
+        try {
+            JsonObjectBO jsonObjectBO = new JsonObjectBO();
+            JSONObject jsonObject = new JSONObject();
+            List<DistrictMenus> district = districtService.selectAllDistrict();
 //        String districts = template.opsForValue().get("District");
 //        List<DistrictMenus> district = JSON.parseArray(districts,DistrictMenus.class);
-        jsonObject.put("District",district);
-        jsonObjectBO.setData(jsonObject);
-        jsonObjectBO.setCode(1);
-        return jsonObjectBO;
+            jsonObject.put("District", district);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            return jsonObjectBO;
+        }catch (Exception e){
+            return JsonObjectBO.exception("获取区域列表失败");
+        }
     }
 
     /**
@@ -94,20 +98,26 @@ public class DistrictController implements InitializingBean
         return jsonObjectBO;
     }
 
+    /**
+     * 根据角色选区域
+     * @param httpServletRequest
+     * @return
+     */
+    @Log("根据角色获取区域")
     @RequestMapping(value = "/select")
     public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest){
-       User user = (User) httpServletRequest.getSession().getAttribute("user");
-
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-        List<DistrictMenus> district = districtService.selectOneDistrict(user.getDistrict().getDistrictId());
-        for (DistrictMenus districts:district) {
-            System.out.println(districts.toString());
+        try {
+            User user = (User) httpServletRequest.getSession().getAttribute("user");
+            JsonObjectBO jsonObjectBO = new JsonObjectBO();
+            JSONObject jsonObject = new JSONObject();
+            List<DistrictMenus> district = districtService.selectOneDistrict(user.getDistrict().getDistrictId());
+            jsonObject.put("District", district);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            return jsonObjectBO;
+        }catch (Exception e){
+            return JsonObjectBO.exception("获取区域失败！");
         }
-        jsonObject.put("District",district);
-        jsonObjectBO.setData(jsonObject);
-        jsonObjectBO.setCode(1);
-        return jsonObjectBO;
 
     }
 
