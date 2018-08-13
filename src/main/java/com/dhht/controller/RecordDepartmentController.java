@@ -8,6 +8,7 @@ import com.dhht.model.pojo.CommonHistoryVO;
 import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.ShowHistoryService;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class RecordDepartmentController {
     private RecordDepartmentService recordDepartmentService;
     @Autowired
     private DistrictService districtService;
+    @Autowired
+    private ShowHistoryService showHistoryService;
 
 
     /**
@@ -111,25 +114,25 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
-//    @RequestMapping(value = "/showhistory")
-//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-//        String flag = (String)map.get("flag");
-//        JSONObject jsonObject = new JSONObject();
-//        try{
-//                List<RecordDepartment> recordDepartments= recordDepartmentService.showMore(flag);
-//                jsonObject.put("recordDepartments",recordDepartments);
-//        }catch (Exception e ){
-//            return JsonObjectBO.exception(e.getMessage());
-//        }
-//        return JsonObjectBO.success("查询成功",jsonObject);
-//    }
-
-    /**
-     * 这是循环比较两条记录的不同，然后将比较的字段不同的结果放在实体类
-     * @param map
-     * @param httpServletRequest
-     * @return
-     */
+    @RequestMapping(value = "/showhistory")
+    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        String flag = (String)map.get("flag");
+        JSONObject jsonObject = new JSONObject();
+        try{
+            List<OperatorRecord> recordDepartments = showHistoryService.showUpdteHistory(flag);
+                jsonObject.put("recordDepartments",recordDepartments);
+        }catch (Exception e ){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+//
+//    /**
+//     * 这是循环比较两条记录的不同，然后将比较的字段不同的结果放在实体类
+//     * @param map
+//     * @param httpServletRequest
+//     * @return
+//     */
 //    @RequestMapping(value = "/showhistory")
 //    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
 //        String flag = (String)map.get("flag");
@@ -149,18 +152,18 @@ public class RecordDepartmentController {
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping(value = "/showhistory")
-    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-        String flag = (String)map.get("flag");
-        JSONObject jsonObject = new JSONObject();
-        try{
-            List<OperatorRecord> recordDepartments= recordDepartmentService.showRecordHistory(flag);
-            jsonObject.put("recordDepartments",recordDepartments);
-        }catch (Exception e ){
-            return JsonObjectBO.exception(e.getMessage());
-        }
-        return JsonObjectBO.success("查询成功",jsonObject);
-    }
+//    @RequestMapping(value = "/showhistory")
+//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
+//        String flag = (String)map.get("flag");
+//        JSONObject jsonObject = new JSONObject();
+//        try{
+//            List<OperatorRecord> recordDepartments= recordDepartmentService.showRecordHistory(flag);
+//            jsonObject.put("recordDepartments",recordDepartments);
+//        }catch (Exception e ){
+//            return JsonObjectBO.exception(e.getMessage());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
     /**
      * 添加备案单位
      * @param recordDepartment

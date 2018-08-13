@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.ChipApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.ChipApply" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="chip_num" property="chipNum" jdbcType="INTEGER" />
+    <result column="get_time" property="getTime" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="make_department_code" property="makeDepartmentCode" jdbcType="CHAR" />
+    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, chip_num, get_time, address, make_department_code, make_department_name, apply_time, 
+    memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from chip_apply
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from chip_apply
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.ChipApply" >
+    insert into chip_apply (id, chip_num, get_time, 
+      address, make_department_code, make_department_name, 
+      apply_time, memo)
+    values (#{id,jdbcType=CHAR}, #{chipNum,jdbcType=INTEGER}, #{getTime,jdbcType=TIMESTAMP}, 
+      #{address,jdbcType=VARCHAR}, #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, 
+      #{applyTime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.ChipApply" >
+    insert into chip_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="chipNum != null" >
+        chip_num,
+      </if>
+      <if test="getTime != null" >
+        get_time,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code,
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name,
+      </if>
+      <if test="applyTime != null" >
+        apply_time,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="chipNum != null" >
+        #{chipNum,jdbcType=INTEGER},
+      </if>
+      <if test="getTime != null" >
+        #{getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        #{makeDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.ChipApply" >
+    update chip_apply
+    <set >
+      <if test="chipNum != null" >
+        chip_num = #{chipNum,jdbcType=INTEGER},
+      </if>
+      <if test="getTime != null" >
+        get_time = #{getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.ChipApply" >
+    update chip_apply
+    set chip_num = #{chipNum,jdbcType=INTEGER},
+      get_time = #{getTime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
+      make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

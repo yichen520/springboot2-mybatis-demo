@@ -20,7 +20,7 @@ public interface NoticeMapper {
 
     int update(Notice notice);
 
-    List<NoticeSimple> selectNoticeByNum(@Param("pageNum") Integer pageNum, @Param("cityId") String cityId, @Param("provinceId") String provinceId);
+    List<NoticeSimple> selectNoticeByNum(@Param("cityId") String cityId, @Param("provinceId") String provinceId);
 
     List<NoticeSimple> selectNoticeList( @Param("cityId") String cityId, @Param("provinceId") String provinceId);
 

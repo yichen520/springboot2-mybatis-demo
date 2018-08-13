@@ -130,11 +130,10 @@ public class MakeDepartmentController {
      */
     @Log("添加制作单位")
     @RequestMapping(value = "insert")
-    public JsonObjectBO insert(@RequestBody Makedepartment makedepartment){
-        int result ;
+    public JsonObjectBO insert(@RequestBody Makedepartment makedepartment,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
-//           makedepartment.s
-            result = makeDepartmentService.insert(makedepartment);
+            int result = makeDepartmentService.insert(makedepartment,user);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException d){
             return JsonObjectBO.exception("该用户已经存在");
@@ -151,11 +150,12 @@ public class MakeDepartmentController {
      */
     @Log("注销制作单位")
     @RequestMapping(value = "/delete")
-    public JsonObjectBO delete(@RequestBody Map map){
+    public JsonObjectBO delete(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         String id = (String) map.get("id");
         int result ;
         try{
-            result = makeDepartmentService.deleteById(id);
+            result = makeDepartmentService.deleteById(id,user);
             return ResultUtil.getResult(result);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -170,10 +170,11 @@ public class MakeDepartmentController {
      */
     @Log("修改制作单位")
     @RequestMapping(value = "/update")
-    public JsonObjectBO update(@RequestBody Makedepartment makedepartment){
-        int result ;
+    public JsonObjectBO update(@RequestBody Makedepartment makedepartment,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+
         try {
-            result = makeDepartmentService.update(makedepartment);
+            int result = makeDepartmentService.update(makedepartment,user);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException d){
             return JsonObjectBO.error("该用户已存在");

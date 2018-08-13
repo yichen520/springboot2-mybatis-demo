@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 2018/6/15 create by fyc
  */
-@Service(value = "DistrictService")
+@Service(value = "districtService")
 @Transactional
 public class DistrictServiceImp implements DistrictService{
     @Autowired
@@ -359,6 +359,19 @@ public class DistrictServiceImp implements DistrictService{
             }
         }
         return districtMenus;
+    }
+
+    @Override
+    public String district(String districtId){
+        String district[] =  StringUtil.DistrictUtil(districtId);
+        if (district[1].equals("00")  && district[2].equals("00")) {
+            return district[0]+"0000";
+        }else if(!district[1].equals("00")&&district[2].equals("00")){
+           return district[0]+district[1]+"00";
+        }else{
+            return districtId;
+        }
+
     }
 
     @Override

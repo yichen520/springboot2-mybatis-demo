@@ -352,10 +352,10 @@ public class SealCountServiceImp implements SealCuontService {
         int lossSealNum = 0;
         int logoutSealNum = 0;
         if (districts == null) { //如果传入的为空  则传入的是当前区域的
-            String str = user.getDistrictId().substring(0, 2);
-            districts = new ArrayList<String>();
-           districts.add(str + "0000");
-//            districts.add(str);
+            String str = user.getDistrictId();
+            String dis = districtService.district(str);
+            districts = new ArrayList<>();
+            districts.add(dis);
         }
         List<DistrictMenus> districtIds = districtService.selectDistrictByArray(districts);
         List<SealCount> sealCounts = new ArrayList<>();

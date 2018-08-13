@@ -110,7 +110,7 @@ public class EmployeeController {
         try {
             return ResultUtil.getResult(employeeService.insertEmployee(employee, user));
         } catch (Exception e) {
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("发生异常！");
         }
     }
 

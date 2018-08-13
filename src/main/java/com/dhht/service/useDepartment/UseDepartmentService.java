@@ -15,7 +15,7 @@ public interface UseDepartmentService {
 
     JsonObjectBO insert(UseDepartment useDepartment,HttpServletRequest httpServletRequest);
 
-    JsonObjectBO update(UseDepartment useDepartment);
+    JsonObjectBO update(UseDepartment useDepartment,HttpServletRequest httpServletRequest);
 
     JsonObjectBO find(String localDistrictId,String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize);
 
