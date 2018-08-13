@@ -234,22 +234,22 @@ public class SealServiceImpl implements SealService {
         seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
         List<Seal> list = new ArrayList<Seal>();
 
-        if (status.equals("01")) {
+        if (status.equals("01")) {  //待制作
             seal.setIsRecord(true);
-            seal.setIsMake(true);
+//            seal.setIsMake(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("02")) {
+        } else if (status.equals("02")) {  //待个人化
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsPersonal(true);
+//            seal.setIsPersonal(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("03")) {
+        } else if (status.equals("03")) {  //待交付
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsPersonal(true);
-            seal.setIsDeliver(true);
+//            seal.setIsPersonal(true);
+//            seal.setIsDeliver(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("00")){
@@ -670,22 +670,22 @@ public class SealServiceImpl implements SealService {
 //            seal.setRecordDepartmentCode(recordCode);
             PageHelper.startPage(pageNum, pageSize);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("02")) {
+        } else if (status.equals("02")) {   //个人化
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsPersonal(true);
+//            seal.setIsPersonal(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("03")) {
+        } else if (status.equals("03")) {  //待交付
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsPersonal(true);
-            seal.setIsDeliver(true);
+//            seal.setIsDeliver(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("00")){
             list = sealDao.selectUndelivered(seal);
-        }else if(status.equals("04")){
+        }else if(status.equals("04")){   //已备案
             seal.setIsRecord(true);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("05")){
