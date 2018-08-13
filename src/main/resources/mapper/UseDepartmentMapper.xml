@@ -36,8 +36,6 @@
     <result column="registered_capital" property="registeredCapital" />
     <result column="business_licence_scanning" property="businessLicenceScanning" />
     <result column="special_business_licence_scanning" property="specialBusinessLicenceScanning" />
-    <result column="legal_idcard_scanning" property="legalIdcardScanning" />
-
   </resultMap>
 
 
@@ -101,7 +99,6 @@
     #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,#{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate}
     ,#{startDate},#{endDate},#{registrationDepartment},#{managementRange},#{registeredCapital},#{businessLicenceScanning}
     ,#{specialBusinessLicenceScanning},#{legalIdcardScanning},#{legalEnglishsurname},#{legalEnglishname}
-
     )
   </insert>
 

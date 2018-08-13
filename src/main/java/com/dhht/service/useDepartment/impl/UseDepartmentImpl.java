@@ -168,9 +168,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         else {
              list = useDepartmentDao.find(code,districtId,name,departmentStatus);
         }
-        for (UseDepartment useDepartment:list) {
-            useDepartment.setDistrictName(districtService.selectByDistrictId(useDepartment.getDistrictId()));
-        }
+        list = setDistrictName(list);
         PageInfo<UseDepartment> result = new PageInfo<>(list);
         jsonObject.put("useDepartment", result);
         jsonObjectBO.setData(jsonObject);

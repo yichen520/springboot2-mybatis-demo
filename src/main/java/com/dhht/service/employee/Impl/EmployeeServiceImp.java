@@ -2,6 +2,8 @@ package com.dhht.service.employee.Impl;
 
 import com.dhht.annotation.Sync;
 import com.dhht.dao.EmployeeDao;
+import com.dhht.dao.OperatorRecordDetailMapper;
+import com.dhht.dao.OperatorRecordMapper;
 import com.dhht.model.*;
 
 import com.dhht.service.employee.EmployeeService;
@@ -21,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 2018/7/2 create by fyc
@@ -40,6 +40,10 @@ public class EmployeeServiceImp implements EmployeeService {
     private MakeDepartmentService makeDepartmentService;
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+    @Autowired
+    private OperatorRecordMapper operatorRecordMapper;
+    @Autowired
+    private OperatorRecordDetailMapper operatorRecordDetailMapper;
 
 
     /**
@@ -67,13 +71,14 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setFlag(UUIDUtil.generate());
             employee.setVersion(1);
             employee.setVersionTime(DateUtil.getCurrentTime());
+            OperatorRecord operatorRecord = setOperatorRecord(user,employee.getFlag(),employee.getId(),SyncOperateType.SAVE);
             if (isInsert(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
             }
-
+            int o = operatorRecordMapper.insert(operatorRecord);
             int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
             int e = employeeDao.insert(employee);
-            if (u==ResultUtil.isSend&&e==1) {
+            if (u==ResultUtil.isSend&&e==1&&o>0) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -91,39 +96,38 @@ public class EmployeeServiceImp implements EmployeeService {
 
     /**
      * 更新从业人员
-     * @param map
+     * @param employee
      * @return
      */
     @Override
-    public int updateEmployee(Map map) {
+    public int updateEmployee(Employee employee,User updateUser) {
         try {
-
-            Employee employee = employeeDao.selectById((String) map.get("id"));
-            String oldTelphone = employee.getTelphone();
+            //Employee employee = employeeDao.selectById((String) map.get("id"));
+            Employee oldDate = employeeDao.selectById(employee.getId());
+            String oldTelphone = oldDate.getTelphone();
             int d = employeeDao.deleteById(employee.getId());
             if (d == 0) {
                 return ResultUtil.isError;
             }
-            employee.setEmployeeName((String) map.get("employeeName"));
-            employee.setEmployeeId((String) map.get("employeeId"));
-            employee.setEmployeeJob((String) map.get("employeeJob"));
-            employee.setEmployeeNation((String) map.get("employeeNation"));
-            employee.setFamilyAddressDetail((String) map.get("familyAddressDetail"));
-            employee.setNowAddressDetail((String) map.get("nowAddressDetail"));
-            employee.setEmployeeGender((String) map.get("employeeGender"));
-            employee.setTelphone((String) map.get("telphone"));
-            employee.setContactName((String) map.get("contactName"));
-            employee.setContactTelphone((String) map.get("contactTelphone"));
-
             if (isInsert(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
-            }
-            int u = userService.update(oldTelphone,employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
+            }employee.setEmployeeDepartmentCode(oldDate.getEmployeeDepartmentCode());
+            employee.setEmployeeCode(oldDate.getEmployeeCode());
+            employee.setOfficeCode(oldDate.getOfficeCode());
+            employee.setEmployeeImage(oldDate.getEmployeeImage());
+            employee.setOfficeName(oldDate.getOfficeName());
+            employee.setRegisterName(oldDate.getRegisterName());
+            employee.setRegisterTime(oldDate.getRegisterTime());
             employee.setVersion(employee.getVersion() + 1);
             employee.setVersionTime(DateUtil.getCurrentTime());
             employee.setId(UUIDUtil.generate());
+            OperatorRecord operatorRecord = setOperatorRecord(updateUser,employee.getFlag(),employee.getId(),SyncOperateType.UPDATE);
+            OperatorRecordDetail operatorRecordDetail = compareData(employee,oldDate,operatorRecord.getId());
+            int u = userService.update(oldTelphone,employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
             int e = employeeDao.insert(employee);
-            if (u == ResultUtil.isSuccess && e == 1) {
+            int o = operatorRecordMapper.insert(operatorRecord);
+            int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
+            if (u == ResultUtil.isSuccess && e == 1&&o>0&&od>0) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -134,6 +138,8 @@ public class EmployeeServiceImp implements EmployeeService {
                 return ResultUtil.isFail;
             }
         }catch (Exception e){
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResultUtil.isException;
         }
     }
@@ -147,7 +153,7 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public int deleteEmployee(String id) {
+    public int deleteEmployee(String id,User updateUser) {
        Employee employee = employeeDao.selectById(id);
        User user = userService.findByUserName("CYRY"+employee.getTelphone());
        employee.setId(UUIDUtil.generate());
@@ -156,11 +162,12 @@ public class EmployeeServiceImp implements EmployeeService {
        employee.setLogoutName(employee.getRegisterName());
        employee.setVersion(employee.getVersion()+1);
        employee.setVersionTime(DateUtil.getCurrentTime());
-
+       OperatorRecord operatorRecord = setOperatorRecord(updateUser,employee.getFlag(),employee.getEmployeeId(),SyncOperateType.DELETE);
        if(user==null){
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if(e==1&&d==1){
+           int o = operatorRecordMapper.insert(operatorRecord);
+           if(e==1&&d==1&&o>0){
                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            }else {
@@ -171,7 +178,8 @@ public class EmployeeServiceImp implements EmployeeService {
            int u = userService.deleteByUserName("CYRY",employee.getTelphone());
            int d = employeeDao.deleteById(id);
            int e = employeeDao.delete(employee);
-           if (u==ResultUtil.isSuccess && e > 0&&d>0) {
+           int o = operatorRecordMapper.insert(operatorRecord);
+           if (u==ResultUtil.isSuccess && e> 0&&d>0&&o>0) {
                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee,SyncDataType.EMPLOYEE,SyncOperateType.DELETE);
                return ResultUtil.isSuccess;
            } else {
@@ -357,6 +365,61 @@ public class EmployeeServiceImp implements EmployeeService {
         }
         PageInfo pageInfo = new PageInfo(employees);
         return pageInfo;
+    }
+
+    /**
+     * 数据操作类的设定
+     * @return
+     */
+    public OperatorRecord setOperatorRecord(User user,String flag,String uuid,int type){
+        OperatorRecord operatorRecord = new OperatorRecord();
+        operatorRecord.setFlag(flag);
+        operatorRecord.setId(UUIDUtil.generate());
+        operatorRecord.setOperateUserId(user.getId());
+        operatorRecord.setOperateUserRealname(user.getRealName());
+        operatorRecord.setOperateEntityId(uuid);
+        operatorRecord.setOperateEntityName("Employee");
+        operatorRecord.setOperateType(type);
+        operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(type));
+        operatorRecord.setOperateTime(DateUtil.getCurrentTime());
+        return operatorRecord;
+    }
+
+    /**
+     * 修改时比较数据
+     * @param newData
+     * @param oldDate
+     * @param operatorRecordId
+     * @return
+     */
+    public OperatorRecordDetail compareData(Employee newData,Employee oldDate,String operatorRecordId) {
+        String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime"};
+        Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newData, ignore);
+        Set<String> keySet = compareResult.keySet();
+        OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+        if(keySet.size()==0){
+            operatorRecordDetail.setId(UUIDUtil.generate());
+            operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+            operatorRecordDetail.setPropertyName("无任何数据修改！");
+            return operatorRecordDetail;
+        }
+        for (String key : keySet) {
+            List<Object> list = compareResult.get(key);
+            operatorRecordDetail.setId(UUIDUtil.generate());
+            operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+            if(list.get(1)==null||list.get(1)==""){
+                operatorRecordDetail.setNewValue("未填写任何值！");
+            }else {
+                operatorRecordDetail.setNewValue(list.get(1).toString());
+            }
+            if(list.get(0)==null||list.get(0)==""){
+                operatorRecordDetail.setOldValue("未填写任何值！");
+            }else {
+                operatorRecordDetail.setOldValue(list.get(0).toString());
+            }
+            operatorRecordDetail.setPropertyName(key);
+        }
+        return operatorRecordDetail;
     }
 
 

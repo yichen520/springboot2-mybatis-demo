@@ -30,7 +30,8 @@
 
   <select id="selectNoticeList" parameterType="java.lang.String" resultMap="SimpleResultMap">
     SELECT <include refid="Simple_Column_list"/> FROM notice
-    WHERE district_id = #{cityId,jdbcType=VARCHAR} OR  district_id = #{provinceId,jdbcType=VARCHAR} ORDER BY create_time DESC
+    WHERE district_id = #{cityId,jdbcType=VARCHAR} OR  district_id = #{provinceId,jdbcType=VARCHAR} OR district_id = #{districtId,jdbcType=VARCHAR}
+    ORDER BY create_time DESC
   </select>
   
   <select id="selectNoticeDetail"  parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -44,9 +45,10 @@
     where send_username = #{userName,jdbcType=VARCHAR} ORDER BY create_time DESC
   </select>
   
-  <select id="selectNoticeByNum" parameterType="java.lang.Object" resultMap="SimpleResultMap">
-    SELECT  <include refid="Simple_Column_list"/>
-    from notice  WHERE district_id LIKE '${cityId}%' OR  district_id LIKE '${provinceId}%' ORDER BY create_time LIMIT 0,5
+  <select id="selectNoticeByNum" parameterType="java.lang.String" resultMap="SimpleResultMap">
+    SELECT <include refid="Simple_Column_list"/> FROM notice
+    WHERE district_id = #{cityId,jdbcType=VARCHAR} OR  district_id = #{provinceId,jdbcType=VARCHAR} OR district_id = #{districtId,jdbcType=VARCHAR}
+    ORDER BY create_time DESC limit 0,5
   </select>
 
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">

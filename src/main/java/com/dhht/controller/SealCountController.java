@@ -1,12 +1,14 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeCountService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealCuontService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +31,15 @@ public class SealCountController {
     @Autowired
     private DistrictService districtService;
 
+    private static Logger logger = Logger.getLogger(SealCountController.class);
+
+
     /**
      * 根据制作单位查询
-     *
      * @param map
      * @return
      */
+    @Log("根据制作单位统计")
     @RequestMapping(value = "/selectByMakedepartment")
     public JsonObjectBO selectBymakedepartment(@RequestBody Map map,HttpServletRequest httpServletRequest) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -49,7 +54,8 @@ public class SealCountController {
             jsonObject.put("sealCounts", sealCounts);
             return JsonObjectBO.success("查询", jsonObject);
         } catch (Exception e) {
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("统计失败");
         }
 
     }
@@ -61,6 +67,7 @@ public class SealCountController {
      * @param map
      * @return
      */
+    @Log("根据区域统计")
     @RequestMapping(value = "/selectByDistrictId")
     public JsonObjectBO selectByDistrictId(@RequestBody Map map, HttpServletRequest httpServletRequest) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -78,7 +85,8 @@ public class SealCountController {
 
             return JsonObjectBO.success("查询", jsonObject);
         } catch (Exception e) {
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("统计失败");
         }
 
     }
@@ -89,6 +97,7 @@ public class SealCountController {
      * @param map
      * @return
      */
+    @Log("根据区域查制作单位")
     @RequestMapping(value = "/selectMakeDepartment")
     public JsonObjectBO selectMakeDepartment(@RequestBody Map map) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -99,10 +108,10 @@ public class SealCountController {
         try {
             List<MakeDepartmentSimple> makeDepartmentSimples = makeDepartmentService.selectInfo(districtId, null, status);
             jsonObject.put("makeDepartmentSimples", makeDepartmentSimples);
-
             return JsonObjectBO.success("查询", jsonObject);
         } catch (Exception e) {
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("统计失败");
         }
 
     }
@@ -112,6 +121,7 @@ public class SealCountController {
      * @param httpServletRequest
      * @return
      */
+    @Log("获取区域")
     @RequestMapping(value = "/district")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
@@ -122,6 +132,7 @@ public class SealCountController {
             jsonObject.put("district",districtMenus);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("获取区域失败");
         }
     }
