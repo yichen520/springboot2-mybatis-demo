@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 import com.dhht.model.ChipGrant;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChipGrantMapper {
     int deleteByPrimaryKey(String id);
 
