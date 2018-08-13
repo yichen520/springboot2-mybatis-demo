@@ -127,8 +127,8 @@ public class NoticeServiceImp implements NoticeService{
     @Override
     public List<NoticeSimple> selectByNum(String district) {
         String districtIds[] = StringUtil.DistrictUtil(district);
-        String cityId = districtIds[0]+districtIds[1];
-        String provinceId = districtIds[0];
+        String cityId = districtIds[0]+districtIds[1]+"00";
+        String provinceId = districtIds[0]+"00"+"00";
         String districtId = districtIds[0]+districtIds[1]+districtIds[2];
         return noticeMapper.selectNoticeByNum(cityId,provinceId,districtId);
     }
