@@ -416,7 +416,7 @@ public class SealController {
         String fileAURL = (String) map.get("fileAURL");
         String fileBURL = (String) map.get("fileBURL");
         try{
-            Face face = sealService.checkface(fileAURL,fileBURL);
+            face face = sealService.checkface(fileAURL,fileBURL);
             if(face.getIsPass().equals("不通过")){
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("不通过");

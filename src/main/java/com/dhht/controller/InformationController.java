@@ -9,7 +9,9 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.tools.ShowHistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.sync.SyncDataType;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -41,6 +43,8 @@ public class InformationController {
     private DistrictService districtService;
     @Autowired
     private SealService sealService;
+    @Autowired
+    private ShowHistoryService showHistoryService;
 
     private static Logger logger = LoggerFactory.getLogger(InformationController.class);
 
@@ -157,7 +161,7 @@ public class InformationController {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            List<Employee> list = employeeService.seletHistory(flag);
+            List<OperatorRecord> list = showHistoryService.showUpdteHistory(flag, SyncDataType.EMPLOYEE);
             jsonObject.put("history", list);
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {

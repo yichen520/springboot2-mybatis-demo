@@ -400,7 +400,7 @@ public class EmployeeServiceImp implements EmployeeService {
         if(keySet.size()==0){
             operatorRecordDetail.setId(UUIDUtil.generate());
             operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-            operatorRecordDetail.setPropertyName("无任何数据修改！");
+            operatorRecordDetail.setPropertyName("nothing");
             return operatorRecordDetail;
         }
         for (String key : keySet) {
@@ -408,12 +408,12 @@ public class EmployeeServiceImp implements EmployeeService {
             operatorRecordDetail.setId(UUIDUtil.generate());
             operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
             if(list.get(1)==null||list.get(1)==""){
-                operatorRecordDetail.setNewValue("未填写任何值！");
+                operatorRecordDetail.setNewValue("");
             }else {
                 operatorRecordDetail.setNewValue(list.get(1).toString());
             }
             if(list.get(0)==null||list.get(0)==""){
-                operatorRecordDetail.setOldValue("未填写任何值！");
+                operatorRecordDetail.setOldValue("");
             }else {
                 operatorRecordDetail.setOldValue(list.get(0).toString());
             }

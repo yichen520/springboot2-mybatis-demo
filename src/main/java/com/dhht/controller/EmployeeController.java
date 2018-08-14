@@ -2,6 +2,8 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
+import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.sync.SyncDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.dhht.common.JsonObjectBO;
@@ -35,6 +37,8 @@ public class EmployeeController {
     private MakeDepartmentService makeDepartmentService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private ShowHistoryService showHistoryService;
 
 
     private static Logger logger = LoggerFactory.getLogger(EmployeeController.class);
@@ -176,7 +180,7 @@ public class EmployeeController {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            List<Employee> list = employeeService.seletHistory(flag);
+            List<OperatorRecord> list = showHistoryService.showUpdteHistory(flag, SyncDataType.EMPLOYEE);
             jsonObject.put("history", list);
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
