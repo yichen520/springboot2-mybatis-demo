@@ -90,12 +90,11 @@ public class ChipApplyServiceImpl implements ChipApplyService {
      * @param chipCodeEnd
      * @param receiver
      * @param grantWay
-     * @param granter
      * @param memo
      * @return
      */
     @Override
-    public int grant(String chipApplyId, Integer grantNum, String grantTime, String chipCodeStart, String chipCodeEnd, String receiver, String grantWay ,String granter,String memo) {
+    public int grant(User user,String chipApplyId, Integer grantNum, String grantTime, String chipCodeStart, String chipCodeEnd, String receiver, String grantWay,String memo) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             ChipGrant chipGrant = new ChipGrant();
@@ -107,7 +106,7 @@ public class ChipApplyServiceImpl implements ChipApplyService {
             chipGrant.setChipCodeStart(chipCodeStart);
             chipGrant.setChipCodeEnd(chipCodeEnd);
             chipGrant.setReceiver(receiver);
-            chipGrant.setGranter(granter);
+            chipGrant.setGranter(user.getRealName());
             chipGrant.setGrantWay(grantWay);
             chipGrant.setGranterId(UUIDUtil.generate());
             chipGrant.setRecordTime(DateUtil.getCurrentTime());

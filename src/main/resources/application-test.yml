@@ -130,3 +130,6 @@ expireTime: 3600
 
 #设置短信过期时间，时间为5分钟
 smsexpireTime: 300000
+
+face:
+  similarity: 50

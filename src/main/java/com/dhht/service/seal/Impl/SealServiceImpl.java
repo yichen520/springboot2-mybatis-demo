@@ -1,10 +1,12 @@
 package com.dhht.service.seal.Impl;
 
 import com.dhht.annotation.Sync;
+import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.RecordDepartmentMapper;
 import com.dhht.dao.ResourceMapper;
 import com.dhht.dao.SealDao;
 import com.dhht.dao.UseDepartmentDao;
+import com.dhht.face.AFRTest;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
 import com.dhht.service.employee.EmployeeService;
@@ -22,6 +24,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.expression.spel.ast.FloatLiteral;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +52,11 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+
+    //相似度参数
+    @Value("${face.similarity}")
+    private float similarity  ;
+
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
         return useDepartmentDao.selectByCode(useDepartmentCode);
@@ -723,6 +732,29 @@ public class SealServiceImpl implements SealService {
         return syncEntity;
     }
 
+
+    /**
+     * 人证合一
+     * @param fileAURL
+     * @param fileBURl
+     * @return
+     */
+    @Override
+    public Face checkface(String fileAURL, String fileBURl){
+        Float a = AFRTest.compareImage(fileAURL,fileBURl);
+        Face face = new Face();
+        face.setFileBURL(fileBURl);
+        face.setMaeeage("相似度为"+a+"%");
+        face.setNum(a);
+        if(a<similarity){
+            face.setIsPass("不通过");
+            return face;
+        }else{
+            face.setIsPass("通过");
+            return face;
+        }
+
+    }
     }
 
 

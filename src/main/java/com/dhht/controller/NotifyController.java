@@ -68,7 +68,7 @@ public class NotifyController {
             jsonObject.put("notify",pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查询失败");
         }
     }
 
@@ -158,7 +158,7 @@ public class NotifyController {
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             //System.out.println(e.toString());
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("获取用户信息失败！");
         }
     }
 

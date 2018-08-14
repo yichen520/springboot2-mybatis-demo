@@ -1,5 +1,6 @@
 package com.dhht.service.seal;
 
+import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
 import com.github.pagehelper.PageInfo;
@@ -38,7 +39,8 @@ public interface SealService {
 
    PageInfo<Seal> seal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
-
+   // 人证合一
+   Face checkface(String fileAURL, String fileBURl);
 
 }
 

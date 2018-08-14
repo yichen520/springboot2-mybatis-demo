@@ -8,6 +8,7 @@ import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.tools.ShowHistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.sync.SyncDataType;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -128,10 +129,8 @@ public class UseDepartmentController {
     public JsonObjectBO showMore(@RequestBody Map map){
         String flag = (String)map.get("flag");
         try {
-            List<OperatorRecord> operatorRecords = showHistoryService.showUpdteHistory(flag);
-            JSONObject jsonObject= new JSONObject();
-            jsonObject.put("operatorRecords",operatorRecords);
-            return JsonObjectBO.success("查询历史成功",jsonObject);
+            //List<OperatorRecord> operatorRecords = showHistoryService.showUpdteHistory(flag, SyncDataType.USERDEPARTMENT);
+           return useDepartmentService.showHistory(flag);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());

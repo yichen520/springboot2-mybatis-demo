@@ -17,7 +17,7 @@ public interface ChipApplyService {
     int apply(Integer chipNum,String getTime,String address,String memo,User user);  //申请
 
 
-    int grant(String chipApplyId, Integer grantNum, String grantTime,String chipCodeStart, String chipCodeEnd, String receiver, String grantWay ,String granter,String memo);//发放
+    int grant(User user,String chipApplyId, Integer grantNum, String grantTime,String chipCodeStart, String chipCodeEnd, String receiver, String grantWay ,String memo);//发放
 
     List<ChipCountVO> countGrantInfo(Map map, HttpServletRequest httpServletRequest);
 
