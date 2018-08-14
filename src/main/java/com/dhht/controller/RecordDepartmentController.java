@@ -10,6 +10,8 @@ import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -131,8 +133,8 @@ public class RecordDepartmentController {
         String flag = (String)map.get("flag");
         JSONObject jsonObject = new JSONObject();
         try{
-            List<OperatorRecord> recordDepartments = showHistoryService.showUpdteHistory(flag);
-                jsonObject.put("recordDepartments",recordDepartments);
+            List<OperatorRecord> recordDepartments = showHistoryService.showUpdteHistory(flag, SyncDataType.RECORDDEPARTMENT);
+            jsonObject.put("recordDepartments",recordDepartments);
         }catch (Exception e ){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());

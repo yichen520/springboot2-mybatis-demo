@@ -21,8 +21,8 @@ public class SyncOperateType {
     public static final int  AGREE= 11; //审核
     public static final int RECORD = 12; //备案
     public static final int UPLOAD =13;//文件上传
-    public static final int LOSS =14;
-    public static final int LOGOUT = 15;
+    public static final int LOSS =14;//挂失
+    public static final int LOGOUT = 15;//注销
     public static final int DELIVER = 16;
     public static final int PERSONAL=17;
     
