@@ -443,11 +443,20 @@ public class SealCountServiceImp implements SealCuontService {
 
             }
             String dis = districtId.getDistrictName();
-            sealCount.add(subtotal(dis,sealCount));//把小计放入队列
+            sealCount.add(subtotal(dis, sealCount));//把小计放入队列
             sealCounts.addAll(sealCount);
 
-        }
 
+        }
+        if(user.getRoleId().equals("BADW")){
+            Iterator<SealCount> i = sealCounts.iterator();
+            if(i.hasNext()){
+                if(i.next().getSealType().equals("")){
+                    sealCounts.remove(i.next());
+                }
+            }
+
+        }
 
         return getSum(sealCounts);
 
