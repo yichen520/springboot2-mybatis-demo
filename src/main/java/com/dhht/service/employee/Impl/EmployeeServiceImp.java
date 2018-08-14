@@ -122,12 +122,11 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setVersionTime(DateUtil.getCurrentTime());
             employee.setId(UUIDUtil.generate());
             OperatorRecord operatorRecord = setOperatorRecord(updateUser,employee.getFlag(),employee.getId(),SyncOperateType.UPDATE);
-            OperatorRecordDetail operatorRecordDetail = compareData(employee,oldDate,operatorRecord.getId());
+            boolean od = compareData(employee,oldDate,operatorRecord.getId());
             int u = userService.update(oldTelphone,employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
             int e = employeeDao.insert(employee);
             int o = operatorRecordMapper.insert(operatorRecord);
-            int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
-            if (u == ResultUtil.isSuccess && e == 1&&o>0&&od>0) {
+            if (u == ResultUtil.isSuccess && e == 1&&o>0&&od) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -386,13 +385,13 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     /**
-     * 修改时比较数据
+     * 修改时比较数据并存储
      * @param newData
      * @param oldDate
      * @param operatorRecordId
      * @return
      */
-    public OperatorRecordDetail compareData(Employee newData,Employee oldDate,String operatorRecordId) {
+    public Boolean compareData(Employee newData,Employee oldDate,String operatorRecordId) {
         String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime"};
         Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newData, ignore);
         Set<String> keySet = compareResult.keySet();
@@ -401,7 +400,11 @@ public class EmployeeServiceImp implements EmployeeService {
             operatorRecordDetail.setId(UUIDUtil.generate());
             operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
             operatorRecordDetail.setPropertyName("nothing");
-            return operatorRecordDetail;
+            int o = operatorRecordDetailMapper.insert(operatorRecordDetail);
+            if(o<0){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
         }
         for (String key : keySet) {
             List<Object> list = compareResult.get(key);
@@ -418,8 +421,13 @@ public class EmployeeServiceImp implements EmployeeService {
                 operatorRecordDetail.setOldValue(list.get(0).toString());
             }
             operatorRecordDetail.setPropertyName(key);
+            int o = operatorRecordDetailMapper.insert(operatorRecordDetail);
+            if(o<0){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
         }
-        return operatorRecordDetail;
+        return true;
     }
 
 

@@ -131,20 +131,19 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 return ResultUtil.isHaveCode;
             }
             OperatorRecord operatorRecord = setOperatorRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),SyncOperateType.UPDATE);
-            OperatorRecordDetail operatorRecordDetail = compareData(makedepartment,oldDate,operatorRecord.getId());
+            boolean od = compareData(makedepartment,oldDate,operatorRecord.getId());
             int o = operatorRecordMapper.insert(operatorRecord);
-            int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
             int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
             //int e = setEmployeeByDepartment(employees, makedepartment, 2);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-            if (m == 1 && u == ResultUtil.isSuccess&&o>0&&od>0) {
+            if (m == 1 && u == ResultUtil.isSuccess&&o>0&&od) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isHave;
             } else {
-
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isError;
             }
         }catch (Exception e){
@@ -209,22 +208,6 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return makedepartments;
     }
 
-    /**
-     * 新版查询历史
-     * @param flag
-     * @return
-     */
-    @Override
-    public List<OperatorRecord> showUpdteHistory(String flag) {
-        List<OperatorRecord> operatorRecords =  operatorRecordMapper.selectByFlag(flag);
-        for(OperatorRecord operatorRecord : operatorRecords){
-            List<OperatorRecordDetail> operatorRecordDetails = operatorRecordDetailMapper.selectByOperateId(operatorRecord.getId());
-            if(operatorRecordDetails.size()>0){
-                operatorRecord.setOperatorRecordDetails(operatorRecordDetails);
-            }
-        }
-        return operatorRecords;
-    }
 
     /**
      * 根据法人电话获取制作单位
@@ -449,13 +432,13 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
-     * 修改时比较数据
+     * 修改时比较数据进行存储
      * @param newData
      * @param oldDate
      * @param operatorRecordId
      * @return
      */
-    public OperatorRecordDetail compareData(Makedepartment newData,Makedepartment oldDate,String operatorRecordId) {
+    public boolean compareData(Makedepartment newData,Makedepartment oldDate,String operatorRecordId) {
         String ignore[] = new String[]{"id", "departmentStatus", "deleteStatus", "version", "flag", "versionTime", "registerTime"};
         Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newData, ignore);
         Set<String> keySet = compareResult.keySet();
@@ -463,25 +446,35 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         if(keySet.size()==0){
             operatorRecordDetail.setId(UUIDUtil.generate());
             operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-            operatorRecordDetail.setPropertyName("无任何数据修改！");
+            operatorRecordDetail.setPropertyName("nothing");
+            int o = operatorRecordDetailMapper.insert(operatorRecordDetail);
+            if(o<1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
         }
         for (String key : keySet) {
             List<Object> list = compareResult.get(key);
             operatorRecordDetail.setId(UUIDUtil.generate());
             operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
             if(list.get(1)==null||list.get(1)==""){
-                operatorRecordDetail.setNewValue("未填写任何值！");
+                operatorRecordDetail.setNewValue("");
             }else {
                 operatorRecordDetail.setNewValue(list.get(1).toString());
             }
             if(list.get(0)==null||list.get(0)==""){
-                operatorRecordDetail.setOldValue("未填写任何值！");
+                operatorRecordDetail.setOldValue("");
             }else {
                 operatorRecordDetail.setOldValue(list.get(0).toString());
             }
             operatorRecordDetail.setPropertyName(key);
+            int o = operatorRecordDetailMapper.insert(operatorRecordDetail);
+            if(o<1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
         }
-        return operatorRecordDetail;
+        return true;
     }
 
     /**
