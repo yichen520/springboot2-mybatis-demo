@@ -4,13 +4,9 @@ import lombok.Data;
 
 @Data
 public class Face {
-    private String fileAURl;
-
-    private String fileBURL;
-
-    private float num;
-
-    private String maeeage;
-
-    private String isPass;
+   private String fileAURL;
+   private String fileBURL;
+   private float num;
+   private String message;
+   private String isPass;
 }
