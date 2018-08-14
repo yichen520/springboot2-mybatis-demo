@@ -53,7 +53,7 @@ public class SealServiceImpl implements SealService {
     @Autowired
     private RecordDepartmentService recordDepartmentService;
 
-    //新用户
+    //相似度参数
     @Value("${face.similarity}")
     private float similarity  ;
 
