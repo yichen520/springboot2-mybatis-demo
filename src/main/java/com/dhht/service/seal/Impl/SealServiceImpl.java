@@ -261,18 +261,18 @@ public class SealServiceImpl implements SealService {
 //            seal.setIsDeliver(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("00")){
+        }else if(status.equals("00")){    //未交付
             list = sealDao.selectUndelivered(seal);
-        }else if(status.equals("04")){
+        }else if(status.equals("04")){    //已备案
             seal.setIsRecord(true);
-            list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("05")){
+            list = sealDao.selectIsRecord(seal);
+        }else if(status.equals("05")){  //已经挂失
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
             list = sealDao.selectByCodeAndName(seal);
-        }else if (status.equals("06")){
+        }else if (status.equals("06")){   //已注销
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
