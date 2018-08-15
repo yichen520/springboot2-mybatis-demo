@@ -744,7 +744,7 @@ public class SealServiceImpl implements SealService {
         Float a = AFRTest.compareImage(fileAURL,fileBURl);
         Face face = new Face();
         face.setFileBURL(fileBURl);
-        face.setMessage("相似度为"+a+"%");
+        face.setMaeeage("相似度为"+a+"%");
         face.setNum(a);
         if(a<similarity){
             face.setIsPass("不通过");
