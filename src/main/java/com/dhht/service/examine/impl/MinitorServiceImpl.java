@@ -163,7 +163,7 @@ public class MinitorServiceImpl implements MinitorService {
             int countSum=0;
             if (districtId.getChildren() != null){
                 for (DistrictMenus districtchilrenId : districtId.getChildren()) {
-                    ExamineCount examineCount = examineMapper.selectExamineCountByCityDistrict(districtchilrenId.getDistrictId(),month);
+                    ExamineCount examineCount = examineMapper.selectExamineCountByDistrict(districtchilrenId.getDistrictId(),month);
                     if (examineCount.getCountNum()!=0){
                         countSum = countSum+examineCount.getCountNum();
                         examineCounts.add(examineCount);
