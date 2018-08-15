@@ -137,6 +137,33 @@ public class SealCountServiceImp implements SealCuontService {
         return list;
     }
 
+    /**
+     * 去小计统计每一栏的总量
+     *
+     * @param list
+     * @return
+     */
+    public List<SealCount> getSumWithoutsubtotal(List<SealCount> list) {
+        int sealAdd = 0;
+        int sealLoss = 0;
+        int sealLogout = 0;
+        if(list.size()!=0) {
+            for (SealCount counts : list) {
+                    sealAdd = sealAdd + counts.getNewSealNum();
+                    sealLoss = sealLoss + counts.getLossSealNum();
+                    sealLogout = sealLogout + counts.getLogoutSealNum();
+                }
+            }
+
+        SealCount count = new SealCount();
+        count.setCountName("总计 ");
+        count.setSealType("");
+        count.setNewSealNum(sealAdd);
+        count.setLossSealNum(sealLoss);
+        count.setLogoutSealNum(sealLogout);
+        list.add(count);
+        return list;
+    }
 
     /**
      * 根据status获取对应的印章数目
@@ -443,13 +470,23 @@ public class SealCountServiceImp implements SealCuontService {
 
             }
             String dis = districtId.getDistrictName();
-            sealCount.add(subtotal(dis,sealCount));//把小计放入队列
+            sealCount.add(subtotal(dis, sealCount));//把小计放入队列
             sealCounts.addAll(sealCount);
 
-        }
 
+        }
+        if(user.getRoleId().equals("BADW")){
+            Iterator<SealCount> i = sealCounts.iterator();
+            while(i.hasNext()){
+                if(i.next().getCountName().contains("小计")){
+                    i.remove();
+                }
+            }
+        return getSumWithoutsubtotal(sealCounts);
+        }else{
 
         return getSum(sealCounts);
+        }
 
     }
 }

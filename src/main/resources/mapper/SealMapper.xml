@@ -267,7 +267,7 @@
 
 
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" or is_loss !=TRUE OR is_logout!=TRUE
+      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
   </select>
 
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
@@ -330,6 +330,23 @@
   <select id="selectUndelivered" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT * from seal
     <where>
+      is_record = 1 AND is_logout = 0 AND is_loss = 0
+      <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+        And use_department_code LIKE  "%"#{useDepartmentCode}"%"
+      </if>
+      <if test="useDepartmentName !=null and useDepartmentName !=''">
+        AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
+        AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+
+    </where>
+  </select>
+
+  <select id="selectIsRecord" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+    SELECT * from seal
+    <where>
       is_deliver = 0 AND is_logout = 0 AND is_loss = 0
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
@@ -343,7 +360,7 @@
 
     </where>
   </select>
-  
+
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName
     ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCertificateType,

@@ -129,7 +129,8 @@ public class NoticeServiceImp implements NoticeService{
         String districtIds[] = StringUtil.DistrictUtil(district);
         String cityId = districtIds[0]+districtIds[1]+"00";
         String provinceId = districtIds[0]+"00"+"00";
-        return noticeMapper.selectNoticeByNum(cityId,provinceId);
+        String districtId = districtIds[0]+districtIds[1]+districtIds[2];
+        return noticeMapper.selectNoticeByNum(cityId,provinceId,districtId);
     }
 
     /**
@@ -142,7 +143,8 @@ public class NoticeServiceImp implements NoticeService{
         String districtIds[] = StringUtil.DistrictUtil(district);
         String cityId = districtIds[0]+districtIds[1]+"00";
         String provinceId = districtIds[0]+"00"+"00";
-        return noticeMapper.selectNoticeList(cityId,provinceId);
+        String districtId = districtIds[0]+districtIds[1]+districtIds[2];
+        return noticeMapper.selectNoticeList(cityId,provinceId,districtId);
     }
 
     /**

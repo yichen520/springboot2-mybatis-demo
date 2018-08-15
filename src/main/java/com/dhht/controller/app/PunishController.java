@@ -3,15 +3,11 @@ package com.dhht.controller.app;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
-import com.dhht.annotation.Sync;
-
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.punish.PunishService;
 import com.dhht.service.user.UserLoginService;
-import com.dhht.sync.SyncDataType;
-import com.dhht.sync.SyncOperateType;
 import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;

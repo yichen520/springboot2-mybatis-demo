@@ -61,7 +61,7 @@ public class UserController {
             return ResultUtil.getResult(userService.insert(user.getTelphone(),"GLY",user.getRealName(),user.getDistrictId()));
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("添加失败");
         }
     }
 
@@ -79,7 +79,7 @@ public class UserController {
             return ResultUtil.getResult(userService.update(user1.getTelphone(),user.getTelphone(),"GLY",user.getRealName(),user.getDistrictId()));
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("修改用户");
         }
 
     }
@@ -96,7 +96,7 @@ public class UserController {
             return ResultUtil.getResult(userService.delete(user.getId()));
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("删除用户");
         }
 
     }
@@ -130,7 +130,7 @@ public class UserController {
             return JsonObjectBO.success("查询成功", jsonObject);
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查询失败");
         }
     }
 
@@ -148,7 +148,7 @@ public class UserController {
             return ResultUtil.getResult(userLockingService.activeLocking(id));
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("主动枷锁失败");
         }
     }
 
@@ -166,7 +166,7 @@ public class UserController {
             return ResultUtil.getResult(userLockingService.activeUnlocking(id));
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("主动解锁失败");
         }
     }
 
@@ -188,7 +188,7 @@ public class UserController {
         }
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("重置失败");
         }
     }
 
@@ -210,7 +210,7 @@ public class UserController {
         }
         catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("获取验证码失败");
         }
     }
 
@@ -233,7 +233,7 @@ public class UserController {
             }
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("重置失败");
         }
     }
 
@@ -260,7 +260,7 @@ public class UserController {
             return jsonObjectBO;
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查询失败");
         }
     }
 
@@ -289,7 +289,7 @@ public class UserController {
             return jsonObjectBO;
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("密码重置失败");
         }
      }
 
@@ -320,10 +320,16 @@ public class UserController {
             return jsonObjectBO;
         }catch (Exception e) {
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("密码修改失败");
         }
     }
 
+    /**
+     * 根据用户获取区域
+     * @param httpServletRequest
+     * @return
+     */
+    @Log("获取区域")
     @RequestMapping(value = "/UserDistrict")
     public JsonObjectBO selectDistrictByUser(HttpServletRequest httpServletRequest){
         JSONObject jsonObject = new JSONObject();
@@ -334,11 +340,17 @@ public class UserController {
             jsonObject.put("District",district);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("查询失败");
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 查询角色
+     * @param map
+     * @return
+     */
+    @Log("查询角色")
     @RequestMapping("role/info")
     public JsonObjectBO getList(@RequestBody(required = false) Map map) {
 
@@ -354,6 +366,7 @@ public class UserController {
                 return jsonObjectBO;
 
             } catch (Exception e) {
+                logger.error(e.getMessage(),e);
                 jsonObjectBO.setMessage("查询角色失败");
                 jsonObjectBO.setCode(-1);
                 return jsonObjectBO;

@@ -9,7 +9,10 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.tools.ShowHistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -41,6 +44,8 @@ public class InformationController {
     private DistrictService districtService;
     @Autowired
     private SealService sealService;
+    @Autowired
+    private ShowHistoryService showHistoryService;
 
     private static Logger logger = LoggerFactory.getLogger(InformationController.class);
 
@@ -104,10 +109,10 @@ public class InformationController {
     @RequestMapping(value = "/makeDepartmentHistory")
     public JsonObjectBO makeDepartmentHistory(@RequestBody Map map){
         String flag = (String)map.get("flag");
-        List<Makedepartment> result = new ArrayList<>();
+        List<OperatorRecord> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
         try {
-            result = makeDepartmentService.selectHistory(flag);
+            result =showHistoryService.showUpdteHistory(flag,SyncDataType.MAKEDEPARTMENT);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -157,7 +162,7 @@ public class InformationController {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            List<Employee> list = employeeService.seletHistory(flag);
+            List<OperatorRecord> list = showHistoryService.showUpdteHistory(flag, SyncDataType.EMPLOYEE);
             jsonObject.put("history", list);
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
@@ -183,9 +188,11 @@ public class InformationController {
         int pageSize = (Integer) map.get("pageSize");
 
         try{
-            return useDepartmentService.find(user.getDistrictId(),code,name,districtId,status,pageNum,pageSize);
+            String localDistrictId = StringUtil.DistrictUtil(user.getDistrictId())[0]+"0000";
+            return useDepartmentService.find(localDistrictId,code,name,districtId,status,pageNum,pageSize);
         }catch (Exception e){
-            return JsonObjectBO.exception("发生异常！");
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("使用单位列表获取失败");
         }
     }
 
@@ -277,7 +284,7 @@ public class InformationController {
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查询使用单位历史失败");
         }
     }
 
@@ -295,6 +302,7 @@ public class InformationController {
             districtMenus = districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("districtMenus",districtMenus);
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -316,7 +324,8 @@ public class InformationController {
             jsonObject.put("districtMenus",list);
             return JsonObjectBO.success("菜单返回成功",jsonObject);
         }catch (Exception e){
-            return JsonObjectBO.exception("发生异常！");
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("制作单位信息获取失败");
         }
     }
 }

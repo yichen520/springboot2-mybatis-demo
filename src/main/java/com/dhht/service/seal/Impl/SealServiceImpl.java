@@ -1,10 +1,12 @@
 package com.dhht.service.seal.Impl;
 
 import com.dhht.annotation.Sync;
+import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.RecordDepartmentMapper;
 import com.dhht.dao.ResourceMapper;
 import com.dhht.dao.SealDao;
 import com.dhht.dao.UseDepartmentDao;
+import com.dhht.face.AFRTest;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
 import com.dhht.service.employee.EmployeeService;
@@ -22,6 +24,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.expression.spel.ast.FloatLiteral;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +52,11 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+
+    //相似度参数
+    @Value("${face.similarity}")
+    private float similarity  ;
+
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
         return useDepartmentDao.selectByCode(useDepartmentCode);
@@ -234,36 +243,36 @@ public class SealServiceImpl implements SealService {
         seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
         List<Seal> list = new ArrayList<Seal>();
 
-        if (status.equals("01")) {
+        if (status.equals("01")) {  //待制作
             seal.setIsRecord(true);
-            seal.setIsMake(true);
+//            seal.setIsMake(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("02")) {
+        } else if (status.equals("02")) {  //待个人化
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsPersonal(true);
+//            seal.setIsPersonal(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("03")) {
+        } else if (status.equals("03")) {  //待交付
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsPersonal(true);
-            seal.setIsDeliver(true);
+//            seal.setIsPersonal(true);
+//            seal.setIsDeliver(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("00")){
+        }else if(status.equals("00")){    //未交付
             list = sealDao.selectUndelivered(seal);
-        }else if(status.equals("04")){
+        }else if(status.equals("04")){    //已备案
             seal.setIsRecord(true);
-            list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("05")){
+            list = sealDao.selectIsRecord(seal);
+        }else if(status.equals("05")){  //已经挂失
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
             list = sealDao.selectByCodeAndName(seal);
-        }else if (status.equals("06")){
+        }else if (status.equals("06")){   //已注销
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
@@ -670,22 +679,22 @@ public class SealServiceImpl implements SealService {
 //            seal.setRecordDepartmentCode(recordCode);
             PageHelper.startPage(pageNum, pageSize);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("02")) {
+        } else if (status.equals("02")) {   //个人化
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsPersonal(true);
+//            seal.setIsPersonal(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("03")) {
+        } else if (status.equals("03")) {  //待交付
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsPersonal(true);
-            seal.setIsDeliver(true);
+//            seal.setIsDeliver(true);
 //            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("00")){
             list = sealDao.selectUndelivered(seal);
-        }else if(status.equals("04")){
+        }else if(status.equals("04")){   //已备案
             seal.setIsRecord(true);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("05")){
@@ -723,6 +732,28 @@ public class SealServiceImpl implements SealService {
         return syncEntity;
     }
 
+
+    /**
+     * 人证合一
+     * @param fileAURL
+     * @param fileBURl
+     * @return
+     */
+    @Override
+    public Face checkface(String fileAURL, String fileBURl){
+        Float a = AFRTest.compareImage(fileAURL,fileBURl);
+        Face face = new Face();
+        face.setFileBURL(fileBURl);
+        face.setMaeeage("相似度为"+a+"%");
+        face.setNum(a);
+        if(a<similarity){
+            face.setIsPass("不通过");
+            return face;
+        }else{
+            face.setIsPass("通过");
+            return face;
+        }
+    }
     }
 
 

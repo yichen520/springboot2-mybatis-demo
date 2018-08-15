@@ -8,6 +8,8 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.sync.SyncDataType;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -41,6 +43,9 @@ public class MakeDepartmentController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private ShowHistoryService showHistoryService;
 
     private static Logger logger = LoggerFactory.getLogger(MakeDepartmentController.class);
 
@@ -81,19 +86,35 @@ public class MakeDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
-    /**
-     * 展示修改记录
-     * @param map
-     * @return
-     */
+//    /**
+//     * 展示修改记录
+//     * @param map
+//     * @return
+//     */
+//    @Log("查看修改记录")
+//    @RequestMapping(value = "/showHistory")
+//    public JsonObjectBO selectHistory(@RequestBody Map map){
+//        String flag = (String)map.get("flag");
+//        List<Makedepartment> result = new ArrayList<>();
+//        JSONObject jsonObject = new JSONObject();
+//        try {
+//            result = makeDepartmentService.selectHistory(flag);
+//            jsonObject.put("makeDepartment",result);
+//        }catch (Exception e){
+//            logger.error(e.getMessage(),e);
+//            return JsonObjectBO.exception(e.toString());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
+
     @Log("查看修改记录")
     @RequestMapping(value = "/showHistory")
     public JsonObjectBO selectHistory(@RequestBody Map map){
         String flag = (String)map.get("flag");
-        List<Makedepartment> result = new ArrayList<>();
+        List<OperatorRecord> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
         try {
-            result = makeDepartmentService.selectHistory(flag);
+            result = showHistoryService.showUpdteHistory(flag, SyncDataType.MAKEDEPARTMENT);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -101,6 +122,7 @@ public class MakeDepartmentController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
+
 
     /**
      * 查看制作单位的详情

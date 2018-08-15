@@ -42,7 +42,7 @@ public class SealController {
     private static Logger logger = LoggerFactory.getLogger(SealController.class);
 
     @Log("查询使用单位是否备案")
-    @RequestMapping("isrecord")
+    @RequestMapping("/isrecord")
     public JsonObjectBO isrecord(@RequestBody Map map) {
 
         JSONObject jsonObject = new JSONObject();
@@ -57,7 +57,7 @@ public class SealController {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查询失败");
         }
     }
 
@@ -71,13 +71,10 @@ public class SealController {
             seal.setId(UUIDUtil.generate());
             seal.setRecordDepartmentCode(user.getUserName());
             seal.setRecordDepartmentName(user.getRealName());
-            //从从业人员查找制作单位   稍后做
-
-//            sealService.insert(seal);
             return JsonObjectBO.ok("添加成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return JsonObjectBO.exception("，添加失败发生异常");
+            return JsonObjectBO.exception("添加失败发生异常");
         }
     }
 
@@ -122,7 +119,7 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("备案失败");
         }
 
 
@@ -156,7 +153,7 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("印章信息获取失败");
         }
     }
 
@@ -189,7 +186,7 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("印模上传失败");
         }
     }
 
@@ -220,13 +217,12 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("个人化失败");
         }
     }
 
     /**
      * 交付
-     *
      * @param httpServletRequest
      * @param
      * @return
@@ -254,7 +250,7 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("交付失败");
         }
     }
 
@@ -293,13 +289,12 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.exception("挂失失败");
         }
     }
 
     /**
      * 注销
-     *
      * @param httpServletRequest
      * @param
      * @return
@@ -329,7 +324,7 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("注销失败");
         }
     }
 
@@ -378,7 +373,7 @@ public class SealController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查询使用单位失败");
         }
     }
 
@@ -403,7 +398,40 @@ public class SealController {
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查看印章详情失败");
+        }
+    }
+
+    /**
+     * 人证合一
+     *
+     * @param map
+     * @return
+     */
+    @Log("人证合一")
+    @RequestMapping(value = "checkface")
+    public JsonObjectBO checkface(@RequestBody Map map){
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String fileAURL = (String) map.get("fileAURL");
+        String fileBURL = (String) map.get("fileBURL");
+        try{
+            Face face = sealService.checkface(fileAURL,fileBURL);
+            if(face.getIsPass().equals("不通过")){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("不通过");
+                jsonObject.put("face",face);
+                jsonObjectBO.setData(jsonObject);
+            }else{
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("通过");
+                jsonObject.put("face",face);
+                jsonObjectBO.setData(jsonObject);
+            }
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("人证合一失败");
         }
     }
 

@@ -9,6 +9,7 @@ import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.UserDao;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
+import com.dhht.service.tools.ShowHistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
@@ -42,6 +43,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
     private UseDepartmentDao useDepartmentDao;
     @Autowired
     private DistrictService districtService;
+    @Autowired
+    private ShowHistoryService showHistoryService;
 
 
     /**
@@ -116,24 +119,43 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 operatorRecord.setOperateType(SyncOperateType.UPDATE);
                 operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.UPDATE));
                 operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-                operatorRecordMapper.insert(operatorRecord);
-
+                int o =  operatorRecordMapper.insert(operatorRecord);
+                OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
                 //和上一次作比较  然后比较不同
                 UseDepartment newUseDepartment =useDepartmentDao.selectById(uuid);
                 Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldUseDepartment, newUseDepartment, new String[]{"id","departmentAddress","isDelete","version","operator","updateTime"});
                 Set<String> keySet = compareResult.keySet();
-                for(String key : keySet){
-                    List<Object> list = compareResult.get(key);
-                    OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+                if(keySet.size()==0){
                     operatorRecordDetail.setId(UUIDUtil.generate());
                     operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-                    operatorRecordDetail.setNewValue(list.get(1).toString());
-                    operatorRecordDetail.setOldValue(list.get(0).toString());
-//                operatorRecordDetail.setPropertyComment();
-                    operatorRecordDetail.setPropertyName(key);
-                    operatorRecordDetailMapper.insert(operatorRecordDetail);
+                    operatorRecordDetail.setPropertyName("nothing");
+                    int od= operatorRecordDetailMapper.insert(operatorRecordDetail);
+                    if(o<0){
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return JsonObjectBO.error("修改失败");
+                    }
                 }
-                if (r == 1) {
+                for(String key : keySet){
+                    List<Object> list = compareResult.get(key);
+                    operatorRecordDetail.setId(UUIDUtil.generate());
+                    operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
+                    if(list.get(1)==null||list.get(1)==""){
+                        operatorRecordDetail.setNewValue("");
+                    }else {
+                        operatorRecordDetail.setNewValue(list.get(1).toString());
+                    }
+                    if(list.get(0)==null||list.get(0)==""){
+                        operatorRecordDetail.setOldValue("");
+                    }else {
+                        operatorRecordDetail.setOldValue(list.get(0).toString());
+                    }
+                    operatorRecordDetail.setPropertyName(key);
+                    int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
+                    if(od<1){
+                        return JsonObjectBO.error("修改失败");
+                    }
+                }
+                if (r == 1&&o>0) {
                     SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
                     return JsonObjectBO.success("修改成功", null);
                 } else {
@@ -168,9 +190,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         else {
              list = useDepartmentDao.find(code,districtId,name,departmentStatus);
         }
-        for (UseDepartment useDepartment:list) {
-            useDepartment.setDistrictName(districtService.selectByDistrictId(useDepartment.getDistrictId()));
-        }
+        list = setDistrictName(list);
         PageInfo<UseDepartment> result = new PageInfo<>(list);
         jsonObject.put("useDepartment", result);
         jsonObjectBO.setData(jsonObject);
@@ -228,7 +248,19 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     @Override
     public JsonObjectBO showHistory(String flag) {
-        List<UseDepartment> list =setDistrictName(useDepartmentDao.selectByFlag(flag));
+        List<OperatorRecord> list = showHistoryService.showUpdteHistory(flag,SyncDataType.USERDEPARTMENT);
+//        for(OperatorRecord operatorRecord : list){
+//            if(operatorRecord.getOperatorRecordDetails()!=null) {
+//                for (OperatorRecordDetail operatorRecordDetail : operatorRecord.getOperatorRecordDetails()) {
+//                    if (operatorRecordDetail.getPropertyName().equals("districtId")) {
+//                        String oldDistrictName = districtService.selectByDistrictId(operatorRecordDetail.getOldValue());
+//                        String newDistrictName = districtService.selectByDistrictId(operatorRecordDetail.getNewValue());
+//                        operatorRecordDetail.setOldValue(oldDistrictName);
+//                        operatorRecordDetail.setNewValue(newDistrictName);
+//                    }
+//                }
+//            }
+//        }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("useDepartment",list);
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -271,7 +303,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         }
         return list;
     }
-    
+
 
     /**
      * 数据同步

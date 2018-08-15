@@ -30,9 +30,9 @@ public class ResultUtil {
             case 3:
                 return JsonObjectBO.error("操作失败");
             case 4:
-                return JsonObjectBO.exception("该数据异常");
+                return JsonObjectBO.exception("发生未知异常");
             case 5:
-                return JsonObjectBO.error("发生错误");
+                return JsonObjectBO.error("发生未知错误");
             case 6:
                 return JsonObjectBO.error("该区域只能添加一个备案单位");
             case 7:
@@ -50,7 +50,7 @@ public class ResultUtil {
             case 13:
                 return JsonObjectBO.error("已经使用的社会统一信用编码");
             case 14:
-                return JsonObjectBO.error("请先在该区域下添加备案单位");
+                return JsonObjectBO.error("该区域暂时没有备案单位，请联系管理员");
             case 15:
                 return JsonObjectBO.error("法定专用章印章信息重复");
             case 16:

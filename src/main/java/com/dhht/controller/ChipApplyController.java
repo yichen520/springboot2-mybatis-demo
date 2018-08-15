@@ -87,7 +87,8 @@ public class ChipApplyController {
             String grantWay = (String)map.get("grantWay");
             String granter = (String)map.get("granter");
             String memo =(String)map.get("memo");
-            int a = chipApplyService.grant(chipApplyId,grantNum,grantTime,chipCodeStart,chipCodeEnd,receiver,grantWay,granter,memo);
+            User user = (User) httpServletRequest.getSession().getAttribute("user");
+            int a = chipApplyService.grant(user ,chipApplyId,grantNum,grantTime,chipCodeStart,chipCodeEnd,receiver,grantWay,memo);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("发放失败");

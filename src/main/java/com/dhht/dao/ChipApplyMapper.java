@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 import com.dhht.model.ChipApply;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChipApplyMapper {
     int deleteByPrimaryKey(String id);
 

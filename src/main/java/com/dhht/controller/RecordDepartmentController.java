@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
@@ -9,8 +10,12 @@ import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.sync.SyncDataType;
+import com.dhht.sync.SyncOperateType;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +41,8 @@ public class RecordDepartmentController {
     @Autowired
     private ShowHistoryService showHistoryService;
 
+    private static Logger logger = LoggerFactory.getLogger(RecordDepartmentController.class);
+
 
     /**
      * 根据角色获取备案单位
@@ -43,6 +50,7 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
+    @Log("获取备案单位")
     @RequestMapping(value = "/selectByRole")
     public JsonObjectBO selectByRole(HttpServletRequest httpServletRequest, @RequestBody Map map){
         User user = (User) httpServletRequest.getSession().getAttribute("user");
@@ -54,7 +62,8 @@ public class RecordDepartmentController {
             pageInfo = recordDepartmentService.selectByDistrictId(user.getDistrictId(),pageSize,pageNum);
             jsonObject.put("recordDepartment",pageInfo);
         }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("获取备案单位失败");
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
@@ -64,6 +73,7 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
+    @Log("根据区域查询备案单位")
     @RequestMapping(value = "/selectByDistrict")
     public JsonObjectBO selectByDistrict(@RequestBody Map map){
         String id = (String) map.get("id");
@@ -76,6 +86,7 @@ public class RecordDepartmentController {
              pageInfo = recordDepartmentService.selectByDistrictId(id,pageSize,pageNum);
              jsonObject.put("recordDepartment",pageInfo);
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -86,6 +97,7 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
+    @Log("获取备案单位列表")
     @RequestMapping(value = "/info")
     public JsonObjectBO selectAllRecordDepartment(@RequestBody Map map,HttpServletRequest httpServletRequest){
         int pageSize = (Integer)map.get("pageSize");
@@ -104,6 +116,7 @@ public class RecordDepartmentController {
                 jsonObject.put("recordDepartment",pageInfo);
             }
         }catch (Exception e ){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -114,14 +127,16 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
+    @Log("获取备案单位历史")
     @RequestMapping(value = "/showhistory")
     public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
         String flag = (String)map.get("flag");
         JSONObject jsonObject = new JSONObject();
         try{
-            List<OperatorRecord> recordDepartments = showHistoryService.showUpdteHistory(flag);
-                jsonObject.put("recordDepartments",recordDepartments);
+            List<OperatorRecord> recordDepartments = showHistoryService.showUpdteHistory(flag, SyncDataType.RECORDDEPARTMENT);
+            jsonObject.put("recordDepartments",recordDepartments);
         }catch (Exception e ){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -169,16 +184,17 @@ public class RecordDepartmentController {
      * @param recordDepartment
      * @return
      */
+    @Log("添加备案单位")
     @RequestMapping(value = "/insert")
     public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
-
         try {
             result = recordDepartmentService.insert(recordDepartment,httpServletRequest);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException exception){
             return JsonObjectBO.error("该编号已经存在");
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
     }
@@ -188,6 +204,7 @@ public class RecordDepartmentController {
      * @param httpServletRequest
      * @return
      */
+    @Log("获取区域")
     @RequestMapping(value = "/selectDistrict")
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
@@ -198,6 +215,7 @@ public class RecordDepartmentController {
             districtMenus = districtService.selectOneDistrict(user.getDistrictId());
             jsonObject.put("districtMenus",districtMenus);
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -208,6 +226,7 @@ public class RecordDepartmentController {
      * @param map
      * @return
      */
+    @Log("删除备案单位")
     @RequestMapping(value = "/delete")
     public JsonObjectBO delete(@RequestBody Map map){
         String id = (String)map.get("id");
@@ -217,6 +236,7 @@ public class RecordDepartmentController {
             result = recordDepartmentService.deleteById(id);
             return ResultUtil.getResult(result);
         }catch (Exception e ){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
 
@@ -227,6 +247,7 @@ public class RecordDepartmentController {
      * @param recordDepartment
      * @return
      */
+    @Log("修改备案单位")
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
@@ -234,6 +255,7 @@ public class RecordDepartmentController {
             result = recordDepartmentService.updateById(httpServletRequest,recordDepartment);
             return ResultUtil.getResult(result);
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.getMessage());
         }
 

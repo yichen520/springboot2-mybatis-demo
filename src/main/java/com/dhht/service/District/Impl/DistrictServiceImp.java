@@ -387,6 +387,9 @@ public class DistrictServiceImp implements DistrictService{
     @Override
     public String selectByDistrictId(String districtId) {
         District district = districtMapper.selectByDistrictId(districtId);
+        if(district==null){
+            return "该公司所属行政划分区域异常！";
+        }
         String districtName = district.getProvinceName()+"/"+district.getCityName()+"/"+district.getDistrictName();
         return districtName;
     }

@@ -154,7 +154,7 @@
 
   <update id="deleteHistoryByID" parameterType="java.lang.String">
      update  make_department set delete_status = 1
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
   </update>
 
   <insert id="insert" parameterType="com.dhht.model.Makedepartment" >

@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8083
 
 #超级管理员账号密码
 
@@ -133,3 +133,6 @@ filePath: C:/temp/
 expireTime: 3600
 #设置短信过期时间，时间为5分钟
 smsexpireTime: 300000
+
+face:
+  similarity: 50
