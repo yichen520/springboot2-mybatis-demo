@@ -42,5 +42,7 @@ public interface SealService {
    // 人证合一
    Face checkface(String fileAURL, String fileBURl);
 
+   public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
+
 }
 
