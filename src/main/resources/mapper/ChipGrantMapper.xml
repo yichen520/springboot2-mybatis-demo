@@ -15,10 +15,43 @@
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="ChipCountResultMap" type="com.dhht.model.pojo.ChipCountVO" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="chip_apply_id" property="chipApplyId" jdbcType="CHAR" />
+    <result column="chip_code_start" property="chipCodeStart" jdbcType="VARCHAR" />
+    <result column="chip_code_end" property="chipCodeEnd" jdbcType="VARCHAR" />
+    <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="grant_num" property="grantNum" jdbcType="INTEGER" />
+    <result column="grant_time" property="grantTime" jdbcType="TIMESTAMP" />
+    <result column="granter_id" property="granterId" jdbcType="CHAR" />
+    <result column="granter" property="granter" jdbcType="VARCHAR" />
+    <result column="grant_way" property="grantWay" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+    <result column="make_department_code" property="makeDepartmentCode" jdbcType="VARCHAR" />
+    <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
+  </resultMap>
   <sql id="Base_Column_List" >
     id, chip_apply_id, chip_code_start, chip_code_end, receiver, grant_num, grant_time, 
     granter_id, granter, grant_way, memo, record_time
   </sql>
+  <select id="selectGrantRecord" resultMap="ChipCountResultMap"  parameterType="java.lang.String">
+    SELECT g.*,a.make_department_name,a.make_department_code from chip_grant g join chip_apply a
+     on g.chip_apply_id = a.id
+    where 1 = 1
+    <if test="startTime == '' and  endTime != ''" >
+      and  grant_time &lt; #{endTime}
+    </if>
+    <if test="startTime != '' and  endTime != ''" >
+      and grant_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != '' and  endTime == ''" >
+      and grant_time &gt; #{startTime}
+    </if>
+    and district_id like '${districtId}%'
+    and make_department_name like '%${makeDepartmentName}%'
+
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />

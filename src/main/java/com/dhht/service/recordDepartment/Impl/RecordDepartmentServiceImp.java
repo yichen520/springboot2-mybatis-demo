@@ -240,7 +240,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
             operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.UPDATE));
             operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
             int o = operatorRecordMapper.insert(operatorRecord);
-
             //和上一次作比较  然后比较不同
             RecordDepartment newRecordDepartment = recordDepartmentMapper.selectById(uuid);
             Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newRecordDepartment, new String[]{"id","principalId","departmentAddress","isDelete","version","operator","updateTime"});
@@ -250,6 +249,11 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 operatorRecordDetail.setId(UUIDUtil.generate());
                 operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
                 operatorRecordDetail.setPropertyName("nothing");
+                int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
+                if(od<1){
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return ResultUtil.isFail;
+                }
             }
             for (String key : keySet) {
                 List<Object> list = compareResult.get(key);
@@ -266,9 +270,14 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                     operatorRecordDetail.setOldValue(list.get(0).toString());
                 }
                 operatorRecordDetail.setPropertyName(key);
+                int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
+                if(od<1){
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return ResultUtil.isFail;
+                }
             }
-            int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
-            if (r==1&&u==ResultUtil.isSuccess&&o>0&&od>0) {
+
+            if (r==1&&u==ResultUtil.isSuccess&&o>0) {
                 return ResultUtil.isSuccess;
             }else if(u==1){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

@@ -158,7 +158,7 @@ public class UserLoginServiceImpl implements UserLoginService {
                 if (errorTimes<1){
                     map.put("status", "error");
                     map.put("currentAuthority", "guest");
-                    map.put("message","该用户登录错误超过5次，请稍后重试！");
+                    map.put("message","该用户登录错误超过5次，请1小时后重试！");
                     return map;
                 }
                 map.put("status", "error");
@@ -175,7 +175,7 @@ public class UserLoginServiceImpl implements UserLoginService {
                 if (currentUser.getLoginErrorTimes()>=loginErrorTime){
                     map.put("status", "error");
                     map.put("currentAuthority", "guest");
-                    map.put("message","该用户登录错误超过5次，请稍后重试！");
+                    map.put("message","该用户登录错误超过5次，请1小时后重试！");
                     return map;
                 }
             }
@@ -233,7 +233,7 @@ public class UserLoginServiceImpl implements UserLoginService {
                 if (errorTimes > 0){
                     return JsonObjectBO.error("账号密码错误,你还可以输入"+errorTimes+"次");
                 }else {
-                    return JsonObjectBO.error("该用户登录错误超过5次，请稍后重试！");
+                    return JsonObjectBO.error("该用户登录错误超过5次，请1小时后重试！！");
                 }
 
             }
@@ -244,7 +244,7 @@ public class UserLoginServiceImpl implements UserLoginService {
                 return JsonObjectBO.error("该用户已被锁定，请联系管理员！");
             }else {
                 if (currentUser.getLoginErrorTimes()>=loginErrorTime){
-                     return JsonObjectBO.error("该用户登录错误超过5次，请稍后重试！");
+                     return JsonObjectBO.error("该用户登录错误超过5次，请1小时后重试！");
                 }
             }
             if(currentUser.getRoleId().equals("BADW")||currentUser.getRoleId().equals("ZZDW")||currentUser.getRoleId().equals("CYRY")){

@@ -108,10 +108,10 @@ public class InformationController {
     @RequestMapping(value = "/makeDepartmentHistory")
     public JsonObjectBO makeDepartmentHistory(@RequestBody Map map){
         String flag = (String)map.get("flag");
-        List<Makedepartment> result = new ArrayList<>();
+        List<OperatorRecord> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
         try {
-            result = makeDepartmentService.selectHistory(flag);
+            result =showHistoryService.showUpdteHistory(flag,SyncDataType.MAKEDEPARTMENT);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -282,7 +282,7 @@ public class InformationController {
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("查询使用单位历史失败");
         }
     }
 

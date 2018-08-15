@@ -29,5 +29,4 @@ public interface MakeDepartmentService {
 
      List<ExamineRecordDetail> selectExamineDetailByID(String id);
 
-     List<OperatorRecord> showUpdteHistory(String flag);
 }

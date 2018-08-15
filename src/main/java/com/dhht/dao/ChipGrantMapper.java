@@ -1,7 +1,11 @@
 package com.dhht.dao;
 
 import com.dhht.model.ChipGrant;
+import com.dhht.model.pojo.ChipCountVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public interface ChipGrantMapper {
@@ -16,4 +20,6 @@ public interface ChipGrantMapper {
     int updateByPrimaryKeySelective(ChipGrant record);
 
     int updateByPrimaryKey(ChipGrant record);
+
+    List<ChipCountVO> selectGrantRecord(@Param("department")String department, @Param("startTime")String startTime, @Param("endTime")String endTime, @Param("districtid")String districtid);
 }
