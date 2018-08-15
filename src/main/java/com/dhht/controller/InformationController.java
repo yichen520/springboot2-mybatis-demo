@@ -12,6 +12,7 @@ import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.ShowHistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
+import com.dhht.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -187,7 +188,8 @@ public class InformationController {
         int pageSize = (Integer) map.get("pageSize");
 
         try{
-            return useDepartmentService.find(user.getDistrictId(),code,name,districtId,status,pageNum,pageSize);
+            String localDistrictId = StringUtil.DistrictUtil(user.getDistrictId())[0]+"0000";
+            return useDepartmentService.find(localDistrictId,code,name,districtId,status,pageNum,pageSize);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("使用单位列表获取失败");
