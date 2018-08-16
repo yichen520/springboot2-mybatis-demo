@@ -21,8 +21,8 @@ public class DictionaryUtil {
     private static final String employeeFamilyAddressDetail = "从业人员户口地址";
     private static final String employeeNowAddressDetail = "从业人员现居地址";
     private static final String employeeTelphone = "从业人员电话";
-    private static final String employeeContactName ="从业人员紧急联系人姓名";
-    private static final String employeeContactTelphone="从业人员紧急联系人姓名";
+    private static final String employeeContactName ="从业人员家庭联系人姓名";
+    private static final String employeeContactTelphone="从业人员家庭联系人电话";
 
     private static final String makeDepartmentCode = "制作单位编码";
     private static final String makeDepartmentName = "制作单位名称";

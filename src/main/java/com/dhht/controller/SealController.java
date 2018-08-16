@@ -411,29 +411,27 @@ public class SealController {
      * @return
      */
     @Log("人证合一")
-    @RequestMapping(value = "checkface")
+    @RequestMapping(value = "facecheck")
     public JsonObjectBO checkface(@RequestBody Map map){
         JSONObject jsonObject = new JSONObject();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String fileAURL = (String) map.get("fileAURL");
-        String fileBURL = (String) map.get("fileBURL");
+        String fileAURL = (String) map.get("idcardPhoto");
+        String fileBURL = (String) map.get("fieldPhoto");
         try{
-            Face face = sealService.checkface(fileAURL,fileBURL);
-            if(face.getIsPass().equals("不通过")){
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("不通过");
-                jsonObject.put("face",face);
-                jsonObjectBO.setData(jsonObject);
-            }else{
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("通过");
-                jsonObject.put("face",face);
-                jsonObjectBO.setData(jsonObject);
-            }
+            Confidence confidence = sealService.checkface(fileAURL,fileBURL);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("比对成功");
+            jsonObject.put("confidence",confidence);
+            jsonObjectBO.setData(jsonObject);
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("人证合一失败");
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("比对失败");
+            jsonObject.put("error",e);
+            jsonObjectBO.setData(jsonObject);
+            return jsonObjectBO;
+
         }
     }
 

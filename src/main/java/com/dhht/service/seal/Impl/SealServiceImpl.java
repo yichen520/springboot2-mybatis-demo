@@ -245,39 +245,32 @@ public class SealServiceImpl implements SealService {
 
         if (status.equals("01")) {  //待制作
             seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         } else if (status.equals("02")) {  //待个人化
             seal.setIsRecord(true);
             seal.setIsMake(true);
-//            seal.setIsPersonal(true);
-//            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
         } else if (status.equals("03")) {  //待交付
             seal.setIsRecord(true);
             seal.setIsMake(true);
-//            seal.setIsPersonal(true);
-//            seal.setIsDeliver(true);
-//            seal.setRecordDepartmentCode(recordCode);
             list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("00")){
+        }else if(status.equals("00")){    //未交付
             list = sealDao.selectUndelivered(seal);
-        }else if(status.equals("04")){
+        }else if(status.equals("04")){    //已备案
             seal.setIsRecord(true);
-            list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("05")){
+            list = sealDao.selectIsRecord(seal);
+        }else if(status.equals("05")){  //已经挂失
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
-            list = sealDao.selectByCodeAndName(seal);
-        }else if (status.equals("06")){
+            list = sealDao.selectIsLoss(seal);
+        }else if (status.equals("06")){   //已注销
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
-            list = sealDao.selectByCodeAndName(seal);
+            list = sealDao.selectIsLogout(seal);
         }
 
         PageInfo<Seal> result = new PageInfo<>(list);
@@ -696,19 +689,19 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectUndelivered(seal);
         }else if(status.equals("04")){   //已备案
             seal.setIsRecord(true);
-            list = sealDao.selectByCodeAndName(seal);
+            list = sealDao.selectIsRecord(seal);
         }else if(status.equals("05")){
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
-            list = sealDao.selectByCodeAndName(seal);
+            list = sealDao.selectIsLoss(seal);
         }else if (status.equals("06")){
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
-            list = sealDao.selectByCodeAndName(seal);
+            list = sealDao.selectIsLogout(seal);
         }
 
         PageInfo<Seal> result = new PageInfo<>(list);
@@ -740,21 +733,70 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public Face checkface(String fileAURL, String fileBURl){
-        Float a = AFRTest.compareImage(fileAURL,fileBURl);
-        Face face = new Face();
-        face.setFileBURL(fileBURl);
-        face.setMessage("相似度为"+a+"%");
-        face.setNum(a);
+    public Confidence checkface(String fileAURL, String fileBURl){
+        Integer a = (int)AFRTest.compareImage(fileAURL,fileBURl);
+        Confidence confidence = new Confidence();
+        confidence.setFieldPhoto(fileBURl);
+        confidence.setSimilarity(a);
         if(a<similarity){
-            face.setIsPass("不通过");
-            return face;
+            confidence.setIsPass(true);
+            return confidence;
         }else{
-            face.setIsPass("通过");
-            return face;
+            confidence.setIsPass(false);
+            return confidence;
         }
     }
+
+    @Override
+    public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
+        String  districtId = user.getDistrictId().substring(0,2);
+
+        Seal seal = new Seal();
+        seal.setUseDepartmentCode(useDepartmentCode);
+        seal.setUseDepartmentName(useDepartmentName);
+        seal.setDistrictId(districtId);
+        List<Seal> list = new ArrayList<Seal>();
+
+        if (status.equals("01")) {
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            PageHelper.startPage(pageNum, pageSize);
+            list = sealDao.selectByCodeAndName(seal);
+        } else if (status.equals("02")) {   //个人化
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            list = sealDao.selectByCodeAndName(seal);
+        } else if (status.equals("03")) {  //待交付
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsPersonal(true);
+//            seal.setIsDeliver(true);
+//            seal.setRecordDepartmentCode(recordCode);
+            list = sealDao.selectByCodeAndName(seal);
+        }else if(status.equals("00")){
+            list = sealDao.selectIsRecord(seal);
+        }else if(status.equals("04")){   //已备案
+            seal.setIsRecord(true);
+            list = sealDao.selectByCodeAndName(seal);
+        }else if(status.equals("05")){
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsLoss(true);
+            list = sealDao.selectIsLoss(seal);
+        }else if (status.equals("06")){
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsLogout(true);
+            list = sealDao.selectIsLogout(seal);
+        }
+
+        PageInfo<Seal> result = new PageInfo<>(list);
+        return result;
     }
+
+}
 
 
 
