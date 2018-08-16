@@ -413,8 +413,8 @@ public class SealController {
     public JsonObjectBO checkface(@RequestBody Map map){
         JSONObject jsonObject = new JSONObject();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String fileAURL = (String) map.get("fileAURL");
-        String fileBURL = (String) map.get("fileBURL");
+        String fileAURL = (String) map.get("idcardPhoto");
+        String fileBURL = (String) map.get("fieldPhoto");
         try{
             Confidence confidence = sealService.checkface(fileAURL,fileBURL);
             jsonObjectBO.setCode(1);

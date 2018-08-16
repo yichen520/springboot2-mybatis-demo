@@ -735,15 +735,15 @@ public class SealServiceImpl implements SealService {
     @Override
     public Confidence checkface(String fileAURL, String fileBURl){
         Integer a = (int)AFRTest.compareImage(fileAURL,fileBURl);
-        Confidence face = new Confidence();
-        face.setFileBURL(fileBURl);
-        face.setSimilarity(a);
+        Confidence confidence = new Confidence();
+        confidence.setFieldPhoto(fileBURl);
+        confidence.setSimilarity(a);
         if(a<similarity){
-            face.setIsPass(true);
-            return face;
+            confidence.setIsPass(true);
+            return confidence;
         }else{
-            face.setIsPass(false);
-            return face;
+            confidence.setIsPass(false);
+            return confidence;
         }
     }
 

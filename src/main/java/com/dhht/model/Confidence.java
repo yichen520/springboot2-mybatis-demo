@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Confidence {
 
-    private String fileBURL;
+    private String fieldPhoto;
 
     private int similarity;
 
