@@ -733,17 +733,16 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public Face checkface(String fileAURL, String fileBURl){
-        Float a = AFRTest.compareImage(fileAURL,fileBURl);
-        Face face = new Face();
+    public Confidence checkface(String fileAURL, String fileBURl){
+        Integer a = (int)AFRTest.compareImage(fileAURL,fileBURl);
+        Confidence face = new Confidence();
         face.setFileBURL(fileBURl);
-        face.setMaeeage("相似度为"+a+"%");
-        face.setNum(a);
+        face.setSimilarity(a);
         if(a<similarity){
-            face.setIsPass("不通过");
+            face.setIsPass(true);
             return face;
         }else{
-            face.setIsPass("通过");
+            face.setIsPass(false);
             return face;
         }
     }

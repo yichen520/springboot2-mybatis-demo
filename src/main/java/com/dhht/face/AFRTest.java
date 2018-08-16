@@ -82,6 +82,7 @@ public class AFRTest {
             inputImgB = loadImage(filePathB);
         }
 
+
         Float similarity  = compareFaceSimilarity(hFDEngine, hFREngine, inputImgA, inputImgB);
 
         // release Engine
