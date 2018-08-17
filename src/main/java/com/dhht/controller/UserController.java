@@ -200,9 +200,9 @@ public class UserController {
     @RequestMapping(value = "/getCheckCode")
     public JsonObjectBO getCheckCode(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String phone = (String)map.get("telphone");
+        String username = (String)map.get("username");
         try{
-        if (userPasswordService.getCheckCode(phone)== 2){
+        if (userPasswordService.getCheckCode(username)== ResultUtil.isSuccess){
             return JsonObjectBO.success("获取验证码成功",null);
         }else{
             return  JsonObjectBO.error("获取验证码失败");
@@ -222,11 +222,11 @@ public class UserController {
     @Log("忘记密码后的密码重置")
     @RequestMapping(value = "/resetPwd")
     public JsonObjectBO resetPwd(@RequestBody Map map){
-        String phone = (String)map.get("telphone");
-        String checkCode = (String)map.get("checkCode");
-        String passWord = (String)map.get("passWord");
+        String username = (String)map.get("username");
+        String checkCode = (String)map.get("captcha");
+        String password = (String)map.get("password");
         try {
-            if (userPasswordService.resetPwd(phone, checkCode, passWord)) {
+            if (userPasswordService.resetPwd(username, checkCode, password)) {
                 return JsonObjectBO.success("重置成功", null);
             } else {
                 return JsonObjectBO.error("重置失败");

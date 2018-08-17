@@ -51,7 +51,7 @@ public class InterceptorConfig implements HandlerInterceptor {
             return true;
         }
         //登录不做要求
-        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/app/login")){
+        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/getCheckCode")||request.getRequestURI().equals("/app/login")){
             return true;
         }
         //获取session是否存在

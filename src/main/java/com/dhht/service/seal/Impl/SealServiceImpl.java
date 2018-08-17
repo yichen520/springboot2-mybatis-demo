@@ -729,14 +729,15 @@ public class SealServiceImpl implements SealService {
     /**
      * 人证合一
      * @param fileAURL
-     * @param fileBURl
+     * @param fileBURL
      * @return
      */
     @Override
-    public Confidence checkface(String fileAURL, String fileBURl){
-        Integer a = (int)AFRTest.compareImage(fileAURL,fileBURl);
-        Confidence confidence = new Confidence();
-        confidence.setFieldPhoto(fileBURl);
+    public FaceCompareResult checkface(String fileAURL, String fileBURL){
+        Integer a = (int)AFRTest.compareImage(fileAURL,fileBURL);
+
+        FaceCompareResult confidence = new FaceCompareResult();
+        confidence.setFieldPhoto(fileBURL);
         confidence.setSimilarity(a);
         if(a<similarity){
             confidence.setIsPass(true);
