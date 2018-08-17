@@ -25,8 +25,11 @@ public class LocalStoreFileService implements FileInfoService {
     @Value("${file.local.root}")
     private String rootDir;
 
+
     @Autowired
     private FileInfosMapper fileInfosMapper;
+
+
 
 
     @Override

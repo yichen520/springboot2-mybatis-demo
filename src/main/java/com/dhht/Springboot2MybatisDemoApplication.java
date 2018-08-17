@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -17,6 +18,7 @@ import javax.servlet.MultipartConfigElement;
 @MapperScan("com.dhht.dao")
 @EnableAspectJAutoProxy(exposeProxy = true)
 @Configuration
+@EnableWebMvc
 public class Springboot2MybatisDemoApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

@@ -3,6 +3,7 @@ package com.dhht.model;
 import java.util.Date;
 
 public class ChipGrant {
+
     private String id;
 
     private String chipApplyId;

@@ -40,7 +40,7 @@ public interface SealService {
    PageInfo<Seal> seal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
    // 人证合一
-   Confidence checkface(String fileAURL, String fileBURl);
+   FaceCompareResult checkface(String fileAURL, String fileBURl);
 
    public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
