@@ -2,6 +2,7 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
+import com.dhht.common.ImageGenerate;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
@@ -20,6 +21,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -432,5 +434,21 @@ public class SealController {
 
         }
     }
+
+    @Log("印模模板生成")
+    @RequestMapping(value = "sealtemplate")
+    public JsonObjectBO sealtemplate(@RequestBody Map map){
+       String sealTemplatePath =  new ImageGenerate().seal(map);
+        try{
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("sealTemplatePath",sealTemplatePath);
+            return JsonObjectBO.success("印模模板生成成功",jsonObject);
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("印模模板生成失败");
+        }
+    }
+
+
 
 }
