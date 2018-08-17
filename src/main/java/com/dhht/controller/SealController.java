@@ -2,6 +2,7 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
+import com.dhht.common.ImageGenerate;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
@@ -20,6 +21,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -409,30 +411,44 @@ public class SealController {
      * @return
      */
     @Log("人证合一")
-    @RequestMapping(value = "checkface")
+    @RequestMapping(value = "facecheck")
     public JsonObjectBO checkface(@RequestBody Map map){
         JSONObject jsonObject = new JSONObject();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String fileAURL = (String) map.get("fileAURL");
-        String fileBURL = (String) map.get("fileBURL");
+        String fileAURL = (String) map.get("idcardPhoto");
+        String fileBURL = (String) map.get("fieldPhoto");
         try{
-            Face face = sealService.checkface(fileAURL,fileBURL);
-            if(face.getIsPass().equals("不通过")){
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("不通过");
-                jsonObject.put("face",face);
-                jsonObjectBO.setData(jsonObject);
-            }else{
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("通过");
-                jsonObject.put("face",face);
-                jsonObjectBO.setData(jsonObject);
-            }
+            Confidence confidence = sealService.checkface(fileAURL,fileBURL);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("比对成功");
+            jsonObject.put("confidence",confidence);
+            jsonObjectBO.setData(jsonObject);
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("人证合一失败");
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("比对失败");
+            jsonObject.put("error",e);
+            jsonObjectBO.setData(jsonObject);
+            return jsonObjectBO;
+
         }
     }
+
+    @Log("印模模板生成")
+    @RequestMapping(value = "sealtemplate")
+    public JsonObjectBO sealtemplate(@RequestBody Map map){
+       String sealTemplatePath =  new ImageGenerate().seal(map);
+        try{
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("sealTemplatePath",sealTemplatePath);
+            return JsonObjectBO.success("印模模板生成成功",jsonObject);
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("印模模板生成失败");
+        }
+    }
+
+
 
 }
