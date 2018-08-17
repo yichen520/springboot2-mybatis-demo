@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhht.dao.FaceCompareRecordMapper">
+    <resultMap id="BaseResultMap" type="com.dhht.model.FaceCompareRecord">
+        <id column="id" jdbcType="CHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="certificate_no" jdbcType="CHAR" property="certificateNo" />
+        <result column="certificate_photo_id" jdbcType="CHAR" property="certificatePhotoId" />
+        <result column="filed_photo_id" jdbcType="CHAR" property="filedPhotoId" />
+        <result column="face_photo_id" jdbcType="CHAR" property="facePhotoId" />
+        <result column="confidence" jdbcType="REAL" property="confidence" />
+        <result column="record_time" jdbcType="TIMESTAMP" property="recordTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, certificate_no, certificate_photo_id, filed_photo_id, face_photo_id, confidence, 
+        record_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select 
+        <include refid="Base_Column_List" />
+        from face_compare_record
+        where id = #{id,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from face_compare_record
+        where id = #{id,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.dhht.model.FaceCompareRecord">
+        insert into face_compare_record (id, name, certificate_no, 
+            certificate_photo_id, filed_photo_id, face_photo_id, 
+            confidence, record_time)
+        values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{certificateNo,jdbcType=CHAR}, 
+            #{certificatePhotoId,jdbcType=CHAR}, #{filedPhotoId,jdbcType=CHAR}, #{facePhotoId,jdbcType=CHAR}, 
+            #{confidence,jdbcType=REAL}, #{recordTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.dhht.model.FaceCompareRecord">
+        insert into face_compare_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="certificateNo != null">
+                certificate_no,
+            </if>
+            <if test="certificatePhotoId != null">
+                certificate_photo_id,
+            </if>
+            <if test="filedPhotoId != null">
+                filed_photo_id,
+            </if>
+            <if test="facePhotoId != null">
+                face_photo_id,
+            </if>
+            <if test="confidence != null">
+                confidence,
+            </if>
+            <if test="recordTime != null">
+                record_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=CHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateNo != null">
+                #{certificateNo,jdbcType=CHAR},
+            </if>
+            <if test="certificatePhotoId != null">
+                #{certificatePhotoId,jdbcType=CHAR},
+            </if>
+            <if test="filedPhotoId != null">
+                #{filedPhotoId,jdbcType=CHAR},
+            </if>
+            <if test="facePhotoId != null">
+                #{facePhotoId,jdbcType=CHAR},
+            </if>
+            <if test="confidence != null">
+                #{confidence,jdbcType=REAL},
+            </if>
+            <if test="recordTime != null">
+                #{recordTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.FaceCompareRecord">
+        update face_compare_record
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateNo != null">
+                certificate_no = #{certificateNo,jdbcType=CHAR},
+            </if>
+            <if test="certificatePhotoId != null">
+                certificate_photo_id = #{certificatePhotoId,jdbcType=CHAR},
+            </if>
+            <if test="filedPhotoId != null">
+                filed_photo_id = #{filedPhotoId,jdbcType=CHAR},
+            </if>
+            <if test="facePhotoId != null">
+                face_photo_id = #{facePhotoId,jdbcType=CHAR},
+            </if>
+            <if test="confidence != null">
+                confidence = #{confidence,jdbcType=REAL},
+            </if>
+            <if test="recordTime != null">
+                record_time = #{recordTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dhht.model.FaceCompareRecord">
+        update face_compare_record
+        set name = #{name,jdbcType=VARCHAR},
+            certificate_no = #{certificateNo,jdbcType=CHAR},
+            certificate_photo_id = #{certificatePhotoId,jdbcType=CHAR},
+            filed_photo_id = #{filedPhotoId,jdbcType=CHAR},
+            face_photo_id = #{facePhotoId,jdbcType=CHAR},
+            confidence = #{confidence,jdbcType=REAL},
+            record_time = #{recordTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=CHAR}
+    </update>
+</mapper>
