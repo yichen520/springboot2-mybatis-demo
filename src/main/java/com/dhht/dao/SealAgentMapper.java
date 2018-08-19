@@ -1,7 +1,10 @@
 package com.dhht.dao;
 
 import com.dhht.model.SealAgent;
+import org.springframework.stereotype.Repository;
 
+
+@Repository
 public interface SealAgentMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +17,5 @@ public interface SealAgentMapper {
     int updateByPrimaryKeySelective(SealAgent record);
 
     int updateByPrimaryKey(SealAgent record);
+
 }

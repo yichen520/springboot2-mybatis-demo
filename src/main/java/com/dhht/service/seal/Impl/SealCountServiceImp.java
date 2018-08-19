@@ -4,7 +4,6 @@ import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.dao.SealDao;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
-import com.dhht.service.make.MakeDepartmentCuontService;
 import com.dhht.service.seal.SealCuontService;
 import com.dhht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;

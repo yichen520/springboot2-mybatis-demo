@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class SealVo  {
+public class SealVO  {
 
     private Seal seal;
 

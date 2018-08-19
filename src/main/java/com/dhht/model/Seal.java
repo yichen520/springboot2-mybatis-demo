@@ -71,13 +71,13 @@ public class Seal extends SealKey {
     private String sealReason; //印章原因
 
     private String districtId;  //区域id
-//
-//    private SealImage sealImage;    //印章图像
 
-    private SealOperationRecord sealOperationRecord;    //经办人等
-//
-//    private RecordDepartment recordDepartment;       //备案单位
+    private String agentId;   //申请
 
+    private String getterId;    // 领取
 
+    private String lossPersonId;    //挂失
+
+    private String logoutPersonId;    //注销
 
 }

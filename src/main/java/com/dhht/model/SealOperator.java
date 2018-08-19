@@ -12,8 +12,6 @@ public class SealOperator {
 
     private Seal seal;
 
-    private SealGetPerson sealGetPerson;
-
     private SealOperationRecord sealOperationRecord;
 
     private String operatorPhoto; //经办人照片
