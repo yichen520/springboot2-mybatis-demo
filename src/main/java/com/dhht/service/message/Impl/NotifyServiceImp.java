@@ -4,7 +4,6 @@ import com.dhht.dao.NotifyMapper;
 import com.dhht.dao.NotifyReceiveDetailMapper;
 import com.dhht.model.*;
 import com.dhht.service.tools.FileService;
-import com.dhht.service.user.UserService;
 import com.dhht.util.*;
 import com.dhht.service.message.NotifyService;
 import com.dhht.util.ResultUtil;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +124,7 @@ public class NotifyServiceImp implements NotifyService {
         notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
             if(notify.getNotifyFileUrls()!=null) {
-                notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
+                notify.setFiles(fileService.selectFileInfo(notify.getNotifyFileUrls()));
             }
         }
         try {
@@ -148,7 +146,7 @@ public class NotifyServiceImp implements NotifyService {
         List<Notify> notifies = notifyMapper.selectNotifyBySendUser(userName);
         for (Notify notify:notifies){
                 if(notify.getNotifyFileUrls()!=null) {
-                    notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
+                    notify.setFiles(fileService.selectFileInfo(notify.getNotifyFileUrls()));
                 }
                 String result = notifyReadCount(notify.getId());
                 if(notify.getIsRecall()) {
@@ -173,19 +171,4 @@ public class NotifyServiceImp implements NotifyService {
         return result;
     }
 
-    /**
-     * 查找文件列表
-     * @param path
-     * @return
-     */
-    public List<FileInfo> selectFileByPath(String path){
-        String paths[] = StringUtil.toStringArray(path);
-        List<FileInfo> fileList = new ArrayList<>();
-        for(int i=0;i<paths.length;i++){
-            FileInfo file = fileService.selectByPath(paths[i]);
-            file.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+file.getFilePath());
-            fileList.add(file);
-        }
-        return fileList;
-    }
 }

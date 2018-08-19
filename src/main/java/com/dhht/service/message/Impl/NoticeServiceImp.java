@@ -67,7 +67,7 @@ public class NoticeServiceImp implements NoticeService{
         List<Notice> noticeList = noticeMapper.selectByUserName(userName);
         for (Notice notice:noticeList) {
             if (notice.getNoticeFileUrl()!=null) {
-                List<FileInfo> fileList = selectFileByPath(notice.getNoticeFileUrl());
+                List<FileInfo> fileList = fileService.selectFileInfo(notice.getNoticeFileUrl());
                 if (fileList.size() > 0) {
                     notice.setFiles(fileList);
                 }
@@ -157,7 +157,7 @@ public class NoticeServiceImp implements NoticeService{
         Notice notice = noticeMapper.selectNoticeDetail(id);
         List<FileInfo> fileList = new ArrayList<>();
         if(notice.getNoticeFileUrl()!=null){
-            fileList = selectFileByPath(notice.getNoticeFileUrl());
+            fileList = fileService.selectFileInfo(notice.getNoticeFileUrl());
             notice.setFiles(fileList);
         }
         return notice;
@@ -165,12 +165,12 @@ public class NoticeServiceImp implements NoticeService{
 
     /**
      * 删除文件表
-     * @param paths
+     * @param fileIds
      * @return
      */
-     public int deleteFile(String paths[]){
-         for(int i = 0;i<paths.length;i++){
-             if(!fileService.deleteFile(paths[i])){
+     public int deleteFile(String[] fileIds){
+         for(int i = 0;i<fileIds.length;i++){
+             if(!fileService.delete(fileIds[i])){
                  TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                  return ResultUtil.isFail;
              }
@@ -183,12 +183,12 @@ public class NoticeServiceImp implements NoticeService{
      * @param noticeFileUrls
      * @return
      */
-     public List<FileInfo> selectFileByPath(String noticeFileUrls) {
-         String paths[] = StringUtil.toStringArray(noticeFileUrls);
+     public List<FileInfo> selectFileInfo(String noticeFileUrls) {
+         String[] fileIds = StringUtil.toStringArray(noticeFileUrls);
          List<FileInfo> fileList = new ArrayList<>();
-         if (paths.length>0) {
-             for (int i = 0; i < paths.length; i++) {
-                 FileInfo fileInfo =fileService.selectByPath(paths[i]);
+         if (fileIds.length>0) {
+             for (int i = 0; i < fileIds.length; i++) {
+                 FileInfo fileInfo = fileService.getFileInfo(fileIds[i]);
                  if(fileInfo!=null) {
                      fileInfo.setFilePath("http://" + trackerServer + ":" + trackerPort + "group1/" + fileInfo.getFilePath());
                      fileList.add(fileInfo);

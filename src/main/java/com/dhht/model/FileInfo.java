@@ -9,10 +9,23 @@ public class FileInfo {
 
     private String fileName;
 
+    private String fileExt;
+
     private String filePath;
 
     private Date createTime;
 
-    private String operationRecordId;
+    private String createMemo;
 
+    private int createType;
+
+    private String creatorId;
+
+    private String creatorName;
+
+    private boolean register;
+
+    private String registerMemo;
+
+    private Date registerTime;
 }
