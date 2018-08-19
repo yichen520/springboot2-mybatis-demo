@@ -136,16 +136,23 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     /**
      * 密码重置中
      * 获取验证码
-     * @param phone
+     * @param username
      * @return
      */
     @Override
-    public int getCheckCode(String phone) {
+    public int getCheckCode(String username) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String code = createRandomVcode();
+        User user = userDao.findByUserName(username);
+        String phone = user.getTelphone();
         int a = sendMessage(phone,code,checkCode1);
         if(a<0){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("验证码获取失败");
             return ResultUtil.isFail;
         }else{
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("验证码获取成功");
             return ResultUtil.isSuccess;
         }
     }
@@ -156,21 +163,21 @@ public class UserPasswordServiceImpl implements UserPasswordService{
      * 重置密码
      */
     @Override
-    public boolean resetPwd(String phone,String checkCode,String passWord){
+    public boolean resetPwd(String username,String checkCode,String password){
+        User user = userDao.findByUserName(username);
+        String phone = user.getTelphone();
         SMSCode code = smsCodeDao.getSMSCodeByPhone(phone);
         String smscode = code.getSmscode();
         if(smscode.equals(checkCode)){
-            User user = userDao.findByTelphone(phone);
-            String userName = user.getUserName();
-            String pwd = MD5Util.toMd5(passWord);
+            String pwd = MD5Util.toMd5(password);
             user.setPassword(pwd);
             int a = userDao.update(user);
             if (a!=1){
                 return false;
             }else {
                 ArrayList<String> params = new ArrayList<String>();
-                params.add(userName);
-                params.add(passWord);
+                params.add(username);
+                params.add(password);
                 smsSendService.sendSingleMsgByTemplate(user.getTelphone(),newPassword,params);
                 return true;
             }

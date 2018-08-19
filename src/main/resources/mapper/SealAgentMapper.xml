@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhht.dao.SealAgentMapper">
+    <resultMap id="BaseResultMap" type="com.dhht.model.SealAgent">
+        <id column="id" jdbcType="CHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="certificate_type" jdbcType="CHAR" property="certificateType" />
+        <result column="certificate_no" jdbcType="VARCHAR" property="certificateNo" />
+        <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+        <result column="agent_photo_id" jdbcType="CHAR" property="agentPhotoId" />
+        <result column="idcard_front_id" jdbcType="CHAR" property="idcardFrontId" />
+        <result column="idcard_reverse_id" jdbcType="CHAR" property="idcardReverseId" />
+        <result column="proxy_id" jdbcType="CHAR" property="proxyId" />
+        <result column="business_type" jdbcType="CHAR" property="businessType" />
+        <result column="face_compare_record_id" jdbcType="CHAR" property="faceCompareRecordId" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, certificate_type, certificate_no, telphone, agent_photo_id, idcard_front_id, 
+        idcard_reverse_id, proxy_id, business_type, face_compare_record_id
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select 
+        <include refid="Base_Column_List" />
+        from seal_agent
+        where id = #{id,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from seal_agent
+        where id = #{id,jdbcType=CHAR}
+    </delete>
+    <insert id="insert" parameterType="com.dhht.model.SealAgent">
+        insert into seal_agent (id, name, certificate_type, 
+            certificate_no, telphone, agent_photo_id, 
+            idcard_front_id, idcard_reverse_id, proxy_id, 
+            business_type, face_compare_record_id)
+        values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{certificateType,jdbcType=CHAR}, 
+            #{certificateNo,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{agentPhotoId,jdbcType=CHAR}, 
+            #{idcardFrontId,jdbcType=CHAR}, #{idcardReverseId,jdbcType=CHAR}, #{proxyId,jdbcType=CHAR}, 
+            #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.dhht.model.SealAgent">
+        insert into seal_agent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="certificateType != null">
+                certificate_type,
+            </if>
+            <if test="certificateNo != null">
+                certificate_no,
+            </if>
+            <if test="telphone != null">
+                telphone,
+            </if>
+            <if test="agentPhotoId != null">
+                agent_photo_id,
+            </if>
+            <if test="idcardFrontId != null">
+                idcard_front_id,
+            </if>
+            <if test="idcardReverseId != null">
+                idcard_reverse_id,
+            </if>
+            <if test="proxyId != null">
+                proxy_id,
+            </if>
+            <if test="businessType != null">
+                business_type,
+            </if>
+            <if test="faceCompareRecordId != null">
+                face_compare_record_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=CHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateType != null">
+                #{certificateType,jdbcType=CHAR},
+            </if>
+            <if test="certificateNo != null">
+                #{certificateNo,jdbcType=VARCHAR},
+            </if>
+            <if test="telphone != null">
+                #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="agentPhotoId != null">
+                #{agentPhotoId,jdbcType=CHAR},
+            </if>
+            <if test="idcardFrontId != null">
+                #{idcardFrontId,jdbcType=CHAR},
+            </if>
+            <if test="idcardReverseId != null">
+                #{idcardReverseId,jdbcType=CHAR},
+            </if>
+            <if test="proxyId != null">
+                #{proxyId,jdbcType=CHAR},
+            </if>
+            <if test="businessType != null">
+                #{businessType,jdbcType=CHAR},
+            </if>
+            <if test="faceCompareRecordId != null">
+                #{faceCompareRecordId,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.SealAgent">
+        update seal_agent
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateType != null">
+                certificate_type = #{certificateType,jdbcType=CHAR},
+            </if>
+            <if test="certificateNo != null">
+                certificate_no = #{certificateNo,jdbcType=VARCHAR},
+            </if>
+            <if test="telphone != null">
+                telphone = #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="agentPhotoId != null">
+                agent_photo_id = #{agentPhotoId,jdbcType=CHAR},
+            </if>
+            <if test="idcardFrontId != null">
+                idcard_front_id = #{idcardFrontId,jdbcType=CHAR},
+            </if>
+            <if test="idcardReverseId != null">
+                idcard_reverse_id = #{idcardReverseId,jdbcType=CHAR},
+            </if>
+            <if test="proxyId != null">
+                proxy_id = #{proxyId,jdbcType=CHAR},
+            </if>
+            <if test="businessType != null">
+                business_type = #{businessType,jdbcType=CHAR},
+            </if>
+            <if test="faceCompareRecordId != null">
+                face_compare_record_id = #{faceCompareRecordId,jdbcType=CHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=CHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dhht.model.SealAgent">
+        update seal_agent
+        set name = #{name,jdbcType=VARCHAR},
+            certificate_type = #{certificateType,jdbcType=CHAR},
+            certificate_no = #{certificateNo,jdbcType=VARCHAR},
+            telphone = #{telphone,jdbcType=VARCHAR},
+            agent_photo_id = #{agentPhotoId,jdbcType=CHAR},
+            idcard_front_id = #{idcardFrontId,jdbcType=CHAR},
+            idcard_reverse_id = #{idcardReverseId,jdbcType=CHAR},
+            proxy_id = #{proxyId,jdbcType=CHAR},
+            business_type = #{businessType,jdbcType=CHAR},
+            face_compare_record_id = #{faceCompareRecordId,jdbcType=CHAR}
+        where id = #{id,jdbcType=CHAR}
+    </update>
+</mapper>

@@ -3,7 +3,7 @@ package com.dhht.model;
 import lombok.Data;
 
 @Data
-public class Confidence {
+public class FaceCompareResult {
 
     private String fieldPhoto;
 

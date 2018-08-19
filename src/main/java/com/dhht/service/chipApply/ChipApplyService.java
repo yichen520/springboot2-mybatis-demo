@@ -1,5 +1,6 @@
 package com.dhht.service.chipApply;
 
+import com.dhht.model.ChipApply;
 import com.dhht.model.ChipGrant;
 import com.dhht.model.User;
 import com.dhht.model.pojo.ChipCountVO;

@@ -386,10 +386,10 @@ public class SealController {
         String fileAURL = (String) map.get("idcardPhoto");
         String fileBURL = (String) map.get("fieldPhoto");
         try{
-            Confidence confidence = sealService.checkface(fileAURL,fileBURL);
+            FaceCompareResult faceCompareResult = sealService.checkface(fileAURL,fileBURL);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setMessage("比对成功");
-            jsonObject.put("confidence",confidence);
+            jsonObject.put("faceCompareResult",faceCompareResult);
             jsonObjectBO.setData(jsonObject);
             return jsonObjectBO;
         }catch (Exception e){
