@@ -7,6 +7,8 @@ public class FaceCompareResult {
 
     private String fieldPhotoId;
 
+    private String idCardPhotoId;
+
     private int similarity;
 
     private Boolean isPass;
