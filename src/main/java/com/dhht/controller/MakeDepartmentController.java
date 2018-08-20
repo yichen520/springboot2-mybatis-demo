@@ -6,7 +6,8 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentService;
-import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.service.tools.FileService;
+import com.dhht.service.tools.HistoryService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -38,7 +41,10 @@ public class MakeDepartmentController {
     private DistrictService districtService;
 
     @Autowired
-    private ShowHistoryService showHistoryService;
+    private FileService fileService;
+
+    @Autowired
+    private HistoryService historyService;
 
     private static Logger logger = LoggerFactory.getLogger(MakeDepartmentController.class);
 
@@ -75,30 +81,13 @@ public class MakeDepartmentController {
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
-//    /**
-//     * 展示修改记录
-//     * @param map
-//     * @return
-//     */
-//    @Log("查看修改记录")
-//    @RequestMapping(value = "/showHistory")
-//    public JsonObjectBO selectHistory(@RequestBody Map map){
-//        String flag = (String)map.get("flag");
-//        List<Makedepartment> result = new ArrayList<>();
-//        JSONObject jsonObject = new JSONObject();
-//        try {
-//            result = makeDepartmentService.selectHistory(flag);
-//            jsonObject.put("makeDepartment",result);
-//        }catch (Exception e){
-//            logger.error(e.getMessage(),e);
-//            return JsonObjectBO.exception(e.toString());
-//        }
-//        return JsonObjectBO.success("查询成功",jsonObject);
-//    }
+
 
     @Log("查看修改记录")
     @RequestMapping(value = "/showHistory")
@@ -107,7 +96,7 @@ public class MakeDepartmentController {
         List<OperatorRecord> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
         try {
-            result = showHistoryService.showUpdteHistory(flag, SyncDataType.MAKEDEPARTMENT);
+            result = historyService.showUpdteHistory(flag, SyncDataType.MAKEDEPARTMENT);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -247,5 +236,32 @@ public class MakeDepartmentController {
             JsonObjectBO.exception(e.toString());
         }
         return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+    /**
+     * 文件上传接口
+     * @param request
+     * @param file
+     * @return
+     */
+    @Log("制作单位文件上传")
+    @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
+    public JsonObjectBO headFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return JsonObjectBO.error("请选择上传文件");
+        }
+        try {
+            FileInfo uploadFile = fileService.insertFile(request, file);
+            if (uploadFile != null) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("file", uploadFile);
+                return JsonObjectBO.success("头像上传成功", jsonObject);
+            } else {
+                return JsonObjectBO.error("头像上传失败");
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("头像文件失败");
+        }
     }
 }

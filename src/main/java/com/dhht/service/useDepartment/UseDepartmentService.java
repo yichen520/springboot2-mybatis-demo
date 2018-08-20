@@ -3,6 +3,7 @@ package com.dhht.service.useDepartment;
 import com.dhht.common.JsonObjectBO;
 
 import com.dhht.model.UseDepartment;
+import com.dhht.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -13,13 +14,13 @@ import java.util.List;
  */
 public interface UseDepartmentService {
 
-    JsonObjectBO insert(UseDepartment useDepartment,HttpServletRequest httpServletRequest);
+    JsonObjectBO insert(UseDepartment useDepartment,User updateUser);
 
-    JsonObjectBO update(UseDepartment useDepartment,HttpServletRequest httpServletRequest);
+    JsonObjectBO update(UseDepartment useDepartment,User updateUser);
 
     JsonObjectBO find(String localDistrictId,String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize);
 
-    JsonObjectBO delete(UseDepartment useDepartment);
+    JsonObjectBO delete(UseDepartment useDepartment,User updateUser);
 
     JsonObjectBO showHistory(String flag);
 

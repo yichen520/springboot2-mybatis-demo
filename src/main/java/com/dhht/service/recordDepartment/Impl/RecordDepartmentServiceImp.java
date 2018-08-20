@@ -3,10 +3,8 @@ package com.dhht.service.recordDepartment.Impl;
 import com.dhht.annotation.Sync;
 import com.dhht.dao.*;
 import com.dhht.model.*;
-import com.dhht.model.pojo.CommonHistoryVO;
-import com.dhht.model.pojo.DataHistory;
-import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.HistoryService;
 import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
@@ -14,14 +12,11 @@ import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
 import java.util.*;
 
 /**
@@ -51,6 +46,9 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HistoryService historyService;
 
 
     /**
@@ -118,14 +116,13 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @return
      */
     @Override
-    public int insert(RecordDepartment recordDepartment,HttpServletRequest httpServletRequest) {
+    public int insert(RecordDepartment recordDepartment,User updateUser) {
         if(isInsert(recordDepartment)){
             return ResultUtil.isDistrict;
         }
         if (recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
             return ResultUtil.isHave;
         }
-        User user1 = (User)httpServletRequest.getSession().getAttribute("user");
         String uuid =UUIDUtil.generate();
         recordDepartment.setId(uuid);
         recordDepartment.setVersion(1);
@@ -134,18 +131,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userService.insert(recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress());
-        if(r==1&&u==ResultUtil.isSend){
-            OperatorRecord operatorRecord = new OperatorRecord();
-            operatorRecord.setFlag(flag);
-            operatorRecord.setId(UUIDUtil.generate());
-            operatorRecord.setOperateUserId(user1.getId());
-            operatorRecord.setOperateUserRealname(user1.getRealName());
-            operatorRecord.setOperateEntityId(uuid);
-            operatorRecord.setOperateEntityName("recordDepartment");
-            operatorRecord.setOperateType(SyncOperateType.SAVE);
-            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
-            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-            operatorRecordMapper.insert(operatorRecord);
+        boolean o = historyService.insertOperateRecord(updateUser,recordDepartment.getFlag(),recordDepartment.getId(),"recordDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
+        if(r==1&&u==ResultUtil.isSend&&o){
             return ResultUtil.isSuccess;
         }else if(u==ResultUtil.isHave){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -205,79 +192,29 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @return
      */
     @Override
-    public int updateById(HttpServletRequest httpServletRequest, RecordDepartment recordDepartment) {
+    public int updateById(RecordDepartment recordDepartment,User updateUser) {
         try {
-            User user = (User)httpServletRequest.getSession().getAttribute("user");
-            recordDepartment.setOperator(user.getRealName());
             RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-            int u = userService.update(oldDate.getTelphone(),recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress()); // 自己看
             int d = recordDepartmentMapper.deleteById(recordDepartment.getId());
             if(d==0){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isError;
             }
             if(recordDepartmentMapper.validateCode(recordDepartment.getDepartmentCode())>0){
                 return ResultUtil.isHave;
             }
-
-            recordDepartmentMapper.deleteById(recordDepartment.getId());
             recordDepartment.setVersion(recordDepartment.getVersion()+1);
             recordDepartment.setIsDelete(true);
             recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
             String uuid = UUIDUtil.generate();
             recordDepartment.setId(uuid);
             int r = recordDepartmentMapper.insert(recordDepartment);
-
-            //增加操作记录
-            OperatorRecord operatorRecord = new OperatorRecord();
-            String operatorRecordId = UUIDUtil.generate();
-            operatorRecord.setFlag(recordDepartment.getFlag());
-            operatorRecord.setId(operatorRecordId);
-            operatorRecord.setOperateUserId(user.getId());
-            operatorRecord.setOperateUserRealname(user.getRealName());
-            operatorRecord.setOperateEntityId(uuid);
-            operatorRecord.setOperateEntityName("recordDepartment");
-            operatorRecord.setOperateType(SyncOperateType.UPDATE);
-            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.UPDATE));
-            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-            int o = operatorRecordMapper.insert(operatorRecord);
-            //和上一次作比较  然后比较不同
-            RecordDepartment newRecordDepartment = recordDepartmentMapper.selectById(uuid);
-            Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldDate, newRecordDepartment, new String[]{"id","principalId","departmentAddress","isDelete","version","operator","updateTime"});
-            Set<String> keySet = compareResult.keySet();
-            OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
-            if(keySet.size()==0){
-                operatorRecordDetail.setId(UUIDUtil.generate());
-                operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-                operatorRecordDetail.setPropertyName("nothing");
-                int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
-                if(od<1){
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return ResultUtil.isFail;
-                }
-            }
-            for (String key : keySet) {
-                List<Object> list = compareResult.get(key);
-                operatorRecordDetail.setId(UUIDUtil.generate());
-                operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-                if(list.get(1)==null||list.get(1)==""){
-                    operatorRecordDetail.setNewValue("");
-                }else {
-                    operatorRecordDetail.setNewValue(list.get(1).toString());
-                }
-                if(list.get(0)==null||list.get(0)==""){
-                    operatorRecordDetail.setOldValue("");
-                }else {
-                    operatorRecordDetail.setOldValue(list.get(0).toString());
-                }
-                operatorRecordDetail.setPropertyName(key);
-                int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
-                if(od<1){
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return ResultUtil.isFail;
-                }
-            }
-
-            if (r==1&&u==ResultUtil.isSuccess&&o>0) {
+            int u = userService.update(oldDate.getTelphone(),recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress());
+            String[] ignore = new String[]{"id","principalId","departmentAddress","isDelete","version","operator","updateTime"};
+            String operateUUid = UUIDUtil.generate();
+            boolean o = historyService.insertOperateRecord(updateUser,recordDepartment.getFlag(),recordDepartment.getId(),"recordmentDepartment",SyncOperateType.UPDATE,operateUUid);
+            boolean od = historyService.insertUpdateRecord(recordDepartment,oldDate,operateUUid,ignore);
+            if (r==1&&u==ResultUtil.isSuccess&&o&&od){
                 return ResultUtil.isSuccess;
             }else if(u==1){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -306,112 +243,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         }
     }
 
-
-//        /**
-//         * 设置User
-//         * @param recordDepartment
-//         * @param type
-//         * @return
-//         */
-//        public User setUserByType (RecordDepartment recordDepartment,int type){
-//            User user = new User();
-//            switch (type) {
-//                //添加user
-//                case 1:
-//                    user.setId(UUIDUtil.generate());
-//                    user.setUserName("BADW"+recordDepartment.getTelphone());
-//                    user.setRealName(recordDepartment.getDepartmentName());
-//                    user.setRoleId("BADW");
-//                    user.setTelphone(recordDepartment.getTelphone());
-//                    user.setDistrictId(recordDepartment.getDepartmentAddress());
-//                    break;
-//                 //修改user
-//                case 2:
-//                    RecordDepartment oldDate = recordDepartmentMapper.selectById(recordDepartment.getId());
-//                    user = userService.findByUserName("BADW"+oldDate.getTelphone());
-//                    user.setUserName("BADW"+recordDepartment.getTelphone());
-//                    user.setRealName(recordDepartment.getDepartmentName());
-//                    user.setRoleId("BADW");
-//                    user.setTelphone(recordDepartment.getTelphone());
-//                    user.setDistrictId(recordDepartment.getDepartmentAddress());
-//                    break;
-//                 //删除user
-//                case 3:
-//                    user = userService.findByUserName("BADW"+recordDepartment.getTelphone());
-//                default:
-//                    break;
-//            }
-//            return user;
-//        }
-
-    /**
-     * 历史记录查询
-      * @param flag
-     * @return
-     */
-    @Override
-    public List<RecordDepartment> showMore(String flag) {
-        return recordDepartmentMapper.selectByFlag(flag);
-    }
-    /**
-     * 历史记录查询
-     * @param flag
-     * @return
-     */
-    @Override
-    public List<CommonHistoryVO> showHistory(String flag) {
-        List<CommonHistoryVO> commonHistoryVOS =new ArrayList<>();
-        List<RecordDepartmentHistoryVO> recordDepartmentHistoryVOS=new ArrayList<>();
-        List<RecordDepartment> recordDepartments =recordDepartmentMapper.selectByFlag(flag);
-        for(RecordDepartment person:recordDepartments){
-            RecordDepartmentHistoryVO student=new RecordDepartmentHistoryVO();
-            BeanUtils.copyProperties(person, student);
-            recordDepartmentHistoryVOS.add(student);
-        }
-        for (int i=0;i<recordDepartmentHistoryVOS.size()-1;i++){
-            List<DataHistory> dataHistories =new ArrayList<>();
-            if (!recordDepartmentHistoryVOS.get(i).getDepartmentAddressDetail().equals(recordDepartmentHistoryVOS.get(i+1).getDepartmentAddressDetail())){
-                DataHistory dataHistorie = new DataHistory("departmentAddressDetail",recordDepartmentHistoryVOS.get(i).getDepartmentAddressDetail(),recordDepartmentHistoryVOS.get(i+1).getDepartmentAddressDetail());
-                dataHistories.add(dataHistorie);
-            }
-            if (!recordDepartmentHistoryVOS.get(i).getDepartmentCode().equals(recordDepartmentHistoryVOS.get(i+1).getDepartmentCode())){
-                DataHistory dataHistorie = new DataHistory("departmentCode",recordDepartmentHistoryVOS.get(i).getDepartmentCode(),recordDepartmentHistoryVOS.get(i+1).getDepartmentCode());
-               dataHistories.add(dataHistorie);
-            }
-            if (!recordDepartmentHistoryVOS.get(i).getDepartmentName().equals(recordDepartmentHistoryVOS.get(i+1).getDepartmentName())){
-                DataHistory dataHistorie = new DataHistory("departmentName",recordDepartmentHistoryVOS.get(i).getDepartmentName(),recordDepartmentHistoryVOS.get(i+1).getDepartmentName());
-                dataHistories.add(dataHistorie);
-            }
-            if (!recordDepartmentHistoryVOS.get(i).getPostalCode().equals(recordDepartmentHistoryVOS.get(i+1).getPostalCode())){
-                DataHistory dataHistorie = new DataHistory("postalCode",recordDepartmentHistoryVOS.get(i).getPostalCode(),recordDepartmentHistoryVOS.get(i+1).getPostalCode());
-                dataHistories.add(dataHistorie);
-            }
-            if (!recordDepartmentHistoryVOS.get(i).getPrincipalName().equals(recordDepartmentHistoryVOS.get(i+1).getPrincipalName())){
-                DataHistory dataHistorie = new DataHistory("principalName",recordDepartmentHistoryVOS.get(i).getPrincipalName(),recordDepartmentHistoryVOS.get(i+1).getPrincipalName());
-                dataHistories.add(dataHistorie);
-            }
-            if (!recordDepartmentHistoryVOS.get(i).getTelphone().equals(recordDepartmentHistoryVOS.get(i+1).getTelphone())){
-                DataHistory dataHistorie = new DataHistory("telphone",recordDepartmentHistoryVOS.get(i).getTelphone(),recordDepartmentHistoryVOS.get(i+1).getTelphone());
-                dataHistories.add(dataHistorie);
-            }
-            Date updateTime = recordDepartmentHistoryVOS.get(i+1).getUpdateTime();
-            String operator =  recordDepartmentHistoryVOS.get(i+1).getOperator();
-            CommonHistoryVO commonHistoryVO =new CommonHistoryVO(updateTime,operator,dataHistories);
-            commonHistoryVOS.add(commonHistoryVO);
-        }
-        return commonHistoryVOS;
-    }
-
-    /**
-     * 展示历史
-     * @param flag
-     * @return
-     */
-    @Override
-    public List<OperatorRecord> showRecordHistory(String flag) {
-        List<OperatorRecord> operatorRecords =  operatorRecordMapper.selectOperatorRecordByFlag(flag);
-        return operatorRecords;
-    }
 
     /**
      * 根据电话查询备案单位

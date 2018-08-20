@@ -15,19 +15,13 @@ public interface RecordDepartmentService {
 
     PageInfo<RecordDepartment> selectAllRecordDepartMent(int pageSize,int pageNum);
 
-    int insert(RecordDepartment recordDepartment,HttpServletRequest httpServletRequest);
+    int insert(RecordDepartment recordDepartment,User updateUser);
 
     RecordDepartment selectByCode(String code);
 
     int deleteById(String id);
 
-    int updateById(HttpServletRequest httpServletRequest,RecordDepartment recordDepartment);
-
-    List<RecordDepartment> showMore(String flag);
-
-    List<CommonHistoryVO> showHistory(String flag);
-
-    List<OperatorRecord> showRecordHistory(String flag);
+    int updateById(RecordDepartment recordDepartment,User updateUser);
 
 
     RecordDepartment selectByPhone(String phone);

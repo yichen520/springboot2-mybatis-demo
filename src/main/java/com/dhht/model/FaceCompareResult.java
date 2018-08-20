@@ -5,7 +5,9 @@ import lombok.Data;
 @Data
 public class FaceCompareResult {
 
-    private String fieldPhoto;
+    private String fieldPhotoId;
+
+    private String idCardPhotoId;
 
     private int similarity;
 

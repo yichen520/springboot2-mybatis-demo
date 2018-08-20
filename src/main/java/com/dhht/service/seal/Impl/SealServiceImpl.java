@@ -13,6 +13,8 @@ import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.tools.FileService;
+import com.dhht.service.tools.FileStoreService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.DateUtil;
@@ -27,6 +29,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +68,16 @@ public class SealServiceImpl implements SealService {
     //相似度参数
     @Value("${face.similarity}")
     private float similarity  ;
+
+    @Resource(name="localStoreFileService")
+    private FileStoreService localStoreFileService;
+
+    @Resource(name="fastDFSStoreServiceImpl")
+    private FileStoreService fastDFSStoreServiceImpl;
+
+    @Autowired
+    private FileService fileService;
+
 
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
@@ -696,29 +715,6 @@ public class SealServiceImpl implements SealService {
         return syncEntity;
     }
 
-
-    /**
-     * 人证合一
-     * @param fileAURL
-     * @param fileBURL
-     * @return
-     */
-    @Override
-    public FaceCompareResult checkface(String fileAURL, String fileBURL){
-        Integer a = (int)AFRTest.compareImage(fileAURL,fileBURL);
-
-        FaceCompareResult confidence = new FaceCompareResult();
-        confidence.setFieldPhoto(fileBURL);
-        confidence.setSimilarity(a);
-        if(a<similarity){
-            confidence.setIsPass(true);
-            return confidence;
-        }else{
-            confidence.setIsPass(false);
-            return confidence;
-        }
-    }
-
     @Override
     public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
         String  districtId = user.getDistrictId().substring(0,2);
@@ -766,6 +762,83 @@ public class SealServiceImpl implements SealService {
 
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
+    }
+
+    /**
+     * 人证合一
+     * @param idCardId
+     * @param fieldId
+     * @return
+     */
+    @Override
+    public FaceCompareResult faceCompare(String idCardPhotoId, String fieldPhotoId){
+        FileInfo idCardFileInfo = fileService.getFileInfo(idCardPhotoId);
+        FileInfo fieldFileInfo = fileService.getFileInfo(fieldPhotoId);
+        if(fieldFileInfo==null||idCardFileInfo==null){
+            return null;
+        }
+        String idCardUrl = fastDFSStoreServiceImpl.getFullPath(idCardFileInfo.getFilePath());
+        String fieldUrl = fastDFSStoreServiceImpl.getFullPath(fieldFileInfo.getFilePath());
+
+        String idCardPath = downLoadPicture(idCardUrl);
+        String fieldPath = downLoadPicture(fieldUrl);
+        if(idCardPath==null||fieldPath==null){
+            return null;
+        }
+        Integer a = (int)AFRTest.compareImage(idCardPath,fieldPath);
+
+        FaceCompareResult confidence = new FaceCompareResult();
+        confidence.setFieldPhotoId(fieldPhotoId);
+        confidence.setIdCardPhotoId(idCardPhotoId);
+        confidence.setSimilarity(a);
+        if(a<=similarity){
+            confidence.setIsPass(false);
+        }else {
+            confidence.setIsPass(true);
+        }
+        return confidence;
+    }
+
+
+
+    /**
+     * 比对图片下载，传入文件的url
+     * @param fileUrl
+     * @return
+     */
+    public  String downLoadPicture(String fileUrl) {
+        try {
+            URL url = new URL(fileUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3 * 1000);
+           // conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            InputStream inputStream = conn.getInputStream();
+            byte[] fileDate = readInputStream(inputStream);
+            String relativePath = localStoreFileService.store(fileDate,"",".png");
+            String absolutePath = localStoreFileService.getFullPath(relativePath);
+            return absolutePath;
+        } catch (IOException ioe) {
+            return "";
+        } catch (Exception e){
+            return "";
+        }
+    }
+
+    /**
+     * 输入流转换
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    public  byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
     }
 
 }

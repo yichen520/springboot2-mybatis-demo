@@ -6,10 +6,9 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.OperatorRecordDetailMapper;
 import com.dhht.dao.OperatorRecordMapper;
 import com.dhht.dao.UseDepartmentDao;
-import com.dhht.dao.UserDao;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
-import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.service.tools.HistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
@@ -44,7 +43,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Autowired
     private DistrictService districtService;
     @Autowired
-    private ShowHistoryService showHistoryService;
+    private HistoryService historyService;
 
 
     /**
@@ -53,12 +52,11 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public JsonObjectBO insert(UseDepartment useDepartment,HttpServletRequest httpServletRequest) {
+    public JsonObjectBO insert(UseDepartment useDepartment,User updateUser) {
         String code = useDepartment.getCode();
         if(useDepartmentDao.selectByCode(code)!=null){
             return JsonObjectBO.error("该单位已经存在");
         }
-        User user1 = (User)httpServletRequest.getSession().getAttribute("user");
         String Id = UUIDUtil.generate();
         useDepartment.setId(Id);
         useDepartment.setDepartmentStatus("01");//状态1为正常 00 为全部  02为注销
@@ -67,20 +65,11 @@ public class UseDepartmentImpl implements UseDepartmentService {
         useDepartment.setVersion(0);
         useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int useDepartmentResult = useDepartmentDao.insert(useDepartment);
-        if(useDepartmentResult<0){
+        boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
+        if(useDepartmentResult<0&&!operateResult){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
-            OperatorRecord operatorRecord = new OperatorRecord();
-            operatorRecord.setFlag(Id);
-            operatorRecord.setId(UUIDUtil.generate());
-            operatorRecord.setOperateUserId(user1.getId());
-            operatorRecord.setOperateUserRealname(user1.getRealName());
-            operatorRecord.setOperateEntityId(Id);
-            operatorRecord.setOperateEntityName("UseDepartment");
-            operatorRecord.setOperateType(SyncOperateType.SAVE);
-            operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.SAVE));
-            operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-            operatorRecordMapper.insert(operatorRecord);
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.SAVE);
             return JsonObjectBO.success("添加成功",null);
         }
@@ -92,7 +81,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public JsonObjectBO update(UseDepartment useDepartment,HttpServletRequest httpServletRequest) {
+    public JsonObjectBO update(UseDepartment useDepartment,User updateUser) {
             useDepartmentDao.deleteById(useDepartment.getId());
             UseDepartment oldUseDepartment = useDepartmentDao.selectById(useDepartment.getId());
             if (oldUseDepartment == null) {
@@ -105,60 +94,16 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 useDepartment.setId(uuid);
                 useDepartment.setFlag(oldUseDepartment.getFlag());
                 useDepartment.setDepartmentStatus(oldUseDepartment.getDepartmentStatus());
+                String operateUUid = UUIDUtil.generate();
+                String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime"};
                 int r = useDepartmentDao.insert(useDepartment);
-                //增加操作记录
-                User user = (User)httpServletRequest.getSession().getAttribute("user");
-                OperatorRecord operatorRecord = new OperatorRecord();
-                String operatorRecordId = UUIDUtil.generate();
-                operatorRecord.setFlag(oldUseDepartment.getFlag());
-                operatorRecord.setId(operatorRecordId);
-                operatorRecord.setOperateUserId(user.getId());
-                operatorRecord.setOperateUserRealname(user.getRealName());
-                operatorRecord.setOperateEntityId(uuid);
-                operatorRecord.setOperateEntityName("UseDepartment");
-                operatorRecord.setOperateType(SyncOperateType.UPDATE);
-                operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(SyncOperateType.UPDATE));
-                operatorRecord.setOperateTime(new Date(System.currentTimeMillis()));
-                int o =  operatorRecordMapper.insert(operatorRecord);
-                OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
-                //和上一次作比较  然后比较不同
-                UseDepartment newUseDepartment =useDepartmentDao.selectById(uuid);
-                Map<String, List<Object>> compareResult = CompareFieldsUtil.compareFields(oldUseDepartment, newUseDepartment, new String[]{"id","departmentAddress","isDelete","version","operator","updateTime"});
-                Set<String> keySet = compareResult.keySet();
-                if(keySet.size()==0){
-                    operatorRecordDetail.setId(UUIDUtil.generate());
-                    operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-                    operatorRecordDetail.setPropertyName("nothing");
-                    int od= operatorRecordDetailMapper.insert(operatorRecordDetail);
-                    if(o<0){
-                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                        return JsonObjectBO.error("修改失败");
-                    }
-                }
-                for(String key : keySet){
-                    List<Object> list = compareResult.get(key);
-                    operatorRecordDetail.setId(UUIDUtil.generate());
-                    operatorRecordDetail.setEntityOperateRecordId(operatorRecordId);
-                    if(list.get(1)==null||list.get(1)==""){
-                        operatorRecordDetail.setNewValue("");
-                    }else {
-                        operatorRecordDetail.setNewValue(list.get(1).toString());
-                    }
-                    if(list.get(0)==null||list.get(0)==""){
-                        operatorRecordDetail.setOldValue("");
-                    }else {
-                        operatorRecordDetail.setOldValue(list.get(0).toString());
-                    }
-                    operatorRecordDetail.setPropertyName(key);
-                    int od = operatorRecordDetailMapper.insert(operatorRecordDetail);
-                    if(od<1){
-                        return JsonObjectBO.error("修改失败");
-                    }
-                }
-                if (r == 1&&o>0) {
+                boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.UPDATE,operateUUid);
+                boolean operateDetailResult = historyService.insertUpdateRecord(useDepartment,oldUseDepartment,operateUUid,ignore);
+                if (r == 1&&operateDetailResult&&operateResult) {
                     SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
                     return JsonObjectBO.success("修改成功", null);
                 } else {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return JsonObjectBO.error("修改失败");
                 }
             }
@@ -230,13 +175,15 @@ public class UseDepartmentImpl implements UseDepartmentService {
      * @return
      */
     @Override
-    public JsonObjectBO delete(UseDepartment useDepartment) {
+    public JsonObjectBO delete(UseDepartment useDepartment,User updateUser) {
         String id = useDepartment.getId();
         int a = useDepartmentDao.delete(id);
-        if(a>0) {
+        boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.DELETE,UUIDUtil.generate());
+        if(a>0&&operateResult) {
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.DELETE);
             return JsonObjectBO.success("删除成功", null);
         }else{
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("删除失败");
         }
     }
@@ -248,7 +195,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     @Override
     public JsonObjectBO showHistory(String flag) {
-        List<OperatorRecord> list = showHistoryService.showUpdteHistory(flag,SyncDataType.USERDEPARTMENT);
+        List<OperatorRecord> list = historyService.showUpdteHistory(flag,SyncDataType.USERDEPARTMENT);
 //        for(OperatorRecord operatorRecord : list){
 //            if(operatorRecord.getOperatorRecordDetails()!=null) {
 //                for (OperatorRecordDetail operatorRecordDetail : operatorRecord.getOperatorRecordDetails()) {

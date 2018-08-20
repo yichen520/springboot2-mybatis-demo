@@ -31,4 +31,11 @@ public interface FileStoreService {
      *     *    byte[]：对应文件的数据
      */
     byte[] readFile(String path);
+
+    /**
+     * 获得文件的全路径
+     * @param relativeFullName 文件的相对路径
+     * @return
+     */
+    String getFullPath(String relativeFullName);
 }

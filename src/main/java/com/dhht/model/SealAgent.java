@@ -1,7 +1,7 @@
 package com.dhht.model;
 
-import org.mybatis.generator.annotation.Entity;
 
+import com.dhht.annotation.EntityComment;
 
 /**
  * 类注释
@@ -10,37 +10,37 @@ import org.mybatis.generator.annotation.Entity;
  */
 public class SealAgent {
 
-    @Entity(value = "")
+    @EntityComment(value = "")
     private String id;
 
-    @Entity(value = "经办人姓名")
+    @EntityComment(value = "经办人姓名")
     private String name;
 
-    @Entity(value = "证件类型")
+    @EntityComment(value = "证件类型")
     private String certificateType;
 
-    @Entity(value = "证件号码")
+    @EntityComment(value = "证件号码")
     private String certificateNo;
 
-    @Entity(value = "联系电话")
+    @EntityComment(value = "联系电话")
     private String telphone;
 
-    @Entity(value = "经办人照片")
+    @EntityComment(value = "经办人照片")
     private String agentPhotoId;
 
-    @Entity(value = "身份证正面")
+    @EntityComment(value = "身份证正面")
     private String idcardFrontId;
 
-    @Entity(value = "身份证反面")
+    @EntityComment(value = "身份证反面")
     private String idcardReverseId;
 
-    @Entity(value = "授权委托书")
+    @EntityComment(value = "授权委托书")
     private String proxyId;
 
-    @Entity(value = "类型  0-申请  1-领取 2")
+    @EntityComment(value = "类型  0-申请  1-领取 2")
     private String businessType;
 
-    @Entity(value = "人证合一记录id")
+    @EntityComment(value = "人证合一记录id")
     private String faceCompareRecordId;
 
     public String getId() {

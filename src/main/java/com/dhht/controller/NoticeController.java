@@ -75,6 +75,8 @@ public class NoticeController {
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
         }
     }
 
@@ -120,6 +122,8 @@ public class NoticeController {
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("获取列表失败！");
+        }finally {
+            PageHelper.clearPage();
         }
     }
 

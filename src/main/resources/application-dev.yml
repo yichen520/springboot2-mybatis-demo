@@ -68,7 +68,10 @@ spring:
            max-wait: -1
            max-active: 8
        timeout: 10000
-
+    mvc:
+        static-path-pattern: /**
+    resources:
+        static-locations: C:/temp/
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.dhht.model
@@ -120,9 +123,9 @@ notice:
   pageNum: 5
 
 #文件服务器地址
-trackerPort: 9000/
+trackerPort: :9000/
 trackerServer: 10.0.0.40
-
+trackerProtocol: http://
 file:
  local:
    root: C:/temp/
@@ -135,8 +138,4 @@ expireTime: 3600
 smsexpireTime: 300000
 
 face:
-  similarity: 50
-
-seal:
-  template:
-     filepath: C:/temp/seal
+  similarity: 45

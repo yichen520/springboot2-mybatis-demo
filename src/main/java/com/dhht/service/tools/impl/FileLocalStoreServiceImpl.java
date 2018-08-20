@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,15 +34,16 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
     private static final Logger logger = LoggerFactory.getLogger(FileLocalStoreServiceImpl.class);
 
     /**
-     *保存文件
+     * 保存文件
+     *
      * @param fileData 文件数据
      * @param filename 文件真实名称
-     * @param fileExt 文件扩展名
+     * @param fileExt  文件扩展名
      * @return 文件相对路径：保存成功时。
-     *          null：保存失败时。
+     * null：保存失败时。
      */
     @Override
-    public String store(byte[] fileData, String filename, String fileExt){
+    public String store(byte[] fileData, String filename, String fileExt) {
         String uniquenessName = generateFileName(fileExt);
         String relativeFullName = generateRelativeFullName(uniquenessName);
 
@@ -61,7 +64,7 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        }finally {
+        } finally {
             try {
                 if (outputStream != null) {
                     outputStream.close();
@@ -75,6 +78,7 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
 
     /**
      * 生成文件全路径
+     *
      * @param uniquenessName 文件唯一名称
      * @return 按照特定日期格式组织的文件相对路径
      */
@@ -84,6 +88,7 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
 
     /**
      * 根据日期生成路径
+     *
      * @return 按照特定格式生成的日期路径
      */
     private String generatePathByDate() {
@@ -92,6 +97,7 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
 
     /**
      * 生成文件名
+     *
      * @param fileExt 文件扩展名
      * @return 带真实名称和扩展名的文件唯一名称。
      */
@@ -107,10 +113,12 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
 
     /**
      * 获取文件绝对路径
+     *
      * @param relativeFullName
      * @return
      */
-    private String getFullPath(String relativeFullName) {
+    @Override
+    public String getFullPath(String relativeFullName) {
         return rootDir + "/" + relativeFullName;
     }
 
@@ -138,9 +146,9 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
             if (offset != buffer.length) {
                 logger.error("Could not completely read file: " + file.getName());
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             logger.error(e.toString());
-        }finally {
+        } finally {
             try {
                 fi.close();
             } catch (IOException e) {
@@ -152,13 +160,16 @@ public class FileLocalStoreServiceImpl implements FileStoreService,InitializingB
 
     /**
      * 如果根目录不存在则进行创建
+     *
      * @throws Exception
      */
     @Override
     public void afterPropertiesSet() throws Exception {
         File root = new File(rootDir);
-        if(!root.exists()){
+        if (!root.exists()) {
             root.mkdirs();
         }
     }
+
+
 }
