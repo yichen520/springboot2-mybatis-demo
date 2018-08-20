@@ -43,7 +43,7 @@ public interface SealService {
    PageInfo<Seal> seal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
    // 人证合一
-   FaceCompareResult checkface(String fileAURL, String fileBURl);
+   FaceCompareResult faceCompare(String idCardId, String fieldId);
 
    public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 

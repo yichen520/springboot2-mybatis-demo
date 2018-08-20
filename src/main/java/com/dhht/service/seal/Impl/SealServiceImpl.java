@@ -766,8 +766,8 @@ public class SealServiceImpl implements SealService {
 
     /**
      * 人证合一
-     * @param idCardId
-     * @param fieldId
+     * @param idCardPhotoId
+     * @param fieldPhotoId
      * @return
      */
     @Override
