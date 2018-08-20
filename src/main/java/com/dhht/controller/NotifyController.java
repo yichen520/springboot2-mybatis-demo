@@ -2,9 +2,11 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.*;
+import com.dhht.model.FileInfo;
+import com.dhht.model.Notify;
+import com.dhht.model.Role;
+import com.dhht.model.User;
 import com.dhht.service.message.NotifyService;
-import com.dhht.service.tools.FileService;
 import com.dhht.service.user.RoleService;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
@@ -26,8 +28,6 @@ public class NotifyController {
 
     @Autowired
     private NotifyService notifyService;
-    @Autowired
-    private FileService fileService;
     @Autowired
     private RoleService roleService;
 
@@ -71,27 +71,6 @@ public class NotifyController {
             return JsonObjectBO.exception("查询失败");
         }finally {
             PageHelper.clearPage();
-        }
-    }
-
-    /**
-     * 通知文件上传
-     * @param multipartFiles
-     * @param httpServletRequest
-     * @return
-     */
-    @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
-    public JsonObjectBO upload(@RequestParam("file") MultipartFile multipartFiles, HttpServletRequest httpServletRequest){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            FileInfo file = fileService.insertFile(httpServletRequest,multipartFiles);
-            if(file==null){
-            return JsonObjectBO.error("文件上传失败");
-            }
-            jsonObject.put("file",file);
-            return JsonObjectBO.success("文件上传成功",jsonObject);
-        }catch (Exception e){
-            return JsonObjectBO.error("文件上传时发生错误");
         }
     }
 

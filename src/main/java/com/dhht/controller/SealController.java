@@ -8,7 +8,6 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
-import com.dhht.service.tools.FileService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
@@ -21,7 +20,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +32,6 @@ public class SealController {
 
     @Autowired
     private EmployeeService employeeService;
-
-    @Autowired
-    private FileService fileService;
 
     @Autowired
     private UseDepartmentService useDepartmentService;
@@ -330,33 +325,6 @@ public class SealController {
         }
     }
 
-    /**
-     * 文件上传接口
-     *
-     * @param request
-     * @param file
-     * @return
-     */
-    @Log("文件上传")
-    @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
-    public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return JsonObjectBO.error("请选择上传文件");
-        }
-        try {
-            FileInfo uploadFile = fileService.insertFile(request, file);
-            if (uploadFile != null) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("file", uploadFile);
-                return JsonObjectBO.success("文件上传成功", jsonObject);
-            } else {
-                return JsonObjectBO.error("文件上传失败");
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("上传文件失败");
-        }
-    }
 
     /**
      * 根据名字进行了查询
