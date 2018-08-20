@@ -9,7 +9,7 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
-import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.service.tools.HistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.util.StringUtil;
@@ -45,7 +45,7 @@ public class InformationController {
     @Autowired
     private SealService sealService;
     @Autowired
-    private ShowHistoryService showHistoryService;
+    private HistoryService historyService;
 
     private static Logger logger = LoggerFactory.getLogger(InformationController.class);
 
@@ -82,6 +82,8 @@ public class InformationController {
             return JsonObjectBO.success("查询成功",jsonObject);
         } catch (Exception e){
             return JsonObjectBO.exception(e.getMessage());
+        }finally {
+            PageHelper.clearPage();
         }
     }
 
@@ -112,7 +114,7 @@ public class InformationController {
         List<OperatorRecord> result = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
         try {
-            result =showHistoryService.showUpdteHistory(flag,SyncDataType.MAKEDEPARTMENT);
+            result = historyService.showUpdteHistory(flag,SyncDataType.MAKEDEPARTMENT);
             jsonObject.put("makeDepartment",result);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -144,10 +146,13 @@ public class InformationController {
             }
             PageInfo pageInfo= employeeService.selectEmployeeInfo(code,status,name,pageNum,pageSize);
             jsonObject.put("employee",pageInfo);
+            return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
             return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
         }
-        return JsonObjectBO.success("查询成功", jsonObject);
+
     }
 
     /**
@@ -162,7 +167,7 @@ public class InformationController {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            List<OperatorRecord> list = showHistoryService.showUpdteHistory(flag, SyncDataType.EMPLOYEE);
+            List<OperatorRecord> list = historyService.showUpdteHistory(flag, SyncDataType.EMPLOYEE);
             jsonObject.put("history", list);
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
@@ -193,6 +198,8 @@ public class InformationController {
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("使用单位列表获取失败");
+        }finally{
+            PageHelper.clearPage();
         }
     }
 
@@ -225,6 +232,8 @@ public class InformationController {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("发生异常！");
+        }finally {
+            PageHelper.clearPage();
         }
     }
 

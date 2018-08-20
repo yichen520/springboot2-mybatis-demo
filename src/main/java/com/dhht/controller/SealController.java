@@ -410,30 +410,30 @@ public class SealController {
      * @param map
      * @return
      */
-    @Log("人证合一")
-    @RequestMapping(value = "facecheck")
-    public JsonObjectBO checkface(@RequestBody Map map){
-        JSONObject jsonObject = new JSONObject();
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String fileAURL = (String) map.get("idcardPhoto");
-        String fileBURL = (String) map.get("fieldPhoto");
-        try{
-            FaceCompareResult faceCompareResult = sealService.checkface(fileAURL,fileBURL);
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("比对成功");
-            jsonObject.put("faceCompareResult",faceCompareResult);
-            jsonObjectBO.setData(jsonObject);
-            return jsonObjectBO;
-        }catch (Exception e){
-            logger.error(e.getMessage(), e);
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("比对失败");
-            jsonObject.put("error",e);
-            jsonObjectBO.setData(jsonObject);
-            return jsonObjectBO;
-
-        }
-    }
+//    @Log("人证合一")
+//    @RequestMapping(value = "/checkface")
+//    public JsonObjectBO checkface(@RequestBody Map map){
+//        JSONObject jsonObject = new JSONObject();
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        String fileAURL = (String) map.get("FileAURL");
+//        String fileBURL = (String) map.get("FileBURL");
+//        try{
+//            Confidence face = sealService.checkface(fileAURL,fileBURL);
+//            jsonObjectBO.setCode(1);
+//            jsonObjectBO.setMessage("比对成功");
+//            jsonObject.put("face",face);
+//            jsonObjectBO.setData(jsonObject);
+//            return jsonObjectBO;
+//        }catch (Exception e){
+//            logger.error(e.getMessage(), e);
+//            jsonObjectBO.setCode(-1);
+//            jsonObjectBO.setMessage("比对失败");
+//            jsonObject.put("error",e);
+//            jsonObjectBO.setData(jsonObject);
+//            return jsonObjectBO;
+//
+//        }
+//    }
 
     @Log("印模模板生成")
     @RequestMapping(value = "sealtemplate")

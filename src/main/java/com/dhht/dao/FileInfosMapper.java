@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 import com.dhht.model.FileInfos;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FileInfosMapper {
     int deleteByPrimaryKey(String id);
 

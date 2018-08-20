@@ -24,12 +24,10 @@ public class LocalStoreFileService implements FileInfoService {
      */
     @Value("${file.local.root}")
     private String rootDir;
-
-
+    //@Value("${spring.resources.static-locations}")
+    private String localDir;
     @Autowired
     private FileInfosMapper fileInfosMapper;
-
-
 
 
     @Override
@@ -55,7 +53,7 @@ public class LocalStoreFileService implements FileInfoService {
         fileInfo.setId(UUIDUtil.generate());
         fileInfo.setFileName(filename);
         fileInfo.setFileExt(fileExt);
-        fileInfo.setFilePath(relativeFullName);
+        fileInfo.setFilePath(rootDir+relativeFullName);
         fileInfo.setCreateTime(new Date(System.currentTimeMillis()));
         fileInfo.setCreateMemo(memo);
         fileInfosMapper.insertSelective(fileInfo);
@@ -75,7 +73,7 @@ public class LocalStoreFileService implements FileInfoService {
         String uniquenessName = generateFileName(filename, fileExt);
         String relativeFullName = generateRelativeFullName(uniquenessName);
 
-        File dest = new File(rootDir + "/" + relativeFullName);
+        File dest = new File(localDir + "/" + relativeFullName);
         //判断文件是否已经存在
         if (dest.exists()) {
             return "文件已存在";

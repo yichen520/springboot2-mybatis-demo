@@ -2,16 +2,12 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
-import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
-import com.dhht.model.pojo.CommonHistoryVO;
-import com.dhht.model.pojo.RecordDepartmentHistoryVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
-import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.service.tools.HistoryService;
 import com.dhht.sync.SyncDataType;
-import com.dhht.sync.SyncOperateType;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -39,7 +35,7 @@ public class RecordDepartmentController {
     @Autowired
     private DistrictService districtService;
     @Autowired
-    private ShowHistoryService showHistoryService;
+    private HistoryService historyService;
 
     private static Logger logger = LoggerFactory.getLogger(RecordDepartmentController.class);
 
@@ -133,7 +129,7 @@ public class RecordDepartmentController {
         String flag = (String)map.get("flag");
         JSONObject jsonObject = new JSONObject();
         try{
-            List<OperatorRecord> recordDepartments = showHistoryService.showUpdteHistory(flag, SyncDataType.RECORDDEPARTMENT);
+            List<OperatorRecord> recordDepartments = historyService.showUpdteHistory(flag, SyncDataType.RECORDDEPARTMENT);
             jsonObject.put("recordDepartments",recordDepartments);
         }catch (Exception e ){
             logger.error(e.getMessage(),e);
@@ -141,44 +137,7 @@ public class RecordDepartmentController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
-//
-//    /**
-//     * 这是循环比较两条记录的不同，然后将比较的字段不同的结果放在实体类
-//     * @param map
-//     * @param httpServletRequest
-//     * @return
-//     */
-//    @RequestMapping(value = "/showhistory")
-//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-//        String flag = (String)map.get("flag");
-//        JSONObject jsonObject = new JSONObject();
-//        try{
-//            List<CommonHistoryVO> recordDepartments= recordDepartmentService.showHistory(flag);
-//            jsonObject.put("recordDepartments",recordDepartments);
-//        }catch (Exception e ){
-//            return JsonObjectBO.exception(e.getMessage());
-//        }
-//        return JsonObjectBO.success("查询成功",jsonObject);
-//    }
 
-    /**
-     * 这是从表中取出比较的结果
-     * @param map
-     * @param httpServletRequest
-     * @return
-     */
-//    @RequestMapping(value = "/showhistory")
-//    public JsonObjectBO showmore(@RequestBody Map map,HttpServletRequest httpServletRequest){
-//        String flag = (String)map.get("flag");
-//        JSONObject jsonObject = new JSONObject();
-//        try{
-//            List<OperatorRecord> recordDepartments= recordDepartmentService.showRecordHistory(flag);
-//            jsonObject.put("recordDepartments",recordDepartments);
-//        }catch (Exception e ){
-//            return JsonObjectBO.exception(e.getMessage());
-//        }
-//        return JsonObjectBO.success("查询成功",jsonObject);
-//    }
     /**
      * 添加备案单位
      * @param recordDepartment
@@ -188,8 +147,9 @@ public class RecordDepartmentController {
     @RequestMapping(value = "/insert")
     public JsonObjectBO insert(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
         int result = 0;
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         try {
-            result = recordDepartmentService.insert(recordDepartment,httpServletRequest);
+            result = recordDepartmentService.insert(recordDepartment,user);
             return ResultUtil.getResult(result);
         }catch (DuplicateKeyException exception){
             return JsonObjectBO.error("该编号已经存在");
@@ -250,9 +210,10 @@ public class RecordDepartmentController {
     @Log("修改备案单位")
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody RecordDepartment recordDepartment,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
         int result = 0;
         try{
-            result = recordDepartmentService.updateById(httpServletRequest,recordDepartment);
+            result = recordDepartmentService.updateById(recordDepartment,user);
             return ResultUtil.getResult(result);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -260,6 +221,4 @@ public class RecordDepartmentController {
         }
 
     }
-
-
 }

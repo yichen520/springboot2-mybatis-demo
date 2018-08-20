@@ -69,6 +69,8 @@ public class NotifyController {
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.exception("查询失败");
+        }finally {
+            PageHelper.clearPage();
         }
     }
 

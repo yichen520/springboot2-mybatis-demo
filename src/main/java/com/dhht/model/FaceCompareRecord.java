@@ -2,7 +2,7 @@ package com.dhht.model;
 
 import java.util.Date;
 
-import org.mybatis.generator.annotation.Entity;
+import com.dhht.annotation.EntityComment;
 
 
 /**
@@ -12,28 +12,28 @@ import org.mybatis.generator.annotation.Entity;
  */
 public class FaceCompareRecord {
 
-    @Entity(value = "")
+    @EntityComment(value = "")
     private String id;
 
-    @Entity(value = "经办人姓名")
+    @EntityComment(value = "经办人姓名")
     private String name;
 
-    @Entity(value = "经办人身份证号码")
+    @EntityComment(value = "经办人身份证号码")
     private String certificateNo;
 
-    @Entity(value = "身份证上的照片")
+    @EntityComment(value = "身份证上的照片")
     private String certificatePhotoId;
 
-    @Entity(value = "现场照片")
+    @EntityComment(value = "现场照片")
     private String filedPhotoId;
 
-    @Entity(value = "裁剪过后的照片")
+    @EntityComment(value = "裁剪过后的照片")
     private String facePhotoId;
 
-    @Entity(value = "相似度")
+    @EntityComment(value = "相似度")
     private Float confidence;
 
-    @Entity(value = "记录时间")
+    @EntityComment(value = "记录时间")
     private Date recordTime;
 
     public String getId() {

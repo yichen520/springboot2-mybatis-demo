@@ -188,6 +188,7 @@
     from make_department as a RIGHT JOIN(
     select flag as fa,MAX(version) as ver from make_department GROUP BY flag
     )as b on a.flag = b.fa and  a.version=b.ver  where  department_address like '${districtId}%' and department_status = #{departmentStatus,jdbcType=CHAR} and department_name LIKE '%${name}%'
+    ORDER BY version_time DESC
   </select>
 
   <select id="selectByDistrict" resultMap="SimpleResultMap" parameterType="java.lang.String">

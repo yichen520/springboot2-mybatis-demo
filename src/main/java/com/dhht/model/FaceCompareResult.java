@@ -9,6 +9,6 @@ public class FaceCompareResult {
 
     private int similarity;
 
-    private Boolean isPass;
+    private Boolean ispass;
 
 }
