@@ -6,6 +6,7 @@ import com.dhht.model.FastDFSFile;
 import com.dhht.service.tools.FileStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +17,16 @@ import org.springframework.stereotype.Service;
 public class FileFastDFSStoreServiceImpl implements FileStoreService {
 
     private static Logger logger = LoggerFactory.getLogger(FileFastDFSStoreServiceImpl.class);
+
+    @Value("${trackerPort}")
+    private String trackerPort;
+
+    @Value("${trackerServer}")
+    private String trackerServer;
+
+    @Value("${trackerProtocol}")
+    private String trackerProtocol;
+
     @Override
     public String store(byte[] fileData, String filename, String fileExt) {
         FastDFSFilename uploadResult = null;
@@ -54,6 +65,11 @@ public class FileFastDFSStoreServiceImpl implements FileStoreService {
     public byte[] readFile(String path) {
         FastDFSFilename filename = getGroupAndPath(path);
         return FastDFSClient.downFile(filename.getGroupName(), filename.getFilename());
+    }
+
+    @Override
+    public String  getFullPath(String relativeFullName) {
+        return trackerProtocol+trackerServer+trackerPort+relativeFullName;
     }
 
     /**

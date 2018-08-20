@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class FaceCompareResult {
 
-    private String fieldPhoto;
+    private String fieldPhotoId;
 
     private int similarity;
 
-    private Boolean ispass;
+    private Boolean isPass;
 
 }

@@ -64,4 +64,5 @@ public interface FileService {
      *     *    FileInfoVO：对应文件的信息，包含文件数据
      */
     FileInfoVO readFile(String id);
+
 }
