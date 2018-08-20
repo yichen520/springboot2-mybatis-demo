@@ -22,7 +22,7 @@ public interface SealService {
    PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
    //印模上传
-   int sealUpload(User user ,String id, String electronicSealURL, String sealScannerURL);
+   int sealUpload(User user ,String id,  String sealedCardId, String imageDataId);
 
    //印章个人化
    int sealPersonal(String id,User user);

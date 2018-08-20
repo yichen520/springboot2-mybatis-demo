@@ -181,6 +181,16 @@
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
 
+  <insert id="insertSealMaterial"  parameterType="java.util.List">
+    insert into seal_material(id,seal_code,type,file_path)values
+    <foreach collection ="list" item="sealMaterial" index= "index" separator =",">
+                      (
+                      #{sealMaterial.id}, #{sealMaterial.sealCode},
+                      #{sealMaterial.type},
+                      #{sealMaterial.filePath}
+                       )
+    </foreach >
+  </insert>
 
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
       select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)

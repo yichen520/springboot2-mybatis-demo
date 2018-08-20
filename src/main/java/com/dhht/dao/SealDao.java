@@ -49,6 +49,7 @@ public interface SealDao {
 
     int insertFaceCompareRecord(FaceCompareRecord faceCompareRecord);
 
+    int insertSealMaterial(List<SealMaterial > sealMaterials);
 
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);

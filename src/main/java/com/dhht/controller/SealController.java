@@ -166,15 +166,15 @@ public class SealController {
      */
     @Log("上传印模")
     @RequestMapping("/sealUpload")
-    public JsonObjectBO sealUpload(HttpServletRequest httpServletRequest, @RequestBody SealOperator sealOperator) {
+    public JsonObjectBO sealUpload(HttpServletRequest httpServletRequest, @RequestBody Map map) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
 //        Seal seal = sealOperator.getSeal();
-        String id = sealOperator.getId();
-        String electronicSealURL = sealOperator.getElectronicSealURL();
-        String sealScannerURL = sealOperator.getSealScannerURL();
+        String id = (String)map.get("id");
+        String sealedCardId = (String)map.get("sealedCardId");//印鉴留存卡
+        String imageDataId = (String)map.get("imageDataId");//印章图像数据
         try {
-            int a = sealService.sealUpload(user, id, electronicSealURL, sealScannerURL);
+            int a = sealService.sealUpload(user, id,  sealedCardId,  imageDataId);
             if (a < 0) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("上传印模失败");
