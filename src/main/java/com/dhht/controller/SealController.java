@@ -378,30 +378,26 @@ public class SealController {
      * @param map
      * @return
      */
-//    @Log("人证合一")
-//    @RequestMapping(value = "/checkface")
-//    public JsonObjectBO checkface(@RequestBody Map map){
-//        JSONObject jsonObject = new JSONObject();
-//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-//        String fileAURL = (String) map.get("FileAURL");
-//        String fileBURL = (String) map.get("FileBURL");
-//        try{
-//            Confidence face = sealService.checkface(fileAURL,fileBURL);
-//            jsonObjectBO.setCode(1);
-//            jsonObjectBO.setMessage("比对成功");
-//            jsonObject.put("face",face);
-//            jsonObjectBO.setData(jsonObject);
-//            return jsonObjectBO;
-//        }catch (Exception e){
-//            logger.error(e.getMessage(), e);
-//            jsonObjectBO.setCode(-1);
-//            jsonObjectBO.setMessage("比对失败");
-//            jsonObject.put("error",e);
-//            jsonObjectBO.setData(jsonObject);
-//            return jsonObjectBO;
-//
-//        }
-//    }
+    @Log("人证合一")
+    @RequestMapping(value = "/checkface")
+    public JsonObjectBO checkface(@RequestBody Map map){
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String idCardId = (String) map.get("idcardPhoto");
+        String fieldId = (String) map.get("fieldPhoto");
+        try{
+            FaceCompareResult face = sealService.faceCompare(idCardId,fieldId);
+            if(face==null){
+                return JsonObjectBO.error("对比失败");
+            }
+            jsonObject.put("face",face);
+            JsonObjectBO.success("对比成功",jsonObject);
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("对比失败");
+        }
+    }
 
     @Log("印模模板生成")
     @RequestMapping(value = "sealtemplate")
