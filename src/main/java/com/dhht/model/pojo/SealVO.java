@@ -19,6 +19,8 @@ public class SealVO  {
 
     private String proxy;  //授权委托书
 
+    private String moulageId;
+
     private SealOperationRecord sealOperationRecord;
 
 }

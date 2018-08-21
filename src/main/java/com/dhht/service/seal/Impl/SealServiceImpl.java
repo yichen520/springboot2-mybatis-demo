@@ -255,7 +255,7 @@ public class SealServiceImpl implements SealService {
                 map.put("centerImage",seal.getSealCenterImage());
                 String localPath = new ImageGenerate().seal(map);
                 byte[] fileDate = new FileLocalStoreServiceImpl().readFile(localPath);
-                FileInfo fileInfo = fileService.save(fileDate,seal.getUseDepartmentName()+sealType,"png","",FileService.CREATE_TYPE_UPLOAD,user.getId(),user.getUserName());
+                FileInfo fileInfo = fileService.save(fileDate,DateUtil.getCurrentTime()+seal.getUseDepartmentName()+sealType,"png","",FileService.CREATE_TYPE_UPLOAD,user.getId(),user.getUserName());
                 String moulageId=fileInfo.getId();
                 SealMaterial sealMaterial = new SealMaterial();
                 sealMaterial.setId(UUIDUtil.generate());
@@ -677,6 +677,8 @@ public class SealServiceImpl implements SealService {
         sealVo.setReverseIdCardScanner(sealAgent.getIdcardReverseId());
         sealVo.setProxy(sealAgent.getProxyId());
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(sealCode);
+        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
+        sealVo.setMoulageId(sealMaterial.getFilePath());
         sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }

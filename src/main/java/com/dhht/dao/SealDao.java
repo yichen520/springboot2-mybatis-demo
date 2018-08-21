@@ -51,6 +51,8 @@ public interface SealDao {
 
     int insertSealMateriallist(List<SealMaterial > sealMaterials);
 
+    SealMaterial selectSealMaterial(@Param("sealCode") String sealCode,@Param("type") String type);
+
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
 

@@ -181,6 +181,9 @@
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
 
+  <select id="selectSealMaterial" resultType="com.dhht.model.SealMaterial">
+      select file_path as filePath from seal_material where seal_code = #{sealCode} and `type` = #{type};
+  </select>
   <select id="selectSealAgentById" resultType="com.dhht.model.SealAgent">
     select `name` as `name`,certificate_type as certificateType,certificate_no as certificateNo,telphone as telphone,agent_photo_id as agentPhotoId,
     idcard_front_id as idcardFrontId,idcard_reverse_id as idcardReverseId,proxy_id as proxyId,business_type as businessType ,face_compare_record_id as faceCompareRecordId
