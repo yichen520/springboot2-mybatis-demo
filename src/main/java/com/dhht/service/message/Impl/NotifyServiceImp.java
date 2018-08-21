@@ -4,7 +4,6 @@ import com.dhht.dao.NotifyMapper;
 import com.dhht.dao.NotifyReceiveDetailMapper;
 import com.dhht.model.*;
 import com.dhht.service.tools.FileService;
-import com.dhht.service.user.UserService;
 import com.dhht.util.*;
 import com.dhht.service.message.NotifyService;
 import com.dhht.util.ResultUtil;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +31,7 @@ public class NotifyServiceImp implements NotifyService {
     @Autowired
     private FileService fileService;
 
-    @Value("${trackerPort}")
-    private String trackerPort;
-
-    @Value("${trackerServer}")
-    private String trackerServer;
-
+    private final static String NOTIFY_FILE_UPLOAD = "通知文件上传";
     /**
      * 写通知
      * @param notify
@@ -63,12 +56,15 @@ public class NotifyServiceImp implements NotifyService {
                 NotifyReceiveDetail notifyReceiveDetail = new NotifyReceiveDetail();
                 notifyReceiveDetail.setId(UUIDUtil.generate());
                 notifyReceiveDetail.setNofityId(notify.getId());
-                //notifyReceiveDetail.setReceiveUserName(userSimple.getUserName());
                 notifyReceiveDetail.setReceiveUserId(id);
                 if( notifyReceiveDetailMapper.insert(notifyReceiveDetail)==0) {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResultUtil.isFail;
                 }
+            }
+            if(notify.getNotifyFileUrls()!=null){
+                List<String> fieldIds = selectFileIds(notify.getNotifyFileUrls());
+                registerNoticeFile(fieldIds);
             }
             return ResultUtil.isSuccess;
         }catch (Exception e){
@@ -126,7 +122,8 @@ public class NotifyServiceImp implements NotifyService {
         notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
             if(notify.getNotifyFileUrls()!=null) {
-                notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
+                List<String> list = selectFileIds(notify.getNotifyFileUrls());
+                notify.setFileIds(list);
             }
         }
         try {
@@ -134,6 +131,7 @@ public class NotifyServiceImp implements NotifyService {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }finally {
+            PageHelper.clearPage();
             return new PageInfo<>(notifies);
         }
     }
@@ -148,13 +146,14 @@ public class NotifyServiceImp implements NotifyService {
         List<Notify> notifies = notifyMapper.selectNotifyBySendUser(userName);
         for (Notify notify:notifies){
                 if(notify.getNotifyFileUrls()!=null) {
-                    notify.setFiles(selectFileByPath(notify.getNotifyFileUrls()));
+                    List<String> list = selectFileIds(notify.getNotifyFileUrls());
+                    notify.setFileIds(list);
                 }
                 String result = notifyReadCount(notify.getId());
                 if(notify.getIsRecall()) {
                     notify.setNotifyReadCount("已撤回！");
                 }else {
-                    notify.setNotifyReadCount(notifyReadCount(notify.getId()));
+                    notify.setNotifyReadCount(result);
                 }
             }
         return notifies;
@@ -173,19 +172,37 @@ public class NotifyServiceImp implements NotifyService {
         return result;
     }
 
+
     /**
-     * 查找文件列表
-     * @param path
+     * 处理文件ID的方法
+     * @param fileId
      * @return
      */
-    public List<FileInfo> selectFileByPath(String path){
-        String paths[] = StringUtil.toStringArray(path);
-        List<FileInfo> fileList = new ArrayList<>();
-        for(int i=0;i<paths.length;i++){
-            FileInfo file = fileService.selectByPath(paths[i]);
-            file.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+file.getFilePath());
-            fileList.add(file);
+    public List<String> selectFileIds(String fileId){
+        List<String> result = new ArrayList<>();
+        if(fileId!=null){
+            String[] fileIds = StringUtil.toStringArray(fileId);
+            for(int i=0;i<fileIds.length;i++){
+                result.add(fileIds[i]);
+            }
         }
-        return fileList;
+        return result;
     }
+
+    /**
+     * 注册通知文件
+     * @param fileIds
+     * @return
+     */
+    public boolean registerNoticeFile(List<String> fileIds){
+        for(String fileId : fileIds){
+            boolean result =  fileService.register(fileId,NOTIFY_FILE_UPLOAD);
+            if(!result){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

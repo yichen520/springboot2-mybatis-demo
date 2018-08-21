@@ -8,7 +8,6 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.SealVo;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
-import com.dhht.service.tools.FileService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
@@ -21,7 +20,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +32,6 @@ public class SealController {
 
     @Autowired
     private EmployeeService employeeService;
-
-    @Autowired
-    private FileService fileService;
 
     @Autowired
     private UseDepartmentService useDepartmentService;
@@ -330,33 +325,6 @@ public class SealController {
         }
     }
 
-    /**
-     * 文件上传接口
-     *
-     * @param request
-     * @param file
-     * @return
-     */
-    @Log("文件上传")
-    @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
-    public JsonObjectBO singleFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return JsonObjectBO.error("请选择上传文件");
-        }
-        try {
-            FileInfo uploadFile = fileService.insertFile(request, file);
-            if (uploadFile != null) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("file", uploadFile);
-                return JsonObjectBO.success("文件上传成功", jsonObject);
-            } else {
-                return JsonObjectBO.error("文件上传失败");
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("上传文件失败");
-        }
-    }
 
     /**
      * 根据名字进行了查询
@@ -411,27 +379,21 @@ public class SealController {
      * @return
      */
     @Log("人证合一")
-    @RequestMapping(value = "facecheck")
+    @RequestMapping(value = "/facecheck")
     public JsonObjectBO checkface(@RequestBody Map map){
         JSONObject jsonObject = new JSONObject();
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String fileAURL = (String) map.get("idcardPhoto");
-        String fileBURL = (String) map.get("fieldPhoto");
+        String idCardId = (String) map.get("idCardPhoto");
+        String fieldId = (String) map.get("fieldPhoto");
         try{
-            Confidence confidence = sealService.checkface(fileAURL,fileBURL);
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setMessage("比对成功");
-            jsonObject.put("confidence",confidence);
-            jsonObjectBO.setData(jsonObject);
-            return jsonObjectBO;
+            FaceCompareResult face = sealService.faceCompare(idCardId,fieldId);
+            if(face==null){
+                return JsonObjectBO.error("对比失败");
+            }
+            jsonObject.put("face",face);
+            return JsonObjectBO.success("对比成功",jsonObject);
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("比对失败");
-            jsonObject.put("error",e);
-            jsonObjectBO.setData(jsonObject);
-            return jsonObjectBO;
-
+            return JsonObjectBO.exception("对比失败");
         }
     }
 

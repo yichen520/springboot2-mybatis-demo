@@ -253,7 +253,7 @@ public class StringUtil {
      * @return
      */
     public static String[] toStringArray (String str){
-        return str.split(";");
+        return str.split(",");
     }
 
     /**
@@ -289,5 +289,22 @@ public class StringUtil {
         String ftpUrl = "http://"+trackerServer+":"+trackerPort+"group1/";
         String simpleUrl = url.replace(ftpUrl,"");
         return simpleUrl;
+    }
+
+    /**
+     * 将实体类字段处理成数据库字段
+     * @return
+     */
+    public static String getDateBaseColumn(String str) {
+        String ss = "";
+        char[] charArray = str.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            if (charArray[i] >= 'A' && charArray[i] <= 'Z') {
+                ss += "_" + charArray[i];
+            } else {
+                ss += charArray[i];
+            }
+        }
+        return ss.toLowerCase();
     }
 }

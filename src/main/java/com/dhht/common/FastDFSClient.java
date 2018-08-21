@@ -23,7 +23,7 @@ public class FastDFSClient {
         }
     }
 
-    public static String[] upload(FastDFSFile file) {
+    public static FastDFSFilename upload(FastDFSFile file) {
         logger.info("FileInfo Name: " + file.getName() + "FileInfo Length:" + file.getContent().length);
 
         NameValuePair[] meta_list = new NameValuePair[1];
@@ -49,7 +49,11 @@ public class FastDFSClient {
         String remoteFileName = uploadResults[1];
 
         logger.info("upload file successfully!!!" + "group_name:" + groupName + ", remoteFileName:" + " " + remoteFileName);
-        return uploadResults;
+
+        FastDFSFilename filename = new FastDFSFilename();
+        filename.setGroupName(groupName);
+        filename.setFilename(remoteFileName);
+        return filename;
     }
 
     public static FileInfo getFile(String groupName, String remoteFileName) {
@@ -64,12 +68,10 @@ public class FastDFSClient {
         return null;
     }
 
-    public static InputStream downFile(String groupName, String remoteFileName) {
+    public static byte[] downFile(String groupName, String remoteFileName) {
         try {
             StorageClient storageClient = getTrackerClient();
-            byte[] fileByte = storageClient.download_file(groupName, remoteFileName);
-            InputStream ins = new ByteArrayInputStream(fileByte);
-            return ins;
+            return storageClient.download_file(groupName, remoteFileName);
         } catch (IOException e) {
             logger.error("IO Exception: Get FileInfo from Fast DFS failed", e);
         } catch (Exception e) {

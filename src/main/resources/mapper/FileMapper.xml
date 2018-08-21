@@ -4,55 +4,95 @@
   <resultMap id="BaseResultMap" type="com.dhht.model.FileInfo" >
     <id column="id" property="id" jdbcType="CHAR" />
     <result column="file_name" property="fileName" jdbcType="VARCHAR" />
-    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="file_ext" property="fileExt" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="CHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="operation_record_id" property="operationRecordId" jdbcType="VARCHAR" />
+    <result column="create_memo" property="createMemo" jdbcType="VARCHAR" />
+    <result column="create_type" property="createType" jdbcType="TINYINT" />
+    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="is_register" property="register" jdbcType="CHAR" />
+    <result column="register_memo" property="registerMemo" jdbcType="VARCHAR" />
+    <result column="register_time" property="registerTime" jdbcType="BIT" />
   </resultMap>
 
 
   <sql id="Base_Column_List" >
-    id,  file_name, file_path, create_time, operation_record_id
+    id, file_name, file_ext, file_path, create_time, create_memo,create_type, creator_id, creator_name, is_register, register_memo, register_time
   </sql>
 
-  <sql id="Column_List" >
-    id, seal_code, file_name, file_path, note, create_time, operation_type, operation_record_id
-  </sql>
+  <!--<sql id="Column_List" >-->
+    <!--id, seal_code, file_name, file_path, note, create_time, operation_type, operation_record_id-->
+  <!--</sql>-->
 
-  <select id="selectByPath" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
+  <!--<select id="selectByPath" resultMap="BaseResultMap" parameterType="java.lang.String" >-->
+    <!--select -->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from file-->
+    <!--where file_path = #{path,jdbcType=CHAR}-->
+  <!--</select>-->
+
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
     <include refid="Base_Column_List" />
-    from file
-    where file_path = #{path,jdbcType=CHAR}
+    from file_info
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from file_info
+    where id in
+      <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+          #{id}
+      </foreach>
+    ORDER BY create_time
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from file
+    delete from file_info
     where id = #{id,jdbcType=CHAR}
   </delete>
 
-  <delete id="deleteByPrimaryPath" parameterType="java.lang.String"  >
-    delete from file where
-    file_path = #{filePath,jdbcType=VARCHAR}
-  </delete>
+  <!--<delete id="deleteByPrimaryPath" parameterType="java.lang.String"  >-->
+    <!--delete from file where-->
+    <!--file_path = #{filePath,jdbcType=VARCHAR}-->
+  <!--</delete>-->
 
   <insert id="insert" parameterType="com.dhht.model.FileInfo" >
-    insert into file (id,  file_name,
-      file_path, create_time,
-      operation_record_id)
-    values (#{id,jdbcType=CHAR}, #{fileName,jdbcType=VARCHAR},
-      #{filePath,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-      #{operationRecordId,jdbcType=VARCHAR})
+    insert into file_info
+    (<include refid="Base_Column_List" />)
+    values (
+      #{id,jdbcType=CHAR},
+      #{fileName,jdbcType=VARCHAR},
+      #{fileExt,jdbcType=CHAR},
+      #{filePath,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{createMemo,jdbcType=VARCHAR},
+      #{createType,jdbcType=TINYINT},
+      #{creatorId,jdbcType=VARCHAR},
+      #{creatorName,jdbcType=VARCHAR},
+      #{register,jdbcType=BIT},
+      #{registerMemo,jdbcType=VARCHAR},
+      #{registerTime,jdbcType=TIMESTAMP}
+      )
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.FileInfo" >
-    update file
-    set seal_code = #{sealCode,jdbcType=CHAR},
+    update file_info
+    set
       file_name = #{fileName,jdbcType=VARCHAR},
+      file_ext = #{fileExt,jdbcType=CHAR},
       file_path = #{filePath,jdbcType=VARCHAR},
-      note = #{note,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      operation_type = #{operationType,jdbcType=TINYINT},
-      operation_record_id = #{operationRecordId,jdbcType=INTEGER}
+      create_memo = #{createMemo,jdbcType=VARCHAR},
+      create_type = #{createType,jdbcType=TINYINT},
+      creator_id = #{creatorId,jdbcType=VARCHAR},
+      creator_name = #{creatorName,jdbcType=VARCHAR},
+      is_register = #{register,jdbcType=BIT},
+      register_memo = #{registerMemo,jdbcType=VARCHAR},
+      register_time = #{registerTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=CHAR}
   </update>
 </mapper>

@@ -8,7 +8,6 @@ import com.dhht.model.Notice;
 import com.dhht.model.NoticeSimple;
 import com.dhht.model.User;
 import com.dhht.service.message.NoticeService;
-import com.dhht.service.tools.FileService;
 import com.dhht.service.user.UserService;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
@@ -21,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,35 +29,8 @@ import java.util.Map;
 public class NoticeController {
     @Autowired
     private NoticeService noticeService;
-    @Autowired
-    private FileService fileService;
-    @Autowired
-    private UserService userService;
 
     private static Logger logger = LoggerFactory.getLogger(NoticeController.class);
-
-    /**
-     * 附件上传的接口
-     * @param multipartFiles
-     * @param httpServletRequest
-     * @return
-     */
-    @Log("公告文件上传")
-    @RequestMapping(value = "/upload",produces = "application/json;charset=UTF-8")
-    public JsonObjectBO upload( @RequestParam("file") MultipartFile multipartFiles, HttpServletRequest httpServletRequest){
-        JSONObject jsonObject = new JSONObject();
-        try {
-                FileInfo file = fileService.insertFile(httpServletRequest,multipartFiles);
-               if(file==null){
-                   return JsonObjectBO.error("文件上传失败");
-               }
-           jsonObject.put("file",file);
-           return JsonObjectBO.success("文件上传成功",jsonObject);
-        }catch (Exception e){
-            logger.error(e.getMessage(),e);
-            return JsonObjectBO.error("文件上传时发生错误");
-        }
-    }
 
     /**
      * 公告添加
@@ -102,6 +72,8 @@ public class NoticeController {
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
         }
     }
 
@@ -147,6 +119,8 @@ public class NoticeController {
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("获取列表失败！");
+        }finally {
+            PageHelper.clearPage();
         }
     }
 

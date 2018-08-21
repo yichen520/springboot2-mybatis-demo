@@ -13,9 +13,9 @@ public interface UserPasswordService {
 
     boolean adminResetPwd(String id);
 
-    int getCheckCode(String phone);
+    int getCheckCode(String username);
 
-    boolean resetPwd(String phone,String checkCode,String passWord);
+    boolean resetPwd(String username,String checkCode,String password);
 
     boolean appResetPwd(String id,String passWord);
 }

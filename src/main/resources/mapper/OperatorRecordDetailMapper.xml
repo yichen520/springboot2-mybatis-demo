@@ -5,12 +5,11 @@
     <id column="id" jdbcType="CHAR" property="id" />
     <result column="entity_operate_record_id" jdbcType="CHAR" property="entityOperateRecordId" />
     <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
-    <result column="property_comment" jdbcType="VARCHAR" property="propertyComment" />
     <result column="old_value" jdbcType="VARCHAR" property="oldValue" />
     <result column="new_value" jdbcType="VARCHAR" property="newValue" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, entity_operate_record_id, property_name, property_comment, old_value, new_value
+    id, entity_operate_record_id, property_name,old_value, new_value
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -28,82 +27,17 @@
     where id = #{id,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.dhht.model.OperatorRecordDetail">
-    insert into operate_record_detail (id, entity_operate_record_id, property_name, 
-      property_comment, old_value, new_value
+    insert into operate_record_detail (id, entity_operate_record_id, property_name, old_value, new_value
       )
     values (#{id,jdbcType=CHAR}, #{entityOperateRecordId,jdbcType=CHAR}, #{propertyName,jdbcType=VARCHAR}, 
-      #{propertyComment,jdbcType=VARCHAR}, #{oldValue,jdbcType=VARCHAR}, #{newValue,jdbcType=VARCHAR}
+               #{oldValue,jdbcType=VARCHAR}, #{newValue,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.dhht.model.OperatorRecordDetail">
-    insert into operate_record_detail
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="entityOperateRecordId != null">
-        entity_operate_record_id,
-      </if>
-      <if test="propertyName != null">
-        property_name,
-      </if>
-      <if test="propertyComment != null">
-        property_comment,
-      </if>
-      <if test="oldValue != null">
-        old_value,
-      </if>
-      <if test="newValue != null">
-        new_value,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=CHAR},
-      </if>
-      <if test="entityOperateRecordId != null">
-        #{entityOperateRecordId,jdbcType=CHAR},
-      </if>
-      <if test="propertyName != null">
-        #{propertyName,jdbcType=VARCHAR},
-      </if>
-      <if test="propertyComment != null">
-        #{propertyComment,jdbcType=VARCHAR},
-      </if>
-      <if test="oldValue != null">
-        #{oldValue,jdbcType=VARCHAR},
-      </if>
-      <if test="newValue != null">
-        #{newValue,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.OperatorRecordDetail">
-    update operate_record_detail
-    <set>
-      <if test="entityOperateRecordId != null">
-        entity_operate_record_id = #{entityOperateRecordId,jdbcType=CHAR},
-      </if>
-      <if test="propertyName != null">
-        property_name = #{propertyName,jdbcType=VARCHAR},
-      </if>
-      <if test="propertyComment != null">
-        property_comment = #{propertyComment,jdbcType=VARCHAR},
-      </if>
-      <if test="oldValue != null">
-        old_value = #{oldValue,jdbcType=VARCHAR},
-      </if>
-      <if test="newValue != null">
-        new_value = #{newValue,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=CHAR}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.OperatorRecordDetail">
     update operate_record_detail
     set entity_operate_record_id = #{entityOperateRecordId,jdbcType=CHAR},
       property_name = #{propertyName,jdbcType=VARCHAR},
-      property_comment = #{propertyComment,jdbcType=VARCHAR},
       old_value = #{oldValue,jdbcType=VARCHAR},
       new_value = #{newValue,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}

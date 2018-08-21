@@ -116,8 +116,9 @@ notice:
   pageNum: 5
 
 #文件服务器地址
-trackerPort: 9000/
+trackerPort: :9000/
 trackerServer: 10.0.0.40
+trackerProtocol: http://
 
 file:
  local:
@@ -133,3 +134,4 @@ smsexpireTime: 300000
 
 face:
   similarity: 50
+

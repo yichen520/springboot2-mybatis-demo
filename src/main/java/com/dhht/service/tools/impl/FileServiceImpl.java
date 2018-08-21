@@ -1,181 +1,112 @@
 package com.dhht.service.tools.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.dhht.common.CurrentUser;
-import com.dhht.common.FastDFSClient;
 import com.dhht.dao.FileMapper;
-import com.dhht.model.FastDFSFile;
 import com.dhht.model.FileInfo;
-import com.dhht.model.User;
+import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.tools.FileStoreService;
 import com.dhht.util.UUIDUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
-@Service("fileService")
+/**
+ * 文件管理
+ *
+ * @author 赵兴龙
+ */
+@Service
 public class FileServiceImpl implements FileService {
+    /**
+     * 本地存储根目录
+     */
+    @Value("${file.local.root}")
+    private String rootDir;
 
     @Autowired
     private FileMapper fileMapper;
-    @Autowired
-    private StringRedisTemplate template;
 
-    @Value("${trackerPort}")
-    private String trackerPort;
+    @Resource(name="fastDFSStoreServiceImpl")
+    private FileStoreService fileStoreService;
 
-    @Value("${trackerServer}")
-    private String trackerServer;
+    private static final Logger logger = LoggerFactory.getLogger(FileLocalStoreServiceImpl.class);
 
-    private static Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
-
-    /**
-     * 上传文件
-     * @param request
-     * @param file  文件
-     * @return  返回的文件对象
-     */
     @Override
-    public FileInfo insertFile(HttpServletRequest request, MultipartFile file) {
-        try {
-            String path=saveFile(request,file);
-            FileInfo file1=new FileInfo();
-            file1.setId(UUIDUtil.generate());
-            file1.setCreateTime(new Date(System.currentTimeMillis()));
-            file1.setFileName(file.getOriginalFilename());
-            file1.setFilePath(path);
-            String token = request.getHeader("token");
-            User user ;
-            if (token!=null){
-                String token1 = template.opsForValue().get(token);
-                 user =  JSON.parseObject(token1,User.class);
-            }else {
-                 user = CurrentUser.currentUser(request.getSession());
-            }
-            file1.setOperationRecordId(user.getRealName());
-            fileMapper.insert(file1);
-            file1.setFilePath("http://"+trackerServer+":"+trackerPort+"group1/"+path);
-            return file1;
-        }catch (Exception e) {
-            logger.error("upload file failed",e);
-            logger.error(e.getMessage(), e);
+    public FileInfo save(byte[] fileData, String filename, String fileExt, String createMemo, int createType, String creatorId, String creatorName) {
+        String relativeFullName = fileStoreService.store(fileData, filename, fileExt);
+        if(relativeFullName == null) {
             return null;
         }
+        return saveFileInfo(filename, fileExt, relativeFullName, createMemo, createType, creatorId, creatorName);
     }
 
     /**
-     * 删除文件服务文件和表
-     * @param filePath
-     * @return
+     * 保存文件信息
+     * @param filename 文件真实名称
+     * @param fileExt 文件扩展名
+     * @param relativeFullName 文件相对路径
+     * @param memo 备注
+     * @return FileInfo 保存成功时。
+     *
      */
-    @Override
-    public boolean deleteFile(String filePath) {
-
-        String groupName = filePath.substring(findNumber(filePath,"/",3)+1,findNumber(filePath,"/",4));
-       String remoteFileName = filePath.substring(findNumber(filePath,"/",4)+1);
-       try {
-           FastDFSClient.deleteFile(groupName,remoteFileName);
-           fileMapper.deleteByPrimaryPath(filePath);
-           return true;
-       }catch (Exception e) {
-           logger.error("upload delete Exception!",e);
-           return false;
-       }
-    }
-
-    //找到这段字符串中某元素第几个出现的位置
-    public  int findNumber(String str,String letter,int num){
-        int i = 0;
-        int m = 0;
-        char c = new String(letter).charAt(0);
-        char [] ch = str.toCharArray();
-        for(int j=0; j<ch.length; j++){
-            if(ch[j] == c){
-                i++;
-                if(i == num){
-                    m = j;
-                    break;
-                }
-            }
-        }
-        return m;
-    }
-
-    /**
-     * 将文件保存在fastdfs文件服务器中
-     * @param multipartFile
-     * @return
-     * @throws IOException
-     */
-    public String saveFile(HttpServletRequest request,MultipartFile multipartFile) throws IOException {
-        String[] fileAbsolutePath={};
-        String fileName=multipartFile.getOriginalFilename();
-        String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
-        byte[] file_buff = null;
-        InputStream inputStream=multipartFile.getInputStream();
-        if(inputStream!=null){
-            int len1 = inputStream.available();
-            file_buff = new byte[len1];
-            inputStream.read(file_buff);
-        }
-        inputStream.close();
-        FastDFSFile file = new FastDFSFile(fileName, file_buff, ext);
-        try {
-            fileAbsolutePath = FastDFSClient.upload(file);  //upload to fastdfs
-        } catch (Exception e) {
-            logger.error("upload file Exception!",e);
-        }
-        if (fileAbsolutePath==null) {
-            logger.error("upload file failed,please upload again!");
-        }
-        //这是暴露出真实的文件服务器地址
-        // FastDFSClient.getTrackerUrl()+fileAbsolutePath[0]+ "/"+
-        String path=fileAbsolutePath[1];
-
-        //这是反向代理的真实tomcat的地址
-       // String path="http://"+request.getLocalName()+"/"+fileAbsolutePath[0]+ "/"+fileAbsolutePath[1];
-        return path;
-    }
-
-
-    @Override
-    public boolean insertLocal(FileInfo file) {
-         if(fileMapper.insert(file)==1){
-             return true;
-         }else {
-             return false;
-         }
+    private FileInfo saveFileInfo(String filename, String fileExt, String relativeFullName, String memo, int createType, String creatorId, String creatorName) {
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setId(UUIDUtil.generate());
+        fileInfo.setFileName(filename);
+        fileInfo.setFileExt(fileExt);
+        fileInfo.setFilePath(relativeFullName);
+        fileInfo.setCreateTime(new Date(System.currentTimeMillis()));
+        fileInfo.setCreateMemo(memo);
+        fileInfo.setCreateType(createType);
+        fileInfo.setCreatorId(creatorId);
+        fileInfo.setCreatorName(creatorName);
+        fileInfo.setRegister(false);
+        fileMapper.insert(fileInfo);
+        return fileInfo;
     }
 
     @Override
-    public boolean deleteLocalFile(String filePath) {
-        try {
-            fileMapper.deleteByPrimaryPath(filePath);
-            return true;
-        }catch (Exception e) {
-            logger.error("upload delete Exception!",e);
-            return false;
-        }
-
+    public boolean register(String id, String memo) {
+        FileInfo fileInfo = getFileInfo(id);
+        fileInfo.setRegister(true);
+        fileInfo.setCreateMemo(memo);
+        fileInfo.setRegisterTime(new Date());
+        fileMapper.updateByPrimaryKey(fileInfo);
+        return true;
     }
 
-    /**
-     * 根据文件路径查询文件
-     * @param path
-     * @return
-     */
     @Override
-    public FileInfo selectByPath(String path) {
-        String httpPath = "http://"+trackerServer+":"+trackerPort+"group1/";
-        return fileMapper.selectByPath(path.replace(httpPath,""));
+    public boolean delete(String id) {
+        FileInfo fileInfo = getFileInfo(id);
+        fileStoreService.delete(fileInfo.getFilePath());
+        fileMapper.deleteByPrimaryKey(id);
+        return true;
     }
+
+    @Override
+    public FileInfo getFileInfo(String id) {
+        return fileMapper.getById(id);
+    }
+
+    @Override
+    public List<FileInfo> selectFileInfo(String ids) {
+        return fileMapper.selectByIds(ids.split(","));
+    }
+
+    @Override
+    public FileInfoVO readFile(String id) {
+        FileInfo fileInfo = getFileInfo(id);
+        byte[] fileData = fileStoreService.readFile(fileInfo.getFilePath());
+        FileInfoVO fileInfoVO = new FileInfoVO(fileInfo);
+        fileInfoVO.setFileData(fileData);
+        return fileInfoVO;
+    }
+
+
 }

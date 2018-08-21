@@ -4,7 +4,6 @@ package com.dhht.service.user.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.controller.UploadController;
 import com.dhht.dao.*;
 import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;

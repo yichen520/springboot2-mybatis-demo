@@ -6,11 +6,9 @@ import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
-import com.dhht.service.tools.ShowHistoryService;
+import com.dhht.service.tools.HistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
-import com.dhht.sync.SyncDataType;
 import com.dhht.util.StringUtil;
-import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class UseDepartmentController {
     private DistrictService districtService;
 
     @Autowired
-    private ShowHistoryService showHistoryService;
+    private HistoryService historyService;
 
     private static Logger logger = LoggerFactory.getLogger(UseDepartmentController.class);
 
@@ -47,7 +45,8 @@ public class UseDepartmentController {
     @RequestMapping(value ="/insert", method = RequestMethod.POST)
     public JsonObjectBO insert(@RequestBody UseDepartment useDepartment,HttpServletRequest httpServletRequest){
         try{
-        JsonObjectBO jsonObjectBO = useDepartmentService.insert(useDepartment,httpServletRequest);
+        User user = (User) httpServletRequest.getSession().getAttribute("user");
+        JsonObjectBO jsonObjectBO = useDepartmentService.insert(useDepartment,user);
         return jsonObjectBO;}
         catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -66,7 +65,8 @@ public class UseDepartmentController {
     @RequestMapping(value = "/update" , method = RequestMethod.POST)
     public JsonObjectBO update(@RequestBody UseDepartment useDepartment,HttpServletRequest httpServletRequest){
         try {
-        JsonObjectBO jsonObjectBO = useDepartmentService.update(useDepartment,httpServletRequest);
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        JsonObjectBO jsonObjectBO = useDepartmentService.update(useDepartment,user);
         return jsonObjectBO;
         }
         catch (Exception e){
@@ -108,9 +108,10 @@ public class UseDepartmentController {
      */
     @Log("使用单位删除")
     @RequestMapping(value = "/delete" , method = RequestMethod.POST)
-    public JsonObjectBO delete(@RequestBody UseDepartment useDepartment){
+    public JsonObjectBO delete(@RequestBody UseDepartment useDepartment,HttpServletRequest httpServletRequest){
         try {
-            JsonObjectBO jsonObjectBO = useDepartmentService.delete(useDepartment);
+            User user = (User)httpServletRequest.getSession().getAttribute("user");
+            JsonObjectBO jsonObjectBO = useDepartmentService.delete(useDepartment,user);
             return jsonObjectBO;
         }catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -129,7 +130,7 @@ public class UseDepartmentController {
     public JsonObjectBO showMore(@RequestBody Map map){
         String flag = (String)map.get("flag");
         try {
-            //List<OperatorRecord> operatorRecords = showHistoryService.showUpdteHistory(flag, SyncDataType.USERDEPARTMENT);
+            //List<OperatorRecord> operatorRecords = historyService.showUpdteHistory(flag, SyncDataType.USERDEPARTMENT);
            return useDepartmentService.showHistory(flag);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
