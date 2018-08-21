@@ -29,7 +29,7 @@ public class AFRTest {
     public static final boolean bUseBGRToEngine = true;
 
 
-       public static float  compareImage(String filePathA,String filePathB){
+       public static int  compareImage(String filePathA,String filePathB){
 
         //初始化引擎
         Pointer pFDWorkMem = CLibrary.INSTANCE.malloc(FD_WORKBUF_SIZE);
@@ -83,7 +83,7 @@ public class AFRTest {
         }
 
 
-        Float similarity  = compareFaceSimilarity(hFDEngine, hFREngine, inputImgA, inputImgB);
+        Integer similarity  = (int)compareFaceSimilarity(hFDEngine, hFREngine, inputImgA, inputImgB);
 
         // release Engine
         AFD_FSDKLibrary.INSTANCE.AFD_FSDK_UninitialFaceEngine(hFDEngine);

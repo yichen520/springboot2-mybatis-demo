@@ -23,6 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,12 +99,16 @@ public class SealController {
         String idcardReverseId = sealDTO.getIdcardReverseId();//身份证反面扫描件
         String proxyId = sealDTO.getProxyId();
         String faceCompareRecordId = sealDTO.getFaceCompareRecordId();
+        String idCardPhotoId =sealDTO.getAgentPhotoId();
+        String fieldPhotoId = sealDTO.getFieldPhotoId();
+        int confidence = sealDTO.getConfidence();
         Seal seal = sealDTO.getSeal();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
             int a = sealService.sealRecord(seal,user,districtId, agentTelphone,
                     agentName,certificateNo, certificateType,
-                    agentPhotoId,  idcardFrontId,  idcardReverseId,   proxyId, faceCompareRecordId);
+                    agentPhotoId,  idcardFrontId,  idcardReverseId,   proxyId,  idCardPhotoId, confidence,
+             fieldPhotoId);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);

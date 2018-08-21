@@ -43,13 +43,13 @@ public interface SealDao {
 
     List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode);
 
-    List<SealMaterial> selectSealMaterialByCode(@Param("sealCode") String sealCode, @Param("types") List<String> types);
+    SealAgent selectSealAgentById(@Param("agentId") String agentId);
 
     SealOperationRecord selectOperationRecordByCode(@Param("sealCode") String sealCode);
 
     int insertFaceCompareRecord(FaceCompareRecord faceCompareRecord);
 
-    int insertSealMaterial(List<SealMaterial > sealMaterials);
+    int insertSealMateriallist(List<SealMaterial > sealMaterials);
 
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);

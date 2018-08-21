@@ -47,6 +47,12 @@ public class SealDTO {
 
     private String businesslicenseId; // 营业执照
 
+    private int confidence;//置信度
+
+    private String fieldPhotoId;//现场照片
+
+    private String idCardPhotoId;//身份证上的照片
+
     private Boolean isSame;
 
     private Integer pageNum;

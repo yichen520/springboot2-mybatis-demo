@@ -31,7 +31,7 @@ public class FaceCompareRecord {
     private String facePhotoId;
 
     @EntityComment(value = "相似度")
-    private Float confidence;
+    private int confidence;
 
     @EntityComment(value = "记录时间")
     private Date recordTime;
@@ -84,11 +84,11 @@ public class FaceCompareRecord {
         this.facePhotoId = facePhotoId == null ? null : facePhotoId.trim();
     }
 
-    public Float getConfidence() {
+    public int getConfidence() {
         return confidence;
     }
 
-    public void setConfidence(Float confidence) {
+    public void setConfidence(int confidence) {
         this.confidence = confidence;
     }
 
