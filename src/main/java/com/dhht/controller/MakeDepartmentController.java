@@ -238,30 +238,4 @@ public class MakeDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
-    /**
-     * 文件上传接口
-     * @param request
-     * @param file
-     * @return
-     */
-    @Log("制作单位文件上传")
-    @RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8")
-    public JsonObjectBO headFileUpload(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return JsonObjectBO.error("请选择上传文件");
-        }
-        try {
-            FileInfo uploadFile = fileService.insertFile(request, file);
-            if (uploadFile != null) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("file", uploadFile);
-                return JsonObjectBO.success("头像上传成功", jsonObject);
-            } else {
-                return JsonObjectBO.error("头像上传失败");
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("头像文件失败");
-        }
-    }
 }

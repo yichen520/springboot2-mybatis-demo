@@ -85,7 +85,6 @@ public class FileServiceImpl implements FileService {
     public boolean delete(String id) {
         FileInfo fileInfo = getFileInfo(id);
         fileStoreService.delete(fileInfo.getFilePath());
-
         fileMapper.deleteByPrimaryKey(id);
         return true;
     }

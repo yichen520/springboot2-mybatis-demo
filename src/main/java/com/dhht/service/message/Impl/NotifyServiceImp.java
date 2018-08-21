@@ -31,12 +31,7 @@ public class NotifyServiceImp implements NotifyService {
     @Autowired
     private FileService fileService;
 
-    @Value("${trackerPort}")
-    private String trackerPort;
-
-    @Value("${trackerServer}")
-    private String trackerServer;
-
+    private final static String NOTIFY_FILE_UPLOAD = "通知文件上传";
     /**
      * 写通知
      * @param notify
@@ -61,12 +56,15 @@ public class NotifyServiceImp implements NotifyService {
                 NotifyReceiveDetail notifyReceiveDetail = new NotifyReceiveDetail();
                 notifyReceiveDetail.setId(UUIDUtil.generate());
                 notifyReceiveDetail.setNofityId(notify.getId());
-                //notifyReceiveDetail.setReceiveUserName(userSimple.getUserName());
                 notifyReceiveDetail.setReceiveUserId(id);
                 if( notifyReceiveDetailMapper.insert(notifyReceiveDetail)==0) {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResultUtil.isFail;
                 }
+            }
+            if(notify.getNotifyFileUrls()!=null){
+                List<String> fieldIds = selectFileIds(notify.getNotifyFileUrls());
+                registerNoticeFile(fieldIds);
             }
             return ResultUtil.isSuccess;
         }catch (Exception e){
@@ -124,7 +122,8 @@ public class NotifyServiceImp implements NotifyService {
         notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
             if(notify.getNotifyFileUrls()!=null) {
-                notify.setFiles(fileService.selectFileInfo(notify.getNotifyFileUrls()));
+                List<String> list = selectFileIds(notify.getNotifyFileUrls());
+                notify.setFileIds(list);
             }
         }
         try {
@@ -132,6 +131,7 @@ public class NotifyServiceImp implements NotifyService {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }finally {
+            PageHelper.clearPage();
             return new PageInfo<>(notifies);
         }
     }
@@ -146,13 +146,14 @@ public class NotifyServiceImp implements NotifyService {
         List<Notify> notifies = notifyMapper.selectNotifyBySendUser(userName);
         for (Notify notify:notifies){
                 if(notify.getNotifyFileUrls()!=null) {
-                    notify.setFiles(fileService.selectFileInfo(notify.getNotifyFileUrls()));
+                    List<String> list = selectFileIds(notify.getNotifyFileUrls());
+                    notify.setFileIds(list);
                 }
                 String result = notifyReadCount(notify.getId());
                 if(notify.getIsRecall()) {
                     notify.setNotifyReadCount("已撤回！");
                 }else {
-                    notify.setNotifyReadCount(notifyReadCount(notify.getId()));
+                    notify.setNotifyReadCount(result);
                 }
             }
         return notifies;
@@ -169,6 +170,39 @@ public class NotifyServiceImp implements NotifyService {
         Integer allCount = notifyReceiveDetailMapper.countAllById(notifyId);
         String result = "已读："+readCount.toString()+"  未读："+ (allCount-readCount);
         return result;
+    }
+
+
+    /**
+     * 处理文件ID的方法
+     * @param fileId
+     * @return
+     */
+    public List<String> selectFileIds(String fileId){
+        List<String> result = new ArrayList<>();
+        if(fileId!=null){
+            String[] fileIds = StringUtil.toStringArray(fileId);
+            for(int i=0;i<fileIds.length;i++){
+                result.add(fileIds[i]);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 注册通知文件
+     * @param fileIds
+     * @return
+     */
+    public boolean registerNoticeFile(List<String> fileIds){
+        for(String fileId : fileIds){
+            boolean result =  fileService.register(fileId,NOTIFY_FILE_UPLOAD);
+            if(!result){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
+        return true;
     }
 
 }

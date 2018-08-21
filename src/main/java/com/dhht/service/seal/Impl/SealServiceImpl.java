@@ -1,5 +1,6 @@
 package com.dhht.service.seal.Impl;
 
+import com.dhht.annotation.DeleteTempFile;
 import com.dhht.annotation.Sync;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.RecordDepartmentMapper;
@@ -800,6 +801,7 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
+    //@DeleteTempFile
     public FaceCompareResult faceCompare(String idCardPhotoId, String fieldPhotoId){
         FileInfo idCardFileInfo = fileService.getFileInfo(idCardPhotoId);
         FileInfo fieldFileInfo = fileService.getFileInfo(fieldPhotoId);
@@ -819,6 +821,8 @@ public class SealServiceImpl implements SealService {
         FaceCompareResult confidence = new FaceCompareResult();
         confidence.setFieldPhotoId(fieldPhotoId);
         confidence.setIdCardPhotoId(idCardPhotoId);
+        confidence.setIdCardPhotoPath(idCardPath);
+        confidence.setFieldPhotoPath(fieldPath);
         confidence.setSimilarity(a);
         if(a<=similarity){
             confidence.setIsPass(false);

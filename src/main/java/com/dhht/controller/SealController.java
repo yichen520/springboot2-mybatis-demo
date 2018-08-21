@@ -379,11 +379,10 @@ public class SealController {
      * @return
      */
     @Log("人证合一")
-    @RequestMapping(value = "/checkface")
+    @RequestMapping(value = "/facecheck")
     public JsonObjectBO checkface(@RequestBody Map map){
         JSONObject jsonObject = new JSONObject();
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String idCardId = (String) map.get("idcardPhoto");
+        String idCardId = (String) map.get("idCardPhoto");
         String fieldId = (String) map.get("fieldPhoto");
         try{
             FaceCompareResult face = sealService.faceCompare(idCardId,fieldId);
@@ -391,8 +390,7 @@ public class SealController {
                 return JsonObjectBO.error("对比失败");
             }
             jsonObject.put("face",face);
-            JsonObjectBO.success("对比成功",jsonObject);
-            return jsonObjectBO;
+            return JsonObjectBO.success("对比成功",jsonObject);
         }catch (Exception e){
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("对比失败");
