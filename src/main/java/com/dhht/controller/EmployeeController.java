@@ -2,6 +2,7 @@ package com.dhht.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
+import com.dhht.common.CurrentUser;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.sync.SyncDataType;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -191,21 +193,19 @@ public class EmployeeController {
         }
     }
 
-
-
     /**
      * emp表中存入URL字段
      * @param map
      * @return
      */
     @Log("头像URL保存")
-    @RequestMapping(value = "/getUrl")
+    @RequestMapping(value = "/saveAvatar")
     public JsonObjectBO getUrl(@RequestBody Map map){
-        String id = (String)map.get("id");
-        String url = (String)map.get("url");
+        String empId = (String)map.get("empId");
+        String imgId = (String)map.get("imgId");
 
         try {
-            return ResultUtil.getResult(employeeService.updateHeadById(id,url));
+            return ResultUtil.getResult(employeeService.updateHeadById(empId,imgId));
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("头像文件失败");

@@ -23,4 +23,5 @@ public interface FileMapper {
     List<FileInfo> selectByIds(@Param("ids") String[] ids);
 
     int updateByPrimaryKey(FileInfo record);
+
 }

@@ -253,7 +253,7 @@ public class StringUtil {
      * @return
      */
     public static String[] toStringArray (String str){
-        return str.split(";");
+        return str.split(",");
     }
 
     /**

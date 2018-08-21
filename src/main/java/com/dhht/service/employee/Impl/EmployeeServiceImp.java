@@ -10,6 +10,7 @@ import com.dhht.service.employee.EmployeeService;
 
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
@@ -43,6 +44,10 @@ public class EmployeeServiceImp implements EmployeeService {
     private RecordDepartmentService recordDepartmentService;
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private FileService fileService;
+
+    private final static String EMPLOYEE_HEAD_UPLOAD = "从业人员头像上传";
 
 
     /**
@@ -301,8 +306,13 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public int updateHeadById(String id, String image) {
+        Employee employee = employeeDao.selectById(id);
+        if(employee.getEmployeeImage()!=null){
+            fileService.getFileInfo(employee.getEmployeeImage());
+        }
         int e = employeeDao.updateHeadById(id,image);
         if(e==1){
+            fileService.register(image,EMPLOYEE_HEAD_UPLOAD);
             return ResultUtil.isSuccess;
         }else {
             return ResultUtil.isUploadFail;
