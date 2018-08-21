@@ -150,6 +150,9 @@ public class SealServiceImpl implements SealService {
             }
             String telphone = user.getTelphone();
             Employee employee = employeeService.selectByPhone(telphone); //获取从业人员
+            if(employee==null){
+                return ResultUtil.isNoEmployee;
+            }
             MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(employee.getEmployeeDepartmentCode()); //获取制作单位
             RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(districtId);//获取备案单位
            if(makedepartment==null ||recordDepartment==null){

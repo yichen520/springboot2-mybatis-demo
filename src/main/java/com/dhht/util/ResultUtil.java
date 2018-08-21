@@ -19,6 +19,7 @@ public class ResultUtil {
     public static final int noRecordDepartment = 14;
     public static final int isHaveSeal = 15;
     public static final int isNoDepartment = 16;
+    public static final int isNoEmployee = 17;
 
 
     public static JsonObjectBO getResult(int type){
@@ -55,6 +56,8 @@ public class ResultUtil {
                 return JsonObjectBO.error("法定专用章印章信息重复");
             case 16:
                 return JsonObjectBO.error("备案单位或制作单位不存在");
+            case 17:
+                return JsonObjectBO.error("从业人员不存在");
                 default:
                     return null;
         }
