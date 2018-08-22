@@ -37,7 +37,7 @@ public class ImageGenerate {
     private int ilength = 9;
 
     public  String seal(Map map) {
-        String message = (String)map.get("userDepartment");
+        String message = (String)map.get("useDepartment");
         String centerName = (String)map.get("sealType");
         String code = (String)map.get("sealCode");
         String centerImage = (String)map.get("centerImage");
@@ -350,7 +350,7 @@ public class ImageGenerate {
     //生成二维码信息并返回
     public int[][] moulageData(Map map){
 
-        String message = (String)map.get("userDepartment");
+        String message = (String)map.get("useDepartment");
         String centerName = (String)map.get("sealType");
         String code = (String)map.get("sealCode");
         String centerImage = (String)map.get("centerImage");
@@ -467,7 +467,7 @@ public class ImageGenerate {
 
 
     public  BufferedImage startGraphicsFront2D(Map map){
-        String message = (String)map.get("userDepartment");
+        String message = (String)map.get("useDepartment");
         String centerName = (String)map.get("sealType");
         String centerImage = (String)map.get("centerImage");
         // 定义图像buffer

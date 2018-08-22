@@ -9,22 +9,17 @@ public class SealOperationRecord {
 
     private String id;
 
-    private String sealCode;
+    private String sealId;  //印章id
 
-    private Date dateTime; //操作时间
+    private String employeeId;  //从业人员id
 
-    private String operatorTelphone; //操作人手机号
+    private String emplyeeName;  //从业人员名字
 
-    private String emplyeeName; //从业人员姓名
+    private String employeeCode;  //从业人员code
 
-    private String employeeId; //从业人员身份证
+    private String operateType;   //操作类型
 
-    private String operatorName; //经办人姓名
+    private Date operateTime; //操作时间
 
-    private String operatorCertificateCode; //经办人身份证
-
-    private String operatorCertificateType; //身份类型
-
-    private String  flag;//类型
 
 }

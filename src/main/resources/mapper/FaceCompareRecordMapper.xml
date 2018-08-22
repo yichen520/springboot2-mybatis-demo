@@ -8,7 +8,7 @@
         <result column="certificate_photo_id" jdbcType="CHAR" property="certificatePhotoId" />
         <result column="filed_photo_id" jdbcType="CHAR" property="filedPhotoId" />
         <result column="face_photo_id" jdbcType="CHAR" property="facePhotoId" />
-        <result column="confidence" jdbcType="REAL" property="confidence" />
+        <result column="confidence" jdbcType="INTEGER" property="confidence" />
         <result column="record_time" jdbcType="TIMESTAMP" property="recordTime" />
     </resultMap>
     <sql id="Base_Column_List">
@@ -31,7 +31,7 @@
             confidence, record_time)
         values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{certificateNo,jdbcType=CHAR}, 
             #{certificatePhotoId,jdbcType=CHAR}, #{filedPhotoId,jdbcType=CHAR}, #{facePhotoId,jdbcType=CHAR}, 
-            #{confidence,jdbcType=REAL}, #{recordTime,jdbcType=TIMESTAMP})
+            #{confidence,jdbcType=INTEGER}, #{recordTime,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.dhht.model.FaceCompareRecord">
         insert into face_compare_record
@@ -81,7 +81,7 @@
                 #{facePhotoId,jdbcType=CHAR},
             </if>
             <if test="confidence != null">
-                #{confidence,jdbcType=REAL},
+                #{confidence,jdbcType=INTEGER},
             </if>
             <if test="recordTime != null">
                 #{recordTime,jdbcType=TIMESTAMP},
@@ -107,7 +107,7 @@
                 face_photo_id = #{facePhotoId,jdbcType=CHAR},
             </if>
             <if test="confidence != null">
-                confidence = #{confidence,jdbcType=REAL},
+                confidence = #{confidence,jdbcType=INTEGER},
             </if>
             <if test="recordTime != null">
                 record_time = #{recordTime,jdbcType=TIMESTAMP},
@@ -122,7 +122,7 @@
             certificate_photo_id = #{certificatePhotoId,jdbcType=CHAR},
             filed_photo_id = #{filedPhotoId,jdbcType=CHAR},
             face_photo_id = #{facePhotoId,jdbcType=CHAR},
-            confidence = #{confidence,jdbcType=REAL},
+            confidence = #{confidence,jdbcType=INTEGER},
             record_time = #{recordTime,jdbcType=TIMESTAMP}
         where id = #{id,jdbcType=CHAR}
     </update>

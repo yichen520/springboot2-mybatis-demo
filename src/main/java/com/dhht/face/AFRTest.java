@@ -83,7 +83,7 @@ public class AFRTest {
         }
 
 
-        Float similarity  = compareFaceSimilarity(hFDEngine, hFREngine, inputImgA, inputImgB);
+        float similarity  = compareFaceSimilarity(hFDEngine, hFREngine, inputImgA, inputImgB);
 
         // release Engine
         AFD_FSDKLibrary.INSTANCE.AFD_FSDK_UninitialFaceEngine(hFDEngine);

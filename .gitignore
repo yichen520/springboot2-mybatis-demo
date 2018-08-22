@@ -3,6 +3,7 @@
 /src/main/resources/application.yml
 /src/main/resources/generator/generatorConfid.xml
 src/.DS_Store
+.DS_Store
 
 ### STS ###
 .apt_generated

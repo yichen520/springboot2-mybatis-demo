@@ -35,7 +35,11 @@
     <result column="is_loss" property="isLoss" jdbcType="BIT"/>
     <result column="remark" property="remark" jdbcType="VARCHAR"/>
     <result column="seal_reason" property="sealReason" jdbcType="VARCHAR"/>
+    <result column="agent_id" property="agentId" jdbcType="CHAR"/>
     <result column="district_id" property="districtId" jdbcType="VARCHAR"/>
+    <result column="getter_id" property="getterId" jdbcType="CHAR"/>
+    <result column="loss_person_id" property="lossPersonId" jdbcType="CHAR"/>
+    <result column="logout_person_id" property="logoutPersonId" jdbcType="CHAR"/>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -100,7 +104,7 @@
     record_department_code, record_department_name, make_department_code, make_department_name, 
     seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
     seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
     select 
@@ -123,7 +127,7 @@
       materials_code, mimeograph_description, seal_shape_code, 
       seal_size, seal_center_image, seal_specification, 
       seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id
       )
     values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR}, 
       #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR}, 
@@ -132,100 +136,8 @@
       #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
       #{sealSize,jdbcType=VARCHAR}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR},
       #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR},#{recordDate},#{isRecord},#{makeDate},#{isMake},
-      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId})
+      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId},#{agentId},#{getterId},#{lossPersonId},#{logoutPersonId})
   </insert>
-
-  <update id="updateByExampleSelective" parameterType="map" >
-    update seal
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=CHAR},
-      </if>
-      <if test="record.sealCode != null" >
-        seal_code = #{record.sealCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealName != null" >
-        seal_name = #{record.sealName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealStatusCode != null" >
-        seal_status_code = #{record.sealStatusCode,jdbcType=CHAR},
-      </if>
-      <if test="record.useDepartmentCode != null" >
-        use_department_code = #{record.useDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="record.useDepartmentName != null" >
-        use_department_name = #{record.useDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.recordDepartmentCode != null" >
-        record_department_code = #{record.recordDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="record.recordDepartmentName != null" >
-        record_department_name = #{record.recordDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.makeDepartmentCode != null" >
-        make_department_code = #{record.makeDepartmentCode,jdbcType=CHAR},
-      </if>
-      <if test="record.makeDepartmentName != null" >
-        make_department_name = #{record.makeDepartmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealTypeCode != null" >
-        seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
-      </if>
-      <if test="record.materialsCode != null" >
-        materials_code = #{record.materialsCode,jdbcType=CHAR},
-      </if>
-      <if test="record.mimeographDescription != null" >
-        mimeograph_description = #{record.mimeographDescription,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealShapeCode != null" >
-        seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealSize != null" >
-        seal_size = #{record.sealSize,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealCenterImage != null" >
-        seal_center_image = #{record.sealCenterImage,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealSpecification != null" >
-        seal_specification = #{record.sealSpecification,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealMakeTypeCode != null" >
-        seal_make_type_code = #{record.sealMakeTypeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sealRecordTypeCode != null" >
-        seal_record_type_code = #{record.sealRecordTypeCode,jdbcType=VARCHAR},
-      </if>
-
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update seal
-    set id = #{record.id,jdbcType=CHAR},
-      seal_code = #{record.sealCode,jdbcType=VARCHAR},
-      seal_name = #{record.sealName,jdbcType=VARCHAR},
-      seal_status_code = #{record.sealStatusCode,jdbcType=CHAR},
-      use_department_code = #{record.useDepartmentCode,jdbcType=CHAR},
-      use_department_name = #{record.useDepartmentName,jdbcType=VARCHAR},
-      record_department_code = #{record.recordDepartmentCode,jdbcType=CHAR},
-      record_department_name = #{record.recordDepartmentName,jdbcType=VARCHAR},
-      make_department_code = #{record.makeDepartmentCode,jdbcType=CHAR},
-      make_department_name = #{record.makeDepartmentName,jdbcType=VARCHAR},
-     seal_type_code = #{record.sealTypeCode,jdbcType=CHAR},
-      materials_code = #{record.materialsCode,jdbcType=CHAR},
-      mimeograph_description = #{record.mimeographDescription,jdbcType=VARCHAR},
-      seal_shape_code = #{record.sealShapeCode,jdbcType=VARCHAR},
-      seal_size = #{record.sealSize,jdbcType=VARCHAR},
-      seal_center_image = #{record.sealCenterImage,jdbcType=VARCHAR},
-      seal_specification = #{record.sealSpecification,jdbcType=VARCHAR},
-      seal_make_type_code = #{record.sealMakeTypeCode,jdbcType=VARCHAR},
-      seal_record_type_code = #{record.sealRecordTypeCode,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.Seal" >
     update seal
@@ -260,28 +172,49 @@
       is_loss = #{isLoss},
       remark = #{remark},
       seal_reason = #{sealReason},
-      district_id = #{districtId}
+      district_id = #{districtId},
+      agent_id = #{agentId},
+      getter_id = #{getterId},
+      loss_person_id = #{lossPersonId},
+      logout_person_id = #{logoutPersonId}
     where id = #{id,jdbcType=CHAR}
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
 
+  <select id="selectSealMaterial" resultType="com.dhht.model.SealMaterial">
+      select file_path as filePath from seal_material where seal_code = #{sealCode} and `type` = #{type};
+  </select>
+  <select id="selectSealAgentById" resultType="com.dhht.model.SealAgent">
+    select `name` as `name`,certificate_type as certificateType,certificate_no as certificateNo,telphone as telphone,agent_photo_id as agentPhotoId,
+    idcard_front_id as idcardFrontId,idcard_reverse_id as idcardReverseId,proxy_id as proxyId,business_type as businessType ,face_compare_record_id as faceCompareRecordId
+    from
+    seal_agent where id=#{agentId}
+  </select>
+  <insert id="insertSealMateriallist"  parameterType="java.util.List">
+    insert into seal_material(id,seal_code,`type`,file_path)values
+    <foreach collection ="list" item="sealMaterial" index= "index" separator =",">
+                      (
+                      #{sealMaterial.id}, #{sealMaterial.sealCode},
+                      #{sealMaterial.type},
+                      #{sealMaterial.filePath}
+                       )
+    </foreach >
+  </insert>
 
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
       select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
   </select>
 
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
-        select operator_telphone as operatorTelphone,emplyee_name AS emplyeeName ,employee_id as employeeId,operator_name as operatorName,
-        operator_certificate_code as operatorCertificateCode ,operator_certificate_type as operatorCertificateType ,flag as flag FROM  seal_operation_record WHERE seal_code = #{sealCode} AND flag = "01";
+        select emplyee_name AS emplyeeName ,employee_id as employeeId ,employee_code as employeeCode
+     FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = "00";
 </select>
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
-    INSERT INTO seal_operation_record (id, seal_code, date_time,operator_telphone,emplyee_name,
-      employee_id, operator_name,operator_certificate_code,
-      operator_certificate_type,flag)
-    values (#{id}, #{sealCode}, #{dateTime},
-      #{operatorTelphone}, #{emplyeeName}, #{employeeId},
-      #{operatorName}, #{operatorCertificateCode},
-      #{operatorCertificateType},#{flag})
+    INSERT INTO seal_operate_record (id, seal_id, employee_id,emplyee_name,employee_code,
+      operate_type, operate_time)
+    values (#{id}, #{sealId}, #{employeeId},
+      #{emplyeeName}, #{employeeCode}, #{operateType},
+      #{operateTime})
   </insert>
 
 <select id="selectSealMaterialByCode" resultType="com.dhht.model.SealMaterial">
@@ -439,22 +372,13 @@
   </select>
 
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
-    SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName
-    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCertificateType,
-    flag AS flag from seal_operation_record WHERE seal_code =#{sealCode} AND flag="01"
+    SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type="01"
   </select>
 
   <select id="SelectByCodeAndFlag03" resultType="com.dhht.model.SealOperationRecord">
-    SELECT id AS id,seal_code AS sealCode,date_time AS dateTime,operator_telphone AS operatorTelphone,emplyee_name AS emplyeeName
-    ,employee_id AS employeeId, operator_name AS operatorName, operator_certificate_code AS operatorCertificateCode ,operator_certificate_type AS operatorCertificateType,
-    flag AS flag from seal_operation_record WHERE seal_code =#{sealCode} AND flag= #{flag}
+    SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type= #{flag}
   </select>
 
-
-<insert id="insertSealGetperson" parameterType="com.dhht.model.SealGetPerson">
-  insert into seal_getperson(id,seal_code,getperson_name,getperson_type,getperson_id,getperson_telphone,get_date,is_same)VALUES (#{id},#{sealCode},#{getpersonName},#{getpersonType},
-  #{getpersonId},#{getpersonTelphone},#{getDate},#{isSame})
-</insert>
 
   <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">
     SELECT * FROM seal

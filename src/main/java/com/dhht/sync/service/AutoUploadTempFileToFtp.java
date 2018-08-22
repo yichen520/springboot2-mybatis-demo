@@ -65,7 +65,7 @@ public class AutoUploadTempFileToFtp implements InitializingBean{
 		                        fileChannel = fileOutputStream.getChannel();
 		                        fileChannel.tryLock();
 		                    } catch (Throwable e) {
-		                    	System.out.println(uploadFile.getName() + "正在写入，稍后重试");
+//		                    	System.out.println(uploadFile.getName() + "正在写入，稍后重试");
 		                        continue;
 		                    } finally {
 		                    	try {

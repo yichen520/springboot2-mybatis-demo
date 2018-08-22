@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
-import com.dhht.model.pojo.SealVo;
+
+import com.dhht.model.pojo.SealVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
@@ -250,7 +251,7 @@ public class InformationController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String id = (String) map.get("id");
         try {
-            SealVo sealVo = sealService.selectDetailById(id);
+            SealVO sealVo = sealService.selectDetailById(id);
             jsonObject.put("sealVo", sealVo);
             jsonObjectBO.setCode(1);
             jsonObjectBO.setData(jsonObject);

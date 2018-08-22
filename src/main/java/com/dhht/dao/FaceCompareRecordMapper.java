@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 import com.dhht.model.FaceCompareRecord;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface FaceCompareRecordMapper {
     int deleteByPrimaryKey(String id);
 
