@@ -45,7 +45,7 @@ public class SealDTO {
 
     private String faceCompareRecordId; //人证合一记录id
 
-    private String businesslicenseId; // 营业执照
+    private String businessLicenseId; // 营业执照
 
     private int confidence;//置信度
 

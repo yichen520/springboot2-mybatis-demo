@@ -286,7 +286,7 @@ public class SealController {
             String certificateNo = sealDTO.getCertificateNo();
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
-            String businesslicenseId = sealDTO.getBusinesslicenseId();
+            String businesslicenseId = sealDTO.getBusinessLicenseId();
             int a = sealService.loss(  user, id,  agentPhotoId,   proxyId , certificateNo, certificateType,
                      localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId);
             if (a == ResultUtil.isFail) {
@@ -324,7 +324,7 @@ public class SealController {
             String certificateType = sealDTO.getCertificateType();
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
-            String businesslicenseId = sealDTO.getBusinesslicenseId();
+            String businesslicenseId = sealDTO.getBusinessLicenseId();
             int a = sealService.logout( user, id,  agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
