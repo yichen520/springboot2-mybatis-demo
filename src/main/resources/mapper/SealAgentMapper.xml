@@ -8,8 +8,8 @@
         <result column="certificate_no" jdbcType="VARCHAR" property="certificateNo" />
         <result column="telphone" jdbcType="VARCHAR" property="telphone" />
         <result column="agent_photo_id" jdbcType="CHAR" property="agentPhotoId" />
-        <result column="idcard_front_id" jdbcType="CHAR" property="idcardFrontId" />
-        <result column="idcard_reverse_id" jdbcType="CHAR" property="idcardReverseId" />
+        <result column="idcard_front_id" jdbcType="CHAR" property="idCardFrontId" />
+        <result column="idcard_reverse_id" jdbcType="CHAR" property="idCardReverseId" />
         <result column="proxy_id" jdbcType="CHAR" property="proxyId" />
         <result column="business_type" jdbcType="CHAR" property="businessType" />
         <result column="face_compare_record_id" jdbcType="CHAR" property="faceCompareRecordId" />
@@ -35,7 +35,7 @@
             business_type, face_compare_record_id)
         values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{certificateType,jdbcType=CHAR}, 
             #{certificateNo,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{agentPhotoId,jdbcType=CHAR}, 
-            #{idcardFrontId,jdbcType=CHAR}, #{idcardReverseId,jdbcType=CHAR}, #{proxyId,jdbcType=CHAR}, 
+            #{idCardFrontId,jdbcType=CHAR}, #{idCardReverseId,jdbcType=CHAR}, #{proxyId,jdbcType=CHAR},
             #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.dhht.model.SealAgent">
@@ -59,10 +59,10 @@
             <if test="agentPhotoId != null">
                 agent_photo_id,
             </if>
-            <if test="idcardFrontId != null">
+            <if test="idCardFrontId != null">
                 idcard_front_id,
             </if>
-            <if test="idcardReverseId != null">
+            <if test="idCardReverseId != null">
                 idcard_reverse_id,
             </if>
             <if test="proxyId != null">
@@ -94,8 +94,8 @@
             <if test="agentPhotoId != null">
                 #{agentPhotoId,jdbcType=CHAR},
             </if>
-            <if test="idcardFrontId != null">
-                #{idcardFrontId,jdbcType=CHAR},
+            <if test="idCardFrontId != null">
+                #{idCardFrontId,jdbcType=CHAR},
             </if>
             <if test="idcardReverseId != null">
                 #{idcardReverseId,jdbcType=CHAR},
@@ -129,11 +129,11 @@
             <if test="agentPhotoId != null">
                 agent_photo_id = #{agentPhotoId,jdbcType=CHAR},
             </if>
-            <if test="idcardFrontId != null">
-                idcard_front_id = #{idcardFrontId,jdbcType=CHAR},
+            <if test="idCardFrontId != null">
+                idcard_front_id = #{idCardFrontId,jdbcType=CHAR},
             </if>
-            <if test="idcardReverseId != null">
-                idcard_reverse_id = #{idcardReverseId,jdbcType=CHAR},
+            <if test="idCardReverseId != null">
+                idcard_reverse_id = #{idCardReverseId,jdbcType=CHAR},
             </if>
             <if test="proxyId != null">
                 proxy_id = #{proxyId,jdbcType=CHAR},
@@ -154,8 +154,8 @@
             certificate_no = #{certificateNo,jdbcType=VARCHAR},
             telphone = #{telphone,jdbcType=VARCHAR},
             agent_photo_id = #{agentPhotoId,jdbcType=CHAR},
-            idcard_front_id = #{idcardFrontId,jdbcType=CHAR},
-            idcard_reverse_id = #{idcardReverseId,jdbcType=CHAR},
+            idcard_front_id = #{idCardFrontId,jdbcType=CHAR},
+            idcard_reverse_id = #{idCardReverseId,jdbcType=CHAR},
             proxy_id = #{proxyId,jdbcType=CHAR},
             business_type = #{businessType,jdbcType=CHAR},
             face_compare_record_id = #{faceCompareRecordId,jdbcType=CHAR}

@@ -95,8 +95,8 @@ public class SealController {
         String certificateNo = sealDTO.getCertificateNo();
         String certificateType = sealDTO.getCertificateType();
         String agentPhotoId = sealDTO.getAgentPhotoId();
-        String idCardFrontId = sealDTO.getIdcardFrontId();//身份证正面扫描件
-        String idCardReverseId = sealDTO.getIdcardReverseId();//身份证反面扫描件
+        String idCardFrontId = sealDTO.getIdCardFrontId();//身份证正面扫描件
+        String idCardReverseId = sealDTO.getIdCardReverseId();//身份证反面扫描件
         String proxyId = sealDTO.getProxyId();
         String faceCompareRecordId = sealDTO.getFaceCompareRecordId();
         String idCardPhotoId =sealDTO.getAgentPhotoId();
@@ -283,8 +283,8 @@ public class SealController {
             String proxyId = sealDTO.getProxyId();
             String certificateType = sealDTO.getCertificateType();
             String certificateNo = sealDTO.getCertificateNo();
-            String idCardFrontId = sealDTO.getIdcardFrontId();
-            String idCardReverseId = sealDTO.getIdcardReverseId();
+            String idCardFrontId = sealDTO.getIdCardFrontId();
+            String idCardReverseId = sealDTO.getIdCardReverseId();
             String businesslicenseId = sealDTO.getBusinesslicenseId();
             int a = sealService.loss(  user, id,  agentPhotoId,   proxyId , certificateNo, certificateType,
                      localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId);
@@ -321,8 +321,8 @@ public class SealController {
             String proxyId = sealDTO.getProxyId();
             String certificateNo = sealDTO.getCertificateNo();
             String certificateType = sealDTO.getCertificateType();
-            String idCardFrontId = sealDTO.getIdcardFrontId();
-            String idCardReverseId = sealDTO.getIdcardReverseId();
+            String idCardFrontId = sealDTO.getIdCardFrontId();
+            String idCardReverseId = sealDTO.getIdCardReverseId();
             String businesslicenseId = sealDTO.getBusinesslicenseId();
             int a = sealService.logout( user, id,  agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId);
             if (a == ResultUtil.isFail) {
