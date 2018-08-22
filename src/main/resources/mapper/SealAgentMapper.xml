@@ -29,7 +29,7 @@
         where id = #{id,jdbcType=CHAR}
     </delete>
     <insert id="insert" parameterType="com.dhht.model.SealAgent">
-        insert into seal_agent (id, name, certificate_type, 
+        insert into seal_agent (id, `name`, certificate_type,
             certificate_no, telphone, agent_photo_id, 
             idcard_front_id, idcard_reverse_id, proxy_id, 
             business_type, face_compare_record_id)
@@ -38,6 +38,7 @@
             #{idCardFrontId,jdbcType=CHAR}, #{idCardReverseId,jdbcType=CHAR}, #{proxyId,jdbcType=CHAR},
             #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR})
     </insert>
+
     <insert id="insertSelective" parameterType="com.dhht.model.SealAgent">
         insert into seal_agent
         <trim prefix="(" suffix=")" suffixOverrides=",">
