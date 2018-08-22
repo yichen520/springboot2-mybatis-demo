@@ -33,7 +33,7 @@ public class Notify {
 
     private List<String> notifyUser;
 
-    private List<String> fileIds;
+    private List<FileInfo> files;
 
 
 }

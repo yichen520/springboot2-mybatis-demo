@@ -101,11 +101,11 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileInfoVO readFile(String id) {
-        FileInfo fileInfo = getFileInfo(id);
-        byte[] fileData = fileStoreService.readFile(fileInfo.getFilePath());
-        FileInfoVO fileInfoVO = new FileInfoVO(fileInfo);
-        fileInfoVO.setFileData(fileData);
-        return fileInfoVO;
+            FileInfo fileInfo = getFileInfo(id);
+            byte[] fileData = fileStoreService.readFile(fileInfo.getFilePath());
+            FileInfoVO fileInfoVO = new FileInfoVO(fileInfo);
+            fileInfoVO.setFileData(fileData);
+            return fileInfoVO;
     }
 
 
