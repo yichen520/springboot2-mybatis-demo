@@ -270,6 +270,8 @@ public class SealServiceImpl implements SealService {
                 if(sealMaterialInsert<0){
                     return ResultUtil.isError;
                 }
+
+
                 fileService.register(moulageId,"印模图像注册");
                 fileService.register(idCardPhotoId,"认证合一身份证照片注册 ");
                 fileService.register(fieldPhotoId,"认证合一现场照片注册");

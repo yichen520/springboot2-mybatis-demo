@@ -20,7 +20,7 @@ public class ImageGenerate {
     private  final int HEIGHT = 400;//图片高度
     private final String image= "★";
     @Value("${seal.template.filepath}")
-    private String filePath;
+    private String filePath ="C:/temp/seal";
 
     //中心图案五角星大小
     private int centerImageFont = 120;
@@ -42,7 +42,7 @@ public class ImageGenerate {
         String code = (String)map.get("sealCode");
         String centerImage = (String)map.get("centerImage");
         try {
-            String sealPath = filePath+"\\"+message+"\\"+message+".png";
+            String sealPath = filePath+"//"+message+"//"+message+".png";
             BufferedImage image =  startGraphics2D(message,centerName,code,centerImage);
             File dest = new File(sealPath);
             //判断文件父目录是否存在
@@ -56,7 +56,6 @@ public class ImageGenerate {
         }
 
     }
-
 
     public  BufferedImage startGraphics2D(String message,String centerName,String code,String centerImage){
         // 定义图像buffer
@@ -351,7 +350,7 @@ public class ImageGenerate {
     //生成二维码信息并返回
     public int[][] moulageData(Map map){
 
-        String message = (String)map.get("userDepartment");
+        String message = (String)map.get("useDepartment");
         String centerName = (String)map.get("sealType");
         String code = (String)map.get("sealCode");
         String centerImage = (String)map.get("centerImage");
@@ -398,7 +397,7 @@ public class ImageGenerate {
         //编码图层
         int [][] data2 = new int[HEIGHT][WIDTH];
         BufferedImage codeimage = startGraphicsCode2D( code, message);
-        String filePath2 = "C:\\"+"aa\\"+message+"2.png";
+        String filePath2 = filePath+"\\"+message+"\\"+message+"2.png";
         try {
             ImageIO.write(codeimage, "png", new File(filePath2));
         } catch (Exception ex) {
@@ -423,7 +422,7 @@ public class ImageGenerate {
 
         int [][] data3 = new int[HEIGHT][WIDTH];
         BufferedImage trueimage = startGraphicstrue2D();
-        String filePath3 = "C:\\"+"aa\\"+message+"3.png";
+        String filePath3 = filePath+"\\"+message+"\\"+message+"3.png";
         try {
             ImageIO.write(trueimage, "png", new File(filePath3));
         } catch (Exception ex) {
@@ -462,13 +461,13 @@ public class ImageGenerate {
                 data[i][j] =max;
             }
         }
-        return null;
+        return data;
     }
 
 
 
     public  BufferedImage startGraphicsFront2D(Map map){
-        String message = (String)map.get("userDepartment");
+        String message = (String)map.get("useDepartment");
         String centerName = (String)map.get("sealType");
         String centerImage = (String)map.get("centerImage");
         // 定义图像buffer

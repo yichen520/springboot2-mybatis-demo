@@ -414,16 +414,20 @@ public class SealController {
     @Log("印模模板生成")
     @RequestMapping(value = "sealtemplate")
     public JsonObjectBO sealtemplate(@RequestBody Map map){
-       String sealTemplatePath =  new ImageGenerate().seal(map);
+        String sealTemplatePath =  new ImageGenerate().seal(map);
+        int[][] a =new ImageGenerate().moulageData(map);
         try{
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("sealTemplatePath",sealTemplatePath);
+            jsonObject.put("a",a);
             return JsonObjectBO.success("印模模板生成成功",jsonObject);
         }catch (Exception e){
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("印模模板生成失败");
         }
     }
+
+
 
 
 
