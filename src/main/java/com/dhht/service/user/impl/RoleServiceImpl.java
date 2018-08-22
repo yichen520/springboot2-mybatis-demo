@@ -70,8 +70,7 @@ public class RoleServiceImpl implements RoleService {
             sysRoleResource.setRoleId(role.getId());
             roleResourceDao.insert(sysRoleResource);
         }
-       roleDao.updateByPrimaryKeySelective(role);
-
+        roleDao.updateByPrimaryKeySelective(role);
         return new AccessResult(1,"修改角色成功");
     }
 
