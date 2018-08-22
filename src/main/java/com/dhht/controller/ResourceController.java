@@ -76,7 +76,7 @@ public class ResourceController {
 
    @Log("添加资源")
     @RequestMapping(value = "/add")
-    public JsonObjectBO insertResourcr(@RequestBody Resource resource){
+    public JsonObjectBO insertResource(@RequestBody Resource resource){
         resource.setId(UUIDUtil.generate());
         if(resource.getParentId() == ""||resource.getParentId()==null){
             resource.setParentId("0");

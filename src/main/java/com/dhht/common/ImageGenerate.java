@@ -19,8 +19,8 @@ public class ImageGenerate {
     private  final int WIDTH = 400;//图片宽度
     private  final int HEIGHT = 400;//图片高度
     private final String image= "★";
-    @Value("${seal.template.filepath}")
-    private String filePath ="C:/temp/seal";
+    @Value("${sealtemplate.filePath}")
+    private String filePath ;
 
     //中心图案五角星大小
     private int centerImageFont = 120;
@@ -106,7 +106,7 @@ public class ImageGenerate {
         return buffImg;
     }
 
-    public static void  fangwei(Graphics2D g,int radius,int CENTERX,int CENTERY,int w,int n){
+    public  void  fangwei(Graphics2D g,int radius,int CENTERX,int CENTERY,int w,int n){
         Random random = new Random();
         int r1= random.nextInt((60-n))+ 0;
         int r2= random.nextInt((60-n))+ 60;

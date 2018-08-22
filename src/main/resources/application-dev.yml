@@ -129,8 +129,8 @@ trackerProtocol: http://
 file:
  local:
    root: C:/temp/
-
-filePath: C:/temp/
+sealtemplate:
+  filePath: C:/temp/seal
 
 #设置redis中token过期时间
 expireTime: 3600
