@@ -63,7 +63,7 @@ public class NotifyServiceImp implements NotifyService {
                 }
             }
             if(notify.getNotifyFileUrls()!=null){
-                List<String> fieldIds = selectFileIds(notify.getNotifyFileUrls());
+                List<FileInfo> fieldIds = selectFileIds(notify.getNotifyFileUrls());
                 registerNoticeFile(fieldIds);
             }
             return ResultUtil.isSuccess;
@@ -122,8 +122,8 @@ public class NotifyServiceImp implements NotifyService {
         notifies = notifyMapper.selectNotifyDetail(notifyIds);
         for(Notify notify:notifies){
             if(notify.getNotifyFileUrls()!=null) {
-                List<String> list = selectFileIds(notify.getNotifyFileUrls());
-                notify.setFileIds(list);
+                List<FileInfo> list = selectFileIds(notify.getNotifyFileUrls());
+                notify.setFiles(list);
             }
         }
         try {
@@ -146,8 +146,8 @@ public class NotifyServiceImp implements NotifyService {
         List<Notify> notifies = notifyMapper.selectNotifyBySendUser(userName);
         for (Notify notify:notifies){
                 if(notify.getNotifyFileUrls()!=null) {
-                    List<String> list = selectFileIds(notify.getNotifyFileUrls());
-                    notify.setFileIds(list);
+                    List<FileInfo> list = selectFileIds(notify.getNotifyFileUrls());
+                    notify.setFiles(list);
                 }
                 String result = notifyReadCount(notify.getId());
                 if(notify.getIsRecall()) {
@@ -178,12 +178,15 @@ public class NotifyServiceImp implements NotifyService {
      * @param fileId
      * @return
      */
-    public List<String> selectFileIds(String fileId){
-        List<String> result = new ArrayList<>();
+    public List<FileInfo> selectFileIds(String fileId){
+        List<FileInfo> result = new ArrayList<>();
         if(fileId!=null){
             String[] fileIds = StringUtil.toStringArray(fileId);
             for(int i=0;i<fileIds.length;i++){
-                result.add(fileIds[i]);
+                FileInfo fileInfo = fileService.getFileInfo(fileIds[i]);
+                if(fileInfo!=null){
+                    result.add(fileInfo);
+                }
             }
         }
         return result;
@@ -194,9 +197,9 @@ public class NotifyServiceImp implements NotifyService {
      * @param fileIds
      * @return
      */
-    public boolean registerNoticeFile(List<String> fileIds){
-        for(String fileId : fileIds){
-            boolean result =  fileService.register(fileId,NOTIFY_FILE_UPLOAD);
+    public boolean registerNoticeFile(List<FileInfo> fileIds){
+        for(FileInfo fileInfo : fileIds){
+            boolean result =  fileService.register(fileInfo.getId(),NOTIFY_FILE_UPLOAD);
             if(!result){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;

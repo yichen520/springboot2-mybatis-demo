@@ -95,8 +95,8 @@ public class SealController {
         String certificateNo = sealDTO.getCertificateNo();
         String certificateType = sealDTO.getCertificateType();
         String agentPhotoId = sealDTO.getAgentPhotoId();
-        String idcardFrontId = sealDTO.getIdcardFrontId();//身份证正面扫描件
-        String idcardReverseId = sealDTO.getIdcardReverseId();//身份证反面扫描件
+        String idCardFrontId = sealDTO.getIdcardFrontId();//身份证正面扫描件
+        String idCardReverseId = sealDTO.getIdcardReverseId();//身份证反面扫描件
         String proxyId = sealDTO.getProxyId();
         String faceCompareRecordId = sealDTO.getFaceCompareRecordId();
         String idCardPhotoId =sealDTO.getAgentPhotoId();
@@ -107,7 +107,7 @@ public class SealController {
         try {
             int a = sealService.sealRecord(seal,user,districtId, agentTelphone,
                     agentName,certificateNo, certificateType,
-                    agentPhotoId,  idcardFrontId,  idcardReverseId,   proxyId,  idCardPhotoId, confidence,
+                    agentPhotoId,  idCardFrontId,  idCardReverseId,   proxyId,  idCardPhotoId, confidence,
              fieldPhotoId);
 
             if (a == ResultUtil.isSuccess) {
@@ -283,11 +283,11 @@ public class SealController {
             String proxyId = sealDTO.getProxyId();
             String certificateType = sealDTO.getCertificateType();
             String certificateNo = sealDTO.getCertificateNo();
-            String idcardFrontId = sealDTO.getIdcardFrontId();
-            String idcardReverseId = sealDTO.getIdcardReverseId();
+            String idCardFrontId = sealDTO.getIdcardFrontId();
+            String idCardReverseId = sealDTO.getIdcardReverseId();
             String businesslicenseId = sealDTO.getBusinesslicenseId();
             int a = sealService.loss(  user, id,  agentPhotoId,   proxyId , certificateNo, certificateType,
-                     localDistrictId, businesslicenseId, idcardFrontId, idcardReverseId);
+                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("挂失失败");
@@ -321,10 +321,10 @@ public class SealController {
             String proxyId = sealDTO.getProxyId();
             String certificateNo = sealDTO.getCertificateNo();
             String certificateType = sealDTO.getCertificateType();
-            String idcardFrontId = sealDTO.getIdcardFrontId();
-            String idcardReverseId = sealDTO.getIdcardReverseId();
+            String idCardFrontId = sealDTO.getIdcardFrontId();
+            String idCardReverseId = sealDTO.getIdcardReverseId();
             String businesslicenseId = sealDTO.getBusinesslicenseId();
-            int a = sealService.logout( user, id,  agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idcardFrontId,idcardReverseId);
+            int a = sealService.logout( user, id,  agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("注销失败");

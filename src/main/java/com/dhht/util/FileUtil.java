@@ -24,7 +24,8 @@ public class FileUtil {
         out.close();
     }
 
-    public static String saveArrayFile(int[][] imgArr,String createMemo, int createType, String creatorId, String creatorName){
+
+    public static String saveArrayFile(int[][] imgArr){
         try {
             String fileName = UUIDUtil.generate() + ".txt";
             String path = generatePathByDate() + fileName;
