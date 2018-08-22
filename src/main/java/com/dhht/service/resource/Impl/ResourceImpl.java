@@ -1,22 +1,20 @@
 package com.dhht.service.resource.Impl;
 
-import com.dhht.annotation.Sync;
 import com.dhht.dao.ResourceMapper;
 import com.dhht.model.Menus;
 import com.dhht.model.Resource;
 import com.dhht.service.resource.ResourceService;
-import com.dhht.sync.SyncDataType;
-import com.dhht.sync.SyncOperateType;
 import com.dhht.util.MenuUtil;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service("ResourceService")
+@Transactional
 public class ResourceImpl  implements ResourceService {
     @Autowired
     private ResourceMapper resourceMapper;
@@ -31,14 +29,9 @@ public class ResourceImpl  implements ResourceService {
         List<Resource> resources = new ArrayList<Resource>();
         resources = findParent();
         setAllChildren(resources);
-       // System.out.println("数据:"+resources.size());
         return resources;
     }
 
-   // @Override
-   // public List<Resource> findAllResource(){
-    //   return selectAllResource();
- //   }
 
     @Override
 
@@ -60,7 +53,6 @@ public class ResourceImpl  implements ResourceService {
             result = resourceMapper.deleteByPrimaryKey(id);
         }catch (Exception e){
             return 0;
-           // e.printStackTrace();
         }
         return result;
     }
@@ -116,17 +108,18 @@ public class ResourceImpl  implements ResourceService {
         for (Resource resource:resources) {
            List<Resource> list = resourceMapper.selectByParentID(resource.getId());
            if(list.size()>0){
-               resource.setChildren(list);
-           }
+                resource.setChildren(list);
+            }
            setAllChildren(list);
         }
     }
 
-    //查找非依赖父节点，进数据库查找
+    /**
+         查找父id为0的所有资源,即一级菜单
+     */
     public List<Resource> findParent(){
         return resourceMapper.selectByParentID("0");
     }
-
 
 
     //-----------------权限资源相关部分--------------------------//
@@ -195,8 +188,5 @@ public class ResourceImpl  implements ResourceService {
         }
         return list;
     }
-
-
-
 
 }

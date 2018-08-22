@@ -51,7 +51,7 @@ public class RoleController extends JsonObjectBO {
         try {
             PageInfo<Role> roles = roleService.getRoleList(pageNum, pageSize);
             jsonObject.put("roles", roles);
-            return  JsonObjectBO.success("查询角色成功13333",jsonObject);
+            return  JsonObjectBO.success("查询角色成功",jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
