@@ -288,7 +288,7 @@ public class SealServiceImpl implements SealService {
                     SealMaterial sealMaterial1 = new SealMaterial();
                     sealMaterial1.setId(UUIDUtil.generate());
                     sealMaterial1.setSealCode(sealcode);
-                    sealMaterial1.setType("04");
+                    sealMaterial1.setType("05");
                     sealMaterial1.setFilePath(moulageId);
                     int sealMaterialInsert1 = sealDao.insertSealMaterial(sealMaterial1);
 
