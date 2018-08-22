@@ -216,8 +216,6 @@ public class SealServiceImpl implements SealService {
                 if (proxyId != null) {
                     sealAgent.setProxyId(proxyId);
                 }
-
-
                 int sealAgentInsert = sealAgentMapper.insert(sealAgent);
 
 
@@ -226,34 +224,14 @@ public class SealServiceImpl implements SealService {
 
 
                 if (sealInsert > 0 && sealOperationRecordInsert > 0 && sealAgentInsert > 0 && faceCompareRecordInsert > 0) {
-                    String sealType = "";
-                    switch (seal.getSealTypeCode()) {
-                        case "01":
-                            sealType = "单位专用章";
-                            break;
-                        case "02":
-                            sealType = "财务专用章";
-                            break;
-                        case "03":
-                            sealType = "税务专用章";
-                            break;
-                        case "04":
-                            sealType = "合同专用章";
-                            break;
-                        case "05":
-                            sealType = "法人代表人名章";
-                            break;
-                        case "06":
-                            sealType = "其他类型印章";
-                            break;
-                    }
+                    String sealType = chooseType(seal.getSealTypeCode());
                     Map<String, String> map = new HashMap<>();
                     map.put("useDepartment", seal.getUseDepartmentName());
                     map.put("sealType", sealType);
                     map.put("sealCode", sealcode);
                     String centerImageNum = seal.getSealCenterImage();
                     String centerImage = "";
-                    switch (seal.getSealTypeCode()) {
+                    switch (centerImageNum) {
                         case "01":
                             centerImage = "★";
                             break;
@@ -268,8 +246,8 @@ public class SealServiceImpl implements SealService {
                     String localPath = new ImageGenerate().seal(map);
                     File file = new File(localPath);
                     InputStream inputStream = new FileInputStream(file);
-                    byte[] fileDate = FileUtil.readInputStream(inputStream);
-                    FileInfo fileInfo = fileService.save(fileDate, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "png", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
+                    byte[] imageData = FileUtil.readInputStream(inputStream);
+                    FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "png", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageImageId = fileInfo.getId();
                     SealMaterial sealMaterial = new SealMaterial();
                     sealMaterial.setId(UUIDUtil.generate());
@@ -278,12 +256,13 @@ public class SealServiceImpl implements SealService {
                     sealMaterial.setFilePath(moulageImageId);
                     int sealMaterialInsert = sealDao.insertSealMaterial(sealMaterial);
                     ImageGenerate imageGenerate = new ImageGenerate();
+
                     int[][] imgArr = imageGenerate.moulageData(map);
                     String imagArrLocalPath  = FileUtil.saveArrayFile(imgArr);
                     File file1 = new File(imagArrLocalPath);
                     InputStream inputStream1 = new FileInputStream(file1);
-                    byte[] fileDate1 = FileUtil.readInputStream(inputStream1);
-                    FileInfo fileInfo1 = fileService.save(fileDate, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType+"二维数据", "txt", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
+                    byte[] moulageDates = FileUtil.readInputStream(inputStream1);
+                    FileInfo fileInfo1 = fileService.save(moulageDates, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType+"二维数据", "txt", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageId = fileInfo.getId();
                     SealMaterial sealMaterial1 = new SealMaterial();
                     sealMaterial1.setId(UUIDUtil.generate());
@@ -296,7 +275,7 @@ public class SealServiceImpl implements SealService {
                         return ResultUtil.isError;
                     }
 
-
+                    fileService.register(moulageId, "印模图像注册");
                     fileService.register(moulageImageId, "印模图像注册");
                     fileService.register(idCardPhotoId, "认证合一身份证照片注册 ");
                     fileService.register(fieldPhotoId, "认证合一现场照片注册");
@@ -332,7 +311,7 @@ public class SealServiceImpl implements SealService {
 
         String telphone = user.getTelphone();
         if(telphone==null){
-            return null;
+           return new PageInfo<>();
         }
         PageHelper.startPage(pageNum, pageSize);
         Employee employee = employeeService.selectByPhone(telphone);
@@ -340,6 +319,7 @@ public class SealServiceImpl implements SealService {
         Seal seal = new Seal();
         seal.setUseDepartmentCode(useDepartmentCode);
         seal.setUseDepartmentName(useDepartmentName);
+
         seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
         List<Seal> list = new ArrayList<Seal>();
 
@@ -920,6 +900,35 @@ public class SealServiceImpl implements SealService {
         }
     }
 
+    /**
+     * 选择章
+     * @param num
+     * @return
+     */
+    public String chooseType(String num){
+        String sealType = "";
+        switch (num) {
+            case "01":
+                sealType = "单位专用章";
+                break;
+            case "02":
+                sealType = "财务专用章";
+                break;
+            case "03":
+                sealType = "税务专用章";
+                break;
+            case "04":
+                sealType = "合同专用章";
+                break;
+            case "05":
+                sealType = "法人代表人名章";
+                break;
+            case "06":
+                sealType = "其他类型印章";
+                break;
+        }
+        return sealType;
+    }
 
 
 }
