@@ -47,8 +47,8 @@ public class NoticeServiceImp implements NoticeService{
         int n = noticeMapper.insert(notice);
         if (n > 0) {
             if(notice.getNoticeFileUrl()!=null) {
-                List<String> fileIds = selectFileIds(notice.getNoticeFileUrl());
-                boolean result = registerNoticeFile(fileIds);
+                List<FileInfo> fileInfos = selectFileIds(notice.getNoticeFileUrl());
+                boolean result = registerNoticeFile(fileInfos);
                 if(!result){
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResultUtil.isError;
@@ -71,9 +71,9 @@ public class NoticeServiceImp implements NoticeService{
         List<Notice> noticeList = noticeMapper.selectByUserName(userName);
         for (Notice notice:noticeList) {
             if (notice.getNoticeFileUrl()!=null) {
-                List<String> fileList = selectFileIds(notice.getNoticeFileUrl());
+                List<FileInfo> fileList = selectFileIds(notice.getNoticeFileUrl());
                 if (fileList.size() > 0) {
-                    notice.setFileIds(fileList);
+                    notice.setFiles(fileList);
                 }
             }
         }
@@ -94,9 +94,9 @@ public class NoticeServiceImp implements NoticeService{
             return ResultUtil.isFail;
         }
         if(notice.getNoticeFileUrl()!=null) {
-            List<String> list = selectFileIds(notice.getNoticeFileUrl());
-            for (String fileId:list) {
-                boolean result = fileService.delete(fileId);
+            List<FileInfo> list = selectFileIds(notice.getNoticeFileUrl());
+            for (FileInfo fileInfo:list) {
+                boolean result = fileService.delete(fileInfo.getId());
                 if(!result){
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResultUtil.isFail;
@@ -121,8 +121,8 @@ public class NoticeServiceImp implements NoticeService{
         int i = noticeMapper.update(notice);
         if (i == 1) {
             if (notice.getNoticeFileUrl()!= null) {
-                List<String> fileIds = selectFileIds(notice.getNoticeFileUrl());
-                boolean result = registerNoticeFile(fileIds);
+                List<FileInfo> fileInfos = selectFileIds(notice.getNoticeFileUrl());
+                boolean result = registerNoticeFile(fileInfos);
                 if(result){}else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResultUtil.isError;
@@ -170,8 +170,8 @@ public class NoticeServiceImp implements NoticeService{
     public Notice selectNoticeDetail(String id) {
         Notice notice = noticeMapper.selectNoticeDetail(id);
         if(notice.getNoticeFileUrl()!=null){
-            List<String> fileList = selectFileIds(notice.getNoticeFileUrl());
-            notice.setFileIds(fileList);
+            List<FileInfo> fileList = selectFileIds(notice.getNoticeFileUrl());
+            notice.setFiles(fileList);
         }
         return notice;
     }
@@ -182,12 +182,15 @@ public class NoticeServiceImp implements NoticeService{
      * @param fileId
      * @return
      */
-     public List<String> selectFileIds(String fileId){
-         List<String> result = new ArrayList<>();
+     public List<FileInfo> selectFileIds(String fileId){
+         List<FileInfo> result = new ArrayList<>();
          if(fileId!=null){
              String[] fileIds = StringUtil.toStringArray(fileId);
              for(int i=0;i<fileIds.length;i++){
-                 result.add(fileIds[i]);
+                 FileInfo fileInfo = fileService.getFileInfo(fileIds[i]);
+                 if(fileInfo!=null) {
+                     result.add(fileInfo);
+                 }
              }
          }
          return result;
@@ -195,12 +198,12 @@ public class NoticeServiceImp implements NoticeService{
 
     /**
      * 注册公告文件
-     * @param fileIds
+     * @param fileInfos
      * @return
      */
-     public boolean registerNoticeFile(List<String> fileIds){
-         for(String fileId : fileIds){
-            boolean result =  fileService.register(fileId,NOTICE_FILE_UPLOAD);
+     public boolean registerNoticeFile(List<FileInfo> fileInfos){
+         for(FileInfo fileInfo : fileInfos){
+            boolean result =  fileService.register(fileInfo.getId(),NOTICE_FILE_UPLOAD);
             if(!result){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;
