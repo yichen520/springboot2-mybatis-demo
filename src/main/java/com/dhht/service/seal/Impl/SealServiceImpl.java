@@ -17,10 +17,7 @@ import com.dhht.service.tools.FileStoreService;
 import com.dhht.service.tools.impl.FileLocalStoreServiceImpl;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
-import com.dhht.util.DateUtil;
-import com.dhht.util.ResultUtil;
-import com.dhht.util.StringUtil;
-import com.dhht.util.UUIDUtil;
+import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
@@ -848,7 +845,7 @@ public class SealServiceImpl implements SealService {
         if(idCardPath==null||fieldPath==null){
             return null;
         }
-        Integer a = AFRTest.compareImage(idCardPath,fieldPath);
+        Integer a =(int) AFRTest.compareImage(idCardPath,fieldPath);
 
         FaceCompareResult confidence = new FaceCompareResult();
         confidence.setFieldPhotoId(fieldPhotoId);
@@ -880,7 +877,7 @@ public class SealServiceImpl implements SealService {
             conn.setConnectTimeout(3 * 1000);
            // conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             InputStream inputStream = conn.getInputStream();
-            byte[] fileDate = readInputStream(inputStream);
+            byte[] fileDate = FileUtil.readInputStream(inputStream);
             String relativePath = localStoreFileService.store(fileDate,"",".png");
             String absolutePath = localStoreFileService.getFullPath(relativePath);
             return absolutePath;
@@ -891,22 +888,7 @@ public class SealServiceImpl implements SealService {
         }
     }
 
-    /**
-     * 输入流转换
-     * @param inputStream
-     * @return
-     * @throws IOException
-     */
-    public  byte[] readInputStream(InputStream inputStream) throws IOException {
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((len = inputStream.read(buffer)) != -1) {
-            bos.write(buffer, 0, len);
-        }
-        bos.close();
-        return bos.toByteArray();
-    }
+
 
 }
 

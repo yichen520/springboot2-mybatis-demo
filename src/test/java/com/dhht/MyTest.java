@@ -1,5 +1,6 @@
 package com.dhht;
 
+import com.dhht.common.ImageGenerate;
 import com.dhht.dao.RecordPoliceMapper;
 import com.dhht.dao.SealDao;
 import com.dhht.dao.UserDao;
@@ -12,11 +13,15 @@ import com.dhht.service.message.NotifyService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.RoleService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.FileUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -60,7 +65,16 @@ public class MyTest {
 
     @Test
     public void Test1() {
-        System.out.println("");
+        ImageGenerate imageGenerate = new ImageGenerate();
+        Map map = new HashMap();
+        map.put("useDepartment","北京东华宏泰股份有限公司");
+        map.put("sealType","合同专用章");
+        map.put("sealCode","3301081025358963");
+        map.put("centerImage","★");
+        int imgArr[][] = imageGenerate.moulageData(map);
+        String id = FileUtil.saveArrayFile(imgArr,"1",1,"1","1");
+        System.out.println(id);
+
     }
 
 
