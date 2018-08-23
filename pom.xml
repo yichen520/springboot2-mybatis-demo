@@ -138,12 +138,7 @@
 			<version>RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.mybatis.generator</groupId>
-			<artifactId>mybatis-generator-core</artifactId>
-			<version>1.3.2-fix</version>
-		</dependency>
+        
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -237,11 +232,11 @@
 				</configuration>
 
 				<dependencies>
-					<dependency>
-						<groupId>org.mybatis.generator</groupId>
-						<artifactId>mybatis-generator-core</artifactId>
-						<version>1.3.2-fix</version>
-					</dependency>
+					<!--<dependency>-->
+						<!--<groupId>org.mybatis.generator</groupId>-->
+						<!--<artifactId>mybatis-generator-core</artifactId>-->
+						<!--<version>1.3.2-fix</version>-->
+					<!--</dependency>-->
 				</dependencies>
 			</plugin>
 			<plugin>
