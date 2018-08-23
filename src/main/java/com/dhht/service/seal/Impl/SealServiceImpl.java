@@ -315,7 +315,7 @@ public class SealServiceImpl implements SealService {
         if(telphone==null){
            return new PageInfo<>();
         }
-        PageHelper.startPage(pageNum, pageSize);
+
         Employee employee = employeeService.selectByPhone(telphone);
 
         Seal seal = new Seal();
@@ -324,7 +324,7 @@ public class SealServiceImpl implements SealService {
 
         seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
         List<Seal> list = new ArrayList<Seal>();
-
+        PageHelper.startPage(pageNum, pageSize);
 //        if (status.equals("00")) {  //已备案
 //            seal.setIsRecord(true);
 //            list = sealDao.selectByCodeAndName(seal);
@@ -358,7 +358,7 @@ public class SealServiceImpl implements SealService {
 //            seal.setIsLogout(true);
 //            list = sealDao.selectIsLogout(seal);
 //        }
-        list = chooseSealStatus(seal,status,pageNum,pageSize);
+        list = chooseSealStatus(seal,status);
 
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
@@ -749,6 +749,7 @@ public class SealServiceImpl implements SealService {
         seal.setUseDepartmentName(useDepartmentName);
         seal.setDistrictId(districtId);
         List<Seal> list = new ArrayList<Seal>();
+        PageHelper.startPage(pageNum, pageSize);
 //        if (status.equals("00")) {  //已备案
 //            seal.setIsRecord(true);
 //            list = sealDao.selectByCodeAndName(seal);
@@ -782,7 +783,7 @@ public class SealServiceImpl implements SealService {
 //            seal.setIsLogout(true);
 //            list = sealDao.selectIsLogout(seal);
 //        }
-        list = chooseSealStatus(seal,status,pageNum,pageSize);
+        list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
     }
@@ -808,16 +809,17 @@ public class SealServiceImpl implements SealService {
     public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
         String  districtId = user.getDistrictId().substring(0,2);
 
+
         Seal seal = new Seal();
         seal.setUseDepartmentCode(useDepartmentCode);
         seal.setUseDepartmentName(useDepartmentName);
         seal.setDistrictId(districtId);
         List<Seal> list = new ArrayList<Seal>();
-
+        PageHelper.startPage(pageNum, pageSize);
 //        if (status.equals("01")) {
 //            seal.setIsRecord(true);
 //            seal.setIsMake(true);
-//            PageHelper.startPage(pageNum, pageSize);
+//
 //            list = sealDao.selectByCodeAndName(seal);
 //        } else if (status.equals("02")) {   //个人化
 //            seal.setIsRecord(true);
@@ -846,7 +848,7 @@ public class SealServiceImpl implements SealService {
 //            seal.setIsLogout(true);
 //            list = sealDao.selectIsLogout(seal);
 //        }
-        list = chooseSealStatus(seal,status,pageNum,pageSize);
+        list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
     }
@@ -946,34 +948,35 @@ public class SealServiceImpl implements SealService {
         return sealType;
     }
 
-    public List<Seal> chooseSealStatus(Seal seal,String status, int pageNum, int pageSize){
+    public List<Seal> chooseSealStatus(Seal seal,String status){
         List<Seal> list = new ArrayList<Seal>();
-        if (status.equals("01")) {
+        if (status.equals("00")) {  //已备案
             seal.setIsRecord(true);
-            seal.setIsMake(true);
-            PageHelper.startPage(pageNum, pageSize);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("02")) {   //个人化
+        } else if (status.equals("01")) {  //已制作
             seal.setIsRecord(true);
             seal.setIsMake(true);
             list = sealDao.selectByCodeAndName(seal);
-        } else if (status.equals("03")) {  //待交付
+        } else if (status.equals("02")) {  //已个人化
             seal.setIsRecord(true);
             seal.setIsMake(true);
-            seal.setIsPersonal(true);
             list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("00")){
+        }else if(status.equals("03")){    //未交付
+            list = sealDao.selectUndelivered(seal);
+        }else if(status.equals("04")){    //已交付
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsLoss(false);
+            seal.setIsLogout(false);
             list = sealDao.selectIsRecord(seal);
-        }else if(status.equals("04")){   //已备案
-            seal.setIsRecord(true);
-            list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("05")){
+        }else if(status.equals("05")){  //已经挂失
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
             list = sealDao.selectIsLoss(seal);
-        }else if (status.equals("06")){
+        }else if (status.equals("06")){   //已注销
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
