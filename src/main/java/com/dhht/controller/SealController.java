@@ -280,6 +280,7 @@ public class SealController {
             String telphone = user.getTelphone();
             String localDistrictId = user.getDistrictId();
             String id = sealDTO.getId();
+            String name = sealDTO.getName();
             String agentPhotoId = sealDTO.getAgentPhotoId();
             String proxyId = sealDTO.getProxyId();
             String certificateType = sealDTO.getCertificateType();
@@ -287,7 +288,7 @@ public class SealController {
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
-            int a = sealService.loss(  user, id,  agentPhotoId,   proxyId , certificateNo, certificateType,
+            int a = sealService.loss(  user, id, name, agentPhotoId,   proxyId , certificateNo, certificateType,
                      localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
@@ -324,8 +325,9 @@ public class SealController {
             String certificateType = sealDTO.getCertificateType();
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
+            String name = sealDTO.getName();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
-            int a = sealService.logout( user, id,  agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId);
+            int a = sealService.logout( user, id,  name,agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("注销失败");

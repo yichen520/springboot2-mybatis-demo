@@ -32,11 +32,11 @@ public interface SealService {
    boolean deliver(User user,String id,String proxyId,String name,String certificateType,String certificateNo,String agentTelphone,boolean isSame);
 
    //印章挂失
-   int loss (User user,String id, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
+   int loss (User user,String id, String name ,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
          String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId);
 
    //印章注销
-   int logout (User user,String id, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId);
+   int logout (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId);
 
    //详情查看
    SealVO selectDetailById(String id);

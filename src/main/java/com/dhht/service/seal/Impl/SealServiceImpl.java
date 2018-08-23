@@ -544,7 +544,7 @@ public class SealServiceImpl implements SealService {
      * 挂失
      */
     @Override
-    public int  loss (User user,String id, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
+    public int  loss (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
             String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId){
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("05");
@@ -567,7 +567,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
         sealAgent.setBusinessType("02");
-        sealAgent.setName(employee.getEmployeeName());
+        sealAgent.setName(name);
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
 
 
@@ -618,7 +618,7 @@ public class SealServiceImpl implements SealService {
      * @param user
      */
     @Override
-    public int  logout (User user,String id, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId) {
+    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("06");
         if (seal1.getIsLogout()){
@@ -638,7 +638,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
         sealAgent.setBusinessType("03");
-        sealAgent.setName(employee.getEmployeeName());
+        sealAgent.setName(name);
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
 
         //缺少营业执照
