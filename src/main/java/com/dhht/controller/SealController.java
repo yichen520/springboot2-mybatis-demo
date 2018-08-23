@@ -289,8 +289,9 @@ public class SealController {
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
             String agentTelphone = sealDTO.getTelphone();
+            Boolean isSame = sealDTO.getIsSame();
             int a = sealService.loss(  user, id, name, agentPhotoId,   proxyId , certificateNo, certificateType,
-                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone);
+                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone,isSame);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("挂失失败");
@@ -327,9 +328,10 @@ public class SealController {
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String agentTelphone = sealDTO.getTelphone();
+            Boolean isSame = sealDTO.getIsSame();
             String name = sealDTO.getName();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
-            int a = sealService.logout( user, id,  name,agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId,agentTelphone);
+            int a = sealService.logout( user, id,  name,agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId,agentTelphone,isSame);
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("注销失败");
