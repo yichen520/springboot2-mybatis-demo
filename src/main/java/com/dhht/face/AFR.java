@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class AFRTest {
+public class AFR {
 	public static final String    APPID  = "BbStYoweJQpot9VeFeaMH4EFe9u1yjTENt2CdNQGNB55";
 	public static final String FD_SDKKEY = "2XDKXW43diw6qba4a4peGWEivrv9JqfbNdRf3BkKmtNN";
 	public static final String FR_SDKKEY = "2XDKXW43diw6qba4a4peGWEr6GBLsYDiQfzpbaAqV3av";

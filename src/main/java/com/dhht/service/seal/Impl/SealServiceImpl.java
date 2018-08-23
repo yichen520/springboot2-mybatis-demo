@@ -1,10 +1,9 @@
 package com.dhht.service.seal.Impl;
 
-import com.dhht.annotation.DeleteTempFile;
 import com.dhht.annotation.Sync;
 import com.dhht.common.ImageGenerate;
 import com.dhht.dao.*;
-import com.dhht.face.AFRTest;
+import com.dhht.face.AFR;
 import com.dhht.model.*;
 import com.dhht.model.pojo.SealVO;
 
@@ -14,13 +13,11 @@ import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.FileStoreService;
-import com.dhht.service.tools.impl.FileLocalStoreServiceImpl;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.micrometer.core.instrument.Meter;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -282,11 +279,11 @@ public class SealServiceImpl implements SealService {
                     fileService.register(idCardPhotoId, "认证合一身份证照片注册 ");
                     fileService.register(fieldPhotoId, "认证合一现场照片注册");
 
-//                    SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(faceCompareRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(faceCompareRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
                     return ResultUtil.isSuccess;
                 } else {
                     return ResultUtil.isError;
@@ -816,38 +813,6 @@ public class SealServiceImpl implements SealService {
         seal.setDistrictId(districtId);
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
-//        if (status.equals("01")) {
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//
-//            list = sealDao.selectByCodeAndName(seal);
-//        } else if (status.equals("02")) {   //个人化
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            list = sealDao.selectByCodeAndName(seal);
-//        } else if (status.equals("03")) {  //待交付
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            seal.setIsPersonal(true);
-//            list = sealDao.selectByCodeAndName(seal);
-//        }else if(status.equals("00")){
-//            list = sealDao.selectIsRecord(seal);
-//        }else if(status.equals("04")){   //已备案
-//            seal.setIsRecord(true);
-//            list = sealDao.selectByCodeAndName(seal);
-//        }else if(status.equals("05")){
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            seal.setIsDeliver(true);
-//            seal.setIsLoss(true);
-//            list = sealDao.selectIsLoss(seal);
-//        }else if (status.equals("06")){
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            seal.setIsDeliver(true);
-//            seal.setIsLogout(true);
-//            list = sealDao.selectIsLogout(seal);
-//        }
         list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
@@ -875,7 +840,7 @@ public class SealServiceImpl implements SealService {
         if(idCardPath==null||fieldPath==null){
             return null;
         }
-        Integer a =(int) AFRTest.compareImage(idCardPath,fieldPath);
+        Integer a =(int) AFR.compareImage(idCardPath,fieldPath);
 
         FaceCompareResult confidence = new FaceCompareResult();
         confidence.setFieldPhotoId(fieldPhotoId);
@@ -952,6 +917,11 @@ public class SealServiceImpl implements SealService {
         List<Seal> list = new ArrayList<Seal>();
         if (status.equals("03")) {  //已备案
             seal.setIsRecord(true);
+            seal.setIsMake(false);
+            seal.setIsPersonal(false);
+            seal.setIsDeliver(false);
+            seal.setIsLogout(false);
+            seal.setIsLoss(false);
             list = sealDao.selectByCodeAndName(seal);
         } else if (status.equals("01")) {  //已制作
             seal.setIsRecord(true);
@@ -960,6 +930,7 @@ public class SealServiceImpl implements SealService {
         } else if (status.equals("02")) {  //已个人化
             seal.setIsRecord(true);
             seal.setIsMake(true);
+            seal.setIsPersonal(true);
             list = sealDao.selectByCodeAndName(seal);
         }else if(status.equals("00")){    //未交付
             list = sealDao.selectUndelivered(seal);
