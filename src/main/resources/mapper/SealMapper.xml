@@ -248,6 +248,12 @@
       <if test="isDeliver !=null and isDeliver !=''">
         AND is_deliver =  #{isDeliver,jdbcType=BIT}
       </if>
+      <if test="isLoss !=null and isLoss !=''">
+        AND is_loss =  #{isLoss,jdbcType=BIT}
+      </if>
+      <if test="isLogout !=null and isLogout !=''">
+        AND is_logout =  #{isLogout,jdbcType=BIT}
+      </if>
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
