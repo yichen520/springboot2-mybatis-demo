@@ -83,7 +83,7 @@ public class RoleController extends JsonObjectBO {
      * 修改角色
      */
     @Log("修改角色")
-    @RequestMapping("update")
+    @RequestMapping("/update")
     public JsonObjectBO updataRole(@RequestBody Role role) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
