@@ -19,7 +19,9 @@ public class SealVO  {
 
     private String proxy;  //授权委托书
 
-    private String moulageId;
+    private String moulageImageId;//印模图像
+
+    private String moulageId;//印模二维数据
 
     private SealOperationRecord sealOperationRecord;
 

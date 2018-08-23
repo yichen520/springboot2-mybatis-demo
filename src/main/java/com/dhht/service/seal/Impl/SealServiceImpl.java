@@ -243,6 +243,7 @@ public class SealServiceImpl implements SealService {
                             break;
                     }
                     map.put("centerImage",centerImage);
+                    //印模图像
                     String localPath = new ImageGenerate().seal(map);
                     File file = new File(localPath);
                     InputStream inputStream = new FileInputStream(file);
@@ -257,13 +258,14 @@ public class SealServiceImpl implements SealService {
                     int sealMaterialInsert = sealDao.insertSealMaterial(sealMaterial);
                     ImageGenerate imageGenerate = new ImageGenerate();
 
+                    //二维数据
                     int[][] imgArr = imageGenerate.moulageData(map);
                     String imagArrLocalPath  = FileUtil.saveArrayFile(imgArr);
                     File file1 = new File(imagArrLocalPath);
                     InputStream inputStream1 = new FileInputStream(file1);
                     byte[] moulageDates = FileUtil.readInputStream(inputStream1);
                     FileInfo fileInfo1 = fileService.save(moulageDates, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType+"二维数据", "txt", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
-                    String moulageId = fileInfo.getId();
+                    String moulageId = fileInfo1.getId();
                     SealMaterial sealMaterial1 = new SealMaterial();
                     sealMaterial1.setId(UUIDUtil.generate());
                     sealMaterial1.setSealCode(sealcode);
@@ -545,7 +547,8 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int  loss (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
-            String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId){
+            String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,Boolean isSame){
+        SealAgent sealAgent;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("05");
         if(seal1.getIsLoss()){
@@ -555,19 +558,26 @@ public class SealServiceImpl implements SealService {
         String sealCode = seal1.getSealCode();
         Employee employee = employeeService.selectByPhone(telphone);
 
-
-        SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
-        sealAgent.setId(saId);
-        sealAgent.setTelphone(telphone);
-        sealAgent.setAgentPhotoId(agentPhotoId);
-        sealAgent.setCertificateNo(certificateNo);
-        sealAgent.setCertificateType(certificateType);
-        sealAgent.setIdCardFrontId(idcardFrontId);
-        sealAgent.setIdCardReverseId(idcardReverseId);
-        sealAgent.setProxyId(proxyId);
-        sealAgent.setBusinessType("02");
-        sealAgent.setName(name);
+        if(!isSame) {
+            sealAgent = new SealAgent();
+            sealAgent.setId(saId);
+            sealAgent.setTelphone(agentTelphone);
+            sealAgent.setAgentPhotoId(agentPhotoId);
+            sealAgent.setCertificateNo(certificateNo);
+            sealAgent.setCertificateType(certificateType);
+            sealAgent.setIdCardFrontId(idcardFrontId);
+            sealAgent.setIdCardReverseId(idcardReverseId);
+            sealAgent.setProxyId(proxyId);
+            sealAgent.setBusinessType("02");
+            sealAgent.setName(name);
+        }else{
+            String agentId = seal1.getAgentId();
+            sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
+            sealAgent.setId(saId);
+            sealAgent.setFaceCompareRecordId("");
+
+        }
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
 
 
@@ -602,7 +612,7 @@ public class SealServiceImpl implements SealService {
         sealDao.insertSealMaterial(sealMaterial);
 
 
-        if(sealAgentResult>0&&updateByPrimaryKey>0&&insertSealOperationRecord>0){
+        if(sealAgentResult>0&&updateByPrimaryKey>0&&insertSealOperationRecord>0&&sealAgentResult>0){
             SyncEntity syncEntity1 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.LOSS);
             SyncEntity syncEntity2 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.LOSS);
             SyncEntity syncEntity3 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.LOSS);
@@ -618,7 +628,8 @@ public class SealServiceImpl implements SealService {
      * @param user
      */
     @Override
-    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId) {
+    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,Boolean isSame) {
+        SealAgent sealAgent;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("06");
         if (seal1.getIsLogout()){
@@ -627,21 +638,28 @@ public class SealServiceImpl implements SealService {
         String sealCode = seal1.getSealCode();
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
-        SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
-        sealAgent.setId(saId);
-        sealAgent.setTelphone(telphone);
-        sealAgent.setAgentPhotoId(agentPhotoId);
-        sealAgent.setCertificateNo(certificateNo);
-        sealAgent.setCertificateType(certificateType);
-        sealAgent.setIdCardFrontId(idcardFrontId);
-        sealAgent.setIdCardReverseId(idcardReverseId);
-        sealAgent.setProxyId(proxyId);
-        sealAgent.setBusinessType("03");
-        sealAgent.setName(name);
-        int sealAgentResult = sealAgentMapper.insert(sealAgent);
+        if(!isSame) {
+            sealAgent = new SealAgent();
+            sealAgent.setId(saId);
+            sealAgent.setTelphone(agentTelphone);
+            sealAgent.setAgentPhotoId(agentPhotoId);
+            sealAgent.setCertificateNo(certificateNo);
+            sealAgent.setCertificateType(certificateType);
+            sealAgent.setIdCardFrontId(idcardFrontId);
+            sealAgent.setIdCardReverseId(idcardReverseId);
+            sealAgent.setProxyId(proxyId);
+            sealAgent.setBusinessType("03");
+            sealAgent.setName(name);
+        }else{
+            String agentId = seal1.getAgentId();
+            sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
+            sealAgent.setId(saId);
+            sealAgent.setFaceCompareRecordId("");
 
-        //缺少营业执照
+        }
+        int sealAgentResult = sealAgentMapper.insert(sealAgent);
+        //营业执照
         SealMaterial sealMaterial = new SealMaterial();
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setType("01");
@@ -665,7 +683,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord =sealDao.insertSealOperationRecord(sealOperationRecord);
 
-        if(sealAgentResult>0&&insertSealOperationRecord>0&&updateByPrimaryKey>0){
+        if(sealAgentResult>0&&insertSealOperationRecord>0&&updateByPrimaryKey>0&&sealAgentResult>0){
             SyncEntity syncEntity2 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.LOGOUT);
             SyncEntity syncEntity3 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.LOGOUT);
             SyncEntity syncEntity4 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.LOGOUT);
@@ -693,7 +711,7 @@ public class SealServiceImpl implements SealService {
         sealVo.setProxy(sealAgent.getProxyId());
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
         SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
-        sealVo.setMoulageId(sealMaterial.getFilePath());
+        sealVo.setMoulageImageId(sealMaterial.getFilePath());
         sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }
