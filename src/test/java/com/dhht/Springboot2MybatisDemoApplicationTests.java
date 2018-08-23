@@ -1,5 +1,6 @@
 package com.dhht;
 
+import com.dhht.util.FileUtil;
 import com.dhht.util.face.demo.AFRTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,10 +13,8 @@ public class Springboot2MybatisDemoApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		String file1 = "D://picture/3.jpg";
-		String file2= "D://picture/4.jpg";
-		AFRTest afrTest = new AFRTest();
-		float f = afrTest.compareImage(file1,file2);
+//		int[][] a = FileUtil.readArrayFile("C://temp/2018/08/22/8db67be8f3124c0d9a80b30b89e4715f.txt");
+//		 System.out.println(a);
 	}
 
 }
