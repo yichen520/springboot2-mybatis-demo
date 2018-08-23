@@ -51,7 +51,7 @@ public class RoleController extends JsonObjectBO {
         try {
             PageInfo<Role> roles = roleService.getRoleList(pageNum, pageSize);
             jsonObject.put("roles", roles);
-            return  JsonObjectBO.success("查询角色成功13333",jsonObject);
+            return  JsonObjectBO.success("查询角色成功",jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
@@ -83,7 +83,7 @@ public class RoleController extends JsonObjectBO {
      * 修改角色
      */
     @Log("修改角色")
-    @RequestMapping("update")
+    @RequestMapping("/update")
     public JsonObjectBO updataRole(@RequestBody Role role) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
