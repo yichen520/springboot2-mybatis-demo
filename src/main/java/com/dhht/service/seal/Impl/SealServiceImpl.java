@@ -243,6 +243,7 @@ public class SealServiceImpl implements SealService {
                             break;
                     }
                     map.put("centerImage",centerImage);
+                    //印模图像
                     String localPath = new ImageGenerate().seal(map);
                     File file = new File(localPath);
                     InputStream inputStream = new FileInputStream(file);
@@ -257,13 +258,14 @@ public class SealServiceImpl implements SealService {
                     int sealMaterialInsert = sealDao.insertSealMaterial(sealMaterial);
                     ImageGenerate imageGenerate = new ImageGenerate();
 
+                    //二维数据
                     int[][] imgArr = imageGenerate.moulageData(map);
                     String imagArrLocalPath  = FileUtil.saveArrayFile(imgArr);
                     File file1 = new File(imagArrLocalPath);
                     InputStream inputStream1 = new FileInputStream(file1);
                     byte[] moulageDates = FileUtil.readInputStream(inputStream1);
                     FileInfo fileInfo1 = fileService.save(moulageDates, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType+"二维数据", "txt", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
-                    String moulageId = fileInfo.getId();
+                    String moulageId = fileInfo1.getId();
                     SealMaterial sealMaterial1 = new SealMaterial();
                     sealMaterial1.setId(UUIDUtil.generate());
                     sealMaterial1.setSealCode(sealcode);
@@ -545,7 +547,7 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int  loss (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
-            String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId){
+            String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone){
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("05");
         if(seal1.getIsLoss()){
@@ -618,7 +620,7 @@ public class SealServiceImpl implements SealService {
      * @param user
      */
     @Override
-    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId) {
+    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("06");
         if (seal1.getIsLogout()){
@@ -693,7 +695,7 @@ public class SealServiceImpl implements SealService {
         sealVo.setProxy(sealAgent.getProxyId());
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
         SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
-        sealVo.setMoulageId(sealMaterial.getFilePath());
+        sealVo.setMoulageImageId(sealMaterial.getFilePath());
         sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }
