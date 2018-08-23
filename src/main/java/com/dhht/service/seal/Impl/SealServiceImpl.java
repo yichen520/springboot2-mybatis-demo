@@ -950,7 +950,7 @@ public class SealServiceImpl implements SealService {
 
     public List<Seal> chooseSealStatus(Seal seal,String status){
         List<Seal> list = new ArrayList<Seal>();
-        if (status.equals("00")) {  //已备案
+        if (status.equals("03")) {  //已备案
             seal.setIsRecord(true);
             list = sealDao.selectByCodeAndName(seal);
         } else if (status.equals("01")) {  //已制作
@@ -961,7 +961,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsRecord(true);
             seal.setIsMake(true);
             list = sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("03")){    //未交付
+        }else if(status.equals("00")){    //未交付
             list = sealDao.selectUndelivered(seal);
         }else if(status.equals("04")){    //已交付
             seal.setIsRecord(true);
