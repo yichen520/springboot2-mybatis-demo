@@ -266,6 +266,48 @@
     </where>
   </select>
 
+  <select id="selectIsMake" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+  SELECT * from seal
+  <where>
+    is_record = 1 AND is_make =1 and is_personal =0 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
+    <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+      And use_department_code LIKE  "%"#{useDepartmentCode}"%"
+    </if>
+    <if test="useDepartmentName !=null and useDepartmentName !=''">
+      AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="districtId !=null and districtId!=''">
+      AND district_id like #{districtId}"%"
+    </if>
+    <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
+      AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+    </if>
+
+  </where>
+  order by make_date desc
+  </select>
+  
+  <select id="selectPersonal" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+    SELECT * from seal
+    <where>
+      is_record = 1 AND is_make =1 and is_personal =1 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
+      <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+        And use_department_code LIKE  "%"#{useDepartmentCode}"%"
+      </if>
+      <if test="useDepartmentName !=null and useDepartmentName !=''">
+        AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="districtId !=null and districtId!=''">
+        AND district_id like #{districtId}"%"
+      </if>
+      <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
+        AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+
+    </where>
+    order by personal_date desc
+  </select>
+
   <select id="selectUndelivered" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT * from seal
     <where>
@@ -284,6 +326,7 @@
       </if>
 
     </where>
+    order by record_date desc
   </select>
   <select id="selectIsRecord" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT * from seal
@@ -303,6 +346,7 @@
       </if>
 
     </where>
+    order by record_date desc
   </select>
 
   <select id="selectIsDeliver" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
@@ -323,6 +367,7 @@
       </if>
 
     </where>
+    order by deliver_date desc
   </select>
 
   <select id="selectIsLoss" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
@@ -357,6 +402,7 @@
       </if>
 
     </where>
+    order by loss_date desc
   </select>
 
   <select id="selectIsLogout" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
@@ -394,6 +440,7 @@
       </if>
 
     </where>
+    order by logout_date desc
   </select>
 
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">

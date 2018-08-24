@@ -541,6 +541,7 @@ public class SealServiceImpl implements SealService {
             sealAgent.setProxyId(proxyId);
             sealAgent.setBusinessType("02");
             sealAgent.setName(name);
+            sealAgent.setFaceCompareRecordId("");
         }else{
             String agentId = seal1.getAgentId();
             sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
@@ -715,39 +716,7 @@ public class SealServiceImpl implements SealService {
         seal.setDistrictId(districtId);
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
-//        if (status.equals("00")) {  //已备案
-//            seal.setIsRecord(true);
-//            list = sealDao.selectByCodeAndName(seal);
-//        } else if (status.equals("01")) {  //已制作
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            list = sealDao.selectByCodeAndName(seal);
-//        } else if (status.equals("02")) {  //已个人化
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            list = sealDao.selectByCodeAndName(seal);
-//        }else if(status.equals("03")){    //未交付
-//            list = sealDao.selectUndelivered(seal);
-//        }else if(status.equals("04")){    //已交付
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            seal.setIsDeliver(true);
-//            seal.setIsLoss(false);
-//            seal.setIsLogout(false);
-//            list = sealDao.selectIsRecord(seal);
-//        }else if(status.equals("05")){  //已经挂失
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            seal.setIsDeliver(true);
-//            seal.setIsLoss(true);
-//            list = sealDao.selectIsLoss(seal);
-//        }else if (status.equals("06")){   //已注销
-//            seal.setIsRecord(true);
-//            seal.setIsMake(true);
-//            seal.setIsDeliver(true);
-//            seal.setIsLogout(true);
-//            list = sealDao.selectIsLogout(seal);
-//        }
+
         list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
@@ -886,14 +855,9 @@ public class SealServiceImpl implements SealService {
         if (status.equals("03")) {  //已备案
             list = sealDao.selectIsRecord(seal);
         } else if (status.equals("01")) {  //已制作
-            seal.setIsRecord(true);
-            seal.setIsMake(true);
-            list = sealDao.selectByCodeAndName(seal);
+            list = sealDao.selectIsMake(seal);
         } else if (status.equals("02")) {  //已个人化
-            seal.setIsRecord(true);
-            seal.setIsMake(true);
-            seal.setIsPersonal(true);
-            list = sealDao.selectByCodeAndName(seal);
+            list = sealDao.selectPersonal(seal);
         }else if(status.equals("00")){    //未交付
             list = sealDao.selectUndelivered(seal);
         }else if(status.equals("04")){    //已交付

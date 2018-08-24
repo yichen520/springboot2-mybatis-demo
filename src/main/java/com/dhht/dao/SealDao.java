@@ -30,6 +30,10 @@ public interface SealDao {
 
     List<Seal> selectUndelivered(Seal seal);
 
+    List<Seal> selectPersonal(Seal seal);
+
+    List<Seal> selectIsMake(Seal seal);
+
     List<Seal> selectIsRecord(Seal seal);
 
     List<Seal> selectIsDeliver(Seal seal);
