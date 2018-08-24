@@ -78,7 +78,7 @@ loginError:
 pagehelper:
     helperDialect: mysql
     reasonable: true
-    supportMethodsArguments: true
+    supportMethodsArguments: false
     params: count=countSql
     returnPageInfo: check
 #
