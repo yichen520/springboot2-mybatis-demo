@@ -352,7 +352,7 @@
   <select id="selectIsDeliver" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT * from seal
     <where>
-      is_record = 1 and is_deliver = 1 AND is_logout = 0 AND is_loss = 0
+      is_record = 1 and is_deliver = 1
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
