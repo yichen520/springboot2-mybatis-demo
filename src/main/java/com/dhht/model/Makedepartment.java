@@ -31,7 +31,7 @@ public class Makedepartment {
     private String legalEnglishsurname;
     @EntityComment("制作单位法人英文名字全称")
     private String legalEnglishname;
-    @EntityComment("法人手机号码")
+    @EntityComment("制作单位法人手机号码")
     private String legalTelphone;
     @EntityComment("行政区域划分")
     private String departmentAddress;

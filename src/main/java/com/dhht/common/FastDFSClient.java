@@ -70,7 +70,6 @@ public class FastDFSClient {
     public static byte[] downFile(String groupName, String remoteFileName) {
         try {
             StorageClient storageClient = getTrackerClient();
-            logger.error("storageClient："+storageClient.toString());
             return storageClient.download_file(groupName, remoteFileName);
         } catch (IOException e) {
             logger.error("IO Exception: Get FileInfo from Fast DFS failed", e);

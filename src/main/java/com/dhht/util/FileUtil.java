@@ -58,6 +58,35 @@ public class FileUtil {
         return bos.toByteArray();
     }
 
+    public static int[][] readArrayFile(String path){
+        try {
+            int[][] arrayData = new int[500][500];
+            File file = new File(path);
+            FileReader fileReader = new FileReader(file);
+            BufferedReader in = new BufferedReader(fileReader);
+            String line;
+            int row = 0;
+            while (true){
+                line = in.readLine();
+                if(line == null||line==""){
+                    break;
+                }
+                String str[] = line.split("\n");
+                String[] temp = str.toString().split(" ");
+                for (int i = 0;i<temp.length;i++){
+                    if(temp[i]!=" ") {
+                        arrayData[row][i] = Integer.parseInt(temp[i]);
+                    }
+                }
+                row++;
+            }
+            return arrayData;
+        }catch (Exception e){
+           System.out.println(e.toString());
+           return null;
+        }
+    }
+
     public static String generatePathByDate(){
         String date =new SimpleDateFormat("yyyy/MM/dd").format(new Date());
         String path = "C:/temp/" + date+"/";

@@ -8,6 +8,7 @@ import com.dhht.service.tools.HistoryService;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.CompareFieldsUtil;
 import com.dhht.util.DateUtil;
+import com.dhht.util.DictionaryUtil;
 import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,6 +131,7 @@ public class HistoryServiceImpl implements HistoryService {
      * @return
      */
     private List<OperatorRecordDetail> setSpecialValue(List<OperatorRecordDetail> operatorRecordDetails,int type){
+
         List<OperatorRecordDetail> result = new ArrayList<OperatorRecordDetail>();
         for (OperatorRecordDetail operatorRecordDetail:operatorRecordDetails){
             if(operatorRecordDetail.getPropertyName().equals(NULL_VALUE)){
@@ -140,9 +142,13 @@ public class HistoryServiceImpl implements HistoryService {
                 String newDistrict = districtService.selectByDistrictId(operatorRecordDetail.getNewValue());
                 operatorRecordDetail.setNewValue(newDistrict);
                 result.add(operatorRecordDetail);
-            }else {
+            }else if(operatorRecordDetail.getNewValue().contains("CST")||operatorRecordDetail.getOldValue().contains("CST")){
                 operatorRecordDetail.setNewValue(setDateString(operatorRecordDetail.getNewValue()));
                 operatorRecordDetail.setOldValue(setDateString(operatorRecordDetail.getOldValue()));
+                result.add(operatorRecordDetail);
+            }else {
+                operatorRecordDetail.setNewValue(DictionaryUtil.getCodeName(operatorRecordDetail.getPropertyName(),operatorRecordDetail.getNewValue()));
+                operatorRecordDetail.setOldValue(DictionaryUtil.getCodeName(operatorRecordDetail.getPropertyName(),operatorRecordDetail.getOldValue()));
                 result.add(operatorRecordDetail);
             }
         }
@@ -159,14 +165,11 @@ public class HistoryServiceImpl implements HistoryService {
         SimpleDateFormat endTime = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
-           if(value.contains("CST")){
                Date date = startTime.parse(value);
                String newDate = endTime.format(date);
                return newDate;
-           }
         }catch (Exception e){
             return value;
         }
-        return value;
-        }
+    }
 }
