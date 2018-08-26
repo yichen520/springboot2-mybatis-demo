@@ -19,8 +19,8 @@ public class ImageGenerate {
     private  final int WIDTH = 400;//图片宽度
     private  final int HEIGHT = 400;//图片高度
     private final String image= "★";
-    @Value("${sealtemplate.filePath}")
-    private String filePath ;
+//    @Value("${file.local.root}")
+    private String filePath ="C:/temp/seal";
 
     //中心图案五角星大小
     private int centerImageFont = 120;
@@ -42,7 +42,7 @@ public class ImageGenerate {
         String code = (String)map.get("sealCode");
         String centerImage = (String)map.get("centerImage");
         try {
-            String sealPath = filePath+"//"+message+"//"+message+".png";
+            String sealPath = filePath+"/"+message+"/"+message+".png";
             BufferedImage image =  startGraphics2D(message,centerName,code,centerImage);
             File dest = new File(sealPath);
             //判断文件父目录是否存在
@@ -382,7 +382,7 @@ public class ImageGenerate {
         int [][] data1 = new int[HEIGHT][WIDTH];
         BufferedImage image = startGraphicsFront2D(map);
         //文件命名
-        String filePath1 = filePath+"\\"+message+"\\"+message+"1.png";
+        String filePath1 = filePath+"/"+message+"/"+message+"1.png";
         File dest = new File(filePath1);
         //判断文件父目录是否存在
         if (!dest.getParentFile().exists()) {
@@ -413,7 +413,7 @@ public class ImageGenerate {
         //编码图层
         int [][] data2 = new int[HEIGHT][WIDTH];
         BufferedImage codeimage = startGraphicsCode2D( code, message);
-        String filePath2 = filePath+"\\"+message+"\\"+message+"2.png";
+        String filePath2 = filePath+"/"+message+"/"+message+"2.png";
         try {
             ImageIO.write(codeimage, "png", new File(filePath2));
         } catch (Exception ex) {
@@ -438,7 +438,7 @@ public class ImageGenerate {
 
         int [][] data3 = new int[HEIGHT][WIDTH];
         BufferedImage trueimage = startGraphicstrue2D();
-        String filePath3 = filePath+"\\"+message+"\\"+message+"3.png";
+        String filePath3 = filePath+"/"+message+"/"+message+"3.png";
         try {
             ImageIO.write(trueimage, "png", new File(filePath3));
         } catch (Exception ex) {

@@ -1,10 +1,8 @@
 package com.dhht.common;
 
 import com.dhht.model.FastDFSFile;
-import org.csource.fastdfs.ClientGlobal;
-import org.csource.fastdfs.TrackerClient;
-import org.springframework.core.io.ClassPathResource;
 import org.csource.common.NameValuePair;
+import org.springframework.core.io.ClassPathResource;
 import org.csource.fastdfs.*;
 import org.slf4j.LoggerFactory;
 
