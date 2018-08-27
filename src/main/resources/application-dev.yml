@@ -2,7 +2,6 @@ server:
   port: 8083
 
 #超级管理员账号密码
-
 jiaohu:
   name: 数据交互
   canAddItem: false
@@ -14,6 +13,7 @@ jiaohu:
   FTP_USER: test_ftp
   FTP_PWD: jKa4F9zS1
   FTP_PATH: /
+
 
 spring:
     boot:
@@ -82,13 +82,14 @@ loginError:
 
 
 #pagehelper
-pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
-    returnPageInfo: check
-#
+#pagehelper:
+#    helperDialect: mysql
+#    reasonable: true
+#    supportMethodsArguments: true
+#    params: count=countSql
+#    returnPageInfo: check
+
+
 #thymeleaf:
 #       cache: false
 logging:
@@ -130,7 +131,7 @@ file:
  local:
    root: C:/temp/
 sealtemplate:
-  filePath: C:/temp/seal
+ filePath: C:/temp/seal
 
 #设置redis中token过期时间
 expireTime: 3600
@@ -141,4 +142,4 @@ face:
   similarity: 45
 seal:
    template:
-        filepath: /Library/东华宏泰/temp
+        filepath: C:/temp
