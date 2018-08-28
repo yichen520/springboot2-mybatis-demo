@@ -242,10 +242,11 @@ public class StringUtil {
     public static String getString(String[] str){
         StringBuffer stringBuffer = new StringBuffer();
         for(int i = 0;i<str.length;i++){
-            stringBuffer.append(str[i]+";");
+            stringBuffer.append(str[i]+",");
         }
         return stringBuffer.toString();
     }
+
 
     /**
      * 将字符串转成字符串数组
@@ -254,6 +255,10 @@ public class StringUtil {
      */
     public static String[] toStringArray (String str){
         return str.split(",");
+    }
+
+    public static String[] toStringArray1 (String str){
+        return str.split(";");
     }
 
     /**
