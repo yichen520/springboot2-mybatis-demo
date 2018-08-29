@@ -18,6 +18,7 @@ import javax.xml.ws.http.HTTPException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 短信发送服务
@@ -62,6 +63,33 @@ public class SmsSendServiceImpl implements SmsSendService, InitializingBean {
         }
         return false;
     }
+
+//    /**
+//     * 通过模板发送短信给多个手机号<br />
+//     * 仅能发送至国内手机号
+//     * @param phoneNumbers
+//     * @param templateId
+//     * @param params
+//     * @return
+//     */
+//    @Override
+//    public boolean sendMoreMsgByTemplate(List<String> phoneNumbers, int templateId, ArrayList<String> params) {
+//        try {
+//            for(String phoneNumber:phoneNumbers) {
+//                SmsSingleSenderResult result = sender.sendWithParam(nationCode, phoneNumber, templateId, params, "", "", "");
+//                }
+//            }
+//        } catch (HTTPException e) {
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
     /**
      * 初始化短信发送接口

@@ -46,7 +46,11 @@ public interface SealService {
    // 人证合一
    FaceCompareResult faceCompare(String idCardId, String fieldId);
 
-   public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
+   PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
+
+   //图片下载
+
+
 
 }
 

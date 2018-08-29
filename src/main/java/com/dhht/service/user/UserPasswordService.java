@@ -18,4 +18,7 @@ public interface UserPasswordService {
     boolean resetPwd(String username,String checkCode,String password);
 
     boolean appResetPwd(String id,String passWord);
+
+    boolean changePwd(String username,String oldPassword,String newPassword);
+
 }

@@ -211,6 +211,12 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         }
     }
 
+    @Override
+    public boolean changePwd(String username,String oldPassword, String newPassword) {
+        User user = userDao.findByUserName(username);
+//        if(user.getPassword()!=MD5Util)
+            return true;
+    }
 
 
 }
