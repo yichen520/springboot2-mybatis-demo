@@ -21,6 +21,8 @@ public class SealVO  {
 
     private String moulageImageId;//印模图像
 
+    private String micromoulageImageId;//印模图像
+
     private String moulageId;//印模二维数据
 
     private SealOperationRecord sealOperationRecord;

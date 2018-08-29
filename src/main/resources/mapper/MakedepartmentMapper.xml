@@ -100,8 +100,26 @@
     <result column="version" property="version" jdbcType="NUMERIC"/>
     <result column="flag" property="flag" jdbcType="CHAR"/>
   </resultMap>
+
+  <resultMap id="SimpleMap" type="com.dhht.model.MakeDepartmentSimple">
+    <id column="id" property="id" jdbcType="VARCHAR"/>
+    <result column="department_code" property="departmentCode" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="department_type" property="departmentType" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="department_address" property="departmentAddress"/>
+    <result column="department_address_detail" property="departmentAddressDetail" jdbcType="VARCHAR" />
+    <result column="legal_telphone" property="telphone" jdbcType="VARCHAR" />
+    <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
+    <result column="department_status" property="departmentStatus" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="NUMERIC"/>
+    <result column="flag" property="flag" jdbcType="CHAR"/>
+  </resultMap>
   <sql id="Simple_Column_list">
-     id,department_code,  department_name,department_type, legal_name,department_address_detail, telphone, postal_code,department_status,version,flag
+     id,department_code,  department_name,department_type, legal_name,department_address_detail,telphone,  postal_code,department_status,version,flag
+  </sql>
+  <sql id="Simple_Column_list1">
+     id,department_code,  department_name,department_type, legal_name,department_address_detail,legal_telphone , postal_code,department_status,version,flag
   </sql>
   <sql id="Base_Column_List" >
     id,department_code,  department_name, department_nation_name, department_english_name,
@@ -180,11 +198,9 @@
       )
   </insert>
 
-
-
-  <select id="selectInfo" resultMap="SimpleResultMap" parameterType="java.lang.String">
+  <select id="selectInfo" resultMap="SimpleMap" parameterType="java.lang.String">
     select
-    <include refid="Simple_Column_list" />
+    <include refid="Simple_Column_list1" />
     from make_department as a RIGHT JOIN(
     select flag as fa,MAX(version) as ver from make_department GROUP BY flag
     )as b on a.flag = b.fa and  a.version=b.ver  where  department_address like '${districtId}%' and department_status = #{departmentStatus,jdbcType=CHAR} and department_name LIKE '%${name}%'
