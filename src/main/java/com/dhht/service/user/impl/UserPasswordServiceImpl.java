@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smutil.SM3Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -211,11 +212,29 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         }
     }
 
+    /**
+     * 修改密码
+     * @param username
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
     @Override
-    public boolean changePwd(String username,String oldPassword, String newPassword) {
+    public int changePwd(String username,String oldPassword, String newPassword) {
         User user = userDao.findByUserName(username);
-//        if(user.getPassword()!=MD5Util)
-            return true;
+        if(SM3Util.verify(oldPassword,user.getPassword())){
+            user.setPassword(SM3Util.doSM3(newPassword));
+            user.setChangedPwd(true);
+            int updatePwd = userDao.update(user);
+            if(updatePwd<0){
+                return ResultUtil.isFail;
+            }else{
+                return ResultUtil.isSuccess;
+            }
+        }else{
+            return ResultUtil.isNoTrue;
+        }
+
     }
 
 
