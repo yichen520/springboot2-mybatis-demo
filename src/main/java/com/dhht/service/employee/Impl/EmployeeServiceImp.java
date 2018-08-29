@@ -2,8 +2,6 @@ package com.dhht.service.employee.Impl;
 
 import com.dhht.annotation.Sync;
 import com.dhht.dao.EmployeeDao;
-import com.dhht.dao.OperatorRecordDetailMapper;
-import com.dhht.dao.OperatorRecordMapper;
 import com.dhht.model.*;
 
 import com.dhht.service.employee.EmployeeService;

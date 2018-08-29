@@ -78,6 +78,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public PageInfo<Role> getRoleList(int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
+
         PageInfo result = new PageInfo(getRoles());
         return result;
     }
