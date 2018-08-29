@@ -745,7 +745,6 @@ public class SealServiceImpl implements SealService {
         seal.setDistrictId(districtId);
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
-
         list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;

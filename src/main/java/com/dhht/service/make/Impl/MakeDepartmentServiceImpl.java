@@ -9,6 +9,7 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
 import com.dhht.service.employee.EmployeeService;
 
+import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
@@ -48,6 +49,13 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private FileService fileService;
+
+    private final String IDCARD_FRONT_FILE = "制作单位法人身份证正面照片";
+    private final String IDCARD_REVERSE_FILE = "制作单位法人身份证反面照片";
+    private final String SPECIAL_LICENSE_FILE = "制作单位特种行业许可证扫面件";
+    private final String BUSINESS_LICENSE_FILE = "制作单位营业执照扫面件";
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 
     /**
@@ -72,7 +80,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public Makedepartment selectDetailById(String id) {
         Makedepartment makedepartment = makedepartmentMapper.selectDetailById(id);
-        return setFileUrlByType(makedepartment,2);
+        return makedepartment;
     }
 
     /**
@@ -91,9 +99,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersion(1);
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
         boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
-        int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
+        int m = makedepartmentMapper.insert(makedepartment);
+        boolean f = registerFile(makedepartment);
         int u = userService.insert(makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-        if(m==1&&u==ResultUtil.isSend&&o){
+        if(f&&u==ResultUtil.isSend&&o&&m>0){
             SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
         }else if(u==ResultUtil.isHave) {
@@ -133,9 +142,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             String ignore[] = new String[]{"id", "departmentStatus", "deleteStatus", "version", "flag", "versionTime", "registerTime"};
             boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.UPDATE,operateUUid);
             boolean od = historyService.insertUpdateRecord(makedepartment,oldDate,operateUUid,ignore);
-            int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
+            boolean f = registerFile(makedepartment);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-            if (m == 1 && u == ResultUtil.isSuccess&&o&&od) {
+            if (f && u == ResultUtil.isSuccess&&o&&od) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -340,42 +349,21 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return examineRecordDetailMapper.selectExamineDetailByID(id);
     }
 
-
     /**
-     * 设置url字段
+     * 文件注册
      * @param makedepartment
-     * @return
      */
-    public Makedepartment setFileUrlByType(Makedepartment makedepartment,int type){
-        String businessLicenseUrl = makedepartment.getBusinessLicenseUrl();
-        String specialLicenseUrl = makedepartment.getSpecialLicenseUrl();
-        String legalDocumentUrl = makedepartment.getLegalDocumentUrl();
-        switch (type) {
-            case 1:
-                if (businessLicenseUrl != null) {
-                    makedepartment.setBusinessLicenseUrl(StringUtil.getRelativePath(businessLicenseUrl));
-                }
-                if (specialLicenseUrl != null) {
-                    makedepartment.setSpecialLicenseUrl(StringUtil.getRelativePath(specialLicenseUrl));
-                }
-                if (legalDocumentUrl != null) {
-                    makedepartment.setLegalDocumentUrl(StringUtil.getRelativePath(legalDocumentUrl));
-                }
-            case 2:
-                if (businessLicenseUrl != null) {
-                    makedepartment.setBusinessLicenseUrl(StringUtil.getAbsolutePath(businessLicenseUrl));
-                }
-                if (specialLicenseUrl != null) {
-                    makedepartment.setSpecialLicenseUrl(StringUtil.getAbsolutePath(specialLicenseUrl));
-                }
-                if (legalDocumentUrl != null) {
-                    makedepartment.setLegalDocumentUrl(StringUtil.getAbsolutePath(legalDocumentUrl));
-                }
-             default:
-                 break;
+    public boolean registerFile(Makedepartment makedepartment){
+        boolean f1 =fileService.register(makedepartment.getIdCardFrontId(),IDCARD_FRONT_FILE);
+        boolean f2 =fileService.register(makedepartment.getIdCardReverseId(),IDCARD_REVERSE_FILE);
+        boolean f3 = fileService.register(makedepartment.getSpecialLicenseUrl(),SPECIAL_LICENSE_FILE);
+        boolean f4 = fileService.register(makedepartment.getBusinessLicenseUrl(),BUSINESS_LICENSE_FILE);
+        if(f1&&f2&&f3&&f4){
+            return true;
         }
-        return makedepartment;
+        return false;
     }
+
 
 
     /**
