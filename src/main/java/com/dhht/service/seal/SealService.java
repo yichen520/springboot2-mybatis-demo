@@ -2,6 +2,7 @@ package com.dhht.service.seal;
 
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
+import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealVO;
 import com.github.pagehelper.PageInfo;
 
@@ -49,7 +50,7 @@ public interface SealService {
    PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
    //图片下载
-
+   FileInfoVO download(String id);
 
 
 }

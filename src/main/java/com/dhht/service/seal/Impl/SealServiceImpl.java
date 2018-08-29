@@ -5,6 +5,7 @@ import com.dhht.common.ImageGenerate;
 import com.dhht.dao.*;
 import com.dhht.face.AFR;
 import com.dhht.model.*;
+import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealVO;
 
 import com.dhht.service.employee.EmployeeService;
@@ -781,6 +782,37 @@ public class SealServiceImpl implements SealService {
         list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
+    }
+
+    /**
+     *图片下载
+     * @param id
+     * @return
+     */
+    @Override
+    public FileInfoVO download(String id) {
+        try {
+
+            Seal seal = sealDao.selectByPrimaryKey(id);
+            String sealCode = seal.getSealCode();
+            SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode, "04");
+            String moulageImageId = sealMaterial.getFilePath();
+            FileInfo fileInfo = fileService.readFile(moulageImageId);
+            String path = fileInfo.getFilePath();
+            URL url = new URL(path);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3 * 1000);
+            // conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            InputStream inputStream = conn.getInputStream();
+            byte[] fileDate = FileUtil.readInputStream(inputStream);
+            FileInfoVO fileInfoVO = new FileInfoVO(fileInfo);
+            fileInfoVO.setFileData(fileDate);
+            return fileInfoVO;
+        }catch (IOException ioe) {
+            return null;
+        } catch (Exception e){
+            return null;
+        }
     }
 
     /**
