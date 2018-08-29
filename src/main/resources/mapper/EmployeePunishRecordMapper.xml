@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dhht.dao.EmployeePunishRecordMapper" >
-  <resultMap id="BaseResultMap" type="com.dhht.model.EmployeePunishRecord" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.EmployeePunishRecofindPunishrd" >
     <id column="id" property="id" jdbcType="CHAR" />
     <result column="make_department_code" property="makeDepartmentCode" jdbcType="CHAR" />
     <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />

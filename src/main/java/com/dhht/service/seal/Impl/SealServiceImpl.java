@@ -18,6 +18,7 @@ import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -247,19 +248,45 @@ public class SealServiceImpl implements SealService {
                     byte[] imageData = FileUtil.readInputStream(inputStream);
                     FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "png", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageImageId = fileInfo.getId();
+                    //增加微缩图
+                    String fileName = file.getAbsolutePath();
+                    String caselsh = fileName.substring(0,fileName.lastIndexOf("."));//前缀
+                    String suffix = fileName.substring(fileName.lastIndexOf(".")+1);//后缀
+
+                    String path = caselsh+"_micro."+suffix;
+                    Thumbnails.of(localPath).scale(0.3f).toFile(path);
+                    File microfile = new File(path);
+                    InputStream inputStream1 = new FileInputStream(microfile);
+                    byte[] microimageData = FileUtil.readInputStream(inputStream1);
+                    FileInfo microfileInfo = fileService.save(microimageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "png", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
+                    String micromoulageImageId = microfileInfo.getId();
+//                    Thumbnails.of(filePathName).scale(1f).outputQuality(scale).outputFormat("jpg")
+
+
+
                     SealMaterial sealMaterial = new SealMaterial();
                     sealMaterial.setId(UUIDUtil.generate());
                     sealMaterial.setSealCode(sealcode);
                     sealMaterial.setType("04");
                     sealMaterial.setFilePath(moulageImageId);
                     int sealMaterialInsert = sealDao.insertSealMaterial(sealMaterial);
+
+                    SealMaterial microsealMaterial = new SealMaterial();
+                    microsealMaterial.setId(UUIDUtil.generate());
+                    microsealMaterial.setSealCode(sealcode);
+                    microsealMaterial.setType("06");
+                    microsealMaterial.setFilePath(micromoulageImageId);
+                   sealDao.insertSealMaterial(microsealMaterial);
+
+
+
                     ImageGenerate imageGenerate = new ImageGenerate();
 
                     //二维数据
                     int[][] imgArr = imageGenerate.moulageData(map);
                     String imagArrLocalPath  = FileUtil.saveArrayFile(imgArr);
                     File file1 = new File(imagArrLocalPath);
-                    InputStream inputStream1 = new FileInputStream(file1);
+                   // InputStream inputStream1 = new FileInputStream(file1);
                     byte[] moulageDates = FileUtil.readInputStream(inputStream1);
                     FileInfo fileInfo1 = fileService.save(moulageDates, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType+"二维数据", "txt", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageId = fileInfo1.getId();
@@ -682,7 +709,9 @@ public class SealServiceImpl implements SealService {
         sealVo.setProxy(sealAgent.getProxyId());
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
         SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
+        SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode,"06");
         sealVo.setMoulageImageId(sealMaterial.getFilePath());
+        sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
         sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }
@@ -716,7 +745,6 @@ public class SealServiceImpl implements SealService {
         seal.setDistrictId(districtId);
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
-
         list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;

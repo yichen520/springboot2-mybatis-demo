@@ -41,6 +41,8 @@ public class Makedepartment {
     private String telphone;
     @EntityComment("制作单位邮政编码")
     private String postalCode;
+    private String idCardFrontId;
+    private String idCardReverseId;
     private String businessLicenseUrl;
     private String specialLicenseUrl;
     private String legalDocumentUrl;
