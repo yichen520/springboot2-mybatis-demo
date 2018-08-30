@@ -452,7 +452,9 @@ public class SealController {
     public ResponseEntity<byte[]> download(@RequestParam("id") String id) {
         FileInfoVO fileInfoVO = sealService.download(id);
         try {
+            Pattern pattern = Pattern.compile("[^\u4E00-\u9FA5]");
 
+            Matcher matcher = pattern.matcher(fileInfoVO.getFileName());
             //请求头
             HttpHeaders headers = new HttpHeaders();
 
@@ -460,7 +462,7 @@ public class SealController {
 //            String fileName = new String((fileInfoVO.getFileName()).getBytes("UTF-8"),"iso-8859-1");
 
             //通知浏览器以attachment（下载方式）打开
-            headers.setContentDispositionFormData("attachment", fileInfoVO.getFileName()+fileInfoVO.getFileExt());
+            headers.setContentDispositionFormData("attachment", matcher+"."+fileInfoVO.getFileExt());
 
             //application/octet-stream二进制流数据（最常见的文件下载）。
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
