@@ -447,7 +447,7 @@ public class SealController {
      */
     @Log("下载文件")
     @RequestMapping(value="/download",produces="application/json;charset=UTF-8")
-    public byte[] download(@RequestParam("id") String id) {
+    public ResponseEntity<byte[]> download(@RequestParam("id") String id) {
         FileInfoVO fileInfoVO = sealService.download(id);
         try {
             //请求头
@@ -461,7 +461,7 @@ public class SealController {
 
             //application/octet-stream二进制流数据（最常见的文件下载）。
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-           return fileInfoVO.getFileData();
+            return new ResponseEntity<byte[]>(fileInfoVO.getFileData(), headers, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
