@@ -712,8 +712,7 @@ public class SealServiceImpl implements SealService {
 //        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode,"06");
         if(microsealMaterial==null){
-            SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
-            sealVo.setMoulageImageId(sealMaterial.getFilePath());
+            sealVo.setMicromoulageImageId("");
         }else {
             sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
         }
@@ -804,7 +803,8 @@ public class SealServiceImpl implements SealService {
             String moulageImageId = sealMaterial.getFilePath();
             FileInfo fileInfo = fileService.readFile(moulageImageId);
             String path = fileInfo.getFilePath();
-            URL url = new URL(path);
+            String Url = fastDFSStoreServiceImpl.getFullPath(path);
+            URL url = new URL(Url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(3 * 1000);
             // conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
