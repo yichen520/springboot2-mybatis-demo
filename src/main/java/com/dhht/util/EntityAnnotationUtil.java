@@ -1,6 +1,7 @@
 package com.dhht.util;
 
 import com.dhht.annotation.EntityComment;
+import com.dhht.model.EntityCommentModel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -17,14 +18,15 @@ public class EntityAnnotationUtil {
      * @param entityClass
      * @return
      */
-    public static List<String> getAnnotationValue(Class<?> entityClass){
-        List<String> result = new ArrayList<>();
+    public static List<EntityCommentModel> getAnnotationValue(Class<?> entityClass){
+        List<EntityCommentModel> result = new ArrayList<>();
         Field[] fields = entityClass.getDeclaredFields();
         for(Field field:fields){
             boolean fieldHasAnno = field.isAnnotationPresent(EntityComment.class);
             if(fieldHasAnno){
                 EntityComment entityComment = field.getAnnotation(EntityComment.class);
-                result.add(entityComment.value());
+                EntityCommentModel entityCommentModel = new EntityCommentModel(entityComment.value(),entityComment.type());
+                result.add(entityCommentModel);
             }
         }
         return result;
@@ -36,17 +38,18 @@ public class EntityAnnotationUtil {
      * @param fieldName
      * @return
      */
-    public static String getAnnotationValue(Class<?> entityClass,String fieldName){
-        String result = "";
+    public static EntityCommentModel getAnnotationValue(Class<?> entityClass,String fieldName){
+        EntityCommentModel entityCommentModel = new EntityCommentModel();
         Field[] fields = entityClass.getDeclaredFields();
         for(Field field : fields){
             boolean fieldHasAnno = field.isAnnotationPresent(EntityComment.class);
             boolean isField = field.getName().equals(fieldName);
             if(fieldHasAnno&&isField){
                 EntityComment entityComment = field.getAnnotation(EntityComment.class);
-                result = entityComment.value();
+                entityCommentModel.setValue(entityComment.value());
+                entityCommentModel.setType(entityComment.type());
             }
         }
-        return result;
+        return entityCommentModel;
     }
 }

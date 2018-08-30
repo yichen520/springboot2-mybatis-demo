@@ -8,4 +8,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface EntityComment {
     String value() default "";
+    int type() default 0;
 }

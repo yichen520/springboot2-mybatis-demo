@@ -142,9 +142,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             String ignore[] = new String[]{"id", "departmentStatus", "deleteStatus", "version", "flag", "versionTime", "registerTime"};
             boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.UPDATE,operateUUid);
             boolean od = historyService.insertUpdateRecord(makedepartment,oldDate,operateUUid,ignore);
+            int m = makedepartmentMapper.insert(makedepartment);
             boolean f = registerFile(makedepartment);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-            if (f && u == ResultUtil.isSuccess&&o&&od) {
+            if (f && u == ResultUtil.isSuccess&&o&&od&&m>0) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {

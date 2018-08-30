@@ -86,6 +86,7 @@ public class HistoryServiceImpl implements HistoryService {
                 operatorRecordDetail.setNewValue(" ");
             }
             operatorRecordDetail.setPropertyName(compareResult.getPropertyName());
+            operatorRecordDetail.setPropertyType(compareResult.getPropertyType());
             int o = operatorRecordDetailMapper.insert(operatorRecordDetail);
             if(o<0){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -134,7 +135,7 @@ public class HistoryServiceImpl implements HistoryService {
 
         List<OperatorRecordDetail> result = new ArrayList<OperatorRecordDetail>();
         for (OperatorRecordDetail operatorRecordDetail:operatorRecordDetails){
-            if(operatorRecordDetail.getPropertyName().equals(NULL_VALUE)){
+            if(NULL_VALUE.equals(operatorRecordDetail.getPropertyName())){
 
             }else if (operatorRecordDetail.getPropertyName().equals(DISTRICT_ID)){
                 String oldDistrict = districtService.selectByDistrictId(operatorRecordDetail.getOldValue());
