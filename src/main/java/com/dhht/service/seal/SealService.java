@@ -52,6 +52,9 @@ public interface SealService {
    //图片下载
    FileInfoVO download(String id);
 
+   //是否是法人
+   boolean isLegalPerson(String idcard,String useDepartmentCode);
+
 
 }
 

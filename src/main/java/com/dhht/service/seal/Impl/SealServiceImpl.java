@@ -709,10 +709,15 @@ public class SealServiceImpl implements SealService {
         sealVo.setReverseIdCardScanner(sealAgent.getIdCardReverseId());
         sealVo.setProxy(sealAgent.getProxyId());
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
-        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
+//        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode,"06");
-        sealVo.setMoulageImageId(sealMaterial.getFilePath());
-        sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
+        if(microsealMaterial==null){
+            SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
+            sealVo.setMoulageImageId(sealMaterial.getFilePath());
+        }else {
+            sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
+        }
+
         sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }
@@ -812,6 +817,22 @@ public class SealServiceImpl implements SealService {
             return null;
         } catch (Exception e){
             return null;
+        }
+    }
+
+    /**
+     * 是否是法人
+     * @param idcard
+     * @param useDepartmentCode
+     * @return
+     */
+    @Override
+    public boolean isLegalPerson(String idcard, String useDepartmentCode) {
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);
+        if(idcard.equals(useDepartment.getLegalId())){
+            return true;
+        }else{
+            return false;
         }
     }
 

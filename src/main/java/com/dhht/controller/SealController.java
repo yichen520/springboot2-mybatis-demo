@@ -467,6 +467,27 @@ public class SealController {
         }
     }
 
+    @Log("是否是法人")
+    @RequestMapping(value = "/isLegalPerson", method = RequestMethod.POST)
+    public JsonObjectBO isLegalPerson(@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String idcard = (String) map.get("idcard");
+        String useDepartmentCode = (String) map.get("useDepartmentCode");
+        try {
+            Boolean isLegalPerson = sealService.isLegalPerson(idcard,useDepartmentCode);
+            if (isLegalPerson) {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("是法人");
+            } else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("不是法人");
+            }
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("请求失败");
+        }
+    }
 
 
 }
