@@ -29,6 +29,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -456,6 +457,7 @@ public class SealController {
 
             Matcher matcher = pattern.matcher(fileInfoVO.getFileName());
             String fileName = matcher.replaceAll("");
+            fileName = URLEncoder.encode(fileName,"utf-8");
             //请求头
             HttpHeaders headers = new HttpHeaders();
 
