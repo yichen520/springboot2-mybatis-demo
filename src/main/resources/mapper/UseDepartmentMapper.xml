@@ -34,8 +34,10 @@
     <result column="registration_department" property="registrationDepartment" />
     <result column="management_range" property="managementRange" />
     <result column="registered_capital" property="registeredCapital" />
-    <result column="business_licence_scanning" property="businessLicenceScanning" />
+    <result column="business_license_url" property="businessLicenseUrl" />
     <result column="special_business_licence_scanning" property="specialBusinessLicenceScanning" />
+    <result column="idcard_front_id" property="idCardFrontId"/>
+    <result column="idcard_reverse_id" property="idCardReverseId"/>
   </resultMap>
 
 
@@ -43,7 +45,8 @@
   <sql id="Base_Column_List" >
     id,code,`name`,nation_name,english_name,english_ahhr,department_type,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
     legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete,flag,version,updateTime,
-    found_date,start_date,end_date,registration_department,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning,legal_englishsurname,legal_englishname
+    found_date,start_date,end_date,registration_department,management_range,registered_capital,business_license_url,special_business_licence_scanning,legal_englishsurname,legal_englishname,
+    idcard_front_id,idcard_reverse_id
   </sql>
 
 
@@ -87,7 +90,8 @@
     district_id, address,
     telphone, postal_code, department_status,
     department_certificate, department_certificate_type,is_delete,version,flag,updateTime,found_date,start_date,
-    end_date,registration_department,management_range,registered_capital,business_licence_scanning,special_business_licence_scanning,legal_idcard_scanning,legal_englishsurname,legal_englishname
+    end_date,registration_department,management_range,registered_capital,special_business_licence_scanning,legal_englishsurname,legal_englishname,
+    idcard_front_id,idcard_reverse_id,business_license_url
     )
     values (#{id,jdbcType=CHAR},#{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},
     #{nationName,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR},
@@ -96,124 +100,129 @@
     #{legalIdType,jdbcType=VARCHAR}, #{legalTelphone,jdbcType=VARCHAR}, #{legalCountry,jdbcType=VARCHAR},
     #{districtId,jdbcType=CHAR}, #{address,jdbcType=VARCHAR},
     #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
-    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,#{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate}
-    ,#{startDate},#{endDate},#{registrationDepartment},#{managementRange},#{registeredCapital},#{businessLicenceScanning}
-    ,#{specialBusinessLicenceScanning},#{legalIdcardScanning},#{legalEnglishsurname},#{legalEnglishname}
+    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,
+    #{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate},#{startDate},#{endDate},
+    #{registrationDepartment,jdbcType=VARCHAR},#{managementRange},#{registeredCapital},
+    #{specialBusinessLicenceScanning},#{legalEnglishsurname},#{legalEnglishname},
+    #{idCardFrontId,jdbcType=VARCHAR},#{idCardReverseId,jdbcType=VARCHAR},#{businessLicenseUrl,jdbcType=VARCHAR}
     )
   </insert>
 
-  <update id="updateById" parameterType="com.dhht.model.UseDepartment" >
-    update use_department
-    set
-    <if test="isDelete !=null">
-      `is_delete` = #{isDelete,jdbcType=BIT}
-    </if>
-    where id = #{id,jdbcType=CHAR}
-  </update>
+  <!--<update id="updateById" parameterType="com.dhht.model.UseDepartment" >-->
+    <!--update use_department-->
+    <!--set-->
+    <!--<if test="isDelete !=null">-->
+      <!--`is_delete` = #{isDelete,jdbcType=BIT}-->
+    <!--</if>-->
+    <!--where id = #{id,jdbcType=CHAR}-->
+  <!--</update>-->
 
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.UseDepartment" >
-    update use_department
-    set
-    <if test="code !=null">
-    `code` = #{code,jdbcType=VARCHAR},
-    </if>
-    <if test="name !=null">
-    `name` = #{name,jdbcType=VARCHAR},
-    </if>
-    <if test="nationName !=null">
-    nation_name = #{nationName,jdbcType=VARCHAR},
-    </if>
-    <if test="englishName !=null">
-    english_name = #{englishName,jdbcType=VARCHAR},
-    </if>
-    <if test="englishAhhr !=null">
-    english_ahhr = #{englishAhhr,jdbcType=VARCHAR},
-    </if>
-    <if test="department_type !=null">
-    `department_type` = #{departmentType,jdbcType=CHAR},
-    </if>
-    <if test="queryPassword !=null">
-    query_password = #{queryPassword,jdbcType=VARCHAR},
-    </if>
-    <if test="legalName !=null">
-    legal_name = #{legalName,jdbcType=VARCHAR},
-    </if>
-    <if test="legalId !=null">
-    legal_id = #{legalId,jdbcType=VARCHAR},
-    </if>
-    <if test="legalIdType !=null">
-    legal_id_type = #{legalIdType,jdbcType=VARCHAR},
-    </if>
-    <if test="legalTelphone !=null">
-    legal_telphone = #{legalTelphone,jdbcType=VARCHAR},
-    </if>
-    <if test="legalCountry !=null">
-    legal_country = #{legalCountry,jdbcType=VARCHAR},
-    </if>
-    <if test="districtId !=null">
-    district_id = #{districtId,jdbcType=VARCHAR},
-    </if>
-    <if test="address !=null">
-    address = #{address,jdbcType=VARCHAR},
-    </if>
-    <if test="telphone !=null">
-    telphone = #{telphone,jdbcType=VARCHAR},
-    </if>
-    <if test="postalCode !=null">
-    postal_code = #{postalCode,jdbcType=VARCHAR},
-    </if>
-    <if test="departmentStatus !=null">
-    department_status = #{departmentStatus,jdbcType=CHAR},
-    </if>
-    <if test="departmentCertificate !=null">
-    department_certificate = #{departmentCertificate,jdbcType=VARCHAR},
-    </if>
-    <if test="departmentCertificateType !=null">
-    department_certificate_type = #{departmentCertificateType,jdbcType=VARCHAR},
-    </if>
-    <if test="isDelete !=null">
-    `is_delete` = #{isDelete,jdbcType=BIT},
-    </if>
-    <if test="updateTime !=null">
-      updateTime = #{updateTime},
-    </if>
-      `version` = #{version},
-      `flag` = #{flag},
-    <if test="foundDate !=null">
-      found_date = #{foundDate},
-    </if>
-    <if test="startDate !=null">
-      start_date = #{startDate},
-    </if>
-    <if test="endDate !=null">
-      end_date = #{endDate},
-    </if>
-    <if test="registrationDepartment !=null">
-      registration_department = #{registrationDepartment},
-    </if>
-    <if test="managementRange !=null">
-      management_range = #{managementRange},
-    </if>
-    <if test="registereCapital !=null">
-      registered_capital = #{registeredCapital},
-    </if>
-    <if test="businessLicenceScanning !=null">
-      business_licence_scanning = #{businessLicenceScanning},
-    </if>
-    <if test="specialBusinessLicenceScanning !=null">
-      special_business_licence_scanning = #{specialBusinessLicenceScanning},
-    </if>
-    <if test="legalIdcardScanning !=null">
-      legal_idcard_scanning = #{legalIdcardScanning}
-    </if>
-    <if test="legalEnglishsurname !=null">
-      legal_englishsurname = #{legalEnglishsurname}
-    </if>
-    <if test="legalEnglishname !=null">
-      legal_englishname = #{legalEnglishname}
-    </if>
-      where id = #{id,jdbcType=CHAR}
-  </update>
+  <!--<update id="updateByPrimaryKey" parameterType="com.dhht.model.UseDepartment" >-->
+    <!--update use_department-->
+    <!--set-->
+    <!--<if test="code !=null">-->
+    <!--`code` = #{code,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="name !=null">-->
+    <!--`name` = #{name,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="nationName !=null">-->
+    <!--nation_name = #{nationName,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="englishName !=null">-->
+    <!--english_name = #{englishName,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="englishAhhr !=null">-->
+    <!--english_ahhr = #{englishAhhr,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="department_type !=null">-->
+    <!--`department_type` = #{departmentType,jdbcType=CHAR},-->
+    <!--</if>-->
+    <!--<if test="queryPassword !=null">-->
+    <!--query_password = #{queryPassword,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="legalName !=null">-->
+    <!--legal_name = #{legalName,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="legalId !=null">-->
+    <!--legal_id = #{legalId,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="legalIdType !=null">-->
+    <!--legal_id_type = #{legalIdType,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="legalTelphone !=null">-->
+    <!--legal_telphone = #{legalTelphone,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="legalCountry !=null">-->
+    <!--legal_country = #{legalCountry,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="districtId !=null">-->
+    <!--district_id = #{districtId,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="address !=null">-->
+    <!--address = #{address,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="telphone !=null">-->
+    <!--telphone = #{telphone,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="postalCode !=null">-->
+    <!--postal_code = #{postalCode,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="departmentStatus !=null">-->
+    <!--department_status = #{departmentStatus,jdbcType=CHAR},-->
+    <!--</if>-->
+    <!--<if test="departmentCertificate !=null">-->
+    <!--department_certificate = #{departmentCertificate,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="departmentCertificateType !=null">-->
+    <!--department_certificate_type = #{departmentCertificateType,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="isDelete !=null">-->
+    <!--`is_delete` = #{isDelete,jdbcType=BIT},-->
+    <!--</if>-->
+    <!--<if test="updateTime !=null">-->
+      <!--updateTime = #{updateTime},-->
+    <!--</if>-->
+      <!--`version` = #{version},-->
+      <!--`flag` = #{flag},-->
+    <!--<if test="foundDate !=null">-->
+      <!--found_date = #{foundDate},-->
+    <!--</if>-->
+    <!--<if test="startDate !=null">-->
+      <!--start_date = #{startDate},-->
+    <!--</if>-->
+    <!--<if test="endDate !=null">-->
+      <!--end_date = #{endDate},-->
+    <!--</if>-->
+    <!--<if test="registrationDepartment !=null">-->
+      <!--registration_department = #{registrationDepartment},-->
+    <!--</if>-->
+    <!--<if test="managementRange !=null">-->
+      <!--management_range = #{managementRange},-->
+    <!--</if>-->
+    <!--<if test="registereCapital !=null">-->
+      <!--registered_capital = #{registeredCapital},-->
+    <!--</if>-->
+    <!--<if test="businessLicenceUrl !=null">-->
+      <!--business_licence_scanning = #{businessLicenceUrl},-->
+    <!--</if>-->
+    <!--<if test="specialBusinessLicenceScanning !=null">-->
+      <!--special_business_licence_scanning = #{specialBusinessLicenceScanning},-->
+    <!--</if>-->
+    <!--<if test="idCardFrontId !=null">-->
+      <!--idcard_front_id = #{idCardFrontId}-->
+    <!--</if>-->
+    <!--<if test="idCardReverseId ! =null">-->
+      <!--idcard_reverse_id =#{idCardReverseId}-->
+    <!--</if>-->
+    <!--<if test="legalEnglishsurname !=null">-->
+      <!--legal_englishsurname = #{legalEnglishsurname}-->
+    <!--</if>-->
+    <!--<if test="legalEnglishname !=null">-->
+      <!--legal_englishname = #{legalEnglishname}-->
+    <!--</if>-->
+      <!--where id = #{id,jdbcType=CHAR}-->
+  <!--</update>-->
 
   <select id="findAllMake" resultMap="BaseResultMap" >
     select

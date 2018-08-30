@@ -200,7 +200,7 @@ public class UserController {
     @RequestMapping(value = "/getCheckCode")
     public JsonObjectBO getCheckCode(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String username = (String)map.get("username");
+        String username = (String)map.get("userName");
         try{
         if (userPasswordService.getCheckCode(username)== ResultUtil.isSuccess){
             return JsonObjectBO.success("获取验证码成功",null);

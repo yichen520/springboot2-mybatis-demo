@@ -67,9 +67,13 @@ public class UseDepartment {
     private String managementRange;
     @EntityComment("使用单位注册资本")
     private String registeredCapital;
-    private String businessLicenceScanning;
+    @EntityComment(value = "使用单位营业执照扫面件",type = 2)
+    private String businessLicenseUrl;
     private String specialBusinessLicenceScanning;
-    private String legalIdcardScanning;
+    @EntityComment(value = "使用单位法人身份证正面扫面件",type = 2)
+    private String idCardFrontId;
+    @EntityComment(value = "使用单位法人身份证反面扫面件",type = 2)
+    private String idCardReverseId;
     private Boolean isDelete;
     private Integer version;
     private String flag;

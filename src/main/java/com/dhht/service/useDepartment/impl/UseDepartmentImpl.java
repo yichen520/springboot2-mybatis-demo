@@ -8,6 +8,7 @@ import com.dhht.dao.OperatorRecordMapper;
 import com.dhht.dao.UseDepartmentDao;
 import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
+import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
@@ -34,16 +35,19 @@ import java.util.*;
 @Transactional
 public class UseDepartmentImpl implements UseDepartmentService {
 
-    @Autowired
-    private OperatorRecordMapper operatorRecordMapper;
-    @Autowired
-    private OperatorRecordDetailMapper operatorRecordDetailMapper;
+
     @Autowired
     private UseDepartmentDao useDepartmentDao;
     @Autowired
     private DistrictService districtService;
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private FileService fileService;
+
+    private final String IDCARD_FRONT_FILE = "使用单位法人身份证正面照片";
+    private final String IDCARD_REVERSE_FILE = "使用单位法人身份证反面照片";
+    private final String BUSINESS_LICENSE_FILE = "使用单位营业执照扫面件";
 
 
     /**
@@ -65,8 +69,9 @@ public class UseDepartmentImpl implements UseDepartmentService {
         useDepartment.setVersion(0);
         useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int useDepartmentResult = useDepartmentDao.insert(useDepartment);
+        boolean f = registerFile(useDepartment);
         boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
-        if(useDepartmentResult<0&&!operateResult){
+        if(useDepartmentResult<0&&!operateResult&&!f){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
@@ -97,9 +102,10 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 String operateUUid = UUIDUtil.generate();
                 String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime"};
                 int r = useDepartmentDao.insert(useDepartment);
+                boolean f = registerFile(useDepartment);
                 boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.UPDATE,operateUUid);
                 boolean operateDetailResult = historyService.insertUpdateRecord(useDepartment,oldUseDepartment,operateUUid,ignore);
-                if (r == 1&&operateDetailResult&&operateResult) {
+                if (r == 1&&operateDetailResult&&operateResult&&f) {
                     SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
                     return JsonObjectBO.success("修改成功", null);
                 } else {
@@ -196,18 +202,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public JsonObjectBO showHistory(String flag) {
         List<OperatorRecord> list = historyService.showUpdteHistory(flag,SyncDataType.USERDEPARTMENT);
-//        for(OperatorRecord operatorRecord : list){
-//            if(operatorRecord.getOperatorRecordDetails()!=null) {
-//                for (OperatorRecordDetail operatorRecordDetail : operatorRecord.getOperatorRecordDetails()) {
-//                    if (operatorRecordDetail.getPropertyName().equals("districtId")) {
-//                        String oldDistrictName = districtService.selectByDistrictId(operatorRecordDetail.getOldValue());
-//                        String newDistrictName = districtService.selectByDistrictId(operatorRecordDetail.getNewValue());
-//                        operatorRecordDetail.setOldValue(oldDistrictName);
-//                        operatorRecordDetail.setNewValue(newDistrictName);
-//                    }
-//                }
-//            }
-//        }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("useDepartment",list);
         return JsonObjectBO.success("查询成功",jsonObject);
@@ -251,6 +245,19 @@ public class UseDepartmentImpl implements UseDepartmentService {
         return list;
     }
 
+    /**
+     * 文件注册
+     * @param useDepartment
+     */
+    public boolean registerFile(UseDepartment useDepartment){
+        boolean f1 =fileService.register(useDepartment.getIdCardFrontId(),IDCARD_FRONT_FILE);
+        boolean f2 =fileService.register(useDepartment.getIdCardReverseId(),IDCARD_REVERSE_FILE);
+        boolean f3 = fileService.register(useDepartment.getBusinessLicenseUrl(),BUSINESS_LICENSE_FILE);
+        if(f1&&f2&&f3){
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 数据同步
