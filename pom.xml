@@ -238,21 +238,21 @@
 			<version>2.5.0</version>
 		</dependency>
 		<!--sm3加密-->
-		<dependency>
-			<groupId>com.dhht</groupId>
-			<artifactId>smutil</artifactId>
-			<version>v1.0</version>
-		</dependency>
-        <dependency>
-        <groupId>com.dhht</groupId>
-        <artifactId>base64</artifactId>
-        <version>v1.0</version>
-    </dependency>
-    <dependency>
-        <groupId>com.dhht</groupId>
-        <artifactId>bcprov</artifactId>
-        <version>v1.0</version>
-    </dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.dhht</groupId>-->
+			<!--<artifactId>smutil</artifactId>-->
+			<!--<version>v1.0</version>-->
+		<!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.dhht</groupId>-->
+        <!--<artifactId>base64</artifactId>-->
+        <!--<version>v1.0</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+        <!--<groupId>com.dhht</groupId>-->
+        <!--<artifactId>bcprov</artifactId>-->
+        <!--<version>v1.0</version>-->
+    <!--</dependency>-->
 
 		<!--<dependency>-->
 			<!--<groupId>org.mybatis.generator</groupId>-->
