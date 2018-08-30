@@ -2,6 +2,7 @@ package com.dhht.service.seal;
 
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
+import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealVO;
 import com.github.pagehelper.PageInfo;
 
@@ -46,7 +47,14 @@ public interface SealService {
    // 人证合一
    FaceCompareResult faceCompare(String idCardId, String fieldId);
 
-   public PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
+   PageInfo<Seal> Infoseal( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
+
+   //图片下载
+   FileInfoVO download(String id);
+
+   //是否是法人
+   boolean isLegalPerson(String idcard,String useDepartmentCode);
+
 
 }
 

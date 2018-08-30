@@ -5,6 +5,7 @@ import com.dhht.common.ImageGenerate;
 import com.dhht.dao.*;
 import com.dhht.face.AFR;
 import com.dhht.model.*;
+import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealVO;
 
 import com.dhht.service.employee.EmployeeService;
@@ -18,6 +19,7 @@ import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -247,19 +249,45 @@ public class SealServiceImpl implements SealService {
                     byte[] imageData = FileUtil.readInputStream(inputStream);
                     FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "png", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageImageId = fileInfo.getId();
+                    //增加微缩图
+                    String fileName = file.getAbsolutePath();
+                    String caselsh = fileName.substring(0,fileName.lastIndexOf("."));//前缀
+                    String suffix = fileName.substring(fileName.lastIndexOf(".")+1);//后缀
+
+                    String path = caselsh+"_micro."+suffix;
+                    Thumbnails.of(localPath).scale(0.3f).toFile(path);
+                    File microfile = new File(path);
+                    InputStream inputStream1 = new FileInputStream(microfile);
+                    byte[] microimageData = FileUtil.readInputStream(inputStream1);
+                    FileInfo microfileInfo = fileService.save(microimageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "png", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
+                    String micromoulageImageId = microfileInfo.getId();
+//                    Thumbnails.of(filePathName).scale(1f).outputQuality(scale).outputFormat("jpg")
+
+
+
                     SealMaterial sealMaterial = new SealMaterial();
                     sealMaterial.setId(UUIDUtil.generate());
                     sealMaterial.setSealCode(sealcode);
                     sealMaterial.setType("04");
                     sealMaterial.setFilePath(moulageImageId);
                     int sealMaterialInsert = sealDao.insertSealMaterial(sealMaterial);
+
+                    SealMaterial microsealMaterial = new SealMaterial();
+                    microsealMaterial.setId(UUIDUtil.generate());
+                    microsealMaterial.setSealCode(sealcode);
+                    microsealMaterial.setType("06");
+                    microsealMaterial.setFilePath(micromoulageImageId);
+                   sealDao.insertSealMaterial(microsealMaterial);
+
+
+
                     ImageGenerate imageGenerate = new ImageGenerate();
 
                     //二维数据
                     int[][] imgArr = imageGenerate.moulageData(map);
                     String imagArrLocalPath  = FileUtil.saveArrayFile(imgArr);
                     File file1 = new File(imagArrLocalPath);
-                    InputStream inputStream1 = new FileInputStream(file1);
+                   // InputStream inputStream1 = new FileInputStream(file1);
                     byte[] moulageDates = FileUtil.readInputStream(inputStream1);
                     FileInfo fileInfo1 = fileService.save(moulageDates, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType+"二维数据", "txt", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageId = fileInfo1.getId();
@@ -681,8 +709,15 @@ public class SealServiceImpl implements SealService {
         sealVo.setReverseIdCardScanner(sealAgent.getIdCardReverseId());
         sealVo.setProxy(sealAgent.getProxyId());
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
-        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
-        sealVo.setMoulageImageId(sealMaterial.getFilePath());
+//        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
+        SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode,"06");
+        if(microsealMaterial==null){
+            SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
+            sealVo.setMoulageImageId(sealMaterial.getFilePath());
+        }else {
+            sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
+        }
+
         sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }
@@ -752,6 +787,54 @@ public class SealServiceImpl implements SealService {
         list = chooseSealStatus(seal,status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
+    }
+
+    /**
+     *图片下载
+     * @param id
+     * @return
+     */
+    @Override
+    public FileInfoVO download(String id) {
+        try {
+
+            Seal seal = sealDao.selectByPrimaryKey(id);
+            String sealCode = seal.getSealCode();
+            SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode, "04");
+            String moulageImageId = sealMaterial.getFilePath();
+            FileInfo fileInfo = fileService.readFile(moulageImageId);
+            String path = fileInfo.getFilePath();
+            String Url = fastDFSStoreServiceImpl.getFullPath(path);
+            URL url = new URL(Url);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3 * 1000);
+            // conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            InputStream inputStream = conn.getInputStream();
+            byte[] fileDate = FileUtil.readInputStream(inputStream);
+            FileInfoVO fileInfoVO = new FileInfoVO(fileInfo);
+            fileInfoVO.setFileData(fileDate);
+            return fileInfoVO;
+        }catch (IOException ioe) {
+            return null;
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+    /**
+     * 是否是法人
+     * @param idcard
+     * @param useDepartmentCode
+     * @return
+     */
+    @Override
+    public boolean isLegalPerson(String idcard, String useDepartmentCode) {
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);
+        if(idcard.equals(useDepartment.getLegalId())){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
