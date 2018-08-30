@@ -712,8 +712,7 @@ public class SealServiceImpl implements SealService {
 //        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode,"06");
         if(microsealMaterial==null){
-            SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
-            sealVo.setMoulageImageId(sealMaterial.getFilePath());
+            sealVo.setMicromoulageImageId("");
         }else {
             sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
         }
