@@ -1,5 +1,6 @@
 package com.dhht.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.ImageGenerate;
@@ -18,7 +19,9 @@ import com.github.pagehelper.PageInfo;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,7 +41,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/seal/record")
-public class SealController {
+public class SealController implements InitializingBean {
     @Autowired
     private SealService sealService;
 
@@ -46,9 +49,25 @@ public class SealController {
     private EmployeeService employeeService;
 
     @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
     private UseDepartmentService useDepartmentService;
 
     private static Logger logger = LoggerFactory.getLogger(SealController.class);
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Seal seal = sealService.selectLastSeal();
+        if(seal== null) {
+            return ;
+        }
+        if(!redisTemplate.hasKey("SealSerialNum")){
+            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));
+        }
+
+    }
+
 
     @Log("查询使用单位是否备案")
     @RequestMapping("/isrecord")
@@ -110,11 +129,12 @@ public class SealController {
         String faceCompareRecordId = sealDTO.getFaceCompareRecordId();
         String idCardPhotoId =sealDTO.getAgentPhotoId();
         String fieldPhotoId = sealDTO.getFieldPhotoId();
+        String useDepartmentCode =sealDTO.getUseDepartmentCode();
         int confidence = sealDTO.getConfidence();
-        Seal seal = sealDTO.getSeal();
+        List<Seal> seals = sealDTO.getSeals();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-            int a = sealService.sealRecord(seal,user,districtId, agentTelphone,
+            int a = sealService.sealRecord(seals,user,useDepartmentCode,districtId, agentTelphone,
                     agentName,certificateNo, certificateType,
                     agentPhotoId,  idCardFrontId,  idCardReverseId,   proxyId,  idCardPhotoId, confidence,
              fieldPhotoId);

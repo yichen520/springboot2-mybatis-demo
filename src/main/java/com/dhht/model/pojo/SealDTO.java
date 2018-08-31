@@ -5,6 +5,7 @@ import lombok.Data;
 
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class SealDTO {
@@ -12,6 +13,10 @@ public class SealDTO {
     private String id;
 
     private Seal seal;
+
+    private List<Seal> seals;
+
+    private String useDepartmentCode;
 
     private String sealId;  //印章id
 

@@ -59,6 +59,8 @@ public interface SealDao {
 
     SealMaterial selectSealMaterial(@Param("sealCode") String sealCode,@Param("type") String type);
 
+    Seal selectLastSeal();
+
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
 

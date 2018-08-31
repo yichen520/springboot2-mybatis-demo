@@ -459,7 +459,9 @@
     </where>
   </select>
 
-
+<select id="selectLastSeal" resultMap="BaseResultMap">
+SELECT * from seal where record_date=(select max(record_date) from seal)
+</select>
   <!---统计模块-->
   <select id="countAddSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(id) from seal s  where

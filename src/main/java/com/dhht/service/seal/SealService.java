@@ -15,10 +15,10 @@ public interface SealService {
    int insert(Seal seal);
 
    //印章备案
-   int sealRecord(Seal seal, User user, String districtId, String agentTelphone,
+   int sealRecord(List<Seal> seals, User user,String useDepartmentCode, String districtId, String agentTelphone,
                   String agentName, String certificateNo, String certificateType,
                   String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,
-                  String fieldPhotoId);
+                  String fieldPhotoId );
 
    //印章主界面
    PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
@@ -54,6 +54,9 @@ public interface SealService {
 
    //是否是法人
    boolean isLegalPerson(String idcard,String useDepartmentCode);
+
+   //查找最新的印章信息
+   Seal selectLastSeal();
 
 
 }
