@@ -412,10 +412,10 @@ public class UserController {
                 jsonObjectBO.setCode(1);
             }else if(result==ResultUtil.isFail){
                 jsonObjectBO.setMessage("密码修改成功");
-                jsonObjectBO.setCode(1);
+                jsonObjectBO.setCode(-1);
             }else{
                 jsonObjectBO.setMessage("原密码错误");
-                jsonObjectBO.setCode(1);
+                jsonObjectBO.setCode(-1);
             }
         }catch (Exception e){
             logger.error(e.getMessage(),e);

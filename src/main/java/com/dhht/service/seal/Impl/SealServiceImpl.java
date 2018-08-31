@@ -23,8 +23,10 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -73,6 +75,8 @@ public class SealServiceImpl implements SealService {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
@@ -98,6 +102,20 @@ public class SealServiceImpl implements SealService {
         return sealVcode;
     }
 
+    public String SealSerialNum(String districtId){
+        String num ;
+        Jedis jedis = new Jedis();
+        if(redisTemplate.hasKey("SealSerialNum")){
+             num = jedis.incrBy("SealSerialNum",1).toString();
+        }else{
+            redisTemplate.opsForValue().set("SealSerialNum",0);
+             num = redisTemplate.opsForValue().get("SealSerialNum").toString();
+        }
+        int length = num.length();
+        String serial = "00000000";
+        String sealSerialNum = districtId+serial.substring(0,serial.length()-length)+num;
+        return sealSerialNum;
+    }
 
     @Override
     public int insert(Seal seal) {
@@ -130,7 +148,7 @@ public class SealServiceImpl implements SealService {
                               String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,
                              String fieldPhotoId ) {
             try {
-                String sealcode = createRandomCode(districtId);
+                String sealcode = SealSerialNum(districtId);
                 List<Seal> list = sealDao.selectByCodeAndType(seal.getUseDepartmentCode());
                 if (seal.getSealTypeCode().equals("05")) {
                     if (list.size() != 0) {

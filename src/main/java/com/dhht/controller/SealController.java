@@ -29,9 +29,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/seal/record")
@@ -450,6 +453,11 @@ public class SealController {
     public ResponseEntity<byte[]> download(@RequestParam("id") String id) {
         FileInfoVO fileInfoVO = sealService.download(id);
         try {
+            Pattern pattern = Pattern.compile("[^\u4E00-\u9FA5]");
+
+            Matcher matcher = pattern.matcher(fileInfoVO.getFileName());
+            String fileName = matcher.replaceAll("");
+            fileName = URLEncoder.encode(fileName,"utf-8");
             //请求头
             HttpHeaders headers = new HttpHeaders();
 
@@ -457,7 +465,7 @@ public class SealController {
 //            String fileName = new String((fileInfoVO.getFileName()).getBytes("UTF-8"),"iso-8859-1");
 
             //通知浏览器以attachment（下载方式）打开
-            headers.setContentDispositionFormData("attachment", fileInfoVO.getFileName());
+            headers.setContentDispositionFormData("attachment", fileName+"."+fileInfoVO.getFileExt());
 
             //application/octet-stream二进制流数据（最常见的文件下载）。
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
