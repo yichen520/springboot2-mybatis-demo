@@ -17,7 +17,10 @@ import com.dhht.service.tools.FileService;
 import com.dhht.util.ResultUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +31,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/make/employee")
-public class EmployeeController {
+public class EmployeeController  implements InitializingBean {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
@@ -38,9 +41,9 @@ public class EmployeeController {
     @Autowired
     private MakeDepartmentService makeDepartmentService;
     @Autowired
-    private FileService fileService;
-    @Autowired
     private HistoryService historyService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     private static Logger logger = LoggerFactory.getLogger(EmployeeController.class);
@@ -122,20 +125,6 @@ public class EmployeeController {
         }
     }
 
-/*
-    RestMapping(value = "recordDepartment")
-    public JsonObjectBO selectRecordDepartment(@RequestBody Map map){
-        String districtId = (String)map.get("districtId");
-        JSONObject jsonObject = new JSONObject();
-        try {
-            List<RecordDepartment> recordDepartments = recordDepartmentService.selectByDistrictId(districtId);
-            jsonObject.put("recordDepartment",recordDepartments);
-            return JsonObjectBO.success("查询成功",jsonObject);
-        }catch (Exception e){
-            return JsonObjectBO.exception(e.getMessage());
-        }
-    }
-*/
 
     /**
      * 修改从业人员
@@ -209,6 +198,26 @@ public class EmployeeController {
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("头像文件失败");
+        }
+    }
+
+
+    /**
+     * redis存储最大的从业人员编号
+     * @throws Exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        String emoloyeeCode = employeeService.selectMaxEmployeeCode();
+        if(emoloyeeCode == null) {
+            return ;
+        }
+        String temp = emoloyeeCode.substring(19);
+        Integer code = Integer.parseInt(temp);
+        if(!redisTemplate.hasKey("employeeCode")){
+            redisTemplate.opsForValue().set("employeeCode", code);
+        }else {
+            redisTemplate.opsForValue().getAndSet("employeeCode",code);
         }
     }
 }

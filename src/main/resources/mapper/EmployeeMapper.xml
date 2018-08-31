@@ -64,6 +64,9 @@
      </foreach>
   </select>
 
+  <select id="selectMaxEmployeeCode" resultType="java.lang.String">
+    SELECT Max(employee_code) from employee where version_status = 0;
+  </select>
   
   <select id="operationByDepartmentCode" resultMap="BaseResultMap" parameterType="java.lang.String">
      SELECT a.* from employee as a RIGHT JOIN(

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SMSCodeDao {
     SMSCode getSMSCodeByPhone(@Param("phone")String phone);
-     void save(SMSCode sMSCode);
-     void update(SMSCode sMSCode);
+    void save(SMSCode sMSCode);
+    void update(SMSCode sMSCode);
     SMSCode getSms(@Param("phone")String phone);
 
 }

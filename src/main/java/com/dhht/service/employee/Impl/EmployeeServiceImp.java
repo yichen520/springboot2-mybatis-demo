@@ -18,9 +18,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -44,6 +46,8 @@ public class EmployeeServiceImp implements EmployeeService {
     private HistoryService historyService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     private final static String EMPLOYEE_HEAD_UPLOAD = "从业人员头像上传";
 
@@ -62,7 +66,7 @@ public class EmployeeServiceImp implements EmployeeService {
                 return ResultUtil.noRecordDepartment;
             }
             RecordDepartment recordDepartment = recordDepartments.get(0);
-            employee.setEmployeeCode(CodeUtil.generate());
+            employee.setEmployeeCode(getEmployeeCode(makeDepartmentSimple.getDepartmentCode()));
             employee.setId(UUIDUtil.generate());
             employee.setDistrictId(user.getDistrictId());
             employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
@@ -375,6 +379,19 @@ public class EmployeeServiceImp implements EmployeeService {
         return pageInfo;
     }
 
+    /**
+     * 查询最大的从业人员你的编号，用于redis
+     * @return
+     */
+    @Override
+    public String selectMaxEmployeeCode() {
+        try {
+            return employeeDao.selectMaxEmployeeCode();
+        }catch (Exception e){
+            return null;
+        }
+    }
+
 
     /**
      * 判断身份证号是否是否重复
@@ -388,6 +405,29 @@ public class EmployeeServiceImp implements EmployeeService {
         return false;
     }
 
+    /**
+     * 生成从业人员编号
+     * @param makeDepartmentCode
+     * @return
+     */
+    public String getEmployeeCode(String makeDepartmentCode){
+        String code = "";
+        Jedis jedis = new Jedis();
+        if(redisTemplate.hasKey("employeeCode")){
+            code = jedis.incrBy("employeeCode",1).toString();
+        }else{
+            redisTemplate.opsForValue().set("employeeCode",0);
+            code = redisTemplate.opsForValue().get("employeeCode").toString();
+        }
+        int length = code.length();
+        StringBuffer stringBuffer = new StringBuffer();
+        if(length<4){
+            for(int i = 0;i<4-length;i++){
+                stringBuffer.append("0");
+            }
+        }
+        return makeDepartmentCode+stringBuffer.toString()+code;
+    }
 
     /**
      * 数据同步

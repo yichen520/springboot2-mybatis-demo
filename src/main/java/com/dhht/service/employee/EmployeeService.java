@@ -43,4 +43,6 @@ public interface EmployeeService {
     int updateMakeDepartment(String id,String code);
 
     PageInfo selectEmployeeInfo(String code,int status,String name,int pageNum,int pageSize);
+
+    String selectMaxEmployeeCode();
 }
