@@ -138,8 +138,6 @@
 
 
 
-
-
     <delete id="delete" parameterType="java.lang.String">
          DELETE FROM sys_user WHERE  id = #{id}
     </delete>
@@ -175,9 +173,9 @@
 
     
     <select id="findByUserName" resultType="com.dhht.model.User" parameterType="java.lang.String">
-        SELECT * FROM sys_user
-        WHERE
-        user_name = #{userName,jdbcType=VARCHAR}
+        SELECT `id` AS id,user_name AS userName,real_name AS realName,password AS password,role_id AS roleId,object_id AS objectId,
+    telphone AS telphone,is_locked AS isLocked,login_error_times AS loginErrorTimes,is_changed_pwd AS isChangedPwd,is_deleted AS  isDeleted,
+    district_id AS districtId,login_time AS loginTime FROM sys_user WHERE user_name = #{userName,jdbcType=VARCHAR}
     </select>
 
     <update id="changePwd">

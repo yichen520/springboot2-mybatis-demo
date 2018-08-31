@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smutil.SM3Util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -89,9 +90,13 @@ public class UserLoginServiceImpl implements UserLoginService {
     @Override
     public User validate(User user){
         String userAccount = StringUtil.stringNullHandle(user.getUserName());
-        String password = StringUtil.stringNullHandle(MD5Util.toMd5(user.getPassword()));
-        User user1 = usersMapper.validate(new UserDomain(userAccount,password));
-        return user1;
+        String password = StringUtil.stringNullHandle(user.getPassword());
+        User loginUser = userDao.findByUserName(userAccount);
+        boolean result = SM3Util.verify(password,loginUser.getPassword());
+        if(result){
+            return loginUser;
+        }
+        return new User();
     }
 
 

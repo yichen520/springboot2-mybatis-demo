@@ -1,13 +1,9 @@
 package com.dhht.service.user.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
-import com.dhht.model.RecordPolice;
 import com.dhht.model.User;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserPasswordService;
-import com.dhht.util.MD5Util;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
@@ -18,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smutil.SM3Util;
 
 
 import java.util.*;
@@ -79,7 +76,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setId(UUIDUtil.generate());
         String code = createRandomVcode();
-        String password = MD5Util.toMd5(code);
+        String password = SM3Util.doSM3(code);
         user.setUserName(userName);
         user.setTelphone(telphone);
         user.setRoleId(roleId);
