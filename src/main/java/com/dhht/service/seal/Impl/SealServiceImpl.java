@@ -574,13 +574,16 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int  loss (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
-                      String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,Boolean isSame){
+                      String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone){
         SealAgent sealAgent;
 
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("05");
         if(seal1.getIsLoss()){
             return ResultUtil.isFail;
+        }
+        if (name==null){
+            return ResultUtil.isNoName;
         }
         if(!isLegalPerson(certificateNo,name,seal1.getUseDepartmentCode())) { //判断不是法人
             if(proxyId==null) {   //不是法人而且没有授权委托书
@@ -655,13 +658,16 @@ public class SealServiceImpl implements SealService {
      * @param user
      */
     @Override
-    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,Boolean isSame) {
+    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone) {
         SealAgent sealAgent;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("06");
 
         if (seal1.getIsLogout()){
             return ResultUtil.isFail;
+        }
+        if (name==null){
+            return ResultUtil.isNoName;
         }
         if(!isLegalPerson(certificateNo,name,seal1.getUseDepartmentCode())) { //判断不是法人
             if(proxyId==null) {   //不是法人而且没有授权委托书

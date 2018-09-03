@@ -22,6 +22,7 @@ public class ResultUtil {
     public static final int isNoEmployee = 17;
     public static final int isNoTrue = 18;
     public static final int isNoProxy = 19;
+    public static final int isNoName = 20;
 
 
 
@@ -65,6 +66,8 @@ public class ResultUtil {
                 return JsonObjectBO.error("原密码输入错误");
             case 19:
                 return JsonObjectBO.error("无授权委托书");
+            case 20:
+                return JsonObjectBO.error("请输入姓名");
                 default:
                     return null;
         }

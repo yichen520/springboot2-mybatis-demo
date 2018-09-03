@@ -2,6 +2,8 @@ package com.dhht.service.make;
 
 import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.SealDTO;
+import com.dhht.model.pojo.SealVO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -16,6 +18,10 @@ public interface MakeDepartmentService {
      int update(Makedepartment makedepartment,User user);
 
      int deleteById(String id,User user);
+
+     List<Seal> selectSeal(User user);
+
+     SealVO sealDetails(String id);
 
      List<Makedepartment> selectHistory(String flag);
 

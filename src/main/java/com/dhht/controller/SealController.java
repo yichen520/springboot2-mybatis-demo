@@ -317,15 +317,20 @@ public class SealController implements InitializingBean {
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
             String agentTelphone = sealDTO.getTelphone();
-            Boolean isSame = sealDTO.getIsSame();
             int a = sealService.loss(  user, id, name, agentPhotoId,   proxyId , certificateNo, certificateType,
-                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone,isSame);
-            if (a == ResultUtil.isFail) {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("挂失失败");
-            } else {
+                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone);
+            if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("挂失成功");
+            } else if(a==ResultUtil.isNoProxy){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请提供授权委托书");
+            }else if(a==ResultUtil.isNoName){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请输入名字");
+            } else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("挂失失败");
             }
             return jsonObjectBO;
         } catch (Exception e) {
@@ -356,16 +361,22 @@ public class SealController implements InitializingBean {
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String agentTelphone = sealDTO.getTelphone();
-            Boolean isSame = sealDTO.getIsSame();
+
             String name = sealDTO.getName();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
-            int a = sealService.logout( user, id,  name,agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId,agentTelphone,isSame);
-            if (a == ResultUtil.isFail) {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("注销失败");
-            } else {
+            int a = sealService.logout( user, id,  name,agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId,agentTelphone);
+            if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("注销成功");
+            } else if(a==ResultUtil.isNoProxy){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请提供授权委托书");
+            }else if(a==ResultUtil.isNoName){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请输入名字");
+            }else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("注销失败");
             }
             return jsonObjectBO;
         } catch (Exception e) {

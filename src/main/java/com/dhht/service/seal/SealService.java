@@ -34,10 +34,10 @@ public interface SealService {
 
    //印章挂失
    int loss (User user,String id, String name ,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
-         String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,Boolean isSame);
+         String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone);
 
    //印章注销
-   int logout (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,Boolean isSame);
+   int logout (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone);
 
    //详情查看
    SealVO selectDetailById(String id);

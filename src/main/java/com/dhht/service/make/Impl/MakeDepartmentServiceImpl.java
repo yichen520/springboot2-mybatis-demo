@@ -1,12 +1,11 @@
 package com.dhht.service.make.Impl;
 
 import com.dhht.annotation.Sync;
-import com.dhht.dao.ExamineRecordDetailMapper;
-import com.dhht.dao.MakedepartmentMapper;
-import com.dhht.dao.OperatorRecordDetailMapper;
-import com.dhht.dao.OperatorRecordMapper;
+import com.dhht.dao.*;
 import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.SealDTO;
+import com.dhht.model.pojo.SealVO;
 import com.dhht.service.employee.EmployeeService;
 
 import com.dhht.service.tools.FileService;
@@ -51,6 +50,12 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private SealDao sealDao;
+
+    @Autowired
+    private SealAgentMapper sealAgentMapper;
 
     private final String IDCARD_FRONT_FILE = "制作单位法人身份证正面照片";
     private final String IDCARD_REVERSE_FILE = "制作单位法人身份证反面照片";
@@ -203,6 +208,39 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 return ResultUtil.isFail;
             }
         }
+    }
+
+    /**
+     * 按照制作单位查询印章
+     * @param user
+     * @return
+     */
+    @Override
+    public List<Seal> selectSeal(User user) {
+        String telPhone = user.getTelphone();
+        MakeDepartmentSimple makedepartment = makedepartmentMapper.selectByLegalTephone(telPhone);
+        String makeDepartmentCode = makedepartment.getDepartmentCode();
+        List<Seal> seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode);
+        return  seals;
+    }
+
+    /**
+     * 根据id查找印章的详情
+     * @param id
+     * @return
+     */
+    @Override
+    public SealVO sealDetails(String id) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        String anentId = seal.getAgentId();
+        SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);
+        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(anentId);
+        SealVO sealVO = new SealVO();
+        sealVO.setSeal(seal);
+        sealVO.setSealAgent(sealAgent);
+        sealVO.setSealOperationRecord(sealOperationRecord);
+        return sealVO;
+
     }
 
     /**
@@ -367,6 +405,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
 
 
 
+
+
     /**
      * 数据同步
      * @return
@@ -379,4 +419,6 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         syncEntity.setOperateType(operateType);
         return syncEntity;
     }
+
+
 }

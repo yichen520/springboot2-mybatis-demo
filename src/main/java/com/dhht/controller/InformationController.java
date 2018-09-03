@@ -338,4 +338,25 @@ public class InformationController {
             return JsonObjectBO.exception("制作单位信息获取失败");
         }
     }
+
+    /**
+     *根据制作单位查找印章列表
+     */
+    @Log("获取印章列表")
+    @RequestMapping(value = "/selectSeal")
+    public JsonObjectBO selectSeal(HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        JSONObject jsonObject = new JSONObject();
+        List<Seal> seals = new ArrayList<>();
+        try {
+            seals = makeDepartmentService.selectSeal(user);
+            jsonObject.put("seals",seals);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+    }
+
+    
 }
