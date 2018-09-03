@@ -47,6 +47,7 @@ public class Makedepartment {
     private String idCardReverseId;
     @EntityComment(value = "制作单位营业执照扫面件",type = 2)
     private String businessLicenseUrl;
+    @EntityComment(value = "制作单位特种行业许可证",type = 2)
     private String specialLicenseUrl;
     private String legalDocumentUrl;
     private String departmentStatus;

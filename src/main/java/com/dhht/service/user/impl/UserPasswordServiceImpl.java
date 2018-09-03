@@ -118,7 +118,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     public boolean adminResetPwd(String id) {
         String code = createRandomVcode();
         User user = userDao.findById(id);
-        user.setPassword(MD5Util.toMd5(code));
+        user.setPassword(SM3Util.doSM3(code));
 //        user.setPassword(code);
         String userName = user.getUserName();
         String phone = user.getTelphone();
@@ -170,7 +170,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         SMSCode code = smsCodeDao.getSMSCodeByPhone(phone);
         String smscode = code.getSmscode();
         if(smscode.equals(checkCode)){
-            String pwd = MD5Util.toMd5(password);
+            String pwd = SM3Util.doSM3(password);
             user.setPassword(pwd);
             int a = userDao.update(user);
             if (a!=1){
@@ -197,7 +197,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     public boolean appResetPwd(String id, String newPassWord) {
         User user = userDao.findById(id);
         String userName = user.getUserName();
-        String pwd = MD5Util.toMd5(newPassWord);
+        String pwd = SM3Util.doSM3(newPassWord);
         String phone = user.getTelphone();
         user.setPassword(pwd);
         int a = userDao.update(user);
@@ -213,7 +213,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     }
 
     /**
-     * 修改密码
+     *登入后修改修改密码
      * @param username
      * @param oldPassword
      * @param newPassword

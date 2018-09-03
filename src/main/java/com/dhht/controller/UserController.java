@@ -200,7 +200,7 @@ public class UserController {
     @RequestMapping(value = "/getCheckCode")
     public JsonObjectBO getCheckCode(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String username = (String)map.get("userName");
+        String username = (String)map.get("username");
         try{
         if (userPasswordService.getCheckCode(username)== ResultUtil.isSuccess){
             return JsonObjectBO.success("获取验证码成功",null);
@@ -391,38 +391,7 @@ public class UserController {
 
     }
 
-    /**
-     * 修改密码
-     * @param httpServletRequest
-     * @return
-     */
-    @Log("密码修改")
-    @RequestMapping(value = "/changePwd")
-    public JsonObjectBO changePwd(HttpServletRequest httpServletRequest,@RequestBody Map map){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
-        String username =  user.getUserName();
-        String oldPassword = (String)map.get("oldPassword");
-        String newPassword = (String)map.get("newPassword");
 
-        try {
-            int result =  userPasswordService.changePwd(username,oldPassword,newPassword);
-            if(result==ResultUtil.isSuccess){
-                jsonObjectBO.setMessage("密码修改成功");
-                jsonObjectBO.setCode(1);
-            }else if(result==ResultUtil.isFail){
-                jsonObjectBO.setMessage("密码修改成功");
-                jsonObjectBO.setCode(-1);
-            }else{
-                jsonObjectBO.setMessage("原密码错误");
-                jsonObjectBO.setCode(-1);
-            }
-        }catch (Exception e){
-            logger.error(e.getMessage(),e);
-            jsonObjectBO.setMessage("出现未知错误");
-            jsonObjectBO.setCode(-1);
-        }
-        return jsonObjectBO;
-    }
+
 
 }

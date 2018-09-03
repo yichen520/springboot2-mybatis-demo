@@ -118,6 +118,7 @@ public class NoticeController {
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             logger.error(e.getMessage(),e);
+            System.out.println(e.toString());
             return JsonObjectBO.exception("获取列表失败！");
         }finally {
             PageHelper.clearPage();

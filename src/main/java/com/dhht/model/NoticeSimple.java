@@ -8,6 +8,6 @@ import java.util.Date;
 public class NoticeSimple {
     private String id;
     private String noticeTitle;
-    private String sendRealName;
+    private String sendRealname;
     private Date createTime;
 }
