@@ -50,7 +50,6 @@ public class EmployeeController  implements InitializingBean {
 
     /**
      * 菜单
-     *
      * @param httpServletRequest
      * @return
      */
@@ -72,7 +71,6 @@ public class EmployeeController  implements InitializingBean {
 
     /**
      * 在职从业人员列表
-     *
      * @param map
      * @return
      */
@@ -189,18 +187,33 @@ public class EmployeeController  implements InitializingBean {
      */
     @Log("头像URL保存")
     @RequestMapping(value = "/saveAvatar")
-    public JsonObjectBO getUrl(@RequestBody Map map){
+    public JsonObjectBO getUrl(@RequestBody Map map,HttpServletRequest httpServletRequest){
         String empId = (String)map.get("empId");
         String imgId = (String)map.get("imgId");
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
 
         try {
-            return ResultUtil.getResult(employeeService.updateHeadById(empId,imgId));
+            return ResultUtil.getResult(employeeService.updateHeadById(empId,imgId,user));
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("头像文件失败");
         }
     }
 
+    @Log("从业人员详情")
+    @RequestMapping(value ="/employeeDetail")
+    public JsonObjectBO selectEmployeeDetail(@RequestBody Map map){
+        try {
+            String id = (String)map.get("id");
+            JSONObject jsonObject = new JSONObject();
+            Employee employee = employeeService.selectEmployeeByID(id);
+            jsonObject.put("employee",employee);
+            return JsonObjectBO.success("查询成功",jsonObject);
+         }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception("查看从业人员详情失败");
+        }
+    }
 
     /**
      * redis存储最大的从业人员编号
@@ -210,7 +223,7 @@ public class EmployeeController  implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         String emoloyeeCode = employeeService.selectMaxEmployeeCode();
         if(emoloyeeCode == null) {
-            return ;
+            redisTemplate.opsForValue().set("employeeCode", "0000");
         }
         String temp = emoloyeeCode.substring(19);
         Integer code = Integer.parseInt(temp);

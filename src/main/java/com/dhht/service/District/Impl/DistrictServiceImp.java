@@ -61,16 +61,6 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
-    @Override
-    public JsonObjectBO insert(String districtId, String parentId, String districtName) {
-        return null;
-    }
-
-    @Override
-    public JsonObjectBO delete(String districtId) {
-        return null;
-    }
-
     /**
      * 生成区域下带制作单位的列表
      * @param id
@@ -257,6 +247,11 @@ public class DistrictServiceImp implements DistrictService{
         return districtMenus;
     }
 
+    /**
+     * 区域ID处理
+     * @param districtId
+     * @return
+     */
     @Override
     public String district(String districtId){
         String district[] =  StringUtil.DistrictUtil(districtId);
@@ -284,7 +279,7 @@ public class DistrictServiceImp implements DistrictService{
     public String selectByDistrictId(String districtId) {
         District district = districtMapper.selectByDistrictId(districtId);
         if(district==null){
-            return "该公司所属行政划分区域异常！";
+            return "所属行政划分区域异常！";
         }
         String districtName = district.getProvinceName()+"/"+district.getCityName()+"/"+district.getDistrictName();
         return districtName;
