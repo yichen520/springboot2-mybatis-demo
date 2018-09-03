@@ -60,7 +60,7 @@ public class SealController implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         Seal seal = sealService.selectLastSeal();
         if(seal== null) {
-            return ;
+            redisTemplate.opsForValue().set("SealSerialNum",0);
         }
         if(!redisTemplate.hasKey("SealSerialNum")){
             redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));

@@ -182,7 +182,7 @@ public class SealServiceImpl implements SealService {
                     String sealId = UUIDUtil.generate();
                     seal.setId(sealId);
                     seal.setSealName(useDepartment.getName());
-                    seal.setSealStatusCode("04");
+                    seal.setSealStatusCode("03");
                     seal.setIsRecord(true);
                     seal.setRecordDate(DateUtil.getCurrentTime());
                     seal.setIsMake(false);
@@ -197,6 +197,7 @@ public class SealServiceImpl implements SealService {
                     seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
                     seal.setIsRecord(true);
                     seal.setRecordDate(DateUtil.getCurrentTime());
+                    
 
 
                     //操作记录

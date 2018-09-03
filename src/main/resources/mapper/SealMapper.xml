@@ -40,6 +40,7 @@
     <result column="getter_id" property="getterId" jdbcType="CHAR"/>
     <result column="loss_person_id" property="lossPersonId" jdbcType="CHAR"/>
     <result column="logout_person_id" property="logoutPersonId" jdbcType="CHAR"/>
+    <result column="is_chipseal" property="isChipseal" jdbcType="BIT"></result>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -104,7 +105,7 @@
     record_department_code, record_department_name, make_department_code, make_department_name, 
     seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
     seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
     select 
@@ -127,7 +128,7 @@
       materials_code, mimeograph_description, seal_shape_code, 
       seal_size, seal_center_image, seal_specification, 
       seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal
       )
     values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR}, 
       #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR}, 
@@ -136,7 +137,8 @@
       #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
       #{sealSize,jdbcType=VARCHAR}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR},
       #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR},#{recordDate},#{isRecord},#{makeDate},#{isMake},
-      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId},#{agentId},#{getterId},#{lossPersonId},#{logoutPersonId})
+      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId},#{agentId},#{getterId},#{lossPersonId},#{logoutPersonId},
+      #{isChipseal})
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.Seal" >
@@ -176,7 +178,8 @@
       agent_id = #{agentId},
       getter_id = #{getterId},
       loss_person_id = #{lossPersonId},
-      logout_person_id = #{logoutPersonId}
+      logout_person_id = #{logoutPersonId},
+      is_chipseal = #{isChipseal}
     where id = #{id,jdbcType=CHAR}
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
