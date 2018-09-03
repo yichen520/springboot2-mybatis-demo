@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.IncidenceMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Incidence" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="serial_code" property="serialCode" jdbcType="VARCHAR" />
+    <result column="department_code" property="departmentCode" jdbcType="CHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="incidence_id" property="incidenceId" jdbcType="VARCHAR" />
+    <result column="incidence_type" property="incidenceType" jdbcType="VARCHAR" />
+    <result column="incidence_category" property="incidenceCategory" jdbcType="VARCHAR" />
+    <result column="incidence_time" property="incidenceTime" jdbcType="TIMESTAMP" />
+    <result column="incidence_detail" property="incidenceDetail" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="recorder" property="recorder" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, serial_code, department_code, department_name, incidence_id, incidence_type, 
+    incidence_category, incidence_time, incidence_detail, district_id, create_time, recorder, 
+    update_user, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from make_department_incidence
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectInfo" resultMap="BaseResultMap" parameterType="com.dhht.model.pojo.IncidencePO" >
+    select
+    <include refid="Base_Column_List" />
+    from make_department_incidence
+    where 1 = 1
+    <if test="startTime == null and  endTime != null" >
+      and incidence_time &lt; #{endTime}
+    </if>
+    <if test="startTime != null and  endTime != null" >
+      and incidence_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != null and  endTime == null" >
+      and incidence_time &gt; #{startTime}
+    </if>
+    <if test="serialCode != null" >
+      and serial_code like '%${serialCode}%'
+  </if>
+    <if test="departmentCode != null" >
+      and  department_code like '%${departmentCode}%'
+    </if>
+    <if test="departmentName != null" >
+      and department_name like '%${departmentName}%'
+    </if>
+    <if test="incidenceId != null" >
+      and  incidence_id like '%${incidenceId}%'
+    </if>
+    <if test="incidenceType != null" >
+      and incidence_type = #{incidenceType}
+    </if>
+    <if test="incidenceCategory != null" >
+      and incidence_category  = #{incidenceCategory}
+    </if>
+    <if test="districtId != null" >
+      and district_id like '%${districtId}%'
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from make_department_incidence
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.Incidence" >
+    insert into make_department_incidence (id, serial_code, department_code, 
+      department_name, incidence_id, incidence_type, 
+      incidence_category, incidence_time, incidence_detail, 
+      district_id, create_time, recorder, 
+      update_user, update_time)
+    values (#{id,jdbcType=CHAR}, #{serialCode,jdbcType=VARCHAR}, #{departmentCode,jdbcType=CHAR}, 
+      #{departmentName,jdbcType=VARCHAR}, #{incidenceId,jdbcType=VARCHAR}, #{incidenceType,jdbcType=VARCHAR}, 
+      #{incidenceCategory,jdbcType=VARCHAR}, #{incidenceTime,jdbcType=TIMESTAMP}, #{incidenceDetail,jdbcType=VARCHAR}, 
+      #{districtId,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{recorder,jdbcType=VARCHAR}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.Incidence" >
+    insert into make_department_incidence
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serialCode != null" >
+        serial_code,
+      </if>
+      <if test="departmentCode != null" >
+        department_code,
+      </if>
+      <if test="departmentName != null" >
+        department_name,
+      </if>
+      <if test="incidenceId != null" >
+        incidence_id,
+      </if>
+      <if test="incidenceType != null" >
+        incidence_type,
+      </if>
+      <if test="incidenceCategory != null" >
+        incidence_category,
+      </if>
+      <if test="incidenceTime != null" >
+        incidence_time,
+      </if>
+      <if test="incidenceDetail != null" >
+        incidence_detail,
+      </if>
+      <if test="districtId != null" >
+        district_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="recorder != null" >
+        recorder,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="serialCode != null" >
+        #{serialCode,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentCode != null" >
+        #{departmentCode,jdbcType=CHAR},
+      </if>
+      <if test="departmentName != null" >
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceId != null" >
+        #{incidenceId,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceType != null" >
+        #{incidenceType,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceCategory != null" >
+        #{incidenceCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceTime != null" >
+        #{incidenceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="incidenceDetail != null" >
+        #{incidenceDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        #{districtId,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recorder != null" >
+        #{recorder,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Incidence" >
+    update make_department_incidence
+    <set >
+      <if test="serialCode != null" >
+        serial_code = #{serialCode,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentCode != null" >
+        department_code = #{departmentCode,jdbcType=CHAR},
+      </if>
+      <if test="departmentName != null" >
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceId != null" >
+        incidence_id = #{incidenceId,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceType != null" >
+        incidence_type = #{incidenceType,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceCategory != null" >
+        incidence_category = #{incidenceCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="incidenceTime != null" >
+        incidence_time = #{incidenceTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="incidenceDetail != null" >
+        incidence_detail = #{incidenceDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        district_id = #{districtId,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recorder != null" >
+        recorder = #{recorder,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Incidence" >
+    update make_department_incidence
+    set serial_code = #{serialCode,jdbcType=VARCHAR},
+      department_code = #{departmentCode,jdbcType=CHAR},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      incidence_id = #{incidenceId,jdbcType=VARCHAR},
+      incidence_type = #{incidenceType,jdbcType=VARCHAR},
+      incidence_category = #{incidenceCategory,jdbcType=VARCHAR},
+      incidence_time = #{incidenceTime,jdbcType=TIMESTAMP},
+      incidence_detail = #{incidenceDetail,jdbcType=VARCHAR},
+      district_id = #{districtId,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      recorder = #{recorder,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectMaxSerialCode" resultType="java.lang.String">
+    SELECT Max(serial_code) from make_department_incidence ;
+  </select>
+</mapper>

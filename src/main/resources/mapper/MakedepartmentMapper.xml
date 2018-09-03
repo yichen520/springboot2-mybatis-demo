@@ -31,7 +31,7 @@
     <result column="idcard_front_id" property="idCardFrontId" jdbcType="VARCHAR"/>
     <result column="idcard_reverse_id" property="idCardReverseId" jdbcType="VARCHAR"/>
     <association property="makeDepartmentPunish"  resultMap="makeDepartmentPunishResultMap" javaType="com.dhht.model.MakeDepartmentPunish"></association>
-    <!--<collection property="employee" resultMap="employeeResultMap" javaType="com.dhht.model.Employee"></collection>-->
+
   </resultMap>
   <resultMap id="makeDepartmentPunishResultMap" type="com.dhht.model.MakeDepartmentPunish">
     <id property="id" column="mid"/>
@@ -176,6 +176,11 @@
   <select id="selectDetailById" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/>
     from make_department where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectDetailByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List"/>
+    from make_department  where department_name = #{name,jdbcType=VARCHAR} and delete_status = 0
   </select>
 
   <select id="selectByCode" resultMap="SimpleResultMap" parameterType="com.dhht.model.Makedepartment">
