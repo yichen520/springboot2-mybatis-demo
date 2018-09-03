@@ -53,7 +53,7 @@ public interface SealService {
    FileInfoVO download(String id);
 
    //是否是法人
-   boolean isLegalPerson(String idcard,String useDepartmentCode);
+   boolean isLegalPerson(String certificateNo,String name,String useDepartmentCode);
 
 
 }

@@ -479,10 +479,11 @@ public class SealController {
     @RequestMapping(value = "/isLegalPerson", method = RequestMethod.POST)
     public JsonObjectBO isLegalPerson(@RequestBody Map map) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String idcard = (String) map.get("idcard");
+        String name = (String) map.get("name");
+        String certificateNo = (String) map.get("certificateNo");
         String useDepartmentCode = (String) map.get("useDepartmentCode");
         try {
-            Boolean isLegalPerson = sealService.isLegalPerson(idcard,useDepartmentCode);
+            Boolean isLegalPerson = sealService.isLegalPerson(certificateNo,name,useDepartmentCode);
             if (isLegalPerson) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("是法人");
