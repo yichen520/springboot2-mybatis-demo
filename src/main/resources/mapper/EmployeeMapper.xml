@@ -81,6 +81,10 @@
   <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List"/> from employee WHERE  telphone = #{phone,jdbcType=VARCHAR} AND version_status = 0
   </select>
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List"/> from employee
+    WHERE  employee_name = #{name,jdbcType=VARCHAR} AND version_status = 0
+  </select>
 
   <select id="selectWorkEmployee" resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT <include refid="Base_Column_List"></include> FROM employee WHERE employee_department_code=#{code,jdbcType=VARCHAR} AND version_status = 0 AND employee_name LIKE  '%${name}%'

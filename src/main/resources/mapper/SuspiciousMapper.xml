@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.SuspiciousMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Suspicious" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="make_department_code" property="makeDepartmentCode" jdbcType="VARCHAR" />
+    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+    <result column="employee_code" property="employeeCode" jdbcType="VARCHAR" />
+    <result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
+    <result column="employee_idcard" property="employeeIdcard" jdbcType="CHAR" />
+    <result column="suspicious_type" property="suspiciousType" jdbcType="CHAR" />
+    <result column="suspicious_time" property="suspiciousTime" jdbcType="TIMESTAMP" />
+    <result column="suspicious_detail" property="suspiciousDetail" jdbcType="VARCHAR" />
+    <result column="recorder" property="recorder" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="district_id" property="districtId" jdbcType="INTEGER" />
+    <result column="update_user" property="updateUser" jdbcType="CHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, make_department_code, employee_code, employee_name, employee_idcard, suspicious_type, 
+    suspicious_time, suspicious_detail, recorder, create_time, district_id, update_user, 
+    update_time,make_department_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from suspicious
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from suspicious
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.Suspicious" >
+    insert into suspicious (id, make_department_code, employee_code, 
+      employee_name, employee_idcard, suspicious_type, 
+      suspicious_time, suspicious_detail, recorder, 
+      create_time, district_id, update_user, 
+      update_time,make_department_name)
+    values (#{id,jdbcType=CHAR}, #{makeDepartmentCode,jdbcType=VARCHAR}, #{employeeCode,jdbcType=VARCHAR}, 
+      #{employeeName,jdbcType=VARCHAR}, #{employeeIdcard,jdbcType=CHAR}, #{suspiciousType,jdbcType=CHAR}, 
+      #{suspiciousTime,jdbcType=TIMESTAMP}, #{suspiciousDetail,jdbcType=VARCHAR}, #{recorder,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=INTEGER}, #{updateUser,jdbcType=CHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP},#{makeDepartmentName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.Suspicious" >
+    insert into suspicious
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="makeDepartmentCode != null" >
+        make_department_code,
+      </if>
+      <if test="employeeCode != null" >
+        employee_code,
+      </if>
+      <if test="employeeName != null" >
+        employee_name,
+      </if>
+      <if test="employeeIdcard != null" >
+        employee_idcard,
+      </if>
+      <if test="suspiciousType != null" >
+        suspicious_type,
+      </if>
+      <if test="suspiciousTime != null" >
+        suspicious_time,
+      </if>
+      <if test="suspiciousDetail != null" >
+        suspicious_detail,
+      </if>
+      <if test="recorder != null" >
+        recorder,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="districtId != null" >
+        district_id,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="makeDepartmentCode != null" >
+        #{makeDepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeCode != null" >
+        #{employeeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null" >
+        #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeIdcard != null" >
+        #{employeeIdcard,jdbcType=CHAR},
+      </if>
+      <if test="suspiciousType != null" >
+        #{suspiciousType,jdbcType=CHAR},
+      </if>
+      <if test="suspiciousTime != null" >
+        #{suspiciousTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suspiciousDetail != null" >
+        #{suspiciousDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="recorder != null" >
+        #{recorder,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="districtId != null" >
+        #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=CHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="makeDepartmentName != null" >
+        #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Suspicious" >
+    update suspicious
+    <set >
+      <if test="makeDepartmentCode != null" >
+        make_department_code = #{makeDepartmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeCode != null" >
+        employee_code = #{employeeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null" >
+        employee_name = #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeIdcard != null" >
+        employee_idcard = #{employeeIdcard,jdbcType=CHAR},
+      </if>
+      <if test="suspiciousType != null" >
+        suspicious_type = #{suspiciousType,jdbcType=CHAR},
+      </if>
+      <if test="suspiciousTime != null" >
+        suspicious_time = #{suspiciousTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suspiciousDetail != null" >
+        suspicious_detail = #{suspiciousDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="recorder != null" >
+        recorder = #{recorder,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="districtId != null" >
+        district_id = #{districtId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=CHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="makeDepartmentName != null" >
+        make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <select id="selectInfo" resultMap="BaseResultMap" parameterType="com.dhht.model.pojo.SuspiciousPO" >
+  select
+  <include refid="Base_Column_List" />
+  from suspicious
+  where 1 = 1
+  <if test="startTime == null and  endTime != null" >
+    and suspicious_time &lt; #{endTime}
+  </if>
+  <if test="startTime != null and  endTime != null" >
+    and suspicious_time BETWEEN #{startTime} and #{endTime}
+  </if>
+  <if test="startTime != null and  endTime == null" >
+    and suspicious_time &gt; #{startTime}
+  </if>
+
+  <if test="makeDepartmentCode != null" >
+    and  make_department_code like '%${makeDepartmentCode}%'
+  </if>
+  <if test="makeDepartmentName != null" >
+    and make_department_name like '%${makeDepartmentName}%'
+  </if>
+  <if test="suspiciousType != null" >
+    and  suspicious_type = #{suspiciousType}
+  </if>
+    <if test="updateUser != null" >
+      and  update_user = #{updateUser}
+    </if>
+  <if test="districtId != null" >
+    and district_id like '%${districtId}%'
+  </if>
+  </select>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Suspicious" >
+    update suspicious
+    set make_department_code = #{makeDepartmentCode,jdbcType=VARCHAR},
+    make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      employee_code = #{employeeCode,jdbcType=VARCHAR},
+      employee_name = #{employeeName,jdbcType=VARCHAR},
+      employee_idcard = #{employeeIdcard,jdbcType=CHAR},
+      suspicious_type = #{suspiciousType,jdbcType=CHAR},
+      suspicious_time = #{suspiciousTime,jdbcType=TIMESTAMP},
+      suspicious_detail = #{suspiciousDetail,jdbcType=VARCHAR},
+      recorder = #{recorder,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      district_id = #{districtId,jdbcType=INTEGER},
+      update_user = #{updateUser,jdbcType=CHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

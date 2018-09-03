@@ -175,7 +175,7 @@ public class SealServiceImpl implements SealService {
                 String sealId = UUIDUtil.generate();
                 seal.setId(sealId);
                 seal.setSealName(useDepartment.getName());
-                seal.setSealStatusCode("04");
+                seal.setSealStatusCode("03");
                 seal.setIsRecord(true);
                 seal.setRecordDate(DateUtil.getCurrentTime());
                 seal.setIsMake(false);
@@ -496,7 +496,7 @@ public class SealServiceImpl implements SealService {
     public boolean deliver(User user,String id,String proxyId,String name,
                         String certificateType,String certificateNo,String agentTelphone,boolean isSame) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
-        seal1.setSealStatusCode("03");
+        seal1.setSealStatusCode("04");
         if (seal1.getIsLogout()) {
             return false;
         }
