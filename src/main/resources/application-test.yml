@@ -137,5 +137,8 @@ smsexpireTime: 300000
 
 face:
   similarity: 45
+seal:
+   template:
+        filepath: C:/temp
 
 

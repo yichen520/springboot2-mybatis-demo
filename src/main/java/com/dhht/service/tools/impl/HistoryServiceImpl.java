@@ -78,12 +78,12 @@ public class HistoryServiceImpl implements HistoryService {
             try {
                 operatorRecordDetail.setOldValue(compareResult.getOldValue().toString());
             }catch (NullPointerException e){
-                operatorRecordDetail.setOldValue(" ");
+                operatorRecordDetail.setOldValue("");
             }
             try {
                 operatorRecordDetail.setNewValue(compareResult.getNewValue().toString());
             }catch (NullPointerException e){
-                operatorRecordDetail.setNewValue(" ");
+                operatorRecordDetail.setNewValue("");
             }
             operatorRecordDetail.setPropertyName(compareResult.getPropertyName());
             operatorRecordDetail.setPropertyType(compareResult.getPropertyType());
@@ -119,6 +119,20 @@ public class HistoryServiceImpl implements HistoryService {
         operatorRecord.setOperateTypeName(SyncOperateType.getOperateTypeName(type));
         operatorRecord.setOperateTime(DateUtil.getCurrentTime());
         int i = operatorRecordMapper.insert(operatorRecord);
+        if(i>0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 不通过比较存储历史记录
+     * @param operatorRecordDetail
+     * @return
+     */
+    @Override
+    public boolean insertOperateDetail(OperatorRecordDetail operatorRecordDetail) {
+        int i = operatorRecordDetailMapper.insert(operatorRecordDetail);
         if(i>0){
             return true;
         }

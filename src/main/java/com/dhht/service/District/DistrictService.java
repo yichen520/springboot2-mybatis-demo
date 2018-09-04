@@ -13,12 +13,6 @@ public interface DistrictService {
     //查询指定区域
     List<DistrictMenus> selectOneDistrict(String id);
 
-    //增加区域
-    JsonObjectBO insert(String districtId, String parentId, String districtName);
-
-    //删除
-    JsonObjectBO delete(String districtId);
-
     //生成区域下带制作单位单位列表
     List<DistrictMenus> selectMakeDepartmentMenus(String id);
 

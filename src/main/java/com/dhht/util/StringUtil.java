@@ -5,6 +5,8 @@ package com.dhht.util;
 import com.dhht.common.JsonObjectBO;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -232,6 +234,20 @@ public class StringUtil {
             districtId = id;
         }
         return districtId;
+    }
+
+    /**
+     * 用于三级联动区域id
+     * @param districtId
+     * @return
+     */
+    public static List<String> getDistrictIds(String districtId){
+        List<String> districtIds = new ArrayList<>();
+        String temp[] = DistrictUtil(districtId);
+        districtIds.add(temp[0]+"0000");
+        districtIds.add(temp[0]+temp[1]+"00");
+        districtIds.add(districtId);
+        return districtIds;
     }
 
     /**

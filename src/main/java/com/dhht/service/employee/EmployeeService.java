@@ -20,7 +20,7 @@ public interface EmployeeService {
 
     int deleteEmployee(String id,User user);
 
-    Employee selectEmployeeByID(String employeeCode);
+    Employee selectEmployeeByID(String id);
 
     List<Employee> seletHistory(String flag);
 
@@ -36,7 +36,7 @@ public interface EmployeeService {
 
     Employee selectByPhone(String phone);
 
-    int updateHeadById(String id,String image);
+    int updateHeadById(String id,String image,User updateUser);
 
     List<Employee> operationByDepartmentCode(String code);
 

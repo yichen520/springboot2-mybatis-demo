@@ -158,7 +158,8 @@ public class NoticeServiceImp implements NoticeService{
         String cityId = districtIds[0]+districtIds[1]+"00";
         String provinceId = districtIds[0]+"00"+"00";
         String districtId = districtIds[0]+districtIds[1]+districtIds[2];
-        return noticeMapper.selectNoticeList(cityId,provinceId,districtId);
+        List<NoticeSimple> list = noticeMapper.selectNoticeList(cityId,provinceId,districtId);
+        return list;
     }
 
     /**

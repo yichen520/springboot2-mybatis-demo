@@ -197,7 +197,7 @@ public class SealServiceImpl implements SealService {
                     seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
                     seal.setIsRecord(true);
                     seal.setRecordDate(DateUtil.getCurrentTime());
-                    
+
 
 
                     //操作记录

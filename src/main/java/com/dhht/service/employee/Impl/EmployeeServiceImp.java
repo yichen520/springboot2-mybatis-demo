@@ -4,6 +4,7 @@ import com.dhht.annotation.Sync;
 import com.dhht.dao.EmployeeDao;
 import com.dhht.model.*;
 
+import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 
 import com.dhht.service.make.MakeDepartmentService;
@@ -48,6 +49,8 @@ public class EmployeeServiceImp implements EmployeeService {
     private FileService fileService;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private DistrictService districtService;
 
     private final static String EMPLOYEE_HEAD_UPLOAD = "从业人员头像上传";
 
@@ -68,7 +71,11 @@ public class EmployeeServiceImp implements EmployeeService {
             RecordDepartment recordDepartment = recordDepartments.get(0);
             employee.setEmployeeCode(getEmployeeCode(makeDepartmentSimple.getDepartmentCode()));
             employee.setId(UUIDUtil.generate());
-            employee.setDistrictId(user.getDistrictId());
+            //employee.setDistrictId(user.getDistrictId());
+            if(employee.getFamilyDistrictIds()!=null&&employee.getNowDistrictIds()!=null){
+                employee.setFamilyDistrictId(employee.getFamilyDistrictIds().get(2));
+                employee.setNowDistrictId(employee.getNowDistrictIds().get(2));
+            }
             employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
             employee.setOfficeCode(recordDepartment.getDepartmentCode());
             employee.setOfficeName(recordDepartment.getDepartmentName());
@@ -79,7 +86,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setVersionTime(DateUtil.getCurrentTime());
             String operateUUid = UUIDUtil.generate();
             boolean o = historyService.insertOperateRecord(user,employee.getFlag(),employee.getId(),"employee",SyncOperateType.SAVE,operateUUid);
-            if (isInsert(employee.getEmployeeId())) {
+            if (isRepeatEmployeeId(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
             }
             int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
@@ -115,7 +122,7 @@ public class EmployeeServiceImp implements EmployeeService {
             if (d == 0) {
                 return ResultUtil.isError;
             }
-            if (isInsert(employee.getEmployeeId())) {
+            if (isRepeatEmployeeId(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
             }employee.setEmployeeDepartmentCode(oldDate.getEmployeeDepartmentCode());
             employee.setEmployeeCode(oldDate.getEmployeeCode());
@@ -203,7 +210,8 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public Employee selectEmployeeByID(String id) {
-        return employeeDao.selectById(id);
+        Employee employee = employeeDao.selectById(id);
+        return setEmployeeDistrict(employee);
     }
 
     /**
@@ -307,8 +315,20 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public int updateHeadById(String id, String image) {
+    public int updateHeadById(String id, String image,User updateUser) {
         Employee employee = employeeDao.selectById(id);
+        String operateUUid = UUIDUtil.generate();
+        boolean o = historyService.insertOperateRecord(updateUser,employee.getFlag(),employee.getId(),"employee",SyncOperateType.UPDATE,operateUUid);
+        OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+        operatorRecordDetail.setId(UUIDUtil.generate());
+        operatorRecordDetail.setPropertyType(2);
+        operatorRecordDetail.setPropertyName("从业人员头像");
+        if(employee.getEmployeeImage()!=null) {
+            operatorRecordDetail.setOldValue(employee.getEmployeeImage());
+        }
+        operatorRecordDetail.setNewValue(image);
+        operatorRecordDetail.setEntityOperateRecordId(operateUUid);
+        boolean b = historyService.insertOperateDetail(operatorRecordDetail);
         if(employee.getEmployeeImage()!=null){
             fileService.getFileInfo(employee.getEmployeeImage());
         }
@@ -379,6 +399,18 @@ public class EmployeeServiceImp implements EmployeeService {
         return pageInfo;
     }
 
+    public Employee setEmployeeDistrict(Employee employee){
+        String familyDistrictId = employee.getFamilyDistrictId();
+        employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+        String nowDistrictId = employee.getNowDistrictId();
+        employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+        String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+        String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+        employee.setFamilyDistrictName(familyDistrictName);
+        employee.setNowDistrictName(nowDistrictName);
+        return employee;
+    }
+
     /**
      * 查询最大的从业人员你的编号，用于redis
      * @return
@@ -398,7 +430,7 @@ public class EmployeeServiceImp implements EmployeeService {
      * @param employeeId
      * @return
      */
-    public boolean isInsert(String employeeId){
+    public boolean isRepeatEmployeeId(String employeeId){
         if(employeeDao.selectCountEmployeeId(employeeId)>0){
             return true;
         }
