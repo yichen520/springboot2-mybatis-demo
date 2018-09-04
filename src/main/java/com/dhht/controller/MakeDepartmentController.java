@@ -241,39 +241,39 @@ public class MakeDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
-    @Log("制作单位查看详情")
-    @RequestMapping(value = "/sealDetails")
-    public JsonObjectBO sealDetails(@RequestBody Map map){
-        JSONObject jsonObject = new JSONObject();
-        String id = (String)map.get("id");
-
-        try {
-            SealVO sealVO = makeDepartmentService.sealDetails(id);
-            jsonObject.put("sealDetails",sealVO);
-        }catch (Exception e){
-            logger.error(e.getMessage(),e);
-            JsonObjectBO.exception(e.toString());
-        }
-        return JsonObjectBO.success("查询成功",jsonObject);
-    }
-
-
-    /**
-     *根据制作单位查找印章列表
-     */
-    @Log("获取印章列表")
-    @RequestMapping(value = "/selectSeal")
-    public JsonObjectBO selectSeal(HttpServletRequest httpServletRequest){
-        User user = (User)httpServletRequest.getSession().getAttribute("user");
-        JSONObject jsonObject = new JSONObject();
-        List<Seal> seals = new ArrayList<>();
-        try {
-            seals = makeDepartmentService.selectSeal(user);
-            jsonObject.put("seals",seals);
-            return JsonObjectBO.success("查询成功",jsonObject);
-        }catch (Exception e){
-            logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
-        }
-    }
+//    @Log("制作单位查看详情")
+//    @RequestMapping(value = "/sealDetails")
+//    public JsonObjectBO sealDetails(@RequestBody Map map){
+//        JSONObject jsonObject = new JSONObject();
+//        String id = (String)map.get("id");
+//
+//        try {
+//            SealVO sealVO = makeDepartmentService.sealDetails(id);
+//            jsonObject.put("sealDetails",sealVO);
+//        }catch (Exception e){
+//            logger.error(e.getMessage(),e);
+//            JsonObjectBO.exception(e.toString());
+//        }
+//        return JsonObjectBO.success("查询成功",jsonObject);
+//    }
+//
+//
+//    /**
+//     *根据制作单位查找印章列表
+//     */
+//    @Log("获取印章列表")
+//    @RequestMapping(value = "/selectSeal")
+//    public JsonObjectBO selectSeal(HttpServletRequest httpServletRequest){
+//        User user = (User)httpServletRequest.getSession().getAttribute("user");
+//        JSONObject jsonObject = new JSONObject();
+//        List<Seal> seals = new ArrayList<>();
+//        try {
+//            seals = makeDepartmentService.selectSeal(user);
+//            jsonObject.put("seals",seals);
+//            return JsonObjectBO.success("查询成功",jsonObject);
+//        }catch (Exception e){
+//            logger.error(e.getMessage(),e);
+//            return JsonObjectBO.exception(e.toString());
+//        }
+//    }
 }
