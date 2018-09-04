@@ -146,22 +146,22 @@ public class ImageGenerate {
 
         //设置字体属性
         int fontsize;
-     if (message.length() <14){
-      fontsize = 30;
-     }else if(message.length()==16 || message.length()==15 ){
-         fontsize = 27;
-     }
-     else if(message.length()==17  ){
-        fontsize = 25;
-    }
-     else if(message.length()==18  ){
-        fontsize = 24;
-    }
-     else if(message.length()==19  ){
-         fontsize = 23;
-     }else {
-         fontsize = 20;
-     }
+        if (message.length() <=14){
+            fontsize = 31;
+        }else if( message.length()==15 ){
+            fontsize = 29;
+        }
+        else if(message.length()==16  ){
+            fontsize = 27;
+        }
+        else if(message.length()==17  ){
+            fontsize = 26;
+        }
+        else if(message.length()==18 ){
+            fontsize = 24;
+        }else {
+            fontsize = 24;
+        }
         Font f = new Font("Serif", Font.BOLD, fontsize);
 
         FontRenderContext context = g.getFontRenderContext();
