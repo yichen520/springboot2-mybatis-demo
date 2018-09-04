@@ -108,8 +108,8 @@ public class SealServiceImpl implements SealService {
         if(redisTemplate.hasKey("SealSerialNum")){
              num = jedis.incrBy("SealSerialNum",1).toString();
         }else{
-            redisTemplate.opsForValue().set("SealSerialNum",0);
-             num = redisTemplate.opsForValue().get("SealSerialNum").toString();
+             redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
+             num = jedis.incrBy("SealSerialNum",1).toString();
         }
         int length = num.length();
         String serial = "00000000";

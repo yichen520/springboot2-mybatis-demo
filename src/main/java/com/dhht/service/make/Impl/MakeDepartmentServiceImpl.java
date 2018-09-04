@@ -220,7 +220,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         String telPhone = user.getTelphone();
         MakeDepartmentSimple makedepartment = makedepartmentMapper.selectByLegalTephone(telPhone);
         String makeDepartmentCode = makedepartment.getDepartmentCode();
-        List<Seal> seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode);
+        List<Seal> seals = sealDao.selectByMakeDepartmentCodeAndIsMake(makeDepartmentCode);
         return  seals;
     }
 

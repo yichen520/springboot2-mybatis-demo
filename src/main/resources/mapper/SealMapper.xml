@@ -462,6 +462,13 @@
     </where>
   </select>
 
+  <select id="selectByMakeDepartmentCodeAndIsMake" resultMap="BaseResultMap">
+    SELECT * FROM seal
+    <where>
+      make_department_code = #{makeDepartmentCode} and is_make = true
+    </where>
+  </select>
+
 <select id="selectLastSeal" resultMap="BaseResultMap">
 SELECT * from seal where record_date=(select max(record_date) from seal)
 </select>
