@@ -11,6 +11,8 @@
     <result column="employee_department_code" property="employeeDepartmentCode" jdbcType="VARCHAR"/>
     <result column="employee_nation" property="employeeNation" jdbcType="VARCHAR" />
     <result column="family_address_detail" property="familyAddressDetail" jdbcType="VARCHAR" />
+    <result column="family_districtid" property="familyDistrictId" jdbcType="VARCHAR"/>
+    <result column="now_districtid" property="nowDistrictId" jdbcType="VARCHAR"/>
     <result column="now_address_detail" property="nowAddressDetail" jdbcType="VARCHAR" />
     <result column="employee_image" property="employeeImage" jdbcType="VARCHAR" />
     <result column="telphone" property="telphone" jdbcType="VARCHAR" />
@@ -32,7 +34,7 @@
 
   <sql id="Base_Column_List" >
     id,employee_code, employee_name, employee_id,employee_gender, employee_job,employee_department_code, employee_nation,
-    family_address_detail,  now_address_detail, employee_image, telphone,
+    family_address_detail,  now_address_detail, employee_image, telphone,now_districtid,family_districtid,
     contact_name, contact_telphone, office_code, office_name, register_name, register_time,
     logout_office_code, logout_office_name, logout_name, version,version_time,flag,is_delete
   </sql>
@@ -123,14 +125,14 @@
       employee_job, employee_nation,
       family_address_detail,  now_address_detail,
       employee_image, telphone, contact_name, 
-      contact_telphone, office_code, office_name, 
+      contact_telphone, office_code, office_name, family_districtid,now_districtid,
       register_name, register_time,version,version_time,flag,is_delete,version_status
       )
     values (#{id,jdbcType=VARCHAR},#{employeeCode,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, #{employeeId,jdbcType=VARCHAR}, #{employeeGender,jdbcType=CHAR},
      #{employeeDepartmentCode,jdbcType=VARCHAR}, #{employeeJob,jdbcType=VARCHAR}, #{employeeNation,jdbcType=VARCHAR},
       #{familyAddressDetail,jdbcType=VARCHAR}, #{nowAddressDetail,jdbcType=VARCHAR},
       #{employeeImage,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, 
-      #{contactTelphone,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR}, 
+      #{contactTelphone,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR}, #{familyDistrictId},#{nowDistrictId},
       #{registerName,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{version,jdbcType=NUMERIC},
       #{versionTime,jdbcType=TIMESTAMP},#{flag,jdbcType=VARCHAR},0,0
       )
@@ -144,17 +146,17 @@
       insert into employee (id,employee_code, employee_name, employee_id,employee_gender,employee_department_code,
       employee_job, employee_nation,
       family_address_detail,  now_address_detail,
-      employee_image, telphone, contact_name,
+      employee_image, telphone, contact_name,family_districtid,now_districtid,
       contact_telphone, office_code, office_name, logout_office_code,logout_office_name,logout_name,
       register_name, register_time,version,version_time,flag,is_delete,version_status
       )
     values (#{id,jdbcType=VARCHAR},#{employeeCode,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, #{employeeId,jdbcType=VARCHAR}, #{employeeGender,jdbcType=CHAR},
      #{employeeDepartmentCode,jdbcType=VARCHAR}, #{employeeJob,jdbcType=VARCHAR}, #{employeeNation,jdbcType=VARCHAR},
       #{familyAddressDetail,jdbcType=VARCHAR}, #{nowAddressDetail,jdbcType=VARCHAR},
-      #{employeeImage,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR},
+      #{employeeImage,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR},#{familyDistrictId},#{nowDistrictId},
       #{contactTelphone,jdbcType=VARCHAR}, #{officeCode,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR},#{logoutOfficeCode,jdbcType=VARCHAR},#{logoutOfficeName,jdbcType=VARCHAR},#{logoutName,jdbcType=VARCHAR},
       #{registerName,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{version,jdbcType=NUMERIC},
-      #{versionTime,jdbcType=TIMESTAMP},#{flag,jdbcType=VARCHAR},1,1)
+      #{versionTime,jdbcType=TIMESTAMP},#{flag,jdbcType=VARCHAR},1,0)
   </insert>
 
     <update id="deleteByDepartmentCode" parameterType="java.lang.String">
@@ -198,6 +200,18 @@
   </update>
 
   <!--统计部分-->
+  <select id="indexCountAdd" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver WHERE m1.department_address LIKE '${districtId}%' )AS c on c.department_code = a.employee_department_code
+    WHERE version_status = 0 and date_format(register_time,'%Y-%m')=date_format(now(),'%Y-%m') and is_delete = 0
+  </select>
+  
+  <select id="indexCountDel" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT count(id) from employee as a RIGHT JOIN(SELECT m1.department_code FROM make_department as m1 RIGHT JOIN( select department_code,flag,MAX(version) as ver from make_department GROUP BY flag) as m2
+    on m1.flag = m2.flag and m1.version = m2.ver WHERE m1.department_address LIKE '${districtId}%' )AS c on c.department_code = a.employee_department_code
+    WHERE version_status = 0 and date_format(register_time,'%Y-%m')=date_format(now(),'%Y-%m') and is_delete = 1
+  </select>
+
   <select id="countAllEmployee" parameterType="java.lang.String" resultType="java.lang.Integer">
     SELECT count(id) from employee as a RIGHT JOIN( select employee_department_code,flag,MAX(version) as ver from employee GROUP BY flag )as b
     on a.flag=b.flag and a.version=b.ver

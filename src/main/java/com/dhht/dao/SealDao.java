@@ -85,4 +85,14 @@ public interface SealDao {
     int countLogoutSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     List<SealDistrict> countByDistrictId(List<DistrictMenus> districtIds);
+
+    int indexCountSum(@Param("districtId") String districtId);
+
+    int indexCountAdd(@Param("districtId") String districtId);
+
+    int indexCountDel(@Param("districtId") String districtId);
+
+    List<IndexCount> indexCountSealByDepartment ();
+
+    int indexCountPolyline(@Param("month")int month,@Param("districtId")String districtId);
 }
