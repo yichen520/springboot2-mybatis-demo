@@ -205,7 +205,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             logger.error(e.getMessage(), e);
             map.put("status", "error");
             map.put("currentAuthority", "guest");
-            map.put("message","登录失败！系统无此账号");
+            map.put("message","登录失败！请核对用户名和账号！");
             return map;
         }
     }
