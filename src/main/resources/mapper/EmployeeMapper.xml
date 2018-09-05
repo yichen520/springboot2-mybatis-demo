@@ -81,6 +81,11 @@
   <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List"/> from employee WHERE  telphone = #{phone,jdbcType=VARCHAR} AND version_status = 0
   </select>
+
+  <select id="selectByEmployeeId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List"/> from employee WHERE  employee_id = #{employeeId,jdbcType=CHAR} AND version_status = 0
+  </select>
+
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List"/> from employee
     WHERE  employee_name = #{name,jdbcType=VARCHAR} AND version_status = 0

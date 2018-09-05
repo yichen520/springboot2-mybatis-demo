@@ -234,10 +234,12 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         Seal seal = sealDao.selectByPrimaryKey(id);
         String anentId = seal.getAgentId();
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);
+        List<SealAgent> sealAgents = new ArrayList<>();
         SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(anentId);
+        sealAgents.add(sealAgent);
         SealVO sealVO = new SealVO();
         sealVO.setSeal(seal);
-        sealVO.setSealAgent(sealAgent);
+        sealVO.setSealAgents(sealAgents);
         sealVO.setSealOperationRecord(sealOperationRecord);
         return sealVO;
 

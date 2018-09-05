@@ -12,11 +12,16 @@ import com.dhht.model.pojo.SealDTO;
 import com.dhht.model.pojo.SealVO;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.tools.FileService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.util.Base64Util;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import dhht.idcard.trusted.identify.GuangRayIdentifier;
+import dhht.idcard.trusted.identify.IdentifyResult;
+import sun.misc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,6 +37,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +59,9 @@ public class SealController implements InitializingBean {
 
     @Autowired
     private UseDepartmentService useDepartmentService;
+
+    @Autowired
+    private FileService fileService;
 
     private static Logger logger = LoggerFactory.getLogger(SealController.class);
 
@@ -130,6 +139,7 @@ public class SealController implements InitializingBean {
         String idCardPhotoId =sealDTO.getAgentPhotoId();
         String fieldPhotoId = sealDTO.getFieldPhotoId();
         String useDepartmentCode =sealDTO.getUseDepartmentCode();
+        String entryType = sealDTO.getEntryType();
         int confidence = sealDTO.getConfidence();
         List<Seal> seals = sealDTO.getSeals();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -137,7 +147,7 @@ public class SealController implements InitializingBean {
             int a = sealService.sealRecord(seals,user,useDepartmentCode,districtId, agentTelphone,
                     agentName,certificateNo, certificateType,
                     agentPhotoId,  idCardFrontId,  idCardReverseId,   proxyId,  idCardPhotoId, confidence,
-             fieldPhotoId);
+             fieldPhotoId,entryType);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
@@ -151,6 +161,9 @@ public class SealController implements InitializingBean {
             }else if(a==ResultUtil.isNoEmployee){
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("从业人员不存在");
+            } else if(a==ResultUtil.isNoProxy){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("缺少授权委托书");
             } else {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("添加失败");
@@ -387,6 +400,27 @@ public class SealController implements InitializingBean {
 
 
     /**
+     * 挂失和注销详情
+     */
+    @Log("挂失和注销详情")
+    @RequestMapping(value = "/LossAndLogoutDetail", method = RequestMethod.POST)
+    public JsonObjectBO LossAndLogoutDetail(@RequestBody Map map) {
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String id = (String) map.get("id");
+        try {
+            SealVO sealVO = sealService.lossAndLogoutDetail(id);
+            jsonObject.put("sealVO", sealVO);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setData(jsonObject);
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("查看挂失和注销详情失败");
+        }
+    }
+
+    /**
      * 根据名字进行了查询
      */
     @Log("根据名字进行查询")
@@ -528,6 +562,41 @@ public class SealController implements InitializingBean {
             return JsonObjectBO.exception("请求失败");
         }
     }
+
+
+    /**
+     * 可信身份认证
+     * @param map
+     * @return
+     */
+    @Log("可信身份认证")
+    @RequestMapping(value = "/TrustedIdentityAuthentication", method = RequestMethod.POST)
+    public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String certificateNo = (String) map.get("certificateNo");
+        String name = (String) map.get("name");
+        String fieldPhotoId = (String) map.get("fieldPhotoId");
+        FileInfoVO fieldFileInfo = fileService.readFile(fieldPhotoId);
+        byte[] fileDate = fieldFileInfo.getFileData();
+        float fileDatetoKb =fileDate.length/1024;
+        if(fileDatetoKb>25||fileDatetoKb<10){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("重新上传，图片大小请小于25kb大于10kb");
+        }else {
+            BASE64Encoder base64Encoder = new BASE64Encoder();
+            String photoDate = base64Encoder.encode(fileDate);
+            IdentifyResult identifyResult = GuangRayIdentifier.identify(certificateNo, name, photoDate);
+            if(identifyResult.isPassed()){
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage(identifyResult.getMessage());
+            }else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage(identifyResult.getMessage());
+            }
+        }
+        return jsonObjectBO;
+    }
+
 
 
 }

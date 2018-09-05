@@ -58,6 +58,8 @@ public class SealDTO {
 
     private String idCardPhotoId;//身份证上的照片
 
+    private String entryType;//录入方式  00-读卡  01-可信身份证录入
+
     private Boolean isSame;
 
     private Integer pageNum;

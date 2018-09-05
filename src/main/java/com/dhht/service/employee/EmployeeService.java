@@ -22,6 +22,8 @@ public interface EmployeeService {
 
     Employee selectEmployeeByID(String id);
 
+    Employee selectEmployeeByEmployeeID(String employeeId);
+
     List<Employee> seletHistory(String flag);
 
     int deleteByDepartCode(String code);

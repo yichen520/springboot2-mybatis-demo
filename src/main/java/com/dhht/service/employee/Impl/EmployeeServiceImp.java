@@ -214,6 +214,12 @@ public class EmployeeServiceImp implements EmployeeService {
         return setEmployeeDistrict(employee);
     }
 
+    @Override
+    public Employee selectEmployeeByEmployeeID(String employeeId) {
+        Employee employee = employeeDao.selectByEmployeeId(employeeId);
+        return employee;
+    }
+
     /**
      *历史记录
      * @param flag

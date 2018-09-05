@@ -44,6 +44,8 @@ public interface EmployeeDao {
 
     Employee selectByPhone(@Param("phone") String phone);
 
+    Employee selectByEmployeeId(@Param("employeeId") String employeeId);
+
     Employee selectByName(@Param("name") String name);
 
     int updateHeadById(@Param("id") String id,@Param("employeeImage") String image);

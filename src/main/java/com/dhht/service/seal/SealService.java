@@ -18,7 +18,7 @@ public interface SealService {
    int sealRecord(List<Seal> seals, User user,String useDepartmentCode, String districtId, String agentTelphone,
                   String agentName, String certificateNo, String certificateType,
                   String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,
-                  String fieldPhotoId );
+                  String fieldPhotoId,String entryType );
 
    //印章主界面
    PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
@@ -57,6 +57,9 @@ public interface SealService {
 
    //查找最新的印章信息
    Seal selectLastSeal();
+
+   //挂失和注销的经办人信息
+   SealVO lossAndLogoutDetail(String id);
 
 
 }

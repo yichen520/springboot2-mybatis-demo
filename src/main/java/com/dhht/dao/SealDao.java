@@ -55,6 +55,8 @@ public interface SealDao {
 
     SealOperationRecord selectOperationRecordByCode(@Param("id") String id);
 
+    SealOperationRecord selectOperationRecordByCodeAndType(@Param("id") String id,@Param("type") String type);
+
     int insertFaceCompareRecord(FaceCompareRecord faceCompareRecord);
 
     int insertSealMateriallist(List<SealMaterial > sealMaterials);

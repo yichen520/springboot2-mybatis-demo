@@ -212,6 +212,11 @@
         select emplyee_name AS emplyeeName ,employee_id as employeeId ,employee_code as employeeCode
      FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = "00";
 </select>
+
+  <select id="selectOperationRecordByCodeAndType" resultType="com.dhht.model.SealOperationRecord">
+        select emplyee_name AS emplyeeName ,employee_id as employeeId ,employee_code as employeeCode,operate_time as operateTime
+     FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = #{type};
+</select>
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
     INSERT INTO seal_operate_record (id, seal_id, employee_id,emplyee_name,employee_code,
       operate_type, operate_time)

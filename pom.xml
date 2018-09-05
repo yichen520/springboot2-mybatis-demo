@@ -243,6 +243,11 @@
 			<artifactId>smutil</artifactId>
 			<version>v1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>dhht</groupId>
+			<artifactId>idcard-trusted-identification</artifactId>
+			<version>1.0</version>
+		</dependency>
         <dependency>
         <groupId>com.dhht</groupId>
         <artifactId>base64</artifactId>

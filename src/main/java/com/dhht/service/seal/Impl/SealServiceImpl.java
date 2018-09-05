@@ -19,6 +19,9 @@ import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import dhht.idcard.trusted.identify.GuangRayIdentifier;
+import dhht.idcard.trusted.identify.IdentifyResult;
+import io.micrometer.core.instrument.Meter;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
+import sun.management.Agent;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -146,7 +150,7 @@ public class SealServiceImpl implements SealService {
         public int sealRecord(List<Seal> seals, User user,String useDepartmentCode, String districtId, String agentTelphone,
                               String agentName, String certificateNo, String certificateType,
                               String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,
-                             String fieldPhotoId ) {
+                             String fieldPhotoId,String entryType ) {
             try {
 
                 List<Seal> list = sealDao.selectByCodeAndType(useDepartmentCode);
@@ -229,6 +233,11 @@ public class SealServiceImpl implements SealService {
                     //经办人信息
                     SealAgent sealAgent = new SealAgent();
                     String saId = UUIDUtil.generate();
+                    if(!isLegalPerson(certificateNo,agentName,useDepartment.getCode())){ //判断不是法人
+                        if(proxyId==null) {   //不是法人而且没有授权委托书
+                            return ResultUtil.isNoProxy;
+                        }
+                    }
                     sealAgent.setId(saId);
                     sealAgent.setName(agentName);
                     sealAgent.setTelphone(agentTelphone);
@@ -239,9 +248,8 @@ public class SealServiceImpl implements SealService {
                     sealAgent.setIdCardFrontId(idcardFrontId);
                     sealAgent.setIdCardReverseId(idcardReverseId);
                     sealAgent.setFaceCompareRecordId(checkFace);
-                    if (proxyId != null) {
-                        sealAgent.setProxyId(proxyId);
-                    }
+                    sealAgent.setProxyId(proxyId);
+                    sealAgent.setEntryType(entryType);
                     int sealAgentInsert = sealAgentMapper.insert(sealAgent);
 
 
@@ -731,12 +739,13 @@ public class SealServiceImpl implements SealService {
     @Override
     public SealVO selectDetailById(String id) {
         Seal seal = sealDao.selectByPrimaryKey(id);
+        List<SealAgent> sealAgents = new ArrayList<>();
         SealVO sealVo = new SealVO();
         sealVo.setSeal(seal);
         String sealCode = seal.getSealCode();
         String agentId = seal.getAgentId();
         SealAgent sealAgent = sealDao.selectSealAgentById(agentId);
-        sealVo.setSealAgent(sealAgent);
+        sealVo.setSealAgents(sealAgents);
         sealVo.setOperationPhoto(sealAgent.getAgentPhotoId());
         sealVo.setPositiveIdCardScanner(sealAgent.getIdCardFrontId());
         sealVo.setReverseIdCardScanner(sealAgent.getIdCardReverseId());
@@ -876,6 +885,46 @@ public class SealServiceImpl implements SealService {
         return seal;
     }
 
+
+    /**
+     * 挂失和注销的详细信息
+     * @param id
+     * @return
+     */
+    @Override
+    public SealVO lossAndLogoutDetail(String id) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        SealVO sealVO = new SealVO();
+        List<SealAgent> sealAgents = new ArrayList<>();
+        String AgentId = seal.getAgentId();
+        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(AgentId);  //备案经办人
+        if(!seal.getIsLogout()&&seal.getIsLoss()){  //只有挂失但是没有注销
+            String lossId = seal.getLossPersonId();
+            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办人
+            sealAgents.add(sealAgent);
+            sealAgents.add(sealAgent1);
+            sealVO.setSealAgents(sealAgents);
+            sealVO.setSeal(seal);
+            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(),"04");
+            sealVO.setSealOperationRecord(sealOperationRecord);
+//            String employeeId = sealOperationRecord.getEmployeeId();
+//            Employee employee = employeeService.selectEmployeeByEmployeeID(employeeId);
+
+        }else if(seal.getIsLogout()){
+            String logoutPersonId = seal.getLogoutPersonId();
+            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(logoutPersonId);
+            sealAgents.add(sealAgent);
+            sealAgents.add(sealAgent1);
+            sealVO.setSealAgents(sealAgents);
+            sealVO.setSeal(seal);
+            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(),"05");
+            sealVO.setSealOperationRecord(sealOperationRecord);
+        }
+        return sealVO;
+
+
+    }
+
     /**
      * 人证合一
      * @param idCardPhotoId
@@ -1001,6 +1050,7 @@ public class SealServiceImpl implements SealService {
         }
         return list;
     }
+
 
 }
 

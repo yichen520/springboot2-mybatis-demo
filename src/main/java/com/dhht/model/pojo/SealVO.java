@@ -27,6 +27,6 @@ public class SealVO  {
 
     private SealOperationRecord sealOperationRecord;
 
-    private SealAgent sealAgent;
+    private List<SealAgent> sealAgents;
 
 }
