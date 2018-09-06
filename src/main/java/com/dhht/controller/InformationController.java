@@ -156,6 +156,32 @@ public class InformationController {
 
     }
 
+    @Log("获取从业人员列表")
+    @RequestMapping(value = "/employee/nopage")
+    public JsonObjectBO employeenopage(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+
+        int status = 1;
+        String name = (String)map.get("name");
+        String code = (String)map.get("code");
+
+        JSONObject jsonObject = new JSONObject();
+        List<Employee> employees =new ArrayList<>();
+        try {
+            if(code==null||code==""){
+                code = user.getDistrictId();
+            }
+             employees= employeeService.selectWorkEmployee(code,name);
+            jsonObject.put("employee",employees);
+            return JsonObjectBO.success("查询成功", jsonObject);
+        } catch (Exception e) {
+            return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
+        }
+
+    }
+
     /**
      * 从业人员查询历史记录
      * @param map
