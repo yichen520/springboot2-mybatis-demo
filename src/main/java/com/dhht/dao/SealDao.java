@@ -95,4 +95,10 @@ public interface SealDao {
     List<IndexCount> indexCountSealByDepartment ();
 
     int indexCountPolyline(@Param("month")int month,@Param("districtId")String districtId);
+
+    int indexCountPieChart(@Param("makeDepartmentCode") String makeDepartmentCode ,@Param("sealTypeCode") String sealTypeCode);
+
+    int indexCountAllSealByMakeDepartment(@Param("makeDepartmentCode") String makeDepartmentCode);
+
+    List<IndexCount> indexCountSealTypeByMakeDepartment(@Param("makeDepartmentCode") String makeDepartmentCode);
 }
