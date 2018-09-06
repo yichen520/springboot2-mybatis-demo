@@ -23,6 +23,9 @@ public class ResultUtil {
     public static final int isNoTrue = 18;
     public static final int isNoProxy = 19;
     public static final int isNoName = 20;
+    public static final int isNoChipSeal = 21;
+    public static final int faceCompare = 22;
+
 
 
 
@@ -68,6 +71,10 @@ public class ResultUtil {
                 return JsonObjectBO.error("无授权委托书");
             case 20:
                 return JsonObjectBO.error("请输入姓名");
+            case 21:
+                return JsonObjectBO.error("该印章不是芯片章");
+            case 22:
+                return JsonObjectBO.error("出现未知错误");
                 default:
                     return null;
         }

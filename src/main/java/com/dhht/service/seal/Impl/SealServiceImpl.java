@@ -215,19 +215,24 @@ public class SealServiceImpl implements SealService {
                     sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
                     int sealOperationRecordInsert = sealDao.insertSealOperationRecord(sealOperationRecord); //保存操作记录
 
-
-                    //认证合一记录
-                    FaceCompareRecord faceCompareRecord = new FaceCompareRecord();
                     String checkFace = UUIDUtil.generate();
-                    faceCompareRecord.setId(checkFace);
-                    faceCompareRecord.setCertificateNo(certificateNo);
-                    faceCompareRecord.setCertificatePhotoId(idCardPhotoId);
-                    faceCompareRecord.setConfidence(confidence);
-                    faceCompareRecord.setFacePhotoId(fieldPhotoId);
-                    faceCompareRecord.setFiledPhotoId(fieldPhotoId);
-                    faceCompareRecord.setName(agentName);
-                    faceCompareRecord.setRecordTime(DateUtil.getCurrentTime());
-                    int faceCompareRecordInsert = faceCompareRecordMapper.insert(faceCompareRecord);
+                    if(entryType.equals("00")) {
+                        //认证合一记录
+//                        FaceCompareRecord faceCompareRecord = new FaceCompareRecord();
+//                        faceCompareRecord.setId(checkFace);
+//                        faceCompareRecord.setCertificateNo(certificateNo);
+//                        faceCompareRecord.setCertificatePhotoId(idCardPhotoId);
+//                        faceCompareRecord.setConfidence(confidence);
+//                        faceCompareRecord.setFacePhotoId(fieldPhotoId);
+//                        faceCompareRecord.setFiledPhotoId(fieldPhotoId);
+//                        faceCompareRecord.setName(agentName);
+//                        faceCompareRecord.setRecordTime(DateUtil.getCurrentTime());
+//                        int faceCompareRecordInsert = faceCompareRecordMapper.insert(faceCompareRecord);
+                        FaceCompareRecord faceCompareRecord = faceCompareRecordResult(certificateNo,idCardPhotoId,confidence,fieldPhotoId,agentName);
+                        if (faceCompareRecord==null){
+                            return ResultUtil.faceCompare;
+                        }
+                    }
 
 
                     //经办人信息
@@ -247,7 +252,9 @@ public class SealServiceImpl implements SealService {
                     sealAgent.setCertificateType(certificateType);
                     sealAgent.setIdCardFrontId(idcardFrontId);
                     sealAgent.setIdCardReverseId(idcardReverseId);
-                    sealAgent.setFaceCompareRecordId(checkFace);
+                    if(entryType.equals("00")) {
+                        sealAgent.setFaceCompareRecordId(checkFace);
+                    }
                     sealAgent.setProxyId(proxyId);
                     sealAgent.setEntryType(entryType);
                     int sealAgentInsert = sealAgentMapper.insert(sealAgent);
@@ -257,7 +264,7 @@ public class SealServiceImpl implements SealService {
                     int sealInsert = sealDao.insert(seal);
 
                     //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
-                    if (sealInsert > 0 && sealOperationRecordInsert > 0 && sealAgentInsert > 0 && faceCompareRecordInsert > 0) {
+                    if (sealInsert > 0 && sealOperationRecordInsert > 0 && sealAgentInsert > 0 ) {
                         String sealType = chooseType(seal.getSealTypeCode());
                         Map<String, String> map = new HashMap<>();
                         map.put("useDepartment", seal.getUseDepartmentName());
@@ -466,41 +473,45 @@ public class SealServiceImpl implements SealService {
     @Override
     public int sealPersonal(String id, User user) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
-        seal1.setSealStatusCode("02");
-        if(seal1.getIsLogout()){
-            return ResultUtil.isFail;
-        }
-        if(!seal1.getIsMake()){
-            return ResultUtil.isFail;
-        }
-        String operateType="02";
-        String sealCode = seal1.getSealCode();
-        //根据用户找到对应的从业人员
-        String telphone = user.getTelphone();
-        Employee employee = employeeService.selectByPhone(telphone);
-        SealOperationRecord sealOperationRecord1 = sealDao.SelectByCodeAndFlag03(id,operateType);
-        if ( sealOperationRecord1 != null) {
-            return ResultUtil.isFail;
-        } else {
-            SealOperationRecord sealOperationRecord = new SealOperationRecord();
-            sealOperationRecord.setId(UUIDUtil.generate());
-            sealOperationRecord.setSealId(id);
-            sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-            sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-            sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
-            sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
-            sealOperationRecord.setOperateType("02");
-            int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
-            seal1.setIsPersonal(true);
-            seal1.setPersonalDate(DateUtil.getCurrentTime());
-            int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
-            if (insertSealOperationRecord1 < 0 || updateByPrimaryKey1 < 0) {
+        if(seal1.isChipseal()) {
+            seal1.setSealStatusCode("02");
+            if (seal1.getIsLogout()) {
+                return ResultUtil.isFail;
+            }
+            if (!seal1.getIsMake()) {
+                return ResultUtil.isFail;
+            }
+            String operateType = "02";
+            String sealCode = seal1.getSealCode();
+            //根据用户找到对应的从业人员
+            String telphone = user.getTelphone();
+            Employee employee = employeeService.selectByPhone(telphone);
+            SealOperationRecord sealOperationRecord1 = sealDao.SelectByCodeAndFlag03(id, operateType);
+            if (sealOperationRecord1 != null) {
                 return ResultUtil.isFail;
             } else {
-                SyncEntity syncEntity =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.PERSONAL);
-                SyncEntity syncEntity1 =  ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
-                return ResultUtil.isSuccess;
+                SealOperationRecord sealOperationRecord = new SealOperationRecord();
+                sealOperationRecord.setId(UUIDUtil.generate());
+                sealOperationRecord.setSealId(id);
+                sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+                sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
+                sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+                sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+                sealOperationRecord.setOperateType("02");
+                int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
+                seal1.setIsPersonal(true);
+                seal1.setPersonalDate(DateUtil.getCurrentTime());
+                int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
+                if (insertSealOperationRecord1 < 0 || updateByPrimaryKey1 < 0) {
+                    return ResultUtil.isFail;
+                } else {
+                    SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.PERSONAL);
+                    SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
+                    return ResultUtil.isSuccess;
+                }
             }
+        }else{
+            return ResultUtil.isNoChipSeal;
         }
     }
 
@@ -582,9 +593,10 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int  loss (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
-                      String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone){
-        SealAgent sealAgent;
+                      String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,String entryType,String idCardPhotoId,
+                      int confidence,String fieldPhotoId){
 
+        FaceCompareRecord faceCompareRecord = null;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("05");
         if(seal1.getIsLoss()){
@@ -602,8 +614,15 @@ public class SealServiceImpl implements SealService {
         String sealCode = seal1.getSealCode();
         Employee employee = employeeService.selectByPhone(telphone);
 
+       if(entryType.equals("00")){
+           faceCompareRecord = faceCompareRecordResult(certificateNo,idCardPhotoId,confidence,fieldPhotoId,name);
+           if (faceCompareRecord==null){
+               return ResultUtil.faceCompare;
+           }
+       }
+
         String saId = UUIDUtil.generate();
-        sealAgent = new SealAgent();
+        SealAgent sealAgent = new SealAgent();
         sealAgent.setId(saId);
         sealAgent.setTelphone(agentTelphone);
         sealAgent.setAgentPhotoId(agentPhotoId);
@@ -614,7 +633,10 @@ public class SealServiceImpl implements SealService {
         sealAgent.setProxyId(proxyId);
         sealAgent.setBusinessType("02");
         sealAgent.setName(name);
-        sealAgent.setFaceCompareRecordId("");
+        if(entryType.equals("00")) {
+            sealAgent.setFaceCompareRecordId(faceCompareRecord.getId());
+        }
+        sealAgent.setEntryType(entryType);
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
 
 
@@ -666,8 +688,11 @@ public class SealServiceImpl implements SealService {
      * @param user
      */
     @Override
-    public int  logout (User user,String id, String name,String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone) {
+    public int  logout (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
+                        String localDistrictId,String businesslicenseId,String idcardFrontId,String idcardReverseId,String agentTelphone,String entryType,String idCardPhotoId,
+                        int confidence,String fieldPhotoId) {
         SealAgent sealAgent;
+        FaceCompareRecord faceCompareRecord = null;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         seal1.setSealStatusCode("06");
 
@@ -685,6 +710,14 @@ public class SealServiceImpl implements SealService {
         String sealCode = seal1.getSealCode();
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
+
+        if(entryType.equals("00")){
+            faceCompareRecord = faceCompareRecordResult(certificateNo,idCardPhotoId,confidence,fieldPhotoId,name);
+            if (faceCompareRecord==null){
+                return ResultUtil.faceCompare;
+            }
+        }
+
         String saId = UUIDUtil.generate();
         sealAgent = new SealAgent();
         sealAgent.setId(saId);
@@ -1049,6 +1082,28 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectIsLogout(seal);
         }
         return list;
+    }
+
+    /**
+     * 认证合一信息记录
+     */
+    public FaceCompareRecord faceCompareRecordResult(String certificateNo,String idCardPhotoId,int confidence,String fieldPhotoId,String agentName){
+    FaceCompareRecord faceCompareRecord = new FaceCompareRecord();
+    String checkFace = UUIDUtil.generate();
+    faceCompareRecord.setId(checkFace);
+    faceCompareRecord.setCertificateNo(certificateNo);
+    faceCompareRecord.setCertificatePhotoId(idCardPhotoId);
+    faceCompareRecord.setConfidence(confidence);
+    faceCompareRecord.setFacePhotoId(fieldPhotoId);
+    faceCompareRecord.setFiledPhotoId(fieldPhotoId);
+    faceCompareRecord.setName(agentName);
+    faceCompareRecord.setRecordTime(DateUtil.getCurrentTime());
+    int faceCompareRecordInsert = faceCompareRecordMapper.insert(faceCompareRecord);
+    if(faceCompareRecordInsert>0){
+        return faceCompareRecord;
+    }else{
+        return null;
+    }
     }
 
 

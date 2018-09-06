@@ -259,6 +259,9 @@ public class SealController implements InitializingBean {
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("个人化失败");
+            } if (a == ResultUtil.isNoChipSeal) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章不是芯片章");
             } else {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("个人化成功");
@@ -330,8 +333,13 @@ public class SealController implements InitializingBean {
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
             String agentTelphone = sealDTO.getTelphone();
-            int a = sealService.loss(  user, id, name, agentPhotoId,   proxyId , certificateNo, certificateType,
-                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone);
+            String entryType = sealDTO.getEntryType();
+            String fieldPhotoId = sealDTO.getFieldPhotoId();
+            int confidence = sealDTO.getConfidence();
+            String idCardPhotoId =sealDTO.getAgentPhotoId();
+
+            int a = sealService.loss(user,id,name,agentPhotoId,proxyId,certificateNo,certificateType,
+                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone,entryType,idCardPhotoId,confidence,fieldPhotoId);
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("挂失成功");
@@ -362,9 +370,10 @@ public class SealController implements InitializingBean {
     @RequestMapping("/logout")
     public JsonObjectBO logout(HttpServletRequest httpServletRequest, @RequestBody SealDTO sealDTO) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
-        String telphone = user.getTelphone();
         try {
+            User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+            String telphone = user.getTelphone();
+            String localDistrictId = user.getDistrictId();
             Employee employee = employeeService.selectByPhone(telphone);
             String id = sealDTO.getId();
             String agentPhotoId = sealDTO.getAgentPhotoId();
@@ -374,10 +383,14 @@ public class SealController implements InitializingBean {
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String agentTelphone = sealDTO.getTelphone();
-
+            String entryType = sealDTO.getEntryType();
+            String fieldPhotoId = sealDTO.getFieldPhotoId();
+            int confidence = sealDTO.getConfidence();
+            String idCardPhotoId =sealDTO.getAgentPhotoId();
             String name = sealDTO.getName();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
-            int a = sealService.logout( user, id,  name,agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId,agentTelphone);
+            int a = sealService.logout(user,id,name,agentPhotoId,proxyId,certificateNo,certificateType,
+                    localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone,entryType,idCardPhotoId,confidence,fieldPhotoId);
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("注销成功");
