@@ -88,6 +88,41 @@ public class MakeDepartmentController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    /**
+     * 展示制作单位的列表
+     * @param map
+     * @param httpServletRequest
+     * @return
+     */
+    @Log("查看制作单位列表")
+    @RequestMapping(value = "/info/nopage")
+    public JsonObjectBO commoninfo(@RequestBody Map map, HttpServletRequest httpServletRequest){
+        User user =(User)httpServletRequest.getSession().getAttribute("user");
+        String districtId = (String)map.get("districtId");
+        String name = (String)map.get("name");
+        String status = "01";
+
+        JSONObject jsonObject = new JSONObject();
+        List<MakeDepartmentSimple> list = new ArrayList<>();
+        try {
+
+            if(districtId==""||districtId==null) {
+                list = makeDepartmentService.selectInfo(user.getDistrictId(),name,status);
+                jsonObject.put("makeDepartment", list);
+            }else {
+                list = makeDepartmentService.selectInfo(districtId,name,status);
+                jsonObject.put("makeDepartment", list);
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+
 
 
     @Log("查看修改记录")

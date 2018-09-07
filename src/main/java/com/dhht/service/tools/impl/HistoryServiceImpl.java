@@ -151,7 +151,7 @@ public class HistoryServiceImpl implements HistoryService {
         for (OperatorRecordDetail operatorRecordDetail:operatorRecordDetails){
             if(NULL_VALUE.equals(operatorRecordDetail.getPropertyName())){
 
-            }else if (operatorRecordDetail.getPropertyName().equals(DISTRICT_ID)){
+            }else if (operatorRecordDetail.getPropertyName().contains(DISTRICT_ID)){
                 String oldDistrict = districtService.selectByDistrictId(operatorRecordDetail.getOldValue());
                 operatorRecordDetail.setOldValue(oldDistrict);
                 String newDistrict = districtService.selectByDistrictId(operatorRecordDetail.getNewValue());

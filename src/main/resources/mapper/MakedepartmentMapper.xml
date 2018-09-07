@@ -223,6 +223,17 @@
     ORDER BY version  DESC LIMIT 1
   </select>
   <!--统计模块-->
+  <select id="indexCountAdd" resultType="java.lang.Integer" parameterType="java.lang.String">
+     SELECT count(id) from make_department as a RIGHT JOIN(
+    select flag,MAX(version) as ver from make_department GROUP BY flag
+    )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%'  and date_format(register_time,'%Y-%m')=date_format(now(),'%Y-%m') AND delete_status = 0
+  </select>
+
+  <select id="indexCountDel" resultType="java.lang.Integer" parameterType="java.lang.String">
+ SELECT count(id) from make_department as a RIGHT JOIN(
+    select flag,MAX(version) as ver from make_department GROUP BY flag
+    )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%'  and date_format(register_time,'%Y-%m')=date_format(now(),'%Y-%m') AND delete_status = 1
+  </select>
 
   <select id="countAllDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
     SELECT count(id) from make_department as a RIGHT JOIN(

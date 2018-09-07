@@ -59,6 +59,10 @@ public interface EmployeeDao {
     List<Employee> selectAllEmployeeInfo(@Param("name") String name,@Param("list") List<MakeDepartmentSimple> departmentSimples);
 
     //---------------统计部分--------------------//
+    int indexCountAdd(@Param("districtId") String districtId);
+
+    int indexCountDel(@Param("districtId") String districtId);
+
     int countAllEmployee(@Param("districtId") String districtId);
 
     int countWorkEmployee(@Param("districtId") String districtId);

@@ -42,6 +42,17 @@
     <result column="logout_person_id" property="logoutPersonId" jdbcType="CHAR"/>
     <result column="is_chipseal" property="isChipseal" jdbcType="BIT"></result>
   </resultMap>
+  
+  <resultMap id="indexCountResultMap" type="com.dhht.model.IndexCount">
+    <result column="count(id)" property="value"/>
+    <result column="make_department_code" property="comment"/>
+  </resultMap>
+  
+  <resultMap id="indexSealTypeResultMap" type="com.dhht.model.IndexCount">
+    <result column="id" property="comment"/>
+    <result column="seal_type_code" property="temp"/>
+  </resultMap>
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -556,6 +567,37 @@ SELECT
        #{item.DistrictId}
     </foreach>
     group by  seal.make_department_code
+  </select>
+  
+  <select id="indexCountSum" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%'
+  </select>
+  
+  <select id="indexCountAdd" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
 
+  <select id="indexCountDel" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m') AND is_logout = 1
+  </select>
+  
+  <select id="indexCountSealByDepartment" resultMap="indexCountResultMap">
+    select make_department_code, count(id) from seal GROUP BY make_department_code desc
+  </select>
+
+  <select id="indexCountPolyline" resultType="java.lang.Integer" parameterType="java.lang.Object">
+    select count(seal_code) from seal where MONTH(record_date) = #{month} and district_id LIKE '${districtId}%'
+  </select>
+
+  <select id="indexCountPieChart" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
+  
+  <select id="indexCountAllSealByMakeDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
+  
+  <select id="indexCountSealTypeByMakeDepartment" resultMap="indexSealTypeResultMap" parameterType="java.lang.String">
+    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m') GROUP BY seal_type_code
   </select>
 </mapper>
