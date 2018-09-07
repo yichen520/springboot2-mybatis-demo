@@ -76,7 +76,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
      */
     @Override
     public int sendMessage(String phone, String code,int smsmesscode) {
-//        try {
+        try {
                 ArrayList<String> params = new ArrayList<String>();
                 params.add(code);
                 params.add("5");
@@ -100,10 +100,10 @@ public class UserPasswordServiceImpl implements UserPasswordService{
                     return ResultUtil.isFail;
                 }
 
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResultUtil.isFail;
-//        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.isFail;
+        }
     }
 
 

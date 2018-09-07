@@ -290,20 +290,41 @@ public class SealController implements InitializingBean {
         String certificateType = sealDTO.getCertificateType();
         String certificateNo = sealDTO.getCertificateNo();
         String agentTelphone = sealDTO.getTelphone();
-        Boolean isSame = sealDTO.getIsSame();
+        String useDepartmentCode = sealDTO.getUseDepartmentCode();
+        String agentPhotoId = sealDTO.getAgentPhotoId();
+        String idcardFrontId = sealDTO.getIdCardFrontId();
+        String idcardReverseId = sealDTO.getIdCardReverseId();
+        String entryType = sealDTO.getEntryType();
+        int confidence = sealDTO.getConfidence();
+        String fieldPhotoId = sealDTO.getFieldPhotoId();
+        String idCardPhotoId = sealDTO.getIdCardPhotoId();
         try {
-            boolean a = sealService.deliver(user, id, proxyId, name, certificateType, certificateNo, agentTelphone, isSame);
-            if (a) {
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("交付成功");
-            } else {
+            int a = sealService.deliver( user, id, useDepartmentCode, proxyId, name,
+                     certificateType, certificateNo, agentTelphone, agentPhotoId, idcardFrontId, idcardReverseId,
+                     entryType, confidence, fieldPhotoId, idCardPhotoId);
+            if (a==ResultUtil.isLogout) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章已被注销");
+            } else if(a==ResultUtil.isLoss) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章已被挂失");
+            }else if(a==ResultUtil.isNoProxy) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("缺少授权委托书");
+            }else if(a==ResultUtil.faceCompare) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章已被挂失");
+            }else if(a==ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("交付失败");
+            }else{
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("交付成功");
             }
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("交付失败");
+            return JsonObjectBO.exception("出现未知错误");
         }
     }
 

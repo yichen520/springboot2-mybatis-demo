@@ -30,7 +30,9 @@ public interface SealService {
    int sealPersonal(String id,User user);
 
    //印章交付
-   boolean deliver(User user,String id,String proxyId,String name,String certificateType,String certificateNo,String agentTelphone,boolean isSame);
+   int deliver(User user,String id,String useDepartmentCode,String proxyId,String name,
+                   String certificateType,String certificateNo,String agentTelphone,String agentPhotoId,String idcardFrontId,String idcardReverseId,
+                   String entryType,int confidence,String fieldPhotoId,String idCardPhotoId);
 
    //印章挂失
    int loss (User user,String id,String name, String agentPhotoId,  String proxyId ,String certificateNo,String certificateType,
