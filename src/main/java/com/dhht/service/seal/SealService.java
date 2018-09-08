@@ -18,7 +18,7 @@ public interface SealService {
    int sealRecord(List<Seal> seals, User user,String useDepartmentCode, String districtId, String agentTelphone,
                   String agentName, String certificateNo, String certificateType,
                   String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,
-                  String fieldPhotoId,String entryType );
+                  String fieldPhotoId,String entryType);
 
    //印章主界面
    PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);

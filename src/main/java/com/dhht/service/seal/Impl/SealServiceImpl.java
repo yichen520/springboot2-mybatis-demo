@@ -110,6 +110,7 @@ public class SealServiceImpl implements SealService {
         String num ;
         Jedis jedis = new Jedis();
         if(redisTemplate.hasKey("SealSerialNum")){
+            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
              num = jedis.incrBy("SealSerialNum",1).toString();
         }else{
              redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
@@ -150,7 +151,7 @@ public class SealServiceImpl implements SealService {
         public int sealRecord(List<Seal> seals, User user,String useDepartmentCode, String districtId, String agentTelphone,
                               String agentName, String certificateNo, String certificateType,
                               String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,
-                             String fieldPhotoId,String entryType ) {
+                             String fieldPhotoId,String entryType) {
             try {
                 FaceCompareRecord faceCompareRecord = null;
                 FaceCompareRecord TrustedIdentityAuthenticationResult = null;
@@ -170,14 +171,20 @@ public class SealServiceImpl implements SealService {
                     return ResultUtil.isFail;
                 }
 
+                for(Seal seal:seals){
+                    if (seal.getSealTypeCode().equals("05")) {
+                        if (list.size() != 0) {
+                           break;
+                        }
+                        return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
+                    }
+
+                }
+
                 //循环加入seal
                 for (Seal seal : seals) {
                     String sealcode = SealSerialNum(districtId);
-                    if (seal.getSealTypeCode().equals("05")) {
-                        if (list.size() != 0) {
-                            return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
-                        }
-                    }
+
 
                     seal.setSealCode(sealcode);
 
@@ -474,7 +481,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int sealPersonal(String id, User user) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
-        if(seal1.isChipseal()) {
+        if(seal1.getIsChipseal()) {
             seal1.setSealStatusCode("02");
             if (seal1.getIsLogout()) {
                 return ResultUtil.isFail;

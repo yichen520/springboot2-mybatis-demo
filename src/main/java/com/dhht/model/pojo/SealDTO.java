@@ -60,6 +60,8 @@ public class SealDTO {
 
     private String entryType;//录入方式  00-读卡  01-可信身份证录入
 
+//    private boolean isChipseal;
+
     private Boolean isSame;
 
     private Integer pageNum;

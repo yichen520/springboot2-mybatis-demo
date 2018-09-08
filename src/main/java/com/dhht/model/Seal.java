@@ -82,4 +82,12 @@ public class Seal extends SealKey {
 
     private boolean isChipseal;  //是否芯片章
 
+
+    public void setIsChipseal(boolean isChipseal) {
+        this.isChipseal= isChipseal;
+    }
+
+    public boolean getIsChipseal() {
+        return isChipseal;
+    }
 }
