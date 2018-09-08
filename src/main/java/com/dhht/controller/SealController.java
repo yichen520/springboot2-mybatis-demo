@@ -608,6 +608,7 @@ public class SealController implements InitializingBean {
     @RequestMapping(value = "/TrustedIdentityAuthentication", method = RequestMethod.POST)
     public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
         String certificateNo = (String) map.get("certificateNo");
         String name = (String) map.get("name");
         String fieldPhotoId = (String) map.get("fieldPhotoId");
@@ -621,10 +622,13 @@ public class SealController implements InitializingBean {
             BASE64Encoder base64Encoder = new BASE64Encoder();
             String photoDate = base64Encoder.encode(fileDate);
             IdentifyResult identifyResult = GuangRayIdentifier.identify(certificateNo, name, photoDate);
+            jsonObject.put("identifyResult",identifyResult);
             if(identifyResult.isPassed()){
+                jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage(identifyResult.getMessage());
             }else {
+                jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage(identifyResult.getMessage());
             }
