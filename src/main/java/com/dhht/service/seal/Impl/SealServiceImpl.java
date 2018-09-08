@@ -251,6 +251,7 @@ public class SealServiceImpl implements SealService {
                     sealAgent.setCertificateNo(certificateNo);
                     sealAgent.setCertificateType(certificateType);
                     sealAgent.setIdCardFrontId(idcardFrontId);
+                    sealAgent.setEntryType(entryType);
                     sealAgent.setIdCardReverseId(idcardReverseId);
                     if(entryType.equals("00")) {
                         sealAgent.setFaceCompareRecordId(checkFace);
@@ -810,6 +811,7 @@ public class SealServiceImpl implements SealService {
         String sealCode = seal.getSealCode();
         String agentId = seal.getAgentId();
         SealAgent sealAgent = sealDao.selectSealAgentById(agentId);
+        sealAgents.add(sealAgent);
         sealVo.setSealAgents(sealAgents);
         sealVo.setOperationPhoto(sealAgent.getAgentPhotoId());
         sealVo.setPositiveIdCardScanner(sealAgent.getIdCardFrontId());
