@@ -40,11 +40,17 @@
     <result column="getter_id" property="getterId" jdbcType="CHAR"/>
     <result column="loss_person_id" property="lossPersonId" jdbcType="CHAR"/>
     <result column="logout_person_id" property="logoutPersonId" jdbcType="CHAR"/>
+    <result column="is_chipseal" property="isChipseal" jdbcType="BIT"></result>
   </resultMap>
   
   <resultMap id="indexCountResultMap" type="com.dhht.model.IndexCount">
     <result column="count(id)" property="value"/>
     <result column="make_department_code" property="comment"/>
+  </resultMap>
+  
+  <resultMap id="indexSealTypeResultMap" type="com.dhht.model.IndexCount">
+    <result column="id" property="comment"/>
+    <result column="seal_type_code" property="temp"/>
   </resultMap>
 
   <sql id="Example_Where_Clause" >
@@ -110,7 +116,7 @@
     record_department_code, record_department_name, make_department_code, make_department_name, 
     seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
     seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
     select 
@@ -133,7 +139,7 @@
       materials_code, mimeograph_description, seal_shape_code, 
       seal_size, seal_center_image, seal_specification, 
       seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal
       )
     values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR}, 
       #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR}, 
@@ -142,7 +148,8 @@
       #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
       #{sealSize,jdbcType=VARCHAR}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR},
       #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR},#{recordDate},#{isRecord},#{makeDate},#{isMake},
-      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId},#{agentId},#{getterId},#{lossPersonId},#{logoutPersonId})
+      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId},#{agentId},#{getterId},#{lossPersonId},#{logoutPersonId},
+      #{isChipseal})
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.Seal" >
@@ -182,7 +189,8 @@
       agent_id = #{agentId},
       getter_id = #{getterId},
       loss_person_id = #{lossPersonId},
-      logout_person_id = #{logoutPersonId}
+      logout_person_id = #{logoutPersonId},
+      is_chipseal = #{isChipseal}
     where id = #{id,jdbcType=CHAR}
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
@@ -214,6 +222,11 @@
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
         select emplyee_name AS emplyeeName ,employee_id as employeeId ,employee_code as employeeCode
      FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = "00";
+</select>
+
+  <select id="selectOperationRecordByCodeAndType" resultType="com.dhht.model.SealOperationRecord">
+        select emplyee_name AS emplyeeName ,employee_id as employeeId ,employee_code as employeeCode,operate_time as operateTime
+     FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = #{type};
 </select>
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
     INSERT INTO seal_operate_record (id, seal_id, employee_id,emplyee_name,employee_code,
@@ -465,7 +478,16 @@
     </where>
   </select>
 
+  <select id="selectByMakeDepartmentCodeAndIsMake" resultMap="BaseResultMap">
+    SELECT * FROM seal
+    <where>
+      make_department_code = #{makeDepartmentCode} and is_make = true
+    </where>
+  </select>
 
+<select id="selectLastSeal" resultMap="BaseResultMap">
+SELECT * from seal where record_date=(select max(record_date) from seal)
+</select>
   <!---统计模块-->
   <select id="countAddSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(id) from seal s  where
@@ -565,5 +587,17 @@ SELECT
 
   <select id="indexCountPolyline" resultType="java.lang.Integer" parameterType="java.lang.Object">
     select count(seal_code) from seal where MONTH(record_date) = #{month} and district_id LIKE '${districtId}%'
+  </select>
+
+  <select id="indexCountPieChart" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
+  
+  <select id="indexCountAllSealByMakeDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
+    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
+  
+  <select id="indexCountSealTypeByMakeDepartment" resultMap="indexSealTypeResultMap" parameterType="java.lang.String">
+    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m') GROUP BY seal_type_code
   </select>
 </mapper>

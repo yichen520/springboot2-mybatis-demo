@@ -1,5 +1,5 @@
 server:
-  port: 8090
+  port: 8083
 
 #超级管理员账号密码
 
@@ -126,7 +126,8 @@ file:
 
 filePath: C:/temp/
 
-sealtemplate:
+seal:
+  template:
   filePath: C:/temp/seal
 
 #设置redis中token过期时间

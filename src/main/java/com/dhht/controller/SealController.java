@@ -1,5 +1,6 @@
 package com.dhht.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.ImageGenerate;
@@ -11,14 +12,21 @@ import com.dhht.model.pojo.SealDTO;
 import com.dhht.model.pojo.SealVO;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.tools.FileService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.util.Base64Util;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import dhht.idcard.trusted.identify.GuangRayIdentifier;
+import dhht.idcard.trusted.identify.IdentifyResult;
+import sun.misc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +37,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +47,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/seal/record")
-public class SealController {
+public class SealController implements InitializingBean {
     @Autowired
     private SealService sealService;
 
@@ -46,9 +55,28 @@ public class SealController {
     private EmployeeService employeeService;
 
     @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
     private UseDepartmentService useDepartmentService;
 
+    @Autowired
+    private FileService fileService;
+
     private static Logger logger = LoggerFactory.getLogger(SealController.class);
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Seal seal = sealService.selectLastSeal();
+        if(seal== null) {
+            redisTemplate.opsForValue().set("SealSerialNum",0);
+        }
+        if(!redisTemplate.hasKey("SealSerialNum")){
+            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));
+        }
+
+    }
+
 
     @Log("查询使用单位是否备案")
     @RequestMapping("/isrecord")
@@ -110,14 +138,16 @@ public class SealController {
         String faceCompareRecordId = sealDTO.getFaceCompareRecordId();
         String idCardPhotoId =sealDTO.getAgentPhotoId();
         String fieldPhotoId = sealDTO.getFieldPhotoId();
+        String useDepartmentCode =sealDTO.getUseDepartmentCode();
+        String entryType = sealDTO.getEntryType();
         int confidence = sealDTO.getConfidence();
-        Seal seal = sealDTO.getSeal();
+        List<Seal> seals = sealDTO.getSeals();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-            int a = sealService.sealRecord(seal,user,districtId, agentTelphone,
+            int a = sealService.sealRecord(seals,user,useDepartmentCode,districtId, agentTelphone,
                     agentName,certificateNo, certificateType,
                     agentPhotoId,  idCardFrontId,  idCardReverseId,   proxyId,  idCardPhotoId, confidence,
-             fieldPhotoId);
+             fieldPhotoId,entryType);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
@@ -131,6 +161,9 @@ public class SealController {
             }else if(a==ResultUtil.isNoEmployee){
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("从业人员不存在");
+            } else if(a==ResultUtil.isNoProxy){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("缺少授权委托书");
             } else {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("添加失败");
@@ -226,6 +259,9 @@ public class SealController {
             if (a == ResultUtil.isFail) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("个人化失败");
+            } if (a == ResultUtil.isNoChipSeal) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章不是芯片章");
             } else {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("个人化成功");
@@ -254,20 +290,41 @@ public class SealController {
         String certificateType = sealDTO.getCertificateType();
         String certificateNo = sealDTO.getCertificateNo();
         String agentTelphone = sealDTO.getTelphone();
-        Boolean isSame = sealDTO.getIsSame();
+        String useDepartmentCode = sealDTO.getUseDepartmentCode();
+        String agentPhotoId = sealDTO.getAgentPhotoId();
+        String idcardFrontId = sealDTO.getIdCardFrontId();
+        String idcardReverseId = sealDTO.getIdCardReverseId();
+        String entryType = sealDTO.getEntryType();
+        int confidence = sealDTO.getConfidence();
+        String fieldPhotoId = sealDTO.getFieldPhotoId();
+        String idCardPhotoId = sealDTO.getIdCardPhotoId();
         try {
-            boolean a = sealService.deliver(user, id, proxyId, name, certificateType, certificateNo, agentTelphone, isSame);
-            if (a) {
+            int a = sealService.deliver( user, id, useDepartmentCode, proxyId, name,
+                     certificateType, certificateNo, agentTelphone, agentPhotoId, idcardFrontId, idcardReverseId,
+                     entryType, confidence, fieldPhotoId, idCardPhotoId);
+            if (a==ResultUtil.isLogout) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章已被注销");
+            } else if(a==ResultUtil.isLoss) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章已被挂失");
+            }else if(a==ResultUtil.isNoProxy) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("缺少授权委托书");
+            }else if(a==ResultUtil.faceCompare) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该印章已被挂失");
+            }else if(a==ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("交付成功");
-            } else {
+            }else{
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("交付失败");
             }
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("交付失败");
+            return JsonObjectBO.exception("出现未知错误");
         }
     }
 
@@ -297,15 +354,25 @@ public class SealController {
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
             String agentTelphone = sealDTO.getTelphone();
-            Boolean isSame = sealDTO.getIsSame();
-            int a = sealService.loss(  user, id, name, agentPhotoId,   proxyId , certificateNo, certificateType,
-                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone,isSame);
-            if (a == ResultUtil.isFail) {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("挂失失败");
-            } else {
+            String entryType = sealDTO.getEntryType();
+            String fieldPhotoId = sealDTO.getFieldPhotoId();
+            int confidence = sealDTO.getConfidence();
+            String idCardPhotoId =sealDTO.getAgentPhotoId();
+
+            int a = sealService.loss(user,id,name,agentPhotoId,proxyId,certificateNo,certificateType,
+                     localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone,entryType,idCardPhotoId,confidence,fieldPhotoId);
+            if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("挂失成功");
+            } else if(a==ResultUtil.isNoProxy){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请提供授权委托书");
+            }else if(a==ResultUtil.isNoName){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请输入名字");
+            } else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("挂失失败");
             }
             return jsonObjectBO;
         } catch (Exception e) {
@@ -324,9 +391,10 @@ public class SealController {
     @RequestMapping("/logout")
     public JsonObjectBO logout(HttpServletRequest httpServletRequest, @RequestBody SealDTO sealDTO) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
-        String telphone = user.getTelphone();
         try {
+            User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+            String telphone = user.getTelphone();
+            String localDistrictId = user.getDistrictId();
             Employee employee = employeeService.selectByPhone(telphone);
             String id = sealDTO.getId();
             String agentPhotoId = sealDTO.getAgentPhotoId();
@@ -336,16 +404,26 @@ public class SealController {
             String idCardFrontId = sealDTO.getIdCardFrontId();
             String idCardReverseId = sealDTO.getIdCardReverseId();
             String agentTelphone = sealDTO.getTelphone();
-            Boolean isSame = sealDTO.getIsSame();
+            String entryType = sealDTO.getEntryType();
+            String fieldPhotoId = sealDTO.getFieldPhotoId();
+            int confidence = sealDTO.getConfidence();
+            String idCardPhotoId =sealDTO.getAgentPhotoId();
             String name = sealDTO.getName();
             String businesslicenseId = sealDTO.getBusinessLicenseId();
-            int a = sealService.logout( user, id,  name,agentPhotoId,   proxyId , certificateNo, certificateType, businesslicenseId,idCardFrontId,idCardReverseId,agentTelphone,isSame);
-            if (a == ResultUtil.isFail) {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("注销失败");
-            } else {
+            int a = sealService.logout(user,id,name,agentPhotoId,proxyId,certificateNo,certificateType,
+                    localDistrictId, businesslicenseId, idCardFrontId, idCardReverseId,agentTelphone,entryType,idCardPhotoId,confidence,fieldPhotoId);
+            if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("注销成功");
+            } else if(a==ResultUtil.isNoProxy){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请提供授权委托书");
+            }else if(a==ResultUtil.isNoName){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("请输入名字");
+            }else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("注销失败");
             }
             return jsonObjectBO;
         } catch (Exception e) {
@@ -354,6 +432,27 @@ public class SealController {
         }
     }
 
+
+    /**
+     * 挂失和注销详情
+     */
+    @Log("挂失和注销详情")
+    @RequestMapping(value = "/LossAndLogoutDetail", method = RequestMethod.POST)
+    public JsonObjectBO LossAndLogoutDetail(@RequestBody Map map) {
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String id = (String) map.get("id");
+        try {
+            SealVO sealVO = sealService.lossAndLogoutDetail(id);
+            jsonObject.put("sealVO", sealVO);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setData(jsonObject);
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("查看挂失和注销详情失败");
+        }
+    }
 
     /**
      * 根据名字进行了查询
@@ -479,10 +578,11 @@ public class SealController {
     @RequestMapping(value = "/isLegalPerson", method = RequestMethod.POST)
     public JsonObjectBO isLegalPerson(@RequestBody Map map) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String idcard = (String) map.get("idcard");
+        String name = (String) map.get("name");
+        String certificateNo = (String) map.get("certificateNo");
         String useDepartmentCode = (String) map.get("useDepartmentCode");
         try {
-            Boolean isLegalPerson = sealService.isLegalPerson(idcard,useDepartmentCode);
+            Boolean isLegalPerson = sealService.isLegalPerson(certificateNo,name,useDepartmentCode);
             if (isLegalPerson) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("是法人");
@@ -496,6 +596,41 @@ public class SealController {
             return JsonObjectBO.exception("请求失败");
         }
     }
+
+
+    /**
+     * 可信身份认证
+     * @param map
+     * @return
+     */
+    @Log("可信身份认证")
+    @RequestMapping(value = "/TrustedIdentityAuthentication", method = RequestMethod.POST)
+    public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String certificateNo = (String) map.get("certificateNo");
+        String name = (String) map.get("name");
+        String fieldPhotoId = (String) map.get("fieldPhotoId");
+        FileInfoVO fieldFileInfo = fileService.readFile(fieldPhotoId);
+        byte[] fileDate = fieldFileInfo.getFileData();
+        float fileDatetoKb =fileDate.length/1024;
+        if(fileDatetoKb>25||fileDatetoKb<10){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("重新上传，图片大小请小于25kb大于10kb");
+        }else {
+            BASE64Encoder base64Encoder = new BASE64Encoder();
+            String photoDate = base64Encoder.encode(fileDate);
+            IdentifyResult identifyResult = GuangRayIdentifier.identify(certificateNo, name, photoDate);
+            if(identifyResult.isPassed()){
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage(identifyResult.getMessage());
+            }else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage(identifyResult.getMessage());
+            }
+        }
+        return jsonObjectBO;
+    }
+
 
 
 }

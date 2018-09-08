@@ -49,15 +49,21 @@ public interface SealDao {
 
     List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode);
 
+    List<Seal> selectByMakeDepartmentCodeAndIsMake(@Param("makeDepartmentCode") String makeDepartmentCode);
+
     SealAgent selectSealAgentById(@Param("agentId") String agentId);
 
     SealOperationRecord selectOperationRecordByCode(@Param("id") String id);
+
+    SealOperationRecord selectOperationRecordByCodeAndType(@Param("id") String id,@Param("type") String type);
 
     int insertFaceCompareRecord(FaceCompareRecord faceCompareRecord);
 
     int insertSealMateriallist(List<SealMaterial > sealMaterials);
 
     SealMaterial selectSealMaterial(@Param("sealCode") String sealCode,@Param("type") String type);
+
+    Seal selectLastSeal();
 
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
@@ -95,4 +101,10 @@ public interface SealDao {
     List<IndexCount> indexCountSealByDepartment ();
 
     int indexCountPolyline(@Param("month")int month,@Param("districtId")String districtId);
+
+    int indexCountPieChart(@Param("makeDepartmentCode") String makeDepartmentCode ,@Param("sealTypeCode") String sealTypeCode);
+
+    int indexCountAllSealByMakeDepartment(@Param("makeDepartmentCode") String makeDepartmentCode);
+
+    List<IndexCount> indexCountSealTypeByMakeDepartment(@Param("makeDepartmentCode") String makeDepartmentCode);
 }
