@@ -486,7 +486,7 @@
   </select>
 
 <select id="selectLastSeal" resultMap="BaseResultMap">
-SELECT * from seal where record_date=(select max(record_date) from seal)
+select * from seal where seal_code = (select max(seal_code) from seal)
 </select>
   <!---统计模块-->
   <select id="countAddSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
