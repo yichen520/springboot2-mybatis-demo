@@ -655,6 +655,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
         sealAgent.setBusinessType("02");
+        sealAgent.setEntryType(entryType);
         sealAgent.setName(name);
         if(entryType.equals("00")) {
             sealAgent.setFaceCompareRecordId(faceCompareRecord.getId());
@@ -758,6 +759,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
         sealAgent.setBusinessType("03");
+        sealAgent.setEntryType(entryType);
         sealAgent.setName(name);
 
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
