@@ -174,9 +174,9 @@ public class SealServiceImpl implements SealService {
                 for(Seal seal:seals){
                     if (seal.getSealTypeCode().equals("05")) {
                         if (list.size() != 0) {
-                           break;
+                            return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
                         }
-                        return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
+
                     }
 
                 }
