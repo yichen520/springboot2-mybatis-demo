@@ -15,6 +15,8 @@ public interface MakedepartmentMapper {
 
     Makedepartment selectDetailById(@Param("id") String id);
 
+   Makedepartment selectDetailByCode(@Param("code") String code);
+
  Makedepartment selectDetailByName(@Param("name") String name);
 
     int insert(Makedepartment makedepartment);

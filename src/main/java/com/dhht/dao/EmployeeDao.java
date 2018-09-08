@@ -46,6 +46,8 @@ public interface EmployeeDao {
 
     Employee selectByName(@Param("name") String name);
 
+    Employee selectByCode(@Param("code") String code);
+
     int updateHeadById(@Param("id") String id,@Param("employeeImage") String image);
 
     int updateMakeDepartment(@Param("id") String id,@Param("employeeDepartmentCode") String employeeDepartmentCode);

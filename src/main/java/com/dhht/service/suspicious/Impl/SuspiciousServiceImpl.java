@@ -40,12 +40,12 @@ public class SuspiciousServiceImpl implements SuspiciousService {
     @Override
     public int insertsuspicious(Suspicious suspicious, User user) {
         try {
-            String code =makedepartmentMapper.selectDetailByName(suspicious.getMakeDepartmentName()).getDepartmentCode();
+           // String code =makedepartmentMapper.selectDetailByName(suspicious.getMakeDepartmentName()).getDepartmentCode();
             suspicious.setId(UUIDUtil.generate());
-            suspicious.setMakeDepartmentCode(code);
-            if (suspicious.getEmployeeName() != null){
-                suspicious.setEmployeeCode(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeCode());
-                suspicious.setEmployeeIdcard(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeId());
+           // suspicious.setMakeDepartmentCode(code);
+            if (suspicious.getEmployeeCode() != null){
+               // suspicious.setEmployeeCode(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeCode());
+                suspicious.setEmployeeIdcard(employeeDao.selectByCode(suspicious.getEmployeeCode()).getEmployeeId());
             }
             suspicious.setDistrictId(user.getDistrictId());
             suspicious.setCreateTime(DateUtil.getCurrentTime());
@@ -70,8 +70,8 @@ public class SuspiciousServiceImpl implements SuspiciousService {
         try {
             Suspicious suspicious1 = suspiciousMapper.selectByPrimaryKey(suspicious.getId());
             if (!suspicious1.getEmployeeName().equals(suspicious.getEmployeeName())){
-                suspicious.setEmployeeCode(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeCode());
-                suspicious.setEmployeeIdcard(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeId());
+                //suspicious.setEmployeeCode(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeCode());
+                suspicious.setEmployeeIdcard(employeeDao.selectByCode(suspicious.getEmployeeCode()).getEmployeeId());
             }
             suspicious.setUpdateUser(user.getRealName());
             suspicious.setUpdateTime(DateUtil.getCurrentTime());

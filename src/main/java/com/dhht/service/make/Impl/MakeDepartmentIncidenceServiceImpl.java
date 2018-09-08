@@ -34,9 +34,9 @@ public class MakeDepartmentIncidenceServiceImpl implements MakeDepartmentInciden
     @Override
     public int insertincidence(Incidence incidence, User user) {
         try {
-            String code =makedepartmentMapper.selectDetailByName(incidence.getDepartmentName()).getDepartmentCode();
+          //  String name =makedepartmentMapper.selectDetailByCode(incidence.getDepartmentCode()).getDepartmentName();
             incidence.setId(UUIDUtil.generate());
-            incidence.setDepartmentCode(code);
+          //  incidence.setDepartmentName(name);
             incidence.setSerialCode(getSerialCode(incidence.getDepartmentCode()));
             incidence.setDistrictId(user.getDistrictId());
             incidence.setCreateTime(DateUtil.getCurrentTime());

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/makedepartmnet/incidence")
+@RequestMapping(value = "/incidence")
 public class MakeDepartmentIncidenceController implements InitializingBean {
     @Autowired
     private MakeDepartmentIncidenceService incidenceService;
@@ -41,6 +41,8 @@ public class MakeDepartmentIncidenceController implements InitializingBean {
     private DistrictService districtService;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
     private static Logger logger = LoggerFactory.getLogger(MakeDepartmentIncidenceController.class);
 
 
@@ -127,6 +129,36 @@ public class MakeDepartmentIncidenceController implements InitializingBean {
             }
         }
     }
+
+    @Log("查看制作单位列表")
+    @RequestMapping(value = "/makeDepartment")
+    public JsonObjectBO commoninfo(HttpServletRequest httpServletRequest){
+        User user =(User)httpServletRequest.getSession().getAttribute("user");
+//        String districtId = (String)map.get("districtId");
+//        String name = (String)map.get("name");
+        String status = "01";
+
+        JSONObject jsonObject = new JSONObject();
+        List<MakeDepartmentSimple> list = new ArrayList<>();
+        try {
+
+
+                list = makeDepartmentService.selectInfo(user.getDistrictId(),null,status);
+                jsonObject.put("makeDepartment", list);
+
+//            if(districtId==""||districtId==null) {}else {
+//                list = makeDepartmentService.selectInfo(districtId,name,status);
+//                jsonObject.put("makeDepartment", list);
+//            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
 
 
 }

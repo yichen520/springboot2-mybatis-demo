@@ -183,6 +183,11 @@
     from make_department  where department_name = #{name,jdbcType=VARCHAR} and delete_status = 0
   </select>
 
+  <select id="selectDetailByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List"/>
+    from make_department  where department_code = #{code,jdbcType=VARCHAR} and delete_status = 0
+  </select>
+
   <select id="selectByCode" resultMap="SimpleResultMap" parameterType="com.dhht.model.Makedepartment">
     select <include refid="Base_Column_List"/>
     from make_department where department_code = #{departmentCode,jdbcType=VARCHAR} and delete_status = 0
