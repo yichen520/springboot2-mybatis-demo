@@ -10,6 +10,7 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealDTO;
 import com.dhht.model.pojo.SealVO;
+import com.dhht.model.pojo.TrustedIdentityAuthenticationVO;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
@@ -609,6 +610,7 @@ public class SealController implements InitializingBean {
     public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
+        TrustedIdentityAuthenticationVO result = new TrustedIdentityAuthenticationVO();
         String certificateNo = (String) map.get("certificateNo");
         String name = (String) map.get("name");
         String fieldPhotoId = (String) map.get("fieldPhotoId");
@@ -622,7 +624,12 @@ public class SealController implements InitializingBean {
             BASE64Encoder base64Encoder = new BASE64Encoder();
             String photoDate = base64Encoder.encode(fileDate);
             IdentifyResult identifyResult = GuangRayIdentifier.identify(certificateNo, name, photoDate);
-            jsonObject.put("identifyResult",identifyResult);
+            result.setFieldPhotoId(fieldPhotoId);
+            result.setCertificateNo(certificateNo);
+            result.setName(name);
+            result.setIsPass(identifyResult.isPassed());
+            result.setMessage(identifyResult.getMessage());
+            jsonObject.put("identifyResult",result);
             if(identifyResult.isPassed()){
                 jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(1);
