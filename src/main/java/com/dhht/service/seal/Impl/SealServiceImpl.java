@@ -537,12 +537,12 @@ public class SealServiceImpl implements SealService {
         if (seal1.getIsLoss()) {
             return ResultUtil.isLoss;
         }
-        UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);  //根据usedepartment查询对应的使用公司
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(seal1.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
         if (useDepartment == null) {
             return ResultUtil.isNoDepartment;
         }
 
-        //登记印章操作
+        //印章操作
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
         SealOperationRecord sealOperationRecord = new SealOperationRecord();

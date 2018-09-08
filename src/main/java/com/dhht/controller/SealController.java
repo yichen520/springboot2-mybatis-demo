@@ -314,12 +314,12 @@ public class SealController implements InitializingBean {
             }else if(a==ResultUtil.faceCompare) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("该印章已被挂失");
-            }else if(a==ResultUtil.isFail) {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("交付失败");
-            }else{
+            }else if(a==ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("交付成功");
+            }else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("交付失败");
             }
             return jsonObjectBO;
         } catch (Exception e) {
