@@ -74,6 +74,8 @@ public class SealController implements InitializingBean {
         }
         if(!redisTemplate.hasKey("SealSerialNum")){
             redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));
+        }else{
+            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));
         }
 
 
@@ -637,7 +639,7 @@ public class SealController implements InitializingBean {
             }else {
                 jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage(identifyResult.getMessage());
+                jsonObjectBO.setMessage("验证失败");
             }
         }
         return jsonObjectBO;
