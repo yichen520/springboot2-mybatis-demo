@@ -187,6 +187,7 @@ public class SealServiceImpl implements SealService {
                     String sealId = UUIDUtil.generate();
                     seal.setId(sealId);
                     seal.setSealName(useDepartment.getName());
+                    seal.setUseDepartmentCode(useDepartmentCode);
                     seal.setUseDepartmentName(useDepartment.getName());
                     seal.setSealStatusCode("03");
                     seal.setIsRecord(true);
