@@ -298,7 +298,6 @@ public class SealServiceImpl implements SealService {
                     ImageIO.write(image,"bmp",new File(localPath));
                     File file = new File(localPath);
                     InputStream inputStream = new FileInputStream(file);
-                    ImageUtil.handleDpi(file,600,600);//设置dpi
                     byte[] imageData = FileUtil.readInputStream(inputStream);
                     FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "bmp", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageImageId = fileInfo.getId();
