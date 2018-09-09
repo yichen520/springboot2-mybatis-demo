@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class ImageUtil {
-    public static int color_range = 245;
+    public static int color_range = 250;
     public static Pattern pattern = Pattern.compile("[0-9]*");
     public static void convert(String path) {
         // TODO Auto-generated constructor stub
