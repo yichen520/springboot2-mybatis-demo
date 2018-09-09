@@ -132,7 +132,7 @@ public class PunishExamineController {
         try {
             PageHelper.startPage(pageNum, pageSize);
             PageInfo<ExamineRecord>  pageInfo =new PageInfo<ExamineRecord> (recordDepartmentService.findPunish(makedepartmentName,startTime,endTime,districtId));
-            jsonObject.put("punishInfo",pageInfo);
+            jsonObject.put("examineInfo",pageInfo);
         }catch (Exception e){
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception(e.getMessage());
