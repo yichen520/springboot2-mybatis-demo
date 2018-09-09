@@ -87,8 +87,12 @@ public class EmployeeServiceImp implements EmployeeService {
             if (isRepeatEmployeeId(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
             }
-            int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
             int e = employeeDao.insert(employee);
+            if(e<0){
+                return ResultUtil.isFail;
+            }
+            int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
+
             if (u==ResultUtil.isSend&&e==1&&o) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
                 return ResultUtil.isSuccess;
