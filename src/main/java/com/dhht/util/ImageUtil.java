@@ -1,18 +1,11 @@
 package com.dhht.util;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import com.sun.imageio.plugins.bmp.BMPImageReader;
-import org.apache.xerces.impl.xpath.regex.BMPattern;
 
 import javax.imageio.ImageIO;
-import javax.imageio.plugins.bmp.BMPImageWriteParam;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class ImageUtil {
