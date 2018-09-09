@@ -305,8 +305,9 @@ public class SealServiceImpl implements SealService {
                     String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);//后缀
 
                     String path = caselsh + "_micro." + suffix;
-                    Thumbnails.of(localPath).scale(0.3f).toFile(path);
                     ImageUtil.convert(path);
+                    Thumbnails.of(localPath).scale(0.3f).toFile(path);
+
                     File microfile = new File(path);
                     InputStream inputStream1 = new FileInputStream(microfile);
 
