@@ -3,8 +3,11 @@ package com.dhht.util;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import com.sun.imageio.plugins.bmp.BMPImageReader;
+import org.apache.xerces.impl.xpath.regex.BMPattern;
 
 import javax.imageio.ImageIO;
+import javax.imageio.plugins.bmp.BMPImageWriteParam;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,7 +19,7 @@ public class ImageUtil {
     public static int color_range = 250;
     public static Pattern pattern = Pattern.compile("[0-9]*");
 
-    public static void convert(String path) {
+    public static void convert(String path) {   //背景透明
         // TODO Auto-generated constructor stub
         try {
 //            File path1 = new File(path);
@@ -107,28 +110,5 @@ public class ImageUtil {
         return bimage;
     }
 
-    /**
-     * 改变图片DPI
-     *
-     * @param file
-     * @param xDensity
-     * @param yDensity
-     */
-    public static void handleDpi(File file, int xDensity, int yDensity) {
-        try {
-            BufferedImage image = ImageIO.read(file);
-            JPEGImageEncoder jpegEncoder = JPEGCodec.createJPEGEncoder(new FileOutputStream(file));
-            JPEGEncodeParam jpegEncodeParam = jpegEncoder.getDefaultJPEGEncodeParam(image);
-            jpegEncodeParam.setDensityUnit(JPEGEncodeParam.DENSITY_UNIT_DOTS_INCH);
-            jpegEncoder.setJPEGEncodeParam(jpegEncodeParam);
-            jpegEncodeParam.setQuality(0.75f, false);
-            jpegEncodeParam.setXDensity(xDensity);
-            jpegEncodeParam.setYDensity(yDensity);
-            jpegEncoder.encode(image, jpegEncodeParam);
-            image.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
