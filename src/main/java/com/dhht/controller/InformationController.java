@@ -138,9 +138,7 @@ public class InformationController {
         int status = (Integer) map.get("status");
         String name = (String)map.get("name");
         String code = (String)map.get("code");
-
         JSONObject jsonObject = new JSONObject();
-
         try {
             if(code==null||code==""){
                 code = user.getDistrictId();
@@ -150,8 +148,6 @@ public class InformationController {
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
             return JsonObjectBO.exception(e.toString());
-        }finally {
-            PageHelper.clearPage();
         }
 
     }
@@ -176,8 +172,6 @@ public class InformationController {
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
             return JsonObjectBO.exception(e.toString());
-        }finally {
-            PageHelper.clearPage();
         }
 
     }

@@ -42,7 +42,7 @@ public interface EmployeeService {
 
     List<Employee> operationByDepartmentCode(String code);
 
-    int updateMakeDepartment(String id,String code);
+    int updateMakeDepartment(String id,String district);
 
     PageInfo selectEmployeeInfo(String code,int status,String name,int pageNum,int pageSize);
 

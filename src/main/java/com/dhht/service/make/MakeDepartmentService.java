@@ -11,6 +11,8 @@ import java.util.List;
 public interface MakeDepartmentService {
      List<MakeDepartmentSimple> selectInfo(String districtId,String name,String status);
 
+     List<MakeDepartmentSimple> selectAllInfo(String districtId);
+
      Makedepartment selectDetailById(String id);
 
      int insert(Makedepartment makedepartment,User user);
