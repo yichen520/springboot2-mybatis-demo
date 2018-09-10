@@ -59,7 +59,7 @@ spring:
 
     redis:
        database: 0
-       host: 127.0.0.1
+       host: 10.0.0.44
        port: 6379
        password:
        jedis:
