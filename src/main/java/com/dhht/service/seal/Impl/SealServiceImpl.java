@@ -111,7 +111,7 @@ public class SealServiceImpl implements SealService {
         String num;
         Jedis jedis = new Jedis();
         if (redisTemplate.hasKey("SealSerialNum")) {
-            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
+//            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
             num = jedis.incrBy("SealSerialNum", 1).toString();
         } else {
             redisTemplate.opsForValue().set("SealSerialNum",0);
