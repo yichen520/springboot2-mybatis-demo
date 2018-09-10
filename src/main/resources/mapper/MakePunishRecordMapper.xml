@@ -68,13 +68,13 @@
   <select id="findPunish" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select <include refid="Base_Column_List" />
     from punish_record_make_department where 1 = 1
-    <if test="startTime == '' and  endTime != ''" >
+    <if test="startTime == null and  endTime != null" >
       and punish_time &lt; #{endTime}
     </if>
-    <if test="startTime != '' and  endTime != ''" >
+    <if test="startTime != null and  endTime != null" >
       and punish_time BETWEEN #{startTime} and #{endTime}
     </if>
-    <if test="startTime != '' and  endTime == '' " >
+    <if test="startTime != null and  endTime == null " >
       and punish_time &gt; #{startTime}
     </if>
     <if test="district != null" >
