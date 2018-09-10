@@ -224,6 +224,7 @@ public class EmployeeController  implements InitializingBean {
         String emoloyeeCode = employeeService.selectMaxEmployeeCode();
         if(emoloyeeCode == null) {
             redisTemplate.opsForValue().set("employeeCode", "0000");
+            return;
         }
         String temp = emoloyeeCode.substring(19);
         Integer code = Integer.parseInt(temp);
