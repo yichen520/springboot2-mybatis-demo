@@ -13,11 +13,13 @@ public interface MakedepartmentMapper {
    //---------------------------------------查询模块----------------------//
     List<MakeDepartmentSimple> selectInfo(@Param("districtId") String districtId,@Param("departmentStatus") String departmentStatus,@Param("name") String name);
 
+    List<MakeDepartmentSimple> selectAllInfo(@Param("districtId") String districtId);
+
     Makedepartment selectDetailById(@Param("id") String id);
 
    Makedepartment selectDetailByCode(@Param("code") String code);
 
- Makedepartment selectDetailByName(@Param("name") String name);
+   Makedepartment selectDetailByName(@Param("name") String name);
 
     int insert(Makedepartment makedepartment);
 
@@ -36,6 +38,8 @@ public interface MakedepartmentMapper {
     List<MakeDepartmentSimple> selectByCode(Makedepartment makedepartment);
 
     List<MakeDepartmentSimple> selectByDistrict(@Param("id") String id);
+
+    List<MakeDepartmentSimple> selectMeumByDistrict(@Param("id") String id);
 
     List<Makedepartment> selectByNameAndTimeAndDistrict(@Param("departmentName")String departmentName,String startTime,String endTime,@Param("districtId") String districtId);
 

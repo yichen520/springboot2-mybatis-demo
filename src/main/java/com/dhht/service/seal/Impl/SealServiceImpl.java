@@ -111,10 +111,10 @@ public class SealServiceImpl implements SealService {
         String num;
         Jedis jedis = new Jedis();
         if (redisTemplate.hasKey("SealSerialNum")) {
-            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
+//            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
             num = jedis.incrBy("SealSerialNum", 1).toString();
         } else {
-            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
+            redisTemplate.opsForValue().set("SealSerialNum",0);
             num = jedis.incrBy("SealSerialNum", 1).toString();
         }
         int length = num.length();
@@ -185,6 +185,7 @@ public class SealServiceImpl implements SealService {
 
             //循环加入seal
             for (Seal seal : seals) {
+//                Seal seal1 = new Seal();
                 String sealcode = SealSerialNum(districtId);
 
 
@@ -401,8 +402,8 @@ public class SealServiceImpl implements SealService {
         Employee employee = employeeService.selectByPhone(telphone);
 
         Seal seal = new Seal();
-        seal.setUseDepartmentCode(useDepartmentCode);
-        seal.setUseDepartmentName(useDepartmentName);
+//        seal.setUseDepartmentCode(useDepartmentCode);
+//        seal.setUseDepartmentName(useDepartmentName);
 
         seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
         List<Seal> list = new ArrayList<Seal>();

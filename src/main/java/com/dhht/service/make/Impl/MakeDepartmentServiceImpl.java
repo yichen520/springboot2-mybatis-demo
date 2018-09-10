@@ -78,6 +78,19 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
+     * 查询区域下所有的制作单位
+     * @param districtId
+     * @return
+     */
+    @Override
+    public List<MakeDepartmentSimple> selectAllInfo(String districtId) {
+        String did = StringUtil.getDistrictId(districtId);
+        List<MakeDepartmentSimple> list = makedepartmentMapper.selectAllInfo(did);
+        return list;
+    }
+
+
+    /**
      * 根据Id查询详细的制作单位资料
      * @param id
      * @return
@@ -128,12 +141,11 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public int update(Makedepartment makedepartment,User updateUser) {
         try {
             Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
-            List<Employee> employees = employeeService.selectAllByDepartmentCode(oldDate.getDepartmentCode());
+            List<Employee> employees = employeeService.selectByDepartmentCode(oldDate.getDepartmentCode());
             int d = makedepartmentMapper.deleteHistoryByID(oldDate.getId());
             if (d == 0) {
                 return 5;
             }
-            //User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
             makedepartment.setId(UUIDUtil.generate());
             makedepartment.setVersionTime(DateUtil.getCurrentTime());
             makedepartment.setFlag(makedepartment.getFlag());
@@ -149,8 +161,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             boolean od = historyService.insertUpdateRecord(makedepartment,oldDate,operateUUid,ignore);
             int m = makedepartmentMapper.insert(makedepartment);
             boolean f = registerFile(makedepartment);
+            int e = setEmployeeByDepartment(employees,makedepartment,updateUser,2);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-            if (f && u == ResultUtil.isSuccess&&o&&od&&m>0) {
+            if (f && u == ResultUtil.isSuccess&&o&&od&&m>0&&e>0) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -178,14 +191,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         if(makedepartmentMapper.deleteHistoryByID(id)==0){
             return ResultUtil.isError;
         }
-        List<Employee> employees = employeeService.selectAllByDepartmentCode(makedepartment.getDepartmentCode());
+        List<Employee> employees = employeeService.selectByDepartmentCode(makedepartment.getDepartmentCode());
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
         User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
         if(user==null){
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e =setEmployeeByDepartment(employees,makedepartment,updateUser);
+            int e =setEmployeeByDepartment(employees,makedepartment,updateUser,1);
             boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.DELETE,UUIDUtil.generate());
             if(m==1&&e==2&&o){
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
@@ -198,7 +211,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int u = userService.delete(user.getId());
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e = setEmployeeByDepartment(employees,makedepartment,updateUser);
+            int e = setEmployeeByDepartment(employees,makedepartment,updateUser,1);
             boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.DELETE,UUIDUtil.generate());
             if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess&&o) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl)AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
@@ -368,15 +381,29 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      * @param employees
      * @return
      */
-    public int setEmployeeByDepartment(List<Employee> employees,Makedepartment makedepartment,User user) {
-        for (Employee emp : employees) {
-            int e = employeeService.deleteEmployee(emp.getId(),user);
-            if (e != 2) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return ResultUtil.isError;
-            }
+    public int setEmployeeByDepartment(List<Employee> employees,Makedepartment makedepartment,User user,int type) {
+        switch (type){
+            case 1:
+                for (Employee emp : employees) {
+                    int e = employeeService.deleteEmployee(emp.getId(),user);
+                    if (e <1) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return ResultUtil.isFail;
+                    }
+                }
+                return ResultUtil.isSuccess;
+            case 2:
+                for (Employee emp : employees) {
+                    emp.setDistrictId(makedepartment.getDepartmentAddress());
+                    int e = employeeService.updateMakeDepartment(emp.getId(),emp.getDistrictId());
+                    if (e<1) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return ResultUtil.isFail;
+                    }
+                }
+                return ResultUtil.isSuccess;
         }
-        return ResultUtil.isSuccess;
+        return ResultUtil.isError;
     }
 
 

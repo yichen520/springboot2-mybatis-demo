@@ -223,7 +223,8 @@ public class EmployeeController  implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         String emoloyeeCode = employeeService.selectMaxEmployeeCode();
         if(emoloyeeCode == null) {
-            redisTemplate.opsForValue().set("employeeCode", "0000");
+            redisTemplate.opsForValue().set("employeeCode", 0);
+            return;
         }
         String temp = emoloyeeCode.substring(19);
         Integer code = Integer.parseInt(temp);

@@ -74,6 +74,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setFamilyDistrictId(employee.getFamilyDistrictIds().get(2));
             employee.setNowDistrictId(employee.getNowDistrictIds().get(2));
             employee.setEmployeeImage("");
+            employee.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
             employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
             employee.setOfficeCode(recordDepartment.getDepartmentCode());
             employee.setOfficeName(recordDepartment.getDepartmentName());
@@ -88,12 +89,9 @@ public class EmployeeServiceImp implements EmployeeService {
                 return ResultUtil.isWrongId;
             }
             int e = employeeDao.insert(employee);
-            if(e<0){
-                return ResultUtil.isFail;
-            }
             int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
 
-            if (u==ResultUtil.isSend&&e==1&&o) {
+            if (u==ResultUtil.isSend&&e>0&&o) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -144,7 +142,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setVersion(employee.getVersion() + 1);
             employee.setVersionTime(DateUtil.getCurrentTime());
             employee.setId(UUIDUtil.generate());
-            String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime","familyDistrictIds","familyDistrictName","nowDistrictIds","nowDistrictName"};
+            String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime","familyDistrictIds","familyDistrictName","nowDistrictIds","nowDistrictName","districtId"};
             String operateUUid = UUIDUtil.generate();
             boolean o = historyService.insertOperateRecord(updateUser,employee.getFlag(),employee.getId(),"employee",SyncOperateType.UPDATE,operateUUid);
             boolean od = historyService.insertUpdateRecord(employee,oldDate,operateUUid,ignore);
@@ -424,14 +422,17 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     /**
-     * 更新制作单位的编号
+     * 更新制作单位的区域
      * @param id
-     * @param code
+     * @param district
      * @return
      */
     @Override
-    public int updateMakeDepartment(String id, String code) {
-        return employeeDao.updateMakeDepartment(id,code);
+    public int updateMakeDepartment(String id, String district) {
+        Employee employee = employeeDao.selectById(id);
+        int u = userService.update(employee.getTelphone(),employee.getTelphone(),"CYRY",employee.getEmployeeName(),district);
+        return u;
+
     }
 
     /**
@@ -445,7 +446,7 @@ public class EmployeeServiceImp implements EmployeeService {
     public PageInfo selectEmployeeInfo(String code, int status, String name, int pageNum,int pageSize) {
         List<Employee> employees = new ArrayList<>();
         if(code.length()==6){
-            List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(code,"","01");
+            List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectAllInfo(code);
             if(makedepartments.size()==0){
                 return new PageInfo(employees);
             }
@@ -458,6 +459,7 @@ public class EmployeeServiceImp implements EmployeeService {
                 employees = employeeDao.selectAllEmployeeInfo(name,makedepartments);
             }
         }else {
+            PageHelper.startPage(pageNum,pageSize);
             if(status==1){
                 employees = employeeDao.selectWorkEmployee(code,name);
             }else if(status==2){

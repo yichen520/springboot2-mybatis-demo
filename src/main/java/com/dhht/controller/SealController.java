@@ -71,10 +71,9 @@ public class SealController implements InitializingBean {
         Seal seal = sealService.selectLastSeal();
         if(seal== null) {
             redisTemplate.opsForValue().set("SealSerialNum",0);
+            return;
         }
         if(!redisTemplate.hasKey("SealSerialNum")){
-            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));
-        }else{
             redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));
         }
 

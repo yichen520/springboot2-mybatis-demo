@@ -164,13 +164,13 @@ public class DistrictServiceImp implements DistrictService{
             if(list.size()>0){
                 districtMenu.setChildren(list);
                 for (DistrictMenus d:list) {
-                    List<MakeDepartmentSimple> makeDepartmentSimpleList = makedepartmentMapper.selectByDistrict(d.getDistrictId());
+                    List<MakeDepartmentSimple> makeDepartmentSimpleList = makedepartmentMapper.selectMeumByDistrict(d.getDistrictId());
                     if(makeDepartmentSimpleList.size()>0){
                         d.setMakeDepartmentSimples(makeDepartmentSimpleList);
                     }
                 }
             }else if(!districtIds[2].equals("00")){
-                List<MakeDepartmentSimple> makeDepartmentSimpleList = makedepartmentMapper.selectByDistrict(districtMenu.getDistrictId());
+                List<MakeDepartmentSimple> makeDepartmentSimpleList = makedepartmentMapper.selectMeumByDistrict(districtMenu.getDistrictId());
                 if(makeDepartmentSimpleList.size()>0){
                     districtMenu.setMakeDepartmentSimples(makeDepartmentSimpleList);
                 }
