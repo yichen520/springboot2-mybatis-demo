@@ -49,6 +49,7 @@ public class SuspiciousServiceImpl implements SuspiciousService {
             }
             suspicious.setDistrictId(user.getDistrictId());
             suspicious.setCreateTime(DateUtil.getCurrentTime());
+            suspicious.setUpdateTime(DateUtil.getCurrentTime());
             suspicious.setRecorder(user.getRealName());
             suspicious.setUpdateUser(user.getRealName());
             int result = suspiciousMapper.insertSelective(suspicious);
