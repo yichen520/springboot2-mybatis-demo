@@ -3,13 +3,13 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.model.Incidence;
-import com.dhht.model.Suspicious;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.model.pojo.IncidencePO;
 import com.dhht.model.pojo.SuspiciousPO;
 import com.dhht.service.District.DistrictService;
+import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentIncidenceService;
+import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.suspicious.SuspiciousService;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.StringUtil;
@@ -36,7 +36,10 @@ public class SuspiciousController  {
     private SuspiciousService suspiciousService;
 
     private static Logger logger = LoggerFactory.getLogger(SuspiciousController.class);
-
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
+    @Autowired
+    private EmployeeService employeeService;
 
 
     @Log("获取可疑情况")
@@ -105,6 +108,41 @@ public class SuspiciousController  {
             return JsonObjectBO.exception("删除失败！");
         }
     }
+
+    @Log("查看制作单位列表")
+    @RequestMapping(value = "/makeDepartment")
+    public JsonObjectBO commoninfo(HttpServletRequest httpServletRequest){
+        User user =(User)httpServletRequest.getSession().getAttribute("user");
+        String status = "01";
+        JSONObject jsonObject = new JSONObject();
+        List<MakeDepartmentSimple> list = new ArrayList<>();
+        try {
+            list = makeDepartmentService.selectInfo(user.getDistrictId(),null,status);
+            jsonObject.put("makeDepartment", list);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }finally {
+            PageHelper.clearPage();
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+    @RequestMapping(value = "/employee")
+    public JsonObjectBO employee(HttpServletRequest httpServletRequest,@RequestBody Map map){
+       // User user =(User)httpServletRequest.getSession().getAttribute("user");
+        String departmentCode = (String) map.get("departmentCode");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<Employee> employees = employeeService.selectByDepartmentCode(departmentCode);
+            jsonObject.put("employees",employees);
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
 
 
 
