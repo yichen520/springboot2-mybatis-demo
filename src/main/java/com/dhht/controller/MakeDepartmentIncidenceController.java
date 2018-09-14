@@ -134,22 +134,12 @@ public class MakeDepartmentIncidenceController implements InitializingBean {
     @RequestMapping(value = "/makeDepartment")
     public JsonObjectBO commoninfo(HttpServletRequest httpServletRequest){
         User user =(User)httpServletRequest.getSession().getAttribute("user");
-//        String districtId = (String)map.get("districtId");
-//        String name = (String)map.get("name");
         String status = "01";
-
         JSONObject jsonObject = new JSONObject();
         List<MakeDepartmentSimple> list = new ArrayList<>();
         try {
-
-
                 list = makeDepartmentService.selectInfo(user.getDistrictId(),null,status);
                 jsonObject.put("makeDepartment", list);
-
-//            if(districtId==""||districtId==null) {}else {
-//                list = makeDepartmentService.selectInfo(districtId,name,status);
-//                jsonObject.put("makeDepartment", list);
-//            }
         }catch (Exception e){
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());

@@ -61,6 +61,12 @@ public class PunishExamineController {
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         String districtId = (String) map.get("districtId");
+        if (startTime !=null){
+            startTime =startTime+" 00:00:00";
+        }
+        if (endTime !=null){
+            endTime =endTime+" 23:59:59";
+        }
         if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());
         }else{
@@ -94,6 +100,12 @@ public class PunishExamineController {
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
+        if (startTime !=null){
+            startTime =startTime+" 00:00:00";
+        }
+        if (endTime !=null){
+            endTime =endTime+" 23:59:59";
+        }
         String districtId = (String) map.get("districtId");
         if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());
@@ -101,6 +113,7 @@ public class PunishExamineController {
             districtId = StringUtil.getDistrictId(districtId);
         }
         Integer pageSize =(Integer) map.get("pageSize");
+
         Integer pageNum =(Integer) map.get("pageNum");
         JSONObject jsonObject = new JSONObject();
         try {
@@ -120,6 +133,12 @@ public class PunishExamineController {
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
         String districtId = (String) map.get("districtId");
+        if (startTime !=null){
+            startTime =startTime+" 00:00:00";
+        }
+        if (endTime !=null){
+            endTime =endTime+" 23:59:59";
+        }
         if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());
         }else{
