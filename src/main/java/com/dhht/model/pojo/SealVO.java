@@ -31,6 +31,6 @@ public class SealVO  {
 
     private UseDepartment useDepartment;
 
-    private MakeDepartmentSimple makeDepartmentSimple;
+    private Makedepartment makeDepartment;
 
 }

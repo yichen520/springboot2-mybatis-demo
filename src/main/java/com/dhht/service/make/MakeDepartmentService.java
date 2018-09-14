@@ -31,6 +31,7 @@ public interface MakeDepartmentService {
 
      MakeDepartmentSimple selectByDepartmentCode(String code);
 
+
      String selectCodeByLegalTelphone(String phone);
 
      List<Makedepartment> selectPunish(String MakeDepartmentName,String startTime,String endTime,String districtId,String localDistrictId);

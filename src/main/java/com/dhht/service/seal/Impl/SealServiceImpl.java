@@ -839,7 +839,7 @@ public class SealServiceImpl implements SealService {
         String useDepartmentCode = seal.getUseDepartmentCode();
         String makeDepartmentCode = seal.getMakeDepartmentCode();
         UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
-        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(makeDepartmentCode);
+        Makedepartment makedepartment = makeDepartmentService.selectByCode(makeDepartmentCode);
 
         List<SealAgent> sealAgents = new ArrayList<>();
         SealVO sealVo = new SealVO();
@@ -853,7 +853,7 @@ public class SealServiceImpl implements SealService {
         sealVo.setPositiveIdCardScanner(sealAgent.getIdCardFrontId());
         sealVo.setReverseIdCardScanner(sealAgent.getIdCardReverseId());
         sealVo.setProxy(sealAgent.getProxyId());
-        sealVo.setMakeDepartmentSimple(makedepartment);
+        sealVo.setMakeDepartment(makedepartment);
         sealVo.setUseDepartment(useDepartment);
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
 //        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
