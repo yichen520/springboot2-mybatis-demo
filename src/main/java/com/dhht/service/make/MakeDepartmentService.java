@@ -37,4 +37,6 @@ public interface MakeDepartmentService {
 
      List<ExamineRecordDetail> selectExamineDetailByID(String id);
 
+     Makedepartment selectByCode(String departmentCode);
+
 }

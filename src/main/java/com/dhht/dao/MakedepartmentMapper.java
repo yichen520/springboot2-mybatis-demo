@@ -35,6 +35,8 @@ public interface MakedepartmentMapper {
 
     List<Makedepartment> selectByFlag(@Param("flag") String flag);
 
+    Makedepartment selectByCode1(@Param("departmentCode") String departmentCode);
+
     List<MakeDepartmentSimple> selectByCode(Makedepartment makedepartment);
 
     List<MakeDepartmentSimple> selectByDistrict(@Param("id") String id);

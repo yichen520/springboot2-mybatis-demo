@@ -209,6 +209,15 @@
     from make_department where department_code = #{departmentCode,jdbcType=VARCHAR} and delete_status = 0
   </select>
 
+  <select id="selectByCode1">
+    select
+    <include refid="Simple_Column_list" />
+    from make_department as a RIGHT JOIN(
+    select flag as fa,MAX(version) as ver from make_department GROUP BY flag
+    )as b on a.flag = b.fa and  a.version=b.ver
+    where department_code = #{departmentCode,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectByFlag" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/>
     from make_department where flag = #{flag,jdbcType =VARCHAR}  AND delete_status = 1 ORDER BY version_time DESC

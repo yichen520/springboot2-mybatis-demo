@@ -5,6 +5,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.MemoryImageSource;
+import java.awt.image.PixelGrabber;
 import java.io.*;
 import java.util.regex.Pattern;
 
@@ -103,5 +105,31 @@ public class ImageUtil {
         return bimage;
     }
 
+    /**
+     * bmp格式
+     * @param filePath
+     * @param
+     */
+    public static void image2RGB565Bmp(String filePath,String savePath) {
+        try {
+            File file = new File(filePath);
+            BufferedImage sourceImg = ImageIO.read(file);
+            int h = sourceImg.getHeight(), w = sourceImg.getWidth();
+            int[] pixel = new int[w * h];  //设置宽高
+            PixelGrabber pixelGrabber = new PixelGrabber(sourceImg, 0, 0, w, h, pixel, 0, w);
+            pixelGrabber.grabPixels();
+
+            MemoryImageSource m = new MemoryImageSource(w, h, pixel, 0, w);
+            Image image = Toolkit.getDefaultToolkit().createImage(m);
+            BufferedImage buff = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            buff.createGraphics().drawImage(image, 0, 0 ,null);
+
+            ImageIO.write(buff, "bmp", new File(savePath));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

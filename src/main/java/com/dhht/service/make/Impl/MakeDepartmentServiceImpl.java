@@ -417,6 +417,12 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return examineRecordDetailMapper.selectExamineDetailByID(id);
     }
 
+    @Override
+    public Makedepartment selectByCode(String departmentCode) {
+        Makedepartment makedepartment = makedepartmentMapper.selectByCode1(departmentCode);
+        return makedepartment;
+    }
+
     /**
      * 文件注册
      * @param makedepartment

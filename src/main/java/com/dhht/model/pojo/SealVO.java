@@ -29,4 +29,8 @@ public class SealVO  {
 
     private List<SealAgent> sealAgents;
 
+    private UseDepartment useDepartment;
+
+    private MakeDepartmentSimple makeDepartmentSimple;
+
 }

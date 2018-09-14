@@ -259,6 +259,11 @@ public class UseDepartmentImpl implements UseDepartmentService {
         return false;
     }
 
+    public UseDepartment selectByCode(String useDepartmentCode){
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);
+        return useDepartment;
+    }
+
     /**
      * 数据同步
      * @param object

@@ -14,6 +14,7 @@ import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.FileStoreService;
+import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
@@ -63,6 +64,9 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private MakeDepartmentService makeDepartmentService;
+
+    @Autowired
+    private UseDepartmentService useDepartmentService;
 
     @Autowired
     private RecordDepartmentService recordDepartmentService;
@@ -295,10 +299,22 @@ public class SealServiceImpl implements SealService {
                     map.put("centerImage", centerImage);
                     //印模图像
                     String localPath = new ImageGenerate().seal(map);
-                    BufferedImage image = ImageUtil.getBufferedImage(localPath);
-                    ImageIO.write(image,"bmp",new File(localPath));
                     File file = new File(localPath);
-                    InputStream inputStream = new FileInputStream(file);
+                  BufferedImage image = ImageUtil.getBufferedImage(localPath);
+////                   ImageIO.write(image,"bmp",new File(localPath));
+//                    String ca = localPath.substring(0,localPath.lastIndexOf("."));
+//                    String savePath = ca+".bmp";
+//                    ImageUtil.image2RGB565Bmp(localPath,savePath);
+                    ImageGenerate imageGenerate = new ImageGenerate();
+                    imageGenerate.saveGridImage(new File(localPath),image); //设置dpi
+                    BufferedImage image1 = ImageUtil.getBufferedImage(localPath);
+
+//                    String ca = localPath.substring(0,localPath.lastIndexOf("."));
+//                    String savePath = ca+".bmp";
+//                    ImageUtil.image2RGB565Bmp(localPath,savePath);
+                    ImageIO.write(image1,"bmp",new File(localPath));
+                    File file2 =  new File(localPath);
+                    InputStream inputStream = new FileInputStream(file2);
                     byte[] imageData = FileUtil.readInputStream(inputStream);
                     FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "bmp", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
                     String moulageImageId = fileInfo.getId();
@@ -335,8 +351,8 @@ public class SealServiceImpl implements SealService {
                     microsealMaterial.setFilePath(micromoulageImageId);
                     sealDao.insertSealMaterial(microsealMaterial);
 
-
-                    ImageGenerate imageGenerate = new ImageGenerate();
+//
+//                   ImageGenerate imageGenerate = new ImageGenerate();
 
                     //二维数据
                     int[][] imgArr = imageGenerate.moulageData(map);
@@ -820,6 +836,11 @@ public class SealServiceImpl implements SealService {
     @Override
     public SealVO selectDetailById(String id) {
         Seal seal = sealDao.selectByPrimaryKey(id);
+        String useDepartmentCode = seal.getUseDepartmentCode();
+        String makeDepartmentCode = seal.getMakeDepartmentCode();
+        UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
+        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(makeDepartmentCode);
+
         List<SealAgent> sealAgents = new ArrayList<>();
         SealVO sealVo = new SealVO();
         sealVo.setSeal(seal);
@@ -832,6 +853,8 @@ public class SealServiceImpl implements SealService {
         sealVo.setPositiveIdCardScanner(sealAgent.getIdCardFrontId());
         sealVo.setReverseIdCardScanner(sealAgent.getIdCardReverseId());
         sealVo.setProxy(sealAgent.getProxyId());
+        sealVo.setMakeDepartmentSimple(makedepartment);
+        sealVo.setUseDepartment(useDepartment);
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
 //        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode, "06");
@@ -1180,6 +1203,18 @@ public class SealServiceImpl implements SealService {
         }
     }
 
+
+    //个人化大图
+    public byte[] BMPPicture(String id){
+        FileInfoVO fileInfo   = fileService.readFile(id);
+        byte[] fileData = fileInfo.getFileData();
+        return null;
+    }
+
+    //个人化小图
+    public byte[] thumbnail(String id){
+        return null;
+    }
 
 }
 

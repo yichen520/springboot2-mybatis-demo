@@ -23,11 +23,13 @@ public interface UseDepartmentDao {
 
     int insert(UseDepartment useDepartment);
 
-    UseDepartment selectByCode(String usedepartmentCode);
+    UseDepartment selectByCode(String useDepartmentCode);
 
     UseDepartment selectById(String Id);
 
     int updateByPrimaryKey(UseDepartment record);
+
+
 
     List<UseDepartment> findAllMake();
 

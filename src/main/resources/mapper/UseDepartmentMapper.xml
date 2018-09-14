@@ -79,7 +79,11 @@
     where id= #{id}
   </update>
 
-
+<!--<select id="selectByCode">-->
+   <!--SELECT * from use_department as a RIGHT JOIN(-->
+    <!--select flag,MAX(version) as ver from use_department GROUP BY flag-->
+    <!--)as b on a.flag=b.flag and  a.version=b.ver where `code` = #{useDeartmentCode}-->
+<!--</select>-->
 
   <insert id="insert" parameterType="com.dhht.model.UseDepartment" >
     insert into use_department (id,code, `name`,
