@@ -418,8 +418,8 @@ public class SealServiceImpl implements SealService {
         Employee employee = employeeService.selectByPhone(telphone);
 
         Seal seal = new Seal();
-//        seal.setUseDepartmentCode(useDepartmentCode);
-//        seal.setUseDepartmentName(useDepartmentName);
+        seal.setUseDepartmentCode(useDepartmentCode);
+        seal.setUseDepartmentName(useDepartmentName);
 
         seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
         List<Seal> list = new ArrayList<Seal>();
