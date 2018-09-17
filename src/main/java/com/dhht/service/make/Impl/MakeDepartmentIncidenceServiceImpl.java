@@ -41,6 +41,10 @@ public class MakeDepartmentIncidenceServiceImpl implements MakeDepartmentInciden
             incidence.setDistrictId(user.getDistrictId());
             incidence.setCreateTime(DateUtil.getCurrentTime());
             incidence.setRecorder(user.getRealName());
+            int incidenceCode = incidenceMapper.incidenceCode(incidence.getIncidenceId());
+            if (incidenceCode>0){
+                return ResultUtil.isIncidenceId;
+            }
             int result = incidenceMapper.insertSelective(incidence);
             if(result == 1){
                 return ResultUtil.isSuccess;

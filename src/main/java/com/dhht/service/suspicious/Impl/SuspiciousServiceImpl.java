@@ -70,10 +70,16 @@ public class SuspiciousServiceImpl implements SuspiciousService {
     public int updatesuspicious(Suspicious suspicious, User user) {
         try {
             Suspicious suspicious1 = suspiciousMapper.selectByPrimaryKey(suspicious.getId());
-            if (!suspicious1.getEmployeeName().equals(suspicious.getEmployeeName())){
-                //suspicious.setEmployeeCode(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeCode());
-                suspicious.setEmployeeIdcard(employeeDao.selectByCode(suspicious.getEmployeeCode()).getEmployeeId());
+            if (suspicious1.getEmployeeName()!=null){
+                if (!suspicious1.getEmployeeName().equals(suspicious.getEmployeeName())){
+                    suspicious.setEmployeeIdcard(employeeDao.selectByCode(suspicious.getEmployeeCode()).getEmployeeId());
+                }
+            }else {
+                if (suspicious.getEmployeeName()!=null){
+                    suspicious.setEmployeeIdcard(employeeDao.selectByCode(suspicious.getEmployeeCode()).getEmployeeId());
+                }
             }
+
             suspicious.setUpdateUser(user.getRealName());
             suspicious.setUpdateTime(DateUtil.getCurrentTime());
             int result = suspiciousMapper.updateByPrimaryKeySelective(suspicious);

@@ -91,6 +91,12 @@ public class PunishController {
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
+        if (startTime !=null){
+            startTime =startTime+" 00:00:00";
+        }
+        if (endTime !=null){
+            endTime =endTime+" 23:59:59";
+        }
         String districtId = (String) map.get("districtId");
         if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());
@@ -171,6 +177,12 @@ public class PunishController {
         String makedepartmentName = (String)map.get("makedepartmentName");
         String startTime = (String) map.get("startTime");
         String endTime = (String) map.get("endTime");
+        if (startTime !=null){
+            startTime =startTime+" 00:00:00";
+        }
+        if (endTime !=null){
+            endTime =endTime+" 23:59:59";
+        }
         String districtId = (String) map.get("districtId");
         if (districtId == null || districtId == ""){
             districtId = StringUtil.getDistrictId(user.getDistrictId());

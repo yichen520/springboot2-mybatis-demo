@@ -64,6 +64,7 @@
     <if test="districtId != null" >
       and district_id like '%${districtId}%'
     </if>
+    order by incidence_id
   </select>
 
 
@@ -239,5 +240,9 @@
 
   <select id="selectMaxSerialCode" resultType="java.lang.String">
     SELECT Max(serial_code) from make_department_incidence ;
+  </select>
+
+  <select id="incidenceCode" parameterType="java.lang.String"  resultType="java.lang.Integer">
+    SELECT count(1) from make_department_incidence  where incidence_id = #{incidenceId,jdbcType=CHAR} ;
   </select>
 </mapper>

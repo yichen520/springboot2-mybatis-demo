@@ -68,9 +68,9 @@ public class ExamineController {
     public JsonObjectBO itemadd(@RequestBody ExamineDetailList examineDetails){
         try {
             if (minitorService.itemadd(examineDetails.getExamineDetails())){
-                return JsonObjectBO.success("新增监督检查表成功",null);
+                return JsonObjectBO.success("新增监督检查项成功",null);
             }else {
-                return JsonObjectBO.error("新增监督检查表失败");
+                return JsonObjectBO.error("新增监督检查项失败");
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);

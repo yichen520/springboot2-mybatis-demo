@@ -23,4 +23,6 @@ public interface IncidenceMapper {
     List<Incidence> selectInfo(IncidencePO map);
 
     String selectMaxSerialCode();
+
+     int incidenceCode(String incidenceId);
 }
