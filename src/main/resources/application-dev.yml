@@ -2,7 +2,6 @@ server:
   port: 8083
 
 #超级管理员账号密码
-
 jiaohu:
   name: 数据交互
   canAddItem: false
@@ -14,6 +13,7 @@ jiaohu:
   FTP_USER: test_ftp
   FTP_PWD: jKa4F9zS1
   FTP_PATH: /
+
 
 spring:
     boot:
@@ -82,13 +82,14 @@ loginError:
 
 
 #pagehelper
-pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
-    returnPageInfo: check
-#
+#pagehelper:
+#    helperDialect: mysql
+#    reasonable: true
+#    supportMethodsArguments: true
+#    params: count=countSql
+#    returnPageInfo: check
+
+
 #thymeleaf:
 #       cache: false
 logging:
@@ -105,6 +106,30 @@ logging:
 
 
 
+notice:
+  pageNum: 5
+
+#文件服务器地址
+trackerPort: :9000/
+trackerServer: 10.0.0.40
+trackerProtocol: http://
+file:
+ local:
+   root: C:/temp/
+sealtemplate:
+ filePath: C:/temp/seal
+
+#设置redis中token过期时间
+expireTime: 3600
+#设置短信过期时间，时间为5分钟
+smsexpireTime: 300000
+
+face:
+  similarity: 45
+seal:
+   template:
+        filepath: C:/temp
+
 #短信发送接口
 sms:
     appId: 1400106872
@@ -117,28 +142,3 @@ sms:
         newUserName: 150917
         makedepartmentpunish: 160963
         employeepunish: 160972
-
-#公告条数
-notice:
-  pageNum: 5
-
-#文件服务器地址
-trackerPort: :9000/
-trackerServer: 10.0.0.40
-trackerProtocol: http://
-file:
- local:
-   root: C:/temp/
-sealtemplate:
-  filePath: C:/temp/seal
-
-#设置redis中token过期时间
-expireTime: 3600
-#设置短信过期时间，时间为5分钟
-smsexpireTime: 300000
-
-face:
-  similarity: 45
-seal:
-   template:
-        filepath: /Library/东华宏泰/temp

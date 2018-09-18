@@ -40,6 +40,7 @@ public class MakeDepartmentCountController {
         String startTime = (String)map.get("startTime");
         String endTime = (String)map.get("endTime");
         String district = (String)map.get("districtId");
+
         User user =(User) httpServletRequest.getSession().getAttribute("user");
 
         JSONObject jsonObject = new JSONObject();

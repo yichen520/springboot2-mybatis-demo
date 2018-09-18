@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smutil.SM3Util;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,7 +76,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
      */
     @Override
     public int sendMessage(String phone, String code,int smsmesscode) {
-//        try {
+        try {
                 ArrayList<String> params = new ArrayList<String>();
                 params.add(code);
                 params.add("5");
@@ -99,10 +100,10 @@ public class UserPasswordServiceImpl implements UserPasswordService{
                     return ResultUtil.isFail;
                 }
 
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResultUtil.isFail;
-//        }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.isFail;
+        }
     }
 
 
@@ -117,7 +118,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     public boolean adminResetPwd(String id) {
         String code = createRandomVcode();
         User user = userDao.findById(id);
-        user.setPassword(MD5Util.toMd5(code));
+        user.setPassword(SM3Util.doSM3(code));
 //        user.setPassword(code);
         String userName = user.getUserName();
         String phone = user.getTelphone();
@@ -169,7 +170,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         SMSCode code = smsCodeDao.getSMSCodeByPhone(phone);
         String smscode = code.getSmscode();
         if(smscode.equals(checkCode)){
-            String pwd = MD5Util.toMd5(password);
+            String pwd = SM3Util.doSM3(password);
             user.setPassword(pwd);
             int a = userDao.update(user);
             if (a!=1){
@@ -196,7 +197,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     public boolean appResetPwd(String id, String newPassWord) {
         User user = userDao.findById(id);
         String userName = user.getUserName();
-        String pwd = MD5Util.toMd5(newPassWord);
+        String pwd = SM3Util.doSM3(newPassWord);
         String phone = user.getTelphone();
         user.setPassword(pwd);
         int a = userDao.update(user);
@@ -211,6 +212,30 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         }
     }
 
+    /**
+     *登入后修改修改密码
+     * @param username
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @Override
+    public int changePwd(String username,String oldPassword, String newPassword) {
+        User user = userDao.findByUserName(username);
+        if(SM3Util.verify(oldPassword,user.getPassword())){
+            user.setPassword(SM3Util.doSM3(newPassword));
+            user.setChangedPwd(true);
+            int updatePwd = userDao.update(user);
+            if(updatePwd<0){
+                return ResultUtil.isFail;
+            }else{
+                return ResultUtil.isSuccess;
+            }
+        }else{
+            return ResultUtil.isNoTrue;
+        }
+
+    }
 
 
 }

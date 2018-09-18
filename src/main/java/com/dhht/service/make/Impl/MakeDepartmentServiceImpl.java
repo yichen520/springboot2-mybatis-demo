@@ -1,14 +1,14 @@
 package com.dhht.service.make.Impl;
 
 import com.dhht.annotation.Sync;
-import com.dhht.dao.ExamineRecordDetailMapper;
-import com.dhht.dao.MakedepartmentMapper;
-import com.dhht.dao.OperatorRecordDetailMapper;
-import com.dhht.dao.OperatorRecordMapper;
+import com.dhht.dao.*;
 import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.SealDTO;
+import com.dhht.model.pojo.SealVO;
 import com.dhht.service.employee.EmployeeService;
 
+import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
@@ -48,6 +48,19 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private SealDao sealDao;
+
+    @Autowired
+    private SealAgentMapper sealAgentMapper;
+
+    private final String IDCARD_FRONT_FILE = "制作单位法人身份证正面照片";
+    private final String IDCARD_REVERSE_FILE = "制作单位法人身份证反面照片";
+    private final String SPECIAL_LICENSE_FILE = "制作单位特种行业许可证扫面件";
+    private final String BUSINESS_LICENSE_FILE = "制作单位营业执照扫面件";
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 
     /**
@@ -65,6 +78,19 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     /**
+     * 查询区域下所有的制作单位
+     * @param districtId
+     * @return
+     */
+    @Override
+    public List<MakeDepartmentSimple> selectAllInfo(String districtId) {
+        String did = StringUtil.getDistrictId(districtId);
+        List<MakeDepartmentSimple> list = makedepartmentMapper.selectAllInfo(did);
+        return list;
+    }
+
+
+    /**
      * 根据Id查询详细的制作单位资料
      * @param id
      * @return
@@ -72,7 +98,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public Makedepartment selectDetailById(String id) {
         Makedepartment makedepartment = makedepartmentMapper.selectDetailById(id);
-        return setFileUrlByType(makedepartment,2);
+        return makedepartment;
     }
 
     /**
@@ -91,9 +117,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setVersion(1);
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
         boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
-        int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
+        int m = makedepartmentMapper.insert(makedepartment);
+        boolean f = registerFile(makedepartment);
         int u = userService.insert(makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-        if(m==1&&u==ResultUtil.isSend&&o){
+        if(f&&u==ResultUtil.isSend&&o&&m>0){
             SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
         }else if(u==ResultUtil.isHave) {
@@ -114,12 +141,11 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public int update(Makedepartment makedepartment,User updateUser) {
         try {
             Makedepartment oldDate = makedepartmentMapper.selectDetailById(makedepartment.getId());
-            List<Employee> employees = employeeService.selectAllByDepartmentCode(oldDate.getDepartmentCode());
+            List<Employee> employees = employeeService.selectByDepartmentCode(oldDate.getDepartmentCode());
             int d = makedepartmentMapper.deleteHistoryByID(oldDate.getId());
             if (d == 0) {
                 return 5;
             }
-            //User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
             makedepartment.setId(UUIDUtil.generate());
             makedepartment.setVersionTime(DateUtil.getCurrentTime());
             makedepartment.setFlag(makedepartment.getFlag());
@@ -133,9 +159,11 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             String ignore[] = new String[]{"id", "departmentStatus", "deleteStatus", "version", "flag", "versionTime", "registerTime"};
             boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.UPDATE,operateUUid);
             boolean od = historyService.insertUpdateRecord(makedepartment,oldDate,operateUUid,ignore);
-            int m = makedepartmentMapper.insert(setFileUrlByType(makedepartment,1));
+            int m = makedepartmentMapper.insert(makedepartment);
+            boolean f = registerFile(makedepartment);
+            int e = setEmployeeByDepartment(employees,makedepartment,updateUser,2);
             int u = userService.update(oldDate.getLegalTelphone(),makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
-            if (m == 1 && u == ResultUtil.isSuccess&&o&&od) {
+            if (f && u == ResultUtil.isSuccess&&o&&od&&m>0&&e>0) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.UPDATE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -163,14 +191,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         if(makedepartmentMapper.deleteHistoryByID(id)==0){
             return ResultUtil.isError;
         }
-        List<Employee> employees = employeeService.selectAllByDepartmentCode(makedepartment.getDepartmentCode());
+        List<Employee> employees = employeeService.selectByDepartmentCode(makedepartment.getDepartmentCode());
         makedepartment.setVersion(makedepartment.getVersion()+1);
         makedepartment.setVersionTime(DateUtil.getCurrentTime());
         User user = userService.findByUserName("ZZDW"+makedepartment.getLegalTelphone());
         if(user==null){
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e =setEmployeeByDepartment(employees,makedepartment,updateUser);
+            int e =setEmployeeByDepartment(employees,makedepartment,updateUser,1);
             boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.DELETE,UUIDUtil.generate());
             if(m==1&&e==2&&o){
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
@@ -183,7 +211,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             int u = userService.delete(user.getId());
             makedepartment.setId(UUIDUtil.generate());
             int m = makedepartmentMapper.deleteById(makedepartment);
-            int e = setEmployeeByDepartment(employees,makedepartment,updateUser);
+            int e = setEmployeeByDepartment(employees,makedepartment,updateUser,1);
             boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.DELETE,UUIDUtil.generate());
             if (u ==ResultUtil.isSuccess&&m==1&&e==ResultUtil.isSuccess&&o) {
                 SyncEntity syncEntity = ((MakeDepartmentServiceImpl)AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.DELETE);
@@ -193,6 +221,41 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
                 return ResultUtil.isFail;
             }
         }
+    }
+
+    /**
+     * 按照制作单位查询印章
+     * @param user
+     * @return
+     */
+    @Override
+    public List<Seal> selectSeal(User user) {
+        String telPhone = user.getTelphone();
+        MakeDepartmentSimple makedepartment = makedepartmentMapper.selectByLegalTephone(telPhone);
+        String makeDepartmentCode = makedepartment.getDepartmentCode();
+        List<Seal> seals = sealDao.selectByMakeDepartmentCodeAndIsMake(makeDepartmentCode);
+        return  seals;
+    }
+
+    /**
+     * 根据id查找印章的详情
+     * @param id
+     * @return
+     */
+    @Override
+    public SealVO sealDetails(String id) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        String anentId = seal.getAgentId();
+        SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);
+        List<SealAgent> sealAgents = new ArrayList<>();
+        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(anentId);
+        sealAgents.add(sealAgent);
+        SealVO sealVO = new SealVO();
+        sealVO.setSeal(seal);
+        sealVO.setSealAgents(sealAgents);
+        sealVO.setSealOperationRecord(sealOperationRecord);
+        return sealVO;
+
     }
 
     /**
@@ -318,15 +381,29 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      * @param employees
      * @return
      */
-    public int setEmployeeByDepartment(List<Employee> employees,Makedepartment makedepartment,User user) {
-        for (Employee emp : employees) {
-            int e = employeeService.deleteEmployee(emp.getId(),user);
-            if (e != 2) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return ResultUtil.isError;
-            }
+    public int setEmployeeByDepartment(List<Employee> employees,Makedepartment makedepartment,User user,int type) {
+        switch (type){
+            case 1:
+                for (Employee emp : employees) {
+                    int e = employeeService.deleteEmployee(emp.getId(),user);
+                    if (e <1) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return ResultUtil.isFail;
+                    }
+                }
+                return ResultUtil.isSuccess;
+            case 2:
+                for (Employee emp : employees) {
+                    emp.setDistrictId(makedepartment.getDepartmentAddress());
+                    int e = employeeService.updateMakeDepartment(emp.getId(),emp.getDistrictId());
+                    if (e<1) {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return ResultUtil.isFail;
+                    }
+                }
+                return ResultUtil.isSuccess;
         }
-        return ResultUtil.isSuccess;
+        return ResultUtil.isError;
     }
 
 
@@ -340,42 +417,29 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return examineRecordDetailMapper.selectExamineDetailByID(id);
     }
 
-
-    /**
-     * 设置url字段
-     * @param makedepartment
-     * @return
-     */
-    public Makedepartment setFileUrlByType(Makedepartment makedepartment,int type){
-        String businessLicenseUrl = makedepartment.getBusinessLicenseUrl();
-        String specialLicenseUrl = makedepartment.getSpecialLicenseUrl();
-        String legalDocumentUrl = makedepartment.getLegalDocumentUrl();
-        switch (type) {
-            case 1:
-                if (businessLicenseUrl != null) {
-                    makedepartment.setBusinessLicenseUrl(StringUtil.getRelativePath(businessLicenseUrl));
-                }
-                if (specialLicenseUrl != null) {
-                    makedepartment.setSpecialLicenseUrl(StringUtil.getRelativePath(specialLicenseUrl));
-                }
-                if (legalDocumentUrl != null) {
-                    makedepartment.setLegalDocumentUrl(StringUtil.getRelativePath(legalDocumentUrl));
-                }
-            case 2:
-                if (businessLicenseUrl != null) {
-                    makedepartment.setBusinessLicenseUrl(StringUtil.getAbsolutePath(businessLicenseUrl));
-                }
-                if (specialLicenseUrl != null) {
-                    makedepartment.setSpecialLicenseUrl(StringUtil.getAbsolutePath(specialLicenseUrl));
-                }
-                if (legalDocumentUrl != null) {
-                    makedepartment.setLegalDocumentUrl(StringUtil.getAbsolutePath(legalDocumentUrl));
-                }
-             default:
-                 break;
-        }
+    @Override
+    public Makedepartment selectByCode(String departmentCode) {
+        Makedepartment makedepartment = makedepartmentMapper.selectByCode1(departmentCode);
         return makedepartment;
     }
+
+    /**
+     * 文件注册
+     * @param makedepartment
+     */
+    public boolean registerFile(Makedepartment makedepartment){
+        boolean f1 =fileService.register(makedepartment.getIdCardFrontId(),IDCARD_FRONT_FILE);
+        boolean f2 =fileService.register(makedepartment.getIdCardReverseId(),IDCARD_REVERSE_FILE);
+        boolean f3 = fileService.register(makedepartment.getSpecialLicenseUrl(),SPECIAL_LICENSE_FILE);
+        boolean f4 = fileService.register(makedepartment.getBusinessLicenseUrl(),BUSINESS_LICENSE_FILE);
+        if(f1&&f2&&f3&&f4){
+            return true;
+        }
+        return false;
+    }
+
+
+
 
 
     /**
@@ -390,4 +454,6 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         syncEntity.setOperateType(operateType);
         return syncEntity;
     }
+
+
 }

@@ -31,6 +31,8 @@ public interface EmployeeDao {
 
     int update(Employee record);
 
+    String selectMaxEmployeeCode();
+
     //查询某个制作单位下的从业人员
     List<Employee> selectByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
@@ -41,6 +43,12 @@ public interface EmployeeDao {
     List<Employee> selectWorkEmployee(@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
     Employee selectByPhone(@Param("phone") String phone);
+
+    Employee selectByEmployeeId(@Param("employeeId") String employeeId);
+
+    Employee selectByName(@Param("name") String name);
+
+    Employee selectByCode(@Param("code") String code);
 
     int updateHeadById(@Param("id") String id,@Param("employeeImage") String image);
 
@@ -53,6 +61,10 @@ public interface EmployeeDao {
     List<Employee> selectAllEmployeeInfo(@Param("name") String name,@Param("list") List<MakeDepartmentSimple> departmentSimples);
 
     //---------------统计部分--------------------//
+    int indexCountAdd(@Param("districtId") String districtId);
+
+    int indexCountDel(@Param("districtId") String districtId);
+
     int countAllEmployee(@Param("districtId") String districtId);
 
     int countWorkEmployee(@Param("districtId") String districtId);

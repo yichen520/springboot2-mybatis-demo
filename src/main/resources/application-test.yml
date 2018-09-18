@@ -126,7 +126,8 @@ file:
 
 filePath: C:/temp/
 
-sealtemplate:
+seal:
+  template:
   filePath: C:/temp/seal
 
 #设置redis中token过期时间
@@ -136,5 +137,8 @@ smsexpireTime: 300000
 
 face:
   similarity: 45
+seal:
+   template:
+        filepath: C:/temp
 
 

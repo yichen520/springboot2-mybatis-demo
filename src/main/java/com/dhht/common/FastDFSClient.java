@@ -1,11 +1,11 @@
 package com.dhht.common;
 
 import com.dhht.model.FastDFSFile;
-import org.csource.fastdfs.ClientGlobal;
-import org.csource.fastdfs.TrackerClient;
-import org.springframework.core.io.ClassPathResource;
+
+
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.*;
+import org.springframework.core.io.ClassPathResource;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
@@ -16,8 +16,7 @@ public class FastDFSClient {
     //加载fastdfs服务器配置属性
     static {
         try {
-            String filePath = new ClassPathResource("fdfs_client.conf").getFile().getAbsolutePath();
-            ClientGlobal.init(filePath);
+            ClientGlobal.init("fdfs_client.conf");
         } catch (Exception e) {
             logger.error("FastDFS Client Init Fail!", e);
         }

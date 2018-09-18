@@ -8,6 +8,7 @@ import com.dhht.service.tools.HistoryService;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.CompareFieldsUtil;
 import com.dhht.util.DateUtil;
+import com.dhht.util.DictionaryUtil;
 import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,14 +78,15 @@ public class HistoryServiceImpl implements HistoryService {
             try {
                 operatorRecordDetail.setOldValue(compareResult.getOldValue().toString());
             }catch (NullPointerException e){
-                operatorRecordDetail.setOldValue(" ");
+                operatorRecordDetail.setOldValue("");
             }
             try {
                 operatorRecordDetail.setNewValue(compareResult.getNewValue().toString());
             }catch (NullPointerException e){
-                operatorRecordDetail.setNewValue(" ");
+                operatorRecordDetail.setNewValue("");
             }
             operatorRecordDetail.setPropertyName(compareResult.getPropertyName());
+            operatorRecordDetail.setPropertyType(compareResult.getPropertyType());
             int o = operatorRecordDetailMapper.insert(operatorRecordDetail);
             if(o<0){
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -124,25 +126,44 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     /**
+     * 不通过比较存储历史记录
+     * @param operatorRecordDetail
+     * @return
+     */
+    @Override
+    public boolean insertOperateDetail(OperatorRecordDetail operatorRecordDetail) {
+        int i = operatorRecordDetailMapper.insert(operatorRecordDetail);
+        if(i>0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 设置参数值得设定
      * @param operatorRecordDetails
      * @param type
      * @return
      */
     private List<OperatorRecordDetail> setSpecialValue(List<OperatorRecordDetail> operatorRecordDetails,int type){
+
         List<OperatorRecordDetail> result = new ArrayList<OperatorRecordDetail>();
         for (OperatorRecordDetail operatorRecordDetail:operatorRecordDetails){
-            if(operatorRecordDetail.getPropertyName().equals(NULL_VALUE)){
+            if(NULL_VALUE.equals(operatorRecordDetail.getPropertyName())){
 
-            }else if (operatorRecordDetail.getPropertyName().equals(DISTRICT_ID)){
+            }else if (operatorRecordDetail.getPropertyName().contains(DISTRICT_ID)){
                 String oldDistrict = districtService.selectByDistrictId(operatorRecordDetail.getOldValue());
                 operatorRecordDetail.setOldValue(oldDistrict);
                 String newDistrict = districtService.selectByDistrictId(operatorRecordDetail.getNewValue());
                 operatorRecordDetail.setNewValue(newDistrict);
                 result.add(operatorRecordDetail);
-            }else {
+            }else if(operatorRecordDetail.getNewValue().contains("CST")||operatorRecordDetail.getOldValue().contains("CST")){
                 operatorRecordDetail.setNewValue(setDateString(operatorRecordDetail.getNewValue()));
                 operatorRecordDetail.setOldValue(setDateString(operatorRecordDetail.getOldValue()));
+                result.add(operatorRecordDetail);
+            }else {
+                operatorRecordDetail.setNewValue(DictionaryUtil.getCodeName(operatorRecordDetail.getPropertyName(),operatorRecordDetail.getNewValue()));
+                operatorRecordDetail.setOldValue(DictionaryUtil.getCodeName(operatorRecordDetail.getPropertyName(),operatorRecordDetail.getOldValue()));
                 result.add(operatorRecordDetail);
             }
         }
@@ -159,14 +180,11 @@ public class HistoryServiceImpl implements HistoryService {
         SimpleDateFormat endTime = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
-           if(value.contains("CST")){
                Date date = startTime.parse(value);
                String newDate = endTime.format(date);
                return newDate;
-           }
         }catch (Exception e){
             return value;
         }
-        return value;
-        }
+    }
 }

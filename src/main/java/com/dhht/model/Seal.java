@@ -80,4 +80,14 @@ public class Seal extends SealKey {
 
     private String logoutPersonId;    //注销
 
+    private boolean isChipseal;  //是否芯片章
+
+
+    public void setIsChipseal(boolean isChipseal) {
+        this.isChipseal= isChipseal;
+    }
+
+    public boolean getIsChipseal() {
+        return isChipseal;
+    }
 }

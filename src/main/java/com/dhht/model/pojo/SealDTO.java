@@ -5,6 +5,7 @@ import lombok.Data;
 
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class SealDTO {
@@ -12,6 +13,10 @@ public class SealDTO {
     private String id;
 
     private Seal seal;
+
+    private List<Seal> seals;
+
+    private String useDepartmentCode;
 
     private String sealId;  //印章id
 
@@ -52,6 +57,10 @@ public class SealDTO {
     private String fieldPhotoId;//现场照片
 
     private String idCardPhotoId;//身份证上的照片
+
+    private String entryType;//录入方式  00-读卡  01-可信身份证录入
+
+//    private boolean isChipseal;
 
     private Boolean isSame;
 

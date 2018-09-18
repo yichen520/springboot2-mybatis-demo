@@ -138,9 +138,7 @@ public class InformationController {
         int status = (Integer) map.get("status");
         String name = (String)map.get("name");
         String code = (String)map.get("code");
-
         JSONObject jsonObject = new JSONObject();
-
         try {
             if(code==null||code==""){
                 code = user.getDistrictId();
@@ -150,10 +148,50 @@ public class InformationController {
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
             return JsonObjectBO.exception(e.toString());
-        }finally {
-            PageHelper.clearPage();
         }
 
+    }
+
+    @Log("获取从业人员列表")
+    @RequestMapping(value = "/employee/nopage")
+    public JsonObjectBO employeenopage(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+
+        int status = 1;
+        String name = (String)map.get("name");
+        String code = (String)map.get("code");
+
+        JSONObject jsonObject = new JSONObject();
+        List<Employee> employees =new ArrayList<>();
+        try {
+            if(code==null||code==""){
+                code = user.getDistrictId();
+            }
+             employees= employeeService.selectWorkEmployee(code,name);
+            jsonObject.put("employee",employees);
+            return JsonObjectBO.success("查询成功", jsonObject);
+        } catch (Exception e) {
+            return JsonObjectBO.exception(e.toString());
+        }
+    }
+
+    /**
+     * 获取从业人员详情
+     * @param map
+     * @return
+     */
+    @Log("从业人员详情")
+    @RequestMapping(value = "/employeeDetail")
+    public JsonObjectBO employeeDetail(@RequestBody Map map){
+        try {
+            String id = (String)map.get("id");
+            JSONObject jsonObject = new JSONObject();
+            Employee employee = employeeService.selectEmployeeByID(id);
+            jsonObject.put("employee",employee);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("获取从业人员详情失败");
+        }
     }
 
     /**
@@ -338,4 +376,42 @@ public class InformationController {
             return JsonObjectBO.exception("制作单位信息获取失败");
         }
     }
+    @Log("制作单位查看详情")
+    @RequestMapping(value = "/makeDepartmentSealDetail")
+    public JsonObjectBO sealDetails(@RequestBody Map map){
+        JSONObject jsonObject = new JSONObject();
+        String id = (String)map.get("id");
+
+        try {
+            SealVO sealVO = makeDepartmentService.sealDetails(id);
+            jsonObject.put("sealDetails",sealVO);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            JsonObjectBO.exception(e.toString());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
+
+
+    /**
+     *根据制作单位查找印章列表
+     */
+    @Log("获取印章列表")
+    @RequestMapping(value = "/selectSeal")
+    public JsonObjectBO selectSeal(HttpServletRequest httpServletRequest){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        JSONObject jsonObject = new JSONObject();
+        List<Seal> seals = new ArrayList<>();
+        try {
+            seals = makeDepartmentService.selectSeal(user);
+            jsonObject.put("seals",seals);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+    }
+
+
+    
 }

@@ -12,4 +12,6 @@ public interface HistoryService {
     boolean insertUpdateRecord(Object newData, Object oldDate, String operatorRecordId,String[] ignore);
 
     boolean insertOperateRecord(User user, String flag, String entityUUid, String entityName,int type,String operateRecordUUid);
+
+    boolean insertOperateDetail(OperatorRecordDetail operatorRecordDetail);
 }

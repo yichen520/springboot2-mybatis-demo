@@ -1,6 +1,7 @@
 package com.dhht.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.CurrentUser;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class FileController {
@@ -32,6 +35,12 @@ public class FileController {
     private FileService fileService;
     @Value("FilePath")
     private String filePath;
+
+    @Autowired
+    private StringRedisTemplate template;
+
+    @Value("${expireTime}")
+    private long expireTime;
 
     private static Logger logger = LoggerFactory.getLogger(FileController.class);
 
@@ -60,8 +69,11 @@ public class FileController {
             String fileName = file.getOriginalFilename();
             String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
 
-            User user = CurrentUser.currentUser(request.getSession());
-
+            User user;
+            user = CurrentUser.currentUser(request.getSession());
+            if (user == null){
+                 user = validatetoken(request);
+            }
             FileInfo fileInfo = fileService.save(fileBuff, fileName, ext, "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getRealName());
 
             if(fileInfo != null){
@@ -103,6 +115,18 @@ public class FileController {
             return new ResponseEntity<byte[]>(fileInfoVO.getFileData(), headers, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public  User validatetoken(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("token");
+        if(template.hasKey(token)){
+            template.expire(token,expireTime,TimeUnit.SECONDS);
+            String user = template.opsForValue().get(token);
+            User currentUser =  JSON.parseObject(user,User.class);
+            return currentUser;
+        }else {
+            return null;
         }
     }
 }

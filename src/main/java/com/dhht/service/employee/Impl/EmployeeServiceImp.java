@@ -2,10 +2,9 @@ package com.dhht.service.employee.Impl;
 
 import com.dhht.annotation.Sync;
 import com.dhht.dao.EmployeeDao;
-import com.dhht.dao.OperatorRecordDetailMapper;
-import com.dhht.dao.OperatorRecordMapper;
 import com.dhht.model.*;
 
+import com.dhht.service.District.DistrictService;
 import com.dhht.service.employee.EmployeeService;
 
 import com.dhht.service.make.MakeDepartmentService;
@@ -20,9 +19,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,6 +47,10 @@ public class EmployeeServiceImp implements EmployeeService {
     private HistoryService historyService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private DistrictService districtService;
 
     private final static String EMPLOYEE_HEAD_UPLOAD = "从业人员头像上传";
 
@@ -64,9 +69,12 @@ public class EmployeeServiceImp implements EmployeeService {
                 return ResultUtil.noRecordDepartment;
             }
             RecordDepartment recordDepartment = recordDepartments.get(0);
-            employee.setEmployeeCode(CodeUtil.generate());
+            employee.setEmployeeCode(getEmployeeCode(makeDepartmentSimple.getDepartmentCode()));
             employee.setId(UUIDUtil.generate());
-            employee.setDistrictId(user.getDistrictId());
+            employee.setFamilyDistrictId(employee.getFamilyDistrictIds().get(2));
+            employee.setNowDistrictId(employee.getNowDistrictIds().get(2));
+            employee.setEmployeeImage("");
+            employee.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
             employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
             employee.setOfficeCode(recordDepartment.getDepartmentCode());
             employee.setOfficeName(recordDepartment.getDepartmentName());
@@ -77,12 +85,13 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setVersionTime(DateUtil.getCurrentTime());
             String operateUUid = UUIDUtil.generate();
             boolean o = historyService.insertOperateRecord(user,employee.getFlag(),employee.getId(),"employee",SyncOperateType.SAVE,operateUUid);
-            if (isInsert(employee.getEmployeeId())) {
+            if (isRepeatEmployeeId(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
             }
-            int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
             int e = employeeDao.insert(employee);
-            if (u==ResultUtil.isSend&&e==1&&o) {
+            int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
+
+            if (u==ResultUtil.isSend&&e>0&&o) {
                 SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
                 return ResultUtil.isSuccess;
             } else if (u == 1) {
@@ -113,9 +122,17 @@ public class EmployeeServiceImp implements EmployeeService {
             if (d == 0) {
                 return ResultUtil.isError;
             }
-            if (isInsert(employee.getEmployeeId())) {
+            if (isRepeatEmployeeId(employee.getEmployeeId())) {
                 return ResultUtil.isWrongId;
-            }employee.setEmployeeDepartmentCode(oldDate.getEmployeeDepartmentCode());
+            }
+            employee.setEmployeeDepartmentCode(oldDate.getEmployeeDepartmentCode());
+            if(employee.getFamilyDistrictIds()!=null&&employee.getNowDistrictIds()!=null){
+                employee.setFamilyDistrictId(employee.getFamilyDistrictIds().get(2));
+                employee.setNowDistrictId(employee.getNowDistrictIds().get(2));
+            }else {
+                employee.setFamilyDistrictId(updateUser.getDistrictId());
+                employee.setNowDistrictId(updateUser.getDistrictId());
+            }
             employee.setEmployeeCode(oldDate.getEmployeeCode());
             employee.setOfficeCode(oldDate.getOfficeCode());
             employee.setEmployeeImage(oldDate.getEmployeeImage());
@@ -125,7 +142,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setVersion(employee.getVersion() + 1);
             employee.setVersionTime(DateUtil.getCurrentTime());
             employee.setId(UUIDUtil.generate());
-            String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime"};
+            String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime","familyDistrictIds","familyDistrictName","nowDistrictIds","nowDistrictName","districtId"};
             String operateUUid = UUIDUtil.generate();
             boolean o = historyService.insertOperateRecord(updateUser,employee.getFlag(),employee.getId(),"employee",SyncOperateType.UPDATE,operateUUid);
             boolean od = historyService.insertUpdateRecord(employee,oldDate,operateUUid,ignore);
@@ -201,7 +218,14 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public Employee selectEmployeeByID(String id) {
-        return employeeDao.selectById(id);
+        Employee employee = employeeDao.selectById(id);
+        return setEmployeeDistrict(employee);
+    }
+
+    @Override
+    public Employee selectEmployeeByEmployeeID(String employeeId) {
+        Employee employee = employeeDao.selectByEmployeeId(employeeId);
+        return employee;
     }
 
     /**
@@ -244,7 +268,18 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public List<Employee> selectAllByDepartmentCode(String employeeDepartmentCode) {
-        return employeeDao.selectAllByDepartmentCode(employeeDepartmentCode);
+        List<Employee> employees =  employeeDao.selectAllByDepartmentCode(employeeDepartmentCode);
+        for(Employee employee:employees){
+            String familyDistrictId = employee.getFamilyDistrictId();
+            employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+            String nowDistrictId = employee.getNowDistrictId();
+            employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+            String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+            String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+            employee.setFamilyDistrictName(familyDistrictName);
+            employee.setNowDistrictName(nowDistrictName);
+        }
+        return employees;
     }
 
     /**
@@ -255,6 +290,16 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public List<Employee> selectByDepartmentCode(String employeeDepartmentCode) {
         List<Employee> employees = employeeDao.selectByDepartmentCode(employeeDepartmentCode);
+        for(Employee employee:employees){
+            String familyDistrictId = employee.getFamilyDistrictId();
+            employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+            String nowDistrictId = employee.getNowDistrictId();
+            employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+            String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+            String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+            employee.setFamilyDistrictName(familyDistrictName);
+            employee.setNowDistrictName(nowDistrictName);
+        }
         return employees;
     }
 
@@ -264,7 +309,18 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public List<Employee> selectAllEmployee(String code,String name) {
-        return employeeDao.selectAllEmployee(code,name);
+        List<Employee> employees =  employeeDao.selectAllEmployee(code,name);
+        for(Employee employee:employees){
+            String familyDistrictId = employee.getFamilyDistrictId();
+            employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+            String nowDistrictId = employee.getNowDistrictId();
+            employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+            String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+            String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+            employee.setFamilyDistrictName(familyDistrictName);
+            employee.setNowDistrictName(nowDistrictName);
+        }
+        return employees;
     }
 
 
@@ -274,7 +330,18 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public List<Employee> selectDeleteEmployee(String code,String name) {
-        return employeeDao.selectDeleteEmployee(code,name);
+        List<Employee> employees =  employeeDao.selectDeleteEmployee(code,name);
+        for(Employee employee:employees){
+            String familyDistrictId = employee.getFamilyDistrictId();
+            employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+            String nowDistrictId = employee.getNowDistrictId();
+            employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+            String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+            String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+            employee.setFamilyDistrictName(familyDistrictName);
+            employee.setNowDistrictName(nowDistrictName);
+        }
+        return employees;
     }
 
     /**
@@ -285,7 +352,18 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public List<Employee> selectWorkEmployee(String code, String name) {
-        return employeeDao.selectWorkEmployee(code,name);
+        List<Employee> employees =  employeeDao.selectWorkEmployee(code,name);
+        for(Employee employee:employees){
+            String familyDistrictId = employee.getFamilyDistrictId();
+            employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+            String nowDistrictId = employee.getNowDistrictId();
+            employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+            String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+            String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+            employee.setFamilyDistrictName(familyDistrictName);
+            employee.setNowDistrictName(nowDistrictName);
+        }
+        return employees;
     }
 
     /**
@@ -295,7 +373,9 @@ public class EmployeeServiceImp implements EmployeeService {
      */
     @Override
     public Employee selectByPhone(String phone) {
-        return employeeDao.selectByPhone(phone);
+
+        Employee employee =  employeeDao.selectByPhone(phone);
+        return setEmployeeDistrict(employee);
     }
 
     /**
@@ -305,8 +385,20 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     @Override
-    public int updateHeadById(String id, String image) {
+    public int updateHeadById(String id, String image,User updateUser) {
         Employee employee = employeeDao.selectById(id);
+        String operateUUid = UUIDUtil.generate();
+        boolean o = historyService.insertOperateRecord(updateUser,employee.getFlag(),employee.getId(),"employee",SyncOperateType.UPDATE,operateUUid);
+        OperatorRecordDetail operatorRecordDetail = new OperatorRecordDetail();
+        operatorRecordDetail.setId(UUIDUtil.generate());
+        operatorRecordDetail.setPropertyType(2);
+        operatorRecordDetail.setPropertyName("从业人员头像");
+        if(employee.getEmployeeImage()!=null) {
+            operatorRecordDetail.setOldValue(employee.getEmployeeImage());
+        }
+        operatorRecordDetail.setNewValue(image);
+        operatorRecordDetail.setEntityOperateRecordId(operateUUid);
+        boolean b = historyService.insertOperateDetail(operatorRecordDetail);
         if(employee.getEmployeeImage()!=null){
             fileService.getFileInfo(employee.getEmployeeImage());
         }
@@ -330,14 +422,17 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     /**
-     * 更新制作单位的编号
+     * 更新制作单位的区域
      * @param id
-     * @param code
+     * @param district
      * @return
      */
     @Override
-    public int updateMakeDepartment(String id, String code) {
-        return employeeDao.updateMakeDepartment(id,code);
+    public int updateMakeDepartment(String id, String district) {
+        Employee employee = employeeDao.selectById(id);
+        int u = userService.update(employee.getTelphone(),employee.getTelphone(),"CYRY",employee.getEmployeeName(),district);
+        return u;
+
     }
 
     /**
@@ -350,9 +445,8 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public PageInfo selectEmployeeInfo(String code, int status, String name, int pageNum,int pageSize) {
         List<Employee> employees = new ArrayList<>();
-
         if(code.length()==6){
-            List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectInfo(code,"","01");
+            List<MakeDepartmentSimple> makedepartments = makeDepartmentService.selectAllInfo(code);
             if(makedepartments.size()==0){
                 return new PageInfo(employees);
             }
@@ -365,6 +459,7 @@ public class EmployeeServiceImp implements EmployeeService {
                 employees = employeeDao.selectAllEmployeeInfo(name,makedepartments);
             }
         }else {
+            PageHelper.startPage(pageNum,pageSize);
             if(status==1){
                 employees = employeeDao.selectWorkEmployee(code,name);
             }else if(status==2){
@@ -373,8 +468,43 @@ public class EmployeeServiceImp implements EmployeeService {
                 employees = employeeDao.selectAllByDepartmentCode(code);
             }
         }
+        for(Employee employee:employees){
+            String familyDistrictId = employee.getFamilyDistrictId();
+            employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+            String nowDistrictId = employee.getNowDistrictId();
+            employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+            String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+            String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+            employee.setFamilyDistrictName(familyDistrictName);
+            employee.setNowDistrictName(nowDistrictName);
+        }
         PageInfo pageInfo = new PageInfo(employees);
         return pageInfo;
+    }
+
+    public Employee setEmployeeDistrict(Employee employee){
+        String familyDistrictId = employee.getFamilyDistrictId();
+        employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
+        String nowDistrictId = employee.getNowDistrictId();
+        employee.setNowDistrictIds(StringUtil.getDistrictIds(nowDistrictId));
+        String nowDistrictName = districtService.selectByDistrictId(employee.getNowDistrictId());
+        String familyDistrictName = districtService.selectByDistrictId(employee.getFamilyDistrictId());
+        employee.setFamilyDistrictName(familyDistrictName);
+        employee.setNowDistrictName(nowDistrictName);
+        return employee;
+    }
+
+    /**
+     * 查询最大的从业人员你的编号，用于redis
+     * @return
+     */
+    @Override
+    public String selectMaxEmployeeCode() {
+        try {
+            return employeeDao.selectMaxEmployeeCode();
+        }catch (Exception e){
+            return null;
+        }
     }
 
 
@@ -383,13 +513,36 @@ public class EmployeeServiceImp implements EmployeeService {
      * @param employeeId
      * @return
      */
-    public boolean isInsert(String employeeId){
+    public boolean isRepeatEmployeeId(String employeeId){
         if(employeeDao.selectCountEmployeeId(employeeId)>0){
             return true;
         }
         return false;
     }
 
+    /**
+     * 生成从业人员编号
+     * @param makeDepartmentCode
+     * @return
+     */
+    public String getEmployeeCode(String makeDepartmentCode){
+        String code = "";
+        Jedis jedis = new Jedis();
+        if(redisTemplate.hasKey("employeeCode")){
+            code = jedis.incrBy("employeeCode",1).toString();
+        }else{
+            redisTemplate.opsForValue().set("employeeCode",0);
+            code = redisTemplate.opsForValue().get("employeeCode").toString();
+        }
+        int length = code.length();
+        StringBuffer stringBuffer = new StringBuffer();
+        if(length<4){
+            for(int i = 0;i<4-length;i++){
+                stringBuffer.append("0");
+            }
+        }
+        return makeDepartmentCode+stringBuffer.toString()+code;
+    }
 
     /**
      * 数据同步

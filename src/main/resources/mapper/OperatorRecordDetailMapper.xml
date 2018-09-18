@@ -4,12 +4,13 @@
   <resultMap id="BaseResultMap" type="com.dhht.model.OperatorRecordDetail">
     <id column="id" jdbcType="CHAR" property="id" />
     <result column="entity_operate_record_id" jdbcType="CHAR" property="entityOperateRecordId" />
+    <result column="property_type" property="propertyType"/>
     <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
     <result column="old_value" jdbcType="VARCHAR" property="oldValue" />
     <result column="new_value" jdbcType="VARCHAR" property="newValue" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, entity_operate_record_id, property_name,old_value, new_value
+    id, entity_operate_record_id,property_type ,property_name,old_value, new_value
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -27,9 +28,9 @@
     where id = #{id,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.dhht.model.OperatorRecordDetail">
-    insert into operate_record_detail (id, entity_operate_record_id, property_name, old_value, new_value
+    insert into operate_record_detail (id, entity_operate_record_id, property_type,property_name, old_value, new_value
       )
-    values (#{id,jdbcType=CHAR}, #{entityOperateRecordId,jdbcType=CHAR}, #{propertyName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=CHAR}, #{entityOperateRecordId,jdbcType=CHAR}, #{propertyType},#{propertyName,jdbcType=VARCHAR},
                #{oldValue,jdbcType=VARCHAR}, #{newValue,jdbcType=VARCHAR}
       )
   </insert>
@@ -38,6 +39,7 @@
     update operate_record_detail
     set entity_operate_record_id = #{entityOperateRecordId,jdbcType=CHAR},
       property_name = #{propertyName,jdbcType=VARCHAR},
+      property_type = #{propertyType},
       old_value = #{oldValue,jdbcType=VARCHAR},
       new_value = #{newValue,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}

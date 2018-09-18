@@ -13,7 +13,13 @@ public interface MakedepartmentMapper {
    //---------------------------------------查询模块----------------------//
     List<MakeDepartmentSimple> selectInfo(@Param("districtId") String districtId,@Param("departmentStatus") String departmentStatus,@Param("name") String name);
 
+    List<MakeDepartmentSimple> selectAllInfo(@Param("districtId") String districtId);
+
     Makedepartment selectDetailById(@Param("id") String id);
+
+   Makedepartment selectDetailByCode(@Param("code") String code);
+
+   Makedepartment selectDetailByName(@Param("name") String name);
 
     int insert(Makedepartment makedepartment);
 
@@ -29,14 +35,22 @@ public interface MakedepartmentMapper {
 
     List<Makedepartment> selectByFlag(@Param("flag") String flag);
 
+    Makedepartment selectByCode1(@Param("departmentCode") String departmentCode);
+
     List<MakeDepartmentSimple> selectByCode(Makedepartment makedepartment);
 
     List<MakeDepartmentSimple> selectByDistrict(@Param("id") String id);
+
+    List<MakeDepartmentSimple> selectMeumByDistrict(@Param("id") String id);
 
     List<Makedepartment> selectByNameAndTimeAndDistrict(@Param("departmentName")String departmentName,String startTime,String endTime,@Param("districtId") String districtId);
 
     List<Makedepartment> selectByNameOrTimeAndDistrict(@Param("departmentName")String departmentName,String startTime,String endTime,@Param("localDistrictId") String localDistrictId);
     //------------------------------统计模块-------------------------------------//
+    int indexCountAdd (@Param("districtId") String districtId);
+
+    int indexCountDel(@Param("districtId") String districtId);
+
     int countAllDepartment(@Param("districtId") String districtId);
 
     int countWorkDepartment(@Param("districtId") String districtId);

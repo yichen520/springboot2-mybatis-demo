@@ -4,6 +4,7 @@ import com.dhht.annotation.EntityComment;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Employee {
@@ -30,6 +31,9 @@ public class Employee {
     @EntityComment(value = "从业人员民族")
     private String employeeNation;
 
+    private List<String> familyDistrictIds;
+
+    @EntityComment(value = "从业人员户籍地行政区域划分")
     private String familyDistrictId;
 
     private String familyDistrictName;
@@ -40,6 +44,9 @@ public class Employee {
     @EntityComment("从业人员现居详细地址")
     private String nowAddressDetail;
 
+    private List<String> nowDistrictIds;
+
+    @EntityComment("从业人员现居地行政区域划分")
     private String nowDistrictId;
 
     private String nowDistrictName;

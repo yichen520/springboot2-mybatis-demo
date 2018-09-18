@@ -73,6 +73,7 @@ public class LoginController {
         Map<String,Object> map=new HashMap<>();
         try {
             request.getSession().invalidate();
+
             map.put("status", "ok");
             map.put("message","退出登录成功");
             return map;

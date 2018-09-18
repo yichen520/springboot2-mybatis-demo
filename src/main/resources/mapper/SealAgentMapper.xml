@@ -13,10 +13,11 @@
         <result column="proxy_id" jdbcType="CHAR" property="proxyId" />
         <result column="business_type" jdbcType="CHAR" property="businessType" />
         <result column="face_compare_record_id" jdbcType="CHAR" property="faceCompareRecordId" />
+        <result column="entry_type" jdbcType="CHAR" property="entryType" />
     </resultMap>
     <sql id="Base_Column_List">
         id, name, certificate_type, certificate_no, telphone, agent_photo_id, idcard_front_id, 
-        idcard_reverse_id, proxy_id, business_type, face_compare_record_id
+        idcard_reverse_id, proxy_id, business_type, face_compare_record_id,entry_type
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select 
@@ -32,11 +33,11 @@
         insert into seal_agent (id, `name`, certificate_type,
             certificate_no, telphone, agent_photo_id, 
             idcard_front_id, idcard_reverse_id, proxy_id, 
-            business_type, face_compare_record_id)
+            business_type, face_compare_record_id,entry_type)
         values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{certificateType,jdbcType=CHAR}, 
             #{certificateNo,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{agentPhotoId,jdbcType=CHAR}, 
             #{idCardFrontId,jdbcType=CHAR}, #{idCardReverseId,jdbcType=CHAR}, #{proxyId,jdbcType=CHAR},
-            #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR})
+            #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR},#{entryType})
     </insert>
 
     <insert id="insertSelective" parameterType="com.dhht.model.SealAgent">
@@ -75,6 +76,9 @@
             <if test="faceCompareRecordId != null">
                 face_compare_record_id,
             </if>
+            <if test="entryType != null">
+                entry_type,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -109,6 +113,9 @@
             </if>
             <if test="faceCompareRecordId != null">
                 #{faceCompareRecordId,jdbcType=CHAR},
+            </if>
+            <if test="entryType != null">
+                #{entryType,jdbcType=CHAR},
             </if>
         </trim>
     </insert>
@@ -145,6 +152,9 @@
             <if test="faceCompareRecordId != null">
                 face_compare_record_id = #{faceCompareRecordId,jdbcType=CHAR},
             </if>
+            <if test="entryType !=null">
+                entry_type = #{entryType},
+            </if>
         </set>
         where id = #{id,jdbcType=CHAR}
     </update>
@@ -159,7 +169,8 @@
             idcard_reverse_id = #{idCardReverseId,jdbcType=CHAR},
             proxy_id = #{proxyId,jdbcType=CHAR},
             business_type = #{businessType,jdbcType=CHAR},
-            face_compare_record_id = #{faceCompareRecordId,jdbcType=CHAR}
+            face_compare_record_id = #{faceCompareRecordId,jdbcType=CHAR},
+            entry_type = #{entryType}
         where id = #{id,jdbcType=CHAR}
     </update>
 </mapper>

@@ -4,6 +4,7 @@ import com.dhht.annotation.Sync;
 import com.dhht.dao.*;
 import com.dhht.model.*;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
@@ -11,6 +12,7 @@ import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.experimental.var;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,17 +40,17 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     @Autowired
     private ExamineRecordDetailMapper examineRecordDetailMapper;
 
-    @Autowired
-    private OperatorRecordMapper operatorRecordMapper;
-
-    @Autowired
-    private OperatorRecordDetailMapper operatorRecordDetailMapper;
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private FileService fileService;
+
+    private static final String NOTICE_FILE_UPLOAD = "检查图片上传";
 
 
     /**
@@ -292,6 +294,8 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      */
     @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
     public ExamineRecord addExamine(User user, ExamineRecord examineRecord){
+
+
         String id = UUIDUtil.generate();
         examineRecord.setId(id);
         examineRecord.setExaminerName(user.getUserName());
@@ -311,6 +315,11 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
                 flag = true;
             }
         }
+       String[] urls =  StringUtil.toStringArray1(examineRecord.getExamineFileUrl());
+        for(int i = 0; i < urls.length; i++) {
+            fileService.register(urls[i],NOTICE_FILE_UPLOAD);
+        }
+
         if (flag){
             return examineRecord;
         }else {

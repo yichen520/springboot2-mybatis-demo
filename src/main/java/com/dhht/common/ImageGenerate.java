@@ -2,7 +2,11 @@ package com.dhht.common;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.imageio.ImageIO;
+import javax.imageio.*;
+import javax.imageio.metadata.IIOInvalidTreeException;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -11,6 +15,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -19,8 +24,8 @@ public class ImageGenerate {
     private  final int WIDTH = 400;//图片宽度
     private  final int HEIGHT = 400;//图片高度
     private final String image= "★";
-    @Value("${sealtemplate.filePath}")
-    private String filePath ;
+//    @Value("${file.local.root}")
+    private String filePath ="C:/temp/seal";
 
     //中心图案五角星大小
     private int centerImageFont = 120;
@@ -42,7 +47,7 @@ public class ImageGenerate {
         String code = (String)map.get("sealCode");
         String centerImage = (String)map.get("centerImage");
         try {
-            String sealPath = filePath+"//"+message+"//"+message+".png";
+            String sealPath = filePath+"/"+message+"/"+message+".png";
             BufferedImage image =  startGraphics2D(message,centerName,code,centerImage);
             File dest = new File(sealPath);
             //判断文件父目录是否存在
@@ -146,22 +151,22 @@ public class ImageGenerate {
 
         //设置字体属性
         int fontsize;
-     if (message.length() <14){
-      fontsize = 30;
-     }else if(message.length()==16 || message.length()==15 ){
-         fontsize = 27;
-     }
-     else if(message.length()==17  ){
-        fontsize = 25;
-    }
-     else if(message.length()==18  ){
-        fontsize = 24;
-    }
-     else if(message.length()==19  ){
-         fontsize = 23;
-     }else {
-         fontsize = 20;
-     }
+        if (message.length() <=14){
+            fontsize = 31;
+        }else if( message.length()==15 ){
+            fontsize = 29;
+        }
+        else if(message.length()==16  ){
+            fontsize = 27;
+        }
+        else if(message.length()==17  ){
+            fontsize = 26;
+        }
+        else if(message.length()==18 ){
+            fontsize = 24;
+        }else {
+            fontsize = 24;
+        }
         Font f = new Font("Serif", Font.BOLD, fontsize);
 
         FontRenderContext context = g.getFontRenderContext();
@@ -382,7 +387,7 @@ public class ImageGenerate {
         int [][] data1 = new int[HEIGHT][WIDTH];
         BufferedImage image = startGraphicsFront2D(map);
         //文件命名
-        String filePath1 = filePath+"\\"+message+"\\"+message+"1.png";
+        String filePath1 = filePath+"/"+message+"/"+message+"1.png";
         File dest = new File(filePath1);
         //判断文件父目录是否存在
         if (!dest.getParentFile().exists()) {
@@ -413,7 +418,7 @@ public class ImageGenerate {
         //编码图层
         int [][] data2 = new int[HEIGHT][WIDTH];
         BufferedImage codeimage = startGraphicsCode2D( code, message);
-        String filePath2 = filePath+"\\"+message+"\\"+message+"2.png";
+        String filePath2 = filePath+"/"+message+"/"+message+"2.png";
         try {
             ImageIO.write(codeimage, "png", new File(filePath2));
         } catch (Exception ex) {
@@ -438,7 +443,7 @@ public class ImageGenerate {
 
         int [][] data3 = new int[HEIGHT][WIDTH];
         BufferedImage trueimage = startGraphicstrue2D();
-        String filePath3 = filePath+"\\"+message+"\\"+message+"3.png";
+        String filePath3 = filePath+"/"+message+"/"+message+"3.png";
         try {
             ImageIO.write(trueimage, "png", new File(filePath3));
         } catch (Exception ex) {
@@ -569,4 +574,51 @@ public class ImageGenerate {
         return buffImg;
     }
 
+    public void saveGridImage(File output,BufferedImage gridImage) throws IOException {
+        output.delete();
+
+        final String formatName = "png";
+
+        for (Iterator<ImageWriter> iw = ImageIO.getImageWritersByFormatName(formatName); iw.hasNext();) {
+            ImageWriter writer = iw.next();
+            ImageWriteParam writeParam = writer.getDefaultWriteParam();
+            ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
+            IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
+            if (metadata.isReadOnly() || !metadata.isStandardMetadataFormatSupported()) {
+                continue;
+            }
+
+            setDPI(metadata);
+
+            final ImageOutputStream stream = ImageIO.createImageOutputStream(output);
+            try {
+                writer.setOutput(stream);
+                writer.write(metadata, new IIOImage(gridImage, null, metadata), writeParam);
+            } finally {
+                stream.close();
+            }
+            break;
+        }
+    }
+
+    private void setDPI(IIOMetadata metadata) throws IIOInvalidTreeException {
+
+        // for PMG, it's dots per millimeter
+        double dotsPerMilli = 1.0 * 600 / 10 / 2.54;
+
+        IIOMetadataNode horiz = new IIOMetadataNode("HorizontalPixelSize");
+        horiz.setAttribute("value", Double.toString(dotsPerMilli));
+
+        IIOMetadataNode vert = new IIOMetadataNode("VerticalPixelSize");
+        vert.setAttribute("value", Double.toString(dotsPerMilli));
+
+        IIOMetadataNode dim = new IIOMetadataNode("Dimension");
+        dim.appendChild(horiz);
+        dim.appendChild(vert);
+
+        IIOMetadataNode root = new IIOMetadataNode("javax_imageio_1.0");
+        root.appendChild(dim);
+
+        metadata.mergeTree("javax_imageio_1.0", root);
+    }
 }

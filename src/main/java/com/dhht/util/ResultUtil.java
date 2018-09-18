@@ -20,6 +20,16 @@ public class ResultUtil {
     public static final int isHaveSeal = 15;
     public static final int isNoDepartment = 16;
     public static final int isNoEmployee = 17;
+    public static final int isNoTrue = 18;
+    public static final int isNoProxy = 19;
+    public static final int isNoName = 20;
+    public static final int isNoChipSeal = 21;
+    public static final int faceCompare = 22;
+    public static final int isLoss = 23;
+    public static final int isLogout = 24;
+    public static final int isIncidenceId = 25;
+
+
 
 
     public static JsonObjectBO getResult(int type){
@@ -58,6 +68,22 @@ public class ResultUtil {
                 return JsonObjectBO.error("备案单位或制作单位不存在");
             case 17:
                 return JsonObjectBO.error("从业人员不存在");
+            case 18:
+                return JsonObjectBO.error("原密码输入错误");
+            case 19:
+                return JsonObjectBO.error("无授权委托书");
+            case 20:
+                return JsonObjectBO.error("请输入姓名");
+            case 21:
+                return JsonObjectBO.error("该印章不是芯片章");
+            case 22:
+                return JsonObjectBO.error("出现未知错误");
+            case 23:
+                return JsonObjectBO.error("该印章已被挂失");
+            case 24:
+                return JsonObjectBO.error("该印章已被注销");
+            case 25:
+                return JsonObjectBO.error("案件编号不可以重复");
                 default:
                     return null;
         }

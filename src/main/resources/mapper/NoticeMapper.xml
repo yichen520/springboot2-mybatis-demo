@@ -14,7 +14,7 @@
   
   <resultMap id="SimpleResultMap" type="com.dhht.model.NoticeSimple">
     <id column="id" jdbcType="CHAR" property="id" />
-    <result column="send_realname" jdbcType="VARCHAR" property="sendUsername" />
+    <result column="send_realname" jdbcType="VARCHAR" property="sendRealname" />
     <result column="notice_title" jdbcType="VARCHAR" property="noticeTitle" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -48,7 +48,7 @@
   <select id="selectNoticeByNum" parameterType="java.lang.String" resultMap="SimpleResultMap">
     SELECT <include refid="Simple_Column_list"/> FROM notice
     WHERE district_id = #{cityId,jdbcType=VARCHAR} OR  district_id = #{provinceId,jdbcType=VARCHAR} OR district_id = #{districtId,jdbcType=VARCHAR}
-    ORDER BY create_time DESC limit 0,5
+    ORDER BY create_time DESC
   </select>
 
   <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -66,7 +66,7 @@
     insert into notice (id, send_username, send_realname, 
       notice_title, notice_content, create_time, 
       district_id, notice_file_url)
-    values (#{id,jdbcType=CHAR}, #{sendUsername,jdbcType=VARCHAR}, #{sendRealname,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=CHAR}, #{sendUsername,jdbcType=VARCHAR}, #{sendRealname,jdbcType=VARCHAR},
       #{noticeTitle,jdbcType=VARCHAR}, #{noticeContent,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{districtId,jdbcType=CHAR}, #{noticeFileUrl,jdbcType=VARCHAR})
   </insert>

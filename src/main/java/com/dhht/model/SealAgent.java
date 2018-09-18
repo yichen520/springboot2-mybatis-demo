@@ -45,4 +45,7 @@ public class SealAgent {
     @EntityComment(value = "人证合一记录id")
     private String faceCompareRecordId;
 
+    @EntityComment(value = "录入方式 00-本地读卡录入   01-可信身份录入")
+    private String entryType;
+
 }

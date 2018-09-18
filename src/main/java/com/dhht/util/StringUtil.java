@@ -5,6 +5,8 @@ package com.dhht.util;
 import com.dhht.common.JsonObjectBO;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -235,6 +237,20 @@ public class StringUtil {
     }
 
     /**
+     * 用于三级联动区域id
+     * @param districtId
+     * @return
+     */
+    public static List<String> getDistrictIds(String districtId){
+        List<String> districtIds = new ArrayList<>();
+        String temp[] = DistrictUtil(districtId);
+        districtIds.add(temp[0]+"0000");
+        districtIds.add(temp[0]+temp[1]+"00");
+        districtIds.add(districtId);
+        return districtIds;
+    }
+
+    /**
      * 将字符串数组处理成用; 号分割的字符串
      * @param str
      * @return
@@ -242,10 +258,11 @@ public class StringUtil {
     public static String getString(String[] str){
         StringBuffer stringBuffer = new StringBuffer();
         for(int i = 0;i<str.length;i++){
-            stringBuffer.append(str[i]+";");
+            stringBuffer.append(str[i]+",");
         }
         return stringBuffer.toString();
     }
+
 
     /**
      * 将字符串转成字符串数组
@@ -254,6 +271,10 @@ public class StringUtil {
      */
     public static String[] toStringArray (String str){
         return str.split(",");
+    }
+
+    public static String[] toStringArray1 (String str){
+        return str.split(";");
     }
 
     /**

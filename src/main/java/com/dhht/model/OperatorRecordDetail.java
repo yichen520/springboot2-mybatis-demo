@@ -8,6 +8,8 @@ public class OperatorRecordDetail {
 
     private String entityOperateRecordId;
 
+    private int propertyType;
+
     private String propertyName;
 
     private String oldValue;

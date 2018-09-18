@@ -73,32 +73,6 @@ public class DistrictController implements InitializingBean
     }
 
     /**
-     * 插入
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = "insert")
-    public JsonObjectBO insert(@RequestBody Map map){
-        String districtId = (String)map.get("districtId");
-        String parentId = (String)map.get("parentId");
-        String districtName = (String)map.get("districtName");
-        JsonObjectBO jsonObjectBO = districtService.insert(districtId,parentId,districtName);
-        return jsonObjectBO;
-    }
-
-    /**
-     * 删除
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = "delete")
-    public JsonObjectBO delete(@RequestBody Map map){
-        String districtId = (String)map.get("districtId");
-        JsonObjectBO jsonObjectBO = districtService.delete(districtId);
-        return jsonObjectBO;
-    }
-
-    /**
      * 根据角色选区域
      * @param httpServletRequest
      * @return
