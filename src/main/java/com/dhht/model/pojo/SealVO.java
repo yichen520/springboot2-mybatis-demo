@@ -25,6 +25,10 @@ public class SealVO  {
 
     private String moulageId;//印模二维数据
 
+    private String lossBusinessLicense;//挂失营业执照
+
+    private String LogoutBussinessLicense;//注销营业执照
+
     private SealOperationRecord sealOperationRecord;
 
     private List<SealAgent> sealAgents;
