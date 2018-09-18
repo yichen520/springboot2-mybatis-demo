@@ -3,6 +3,7 @@ package com.dhht.model;
 import lombok.Data;
 
 import java.util.List;
+
 @Data
 public class DistrictMenus {
     private String DistrictId;

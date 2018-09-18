@@ -173,7 +173,25 @@ public class InformationController {
         } catch (Exception e) {
             return JsonObjectBO.exception(e.toString());
         }
+    }
 
+    /**
+     * 获取从业人员详情
+     * @param map
+     * @return
+     */
+    @Log("从业人员详情")
+    @RequestMapping(value = "/employeeDetail")
+    public JsonObjectBO employeeDetail(@RequestBody Map map){
+        try {
+            String id = (String)map.get("id");
+            JSONObject jsonObject = new JSONObject();
+            Employee employee = employeeService.selectEmployeeByID(id);
+            jsonObject.put("employee",employee);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("获取从业人员详情失败");
+        }
     }
 
     /**
