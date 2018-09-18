@@ -799,7 +799,7 @@ public class SealServiceImpl implements SealService {
         //营业执照
         SealMaterial sealMaterial = new SealMaterial();
         sealMaterial.setId(UUIDUtil.generate());
-        sealMaterial.setType("01");
+        sealMaterial.setType("07");//注销的营业执照
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setFilePath(businesslicenseId);
         sealDao.insertSealMaterial(sealMaterial);
@@ -848,6 +848,10 @@ public class SealServiceImpl implements SealService {
         String agentId = seal.getAgentId();
         SealAgent sealAgent = sealDao.selectSealAgentById(agentId);
         sealAgents.add(sealAgent);
+        if(seal.getIsDeliver()){
+            SealAgent sealAgent1 = sealDao.selectSealAgentByGetterId(seal.getGetterId());
+            sealAgents.add(sealAgent1);
+        }
         sealVo.setSealAgents(sealAgents);
         sealVo.setOperationPhoto(sealAgent.getAgentPhotoId());
         sealVo.setPositiveIdCardScanner(sealAgent.getIdCardFrontId());
@@ -1015,6 +1019,7 @@ public class SealServiceImpl implements SealService {
             sealAgents.add(sealAgent1);
             sealVO.setSealAgents(sealAgents);
             sealVO.setSeal(seal);
+            sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
             SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "04");
             sealVO.setSealOperationRecord(sealOperationRecord);
 //            String employeeId = sealOperationRecord.getEmployeeId();
@@ -1026,6 +1031,10 @@ public class SealServiceImpl implements SealService {
             sealAgents.add(sealAgent);
             sealAgents.add(sealAgent1);
             sealVO.setSealAgents(sealAgents);
+            if(sealDao.selectSealMaterial(seal.getSealCode(),"01")!=null){
+                sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
+            }
+            sealVO.setLogoutBussinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"07").getFilePath());
             sealVO.setSeal(seal);
             SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "05");
             sealVO.setSealOperationRecord(sealOperationRecord);
@@ -1204,17 +1213,6 @@ public class SealServiceImpl implements SealService {
     }
 
 
-    //个人化大图
-    public byte[] BMPPicture(String id){
-        FileInfoVO fileInfo   = fileService.readFile(id);
-        byte[] fileData = fileInfo.getFileData();
-        return null;
-    }
-
-    //个人化小图
-    public byte[] thumbnail(String id){
-        return null;
-    }
 
 }
 
