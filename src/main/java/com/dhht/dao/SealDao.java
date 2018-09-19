@@ -53,8 +53,6 @@ public interface SealDao {
 
     SealAgent selectSealAgentById(@Param("agentId") String agentId);
 
-    SealAgent selectSealAgentByGetterId(@Param("getterId") String getterId);
-
     SealOperationRecord selectOperationRecordByCode(@Param("id") String id);
 
     SealOperationRecord selectOperationRecordByCodeAndType(@Param("id") String id,@Param("type") String type);

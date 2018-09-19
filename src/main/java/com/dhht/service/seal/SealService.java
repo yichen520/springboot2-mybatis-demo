@@ -66,11 +66,6 @@ public interface SealService {
    //挂失和注销的经办人信息
    SealVO lossAndLogoutDetail(String id);
 
-//   //个人化大图
-//   byte[] BMPPicture(String id);
-//
-//   //个人化小图
-//   byte[] thumbnail(String id);
 
 }
 

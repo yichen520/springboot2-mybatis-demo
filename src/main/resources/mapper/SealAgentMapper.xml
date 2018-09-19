@@ -16,7 +16,7 @@
         <result column="entry_type" jdbcType="CHAR" property="entryType" />
     </resultMap>
     <sql id="Base_Column_List">
-        id, name, certificate_type, certificate_no, telphone, agent_photo_id, idcard_front_id, 
+        id, `name`, certificate_type, certificate_no, telphone, agent_photo_id, idcard_front_id,
         idcard_reverse_id, proxy_id, business_type, face_compare_record_id,entry_type
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -39,6 +39,13 @@
             #{idCardFrontId,jdbcType=CHAR}, #{idCardReverseId,jdbcType=CHAR}, #{proxyId,jdbcType=CHAR},
             #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR},#{entryType})
     </insert>
+
+    <select id="selectSealAgentByGetterId" resultType="com.dhht.model.SealAgent">
+    select id as id,`name` as `name`,certificate_type as certificateType,certificate_no as certificateNo,telphone as telphone,agent_photo_id as agentPhotoId,
+    idcard_front_id as idcardFrontId,idcard_reverse_id as idcardReverseId,proxy_id as proxyId,business_type as businessType ,face_compare_record_id as faceCompareRecordId
+    from
+    seal_agent where id=#{getterId}
+  </select>
 
     <insert id="insertSelective" parameterType="com.dhht.model.SealAgent">
         insert into seal_agent

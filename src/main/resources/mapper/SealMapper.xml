@@ -199,18 +199,12 @@
       select file_path as filePath from seal_material where seal_code = #{sealCode} and `type` = #{type};
   </select>
   <select id="selectSealAgentById" resultType="com.dhht.model.SealAgent">
-    select `name` as `name`,certificate_type as certificateType,certificate_no as certificateNo,telphone as telphone,agent_photo_id as agentPhotoId,
+    select id as id,`name` as `name`,certificate_type as certificateType,certificate_no as certificateNo,telphone as telphone,agent_photo_id as agentPhotoId,
     idcard_front_id as idcardFrontId,idcard_reverse_id as idcardReverseId,proxy_id as proxyId,business_type as businessType ,face_compare_record_id as faceCompareRecordId
     from
     seal_agent where id=#{agentId}
   </select>
 
-  <select id="selectSealAgentByGetterId" resultType="com.dhht.model.SealAgent">
-    select `name` as `name`,certificate_type as certificateType,certificate_no as certificateNo,telphone as telphone,agent_photo_id as agentPhotoId,
-    idcard_front_id as idcardFrontId,idcard_reverse_id as idcardReverseId,proxy_id as proxyId,business_type as businessType ,face_compare_record_id as faceCompareRecordId
-    from
-    seal_agent where id=#{getterId}
-  </select>
 
   <insert id="insertSealMateriallist"  parameterType="java.util.List">
     insert into seal_material(id,seal_code,`type`,file_path)values
