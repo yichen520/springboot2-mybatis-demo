@@ -42,6 +42,8 @@ public interface SealDao {
 
     List<Seal> selectIsLogout(Seal seal);
 
+    List<Seal> selectWaitDeliver(Seal seal);
+
     SealOperationRecord SelectByCodeAndFlag(@Param("sealCode") String sealcode);
 
     SealOperationRecord SelectByCodeAndFlag03(@Param("id") String id, @Param("flag") String flag);

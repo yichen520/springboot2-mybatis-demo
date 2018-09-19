@@ -119,7 +119,7 @@ public class IndexController {
             int pageNum = (Integer)map.get("pageNum");
             int pageSize = (Integer)map.get("pageSize");
             JSONObject jsonObject = new JSONObject();
-            PageInfo<Seal> sealPageInfo = sealService.seal(user,"","","01",pageNum,pageSize);
+            PageInfo<Seal> sealPageInfo = sealService.seal(user,"","","07",pageNum,pageSize);
             jsonObject.put("seal",sealPageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){

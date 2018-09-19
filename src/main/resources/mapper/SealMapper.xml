@@ -307,7 +307,31 @@
   </where>
   order by make_date desc
   </select>
-  
+
+    <select id="selectWaitDeliver" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+        SELECT * from seal
+        <where>
+            is_record = 1 AND is_make =1 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
+            <if test="isPersonal !=null and isPersonal !=''">
+                is_personal = #{isPersonal}
+            </if>
+            <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+                And use_department_code LIKE  "%"#{useDepartmentCode}"%"
+            </if>
+            <if test="useDepartmentName !=null and useDepartmentName !=''">
+                AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="districtId !=null and districtId!=''">
+                AND district_id like #{districtId}"%"
+            </if>
+            <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
+                AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+            </if>
+
+        </where>
+        order by personal_date desc
+    </select>
+
   <select id="selectPersonal" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT * from seal
     <where>
