@@ -16,11 +16,13 @@
     <result column="flag" jdbcType="VARCHAR" property="flag"/>
     <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime"/>
     <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="certificate_no" property="certificateNo" jdbcType="VARCHAR" />
+
   </resultMap>
 
   <sql id="Base_Column_List">
     id,department_code, department_name, principal_name, principal_id, department_address,
-    department_address_detail, telphone, postal_code,is_delete,flag,updateTime,version,operator
+    department_address_detail, telphone, postal_code,is_delete,flag,updateTime,version,operator,certificate_no
   </sql>
 
   <select id="selectAllRecordDepartment" resultMap="BaseResultMap">
@@ -38,9 +40,9 @@
 
 
   <insert id="insert" parameterType="com.dhht.model.RecordDepartment">
-    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete,version,flag,updateTime,operator)
+    INSERT INTO record_department (id,department_code,department_name,principal_name,principal_id,department_address,department_address_detail,telphone,postal_code,is_delete,version,flag,updateTime,operator,certificate_no)
     VALUES (#{id,jdbcType=CHAR},#{departmentCode,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},#{principalName,jdbcType=VARCHAR},#{principalId,jdbcType=VARCHAR}, #{departmentAddress,jdbcType=VARCHAR},
-    #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0, #{version,jdbcType=INTEGER},#{flag,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{operator,jdbcType=VARCHAR})
+    #{departmentAddressDetail,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR},#{postalCode,jdbcType=VARCHAR},0, #{version,jdbcType=INTEGER},#{flag,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP},#{operator,jdbcType=VARCHAR},#{certificateNo,jdbcType=VARCHAR})
   </insert>
 
   <update id="updateById" parameterType="com.dhht.model.RecordDepartment">
@@ -53,7 +55,8 @@
       department_address = #{departmentAddress,jdbcType=VARCHAR},
       department_address_detail = #{departmentAddressDetail,jdbcType=VARCHAR},
       telphone = #{telphone,jdbcType=VARCHAR},
-      postal_code = #{postalCode,jdbcType=VARCHAR}
+      postal_code = #{postalCode,jdbcType=VARCHAR},
+      certificate_no = #{certificateNo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
   <!--SELECT * from record_department as a RIGHT JOIN(-->

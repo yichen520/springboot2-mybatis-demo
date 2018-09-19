@@ -44,5 +44,7 @@ public class RecordDepartment {
 
     private String operator;
 
+    private String certificateNo;
+
 
 }
