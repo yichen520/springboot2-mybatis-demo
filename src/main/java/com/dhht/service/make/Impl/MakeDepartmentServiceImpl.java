@@ -249,6 +249,20 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);
         List<SealAgent> sealAgents = new ArrayList<>();
         SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(anentId);
+        if(seal.getIsDeliver()){    //交付经办人
+            SealAgent sealAgent1 = sealAgentMapper.selectSealAgentByGetterId(seal.getGetterId());
+            sealAgents.add(sealAgent1);
+            if (!seal.getIsLogout() && seal.getIsLoss()) {  //只有挂失但是没有注销
+                String lossId = seal.getLossPersonId();
+                SealAgent sealAgent2 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办人
+                sealAgents.add(sealAgent2);
+            }else if(seal.getIsLogout()){
+                SealAgent sealAgent2 = sealAgentMapper.selectSealAgentByGetterId(seal.getLossPersonId());//挂失经办人
+                SealAgent sealAgent3 = sealAgentMapper.selectByPrimaryKey(seal.getLogoutPersonId());//注销经办人
+                sealAgents.add(sealAgent2);
+                sealAgents.add(sealAgent3);
+            }
+        }
         sealAgents.add(sealAgent);
         SealVO sealVO = new SealVO();
         sealVO.setSeal(seal);
