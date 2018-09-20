@@ -108,6 +108,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      */
     @Override
     public int insert(Makedepartment makedepartment,User updateUser) {
+        boolean f =true;
         if(isInsert(makedepartment)){
             return ResultUtil.isHaveCode;
         }
@@ -118,7 +119,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
         boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
         int m = makedepartmentMapper.insert(makedepartment);
-        boolean f = registerFile(makedepartment);
+        if(makedepartment.getBusinessLicenseUrl()!=null) {
+            f = registerFile(makedepartment);
+        }
         int u = userService.insert(makedepartment.getLegalTelphone(),"ZZDW",makedepartment.getDepartmentName(),makedepartment.getDepartmentAddress());
         if(f&&u==ResultUtil.isSend&&o&&m>0){
             SyncEntity syncEntity = ((MakeDepartmentServiceImpl) AopContext.currentProxy()).getSyncData(makedepartment, SyncDataType.MAKEDEPARTMENT, SyncOperateType.SAVE);
@@ -452,7 +455,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return false;
     }
 
-
+    public  String makeDepartmentCode(String name){
+        Makedepartment makedepartment = makedepartmentMapper.selectDetailByName(name);
+        return makedepartment.getDepartmentCode();
+    }
 
 
 

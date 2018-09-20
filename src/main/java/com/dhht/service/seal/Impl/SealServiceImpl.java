@@ -930,6 +930,34 @@ public class SealServiceImpl implements SealService {
 
 
     /**
+     *
+     * 制作单位查找seal
+     * @param user
+     * @param useDepartmentName
+     * @param useDepartmentCode
+     * @param status
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<Seal> mdSeal(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
+
+
+        String name = user.getRealName();
+        String code = makeDepartmentService.makeDepartmentCode(name);
+
+
+        Seal seal = new Seal();
+        seal.setMakeDepartmentCode(code);
+        List<Seal> list = new ArrayList<Seal>();
+        PageHelper.startPage(pageNum, pageSize);
+        list = chooseSealStatus(seal, status);
+        PageInfo<Seal> result = new PageInfo<>(list);
+        return result;
+    }
+
+    /**
      * 数据同步
      *
      * @param object

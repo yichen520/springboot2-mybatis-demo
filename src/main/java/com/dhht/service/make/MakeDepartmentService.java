@@ -40,4 +40,6 @@ public interface MakeDepartmentService {
 
      Makedepartment selectByCode(String departmentCode);
 
+     String makeDepartmentCode(String name);
+
 }

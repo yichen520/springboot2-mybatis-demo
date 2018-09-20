@@ -262,7 +262,7 @@ public class InformationController {
         int pageNum = sealOperator.getPageNum();
         int pageSize = sealOperator.getPageSize();
         try {
-            PageInfo<Seal> seal = sealService.seal(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
+            PageInfo<Seal> seal = sealService.mdSeal(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
