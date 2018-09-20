@@ -915,12 +915,18 @@ public class SealServiceImpl implements SealService {
         } else {
             districtId = id;
         }
-
+        String name = user.getRealName();
+        String code = makeDepartmentService.makeDepartmentCode(name);
 
         Seal seal = new Seal();
         seal.setUseDepartmentCode(useDepartmentCode);
         seal.setUseDepartmentName(useDepartmentName);
-        seal.setDistrictId(districtId);
+        if(user.getRoleId().equals("ADMIN")) {
+            seal.setDistrictId(districtId);
+        }
+        if(user.getRoleId().equals("ZZDW")){
+            seal.setMakeDepartmentCode(code);
+        }
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
         list = chooseSealStatus(seal, status);
