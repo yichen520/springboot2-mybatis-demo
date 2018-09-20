@@ -851,16 +851,24 @@ public class SealServiceImpl implements SealService {
         sealAgents.add(sealAgent);
         if(seal.getIsDeliver()){    //交付经办人
             SealAgent sealAgent1 = sealAgentMapper.selectSealAgentByGetterId(seal.getGetterId());
-            sealAgents.add(sealAgent1);
+            if(sealAgent1!=null) {
+                sealAgents.add(sealAgent1);
+            }
             if (!seal.getIsLogout() && seal.getIsLoss()) {  //只有挂失但是没有注销
                 String lossId = seal.getLossPersonId();
                 SealAgent sealAgent2 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办人
-                sealAgents.add(sealAgent2);
+                if(sealAgent2!=null) {
+                    sealAgents.add(sealAgent2);
+                }
             }else if(seal.getIsLogout()){
                 SealAgent sealAgent2 = sealAgentMapper.selectSealAgentByGetterId(seal.getLossPersonId());//挂失经办人
                 SealAgent sealAgent3 = sealAgentMapper.selectByPrimaryKey(seal.getLogoutPersonId());//注销经办人
-                sealAgents.add(sealAgent2);
-                sealAgents.add(sealAgent3);
+                if(sealAgent2!=null) {
+                    sealAgents.add(sealAgent2);
+                }
+                if(sealAgent3!=null) {
+                    sealAgents.add(sealAgent3);
+                }
             }
         }
 
@@ -1027,9 +1035,11 @@ public class SealServiceImpl implements SealService {
         SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(AgentId);  //备案经办人
         if (!seal.getIsLogout() && seal.getIsLoss()) {  //只有挂失但是没有注销
             String lossId = seal.getLossPersonId();
-            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办人
+            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办
             sealAgents.add(sealAgent);
-            sealAgents.add(sealAgent1);
+            if(sealAgent1!=null) {
+                sealAgents.add(sealAgent1);
+            }
             sealVO.setSealAgents(sealAgents);
             sealVO.setSeal(seal);
             sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
@@ -1042,7 +1052,9 @@ public class SealServiceImpl implements SealService {
             String logoutPersonId = seal.getLogoutPersonId();
             SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(logoutPersonId);
             sealAgents.add(sealAgent);
-            sealAgents.add(sealAgent1);
+            if(sealAgent1!=null) {
+                sealAgents.add(sealAgent1);
+            }
             sealVO.setSealAgents(sealAgents);
             if(sealDao.selectSealMaterial(seal.getSealCode(),"01")!=null){
                 sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
