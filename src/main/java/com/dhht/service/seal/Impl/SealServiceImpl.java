@@ -1158,7 +1158,7 @@ public class SealServiceImpl implements SealService {
             case "05":
                 sealType = "法人代表人名章";
                 break;
-            case "06":
+            case "99":
                 sealType = "其他类型印章";
                 break;
         }
