@@ -44,6 +44,7 @@ public class RecordDepartment {
 
     private String operator;
 
+    @EntityComment("身份证号码")
     private String certificateNo;
 
 
