@@ -915,8 +915,7 @@ public class SealServiceImpl implements SealService {
         } else {
             districtId = id;
         }
-        String name = user.getRealName();
-        String code = makeDepartmentService.makeDepartmentCode(name);
+
 
         Seal seal = new Seal();
         seal.setUseDepartmentCode(useDepartmentCode);
@@ -925,6 +924,8 @@ public class SealServiceImpl implements SealService {
             seal.setDistrictId(districtId);
         }
         if(user.getRoleId().equals("ZZDW")){
+            String name = user.getRealName();
+            String code = makeDepartmentService.makeDepartmentCode(name);
             seal.setMakeDepartmentCode(code);
         }
         List<Seal> list = new ArrayList<Seal>();
