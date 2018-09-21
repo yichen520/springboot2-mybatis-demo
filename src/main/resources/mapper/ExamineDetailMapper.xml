@@ -49,6 +49,10 @@
     delete from examine_type_detail
     where id = #{id,jdbcType=CHAR}
   </delete>
+  <delete id="itemAlldeleteByType" parameterType="java.lang.String">
+    delete from examine_type_detail
+    where examine_type_id = #{examineTypeId,jdbcType=CHAR}
+  </delete>
   <insert id="insert" parameterType="com.dhht.model.ExamineDetail">
     insert into examine_type_detail (id, examine_type_id, examine_item, 
       order_value)

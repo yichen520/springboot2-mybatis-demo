@@ -260,14 +260,24 @@ public class MinitorServiceImpl implements MinitorService {
     }
 
     @Override
-    public boolean itemadd(List<ExamineDetail> examineDetails) {
+    public boolean itemadd(String examineTypeId,List<ExamineDetail> examineDetails) {
             for (ExamineDetail examineDetail : examineDetails) {
                 if( examineDetail.getId()==null) {
                     examineDetail.setId(UUIDUtil.generate());
-                    examineDetailMapper.insertSelective(examineDetail);
                 }
+                if(examineDetail.getExamineTypeId()==null){
+                    examineDetail.setExamineTypeId(examineTypeId);
+                }
+
+                    examineDetailMapper.insertSelective(examineDetail);
+
             }
             return true;
+    }
+
+    @Override
+    public int itemAlldeleteByType(String examineTypeId) {
+        return examineDetailMapper.itemAlldeleteByType(examineTypeId);
     }
 
     @Override

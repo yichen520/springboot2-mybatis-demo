@@ -32,6 +32,7 @@ public interface UserService  {
 
     User findById(String Id);
 
+    List<User> selectByEmployeeRole();
 
 
 }

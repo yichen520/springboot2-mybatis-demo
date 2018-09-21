@@ -67,10 +67,12 @@ public class ExamineController {
     @PostMapping("itemadd")
     public JsonObjectBO itemadd(@RequestBody ExamineDetailList examineDetails){
         try {
-            if (minitorService.itemadd(examineDetails.getExamineDetails())){
-                return JsonObjectBO.success("新增监督检查项成功",null);
+            int result = minitorService.itemAlldeleteByType(examineDetails.getExamineTypeId());
+
+            if (minitorService.itemadd(examineDetails.getExamineTypeId(),examineDetails.getExamineDetails())){
+                return JsonObjectBO.success("修改监督检查项成功",null);
             }else {
-                return JsonObjectBO.error("新增监督检查项失败");
+                return JsonObjectBO.error("修改监督检查项失败");
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);

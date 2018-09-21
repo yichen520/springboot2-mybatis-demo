@@ -134,7 +134,7 @@ public class SuspiciousController  {
         String departmentCode = (String) map.get("departmentCode");
         JSONObject jsonObject = new JSONObject();
         try {
-            List<Employee> employees = employeeService.selectByDepartmentCode(departmentCode);
+            List<Employee> employees = employeeService.selectAllByDepartmentCode(departmentCode);
             jsonObject.put("employees",employees);
         }catch (Exception e){
             logger.error(e.getMessage(), e);
