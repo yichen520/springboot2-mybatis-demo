@@ -920,7 +920,14 @@ public class SealServiceImpl implements SealService {
         Seal seal = new Seal();
         seal.setUseDepartmentCode(useDepartmentCode);
         seal.setUseDepartmentName(useDepartmentName);
-        seal.setDistrictId(districtId);
+        if(user.getRoleId().equals("ADMIN")) {
+            seal.setDistrictId(districtId);
+        }
+        if(user.getRoleId().equals("ZZDW")){
+            String name = user.getRealName();
+            String code = makeDepartmentService.makeDepartmentCode(name);
+            seal.setMakeDepartmentCode(code);
+        }
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
         list = chooseSealStatus(seal, status);

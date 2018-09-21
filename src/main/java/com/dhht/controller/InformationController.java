@@ -262,6 +262,33 @@ public class InformationController {
         int pageNum = sealOperator.getPageNum();
         int pageSize = sealOperator.getPageSize();
         try {
+            PageInfo<Seal> seal = sealService.seal(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
+            jsonObject.put("seal", seal);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("查询成功");
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("发生异常！");
+        }finally {
+            PageHelper.clearPage();
+        }
+    }
+
+    @Log("印章信息")
+    @RequestMapping("/mdseal")
+    public JsonObjectBO mdSeal(HttpServletRequest httpServletRequest, @RequestBody SealOperator sealOperator) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+        String telphone = user.getTelphone();
+        String useDepartmentName = sealOperator.getSeal().getUseDepartmentName();
+        String useDepartmentCode = sealOperator.getSeal().getUseDepartmentCode();
+        String status = sealOperator.getSeal().getSealStatusCode();
+        int pageNum = sealOperator.getPageNum();
+        int pageSize = sealOperator.getPageSize();
+        try {
             PageInfo<Seal> seal = sealService.mdSeal(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
