@@ -286,4 +286,9 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.isSuccess;
         }
     }
+
+    @Override
+    public List<User> selectByEmployeeRole() {
+        return userDao.selectByEmployeeRole();
+    }
 }

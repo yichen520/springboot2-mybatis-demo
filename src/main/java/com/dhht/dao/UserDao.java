@@ -66,4 +66,7 @@ public interface UserDao {
     List<User> findAll();
 
     List<UserSimple> getRoleUser(@Param("districtId")String districtId, @Param("roleId")String roleId);
+
+    //查询未注册的从业人员
+    List<User> selectByEmployeeRole();
 }

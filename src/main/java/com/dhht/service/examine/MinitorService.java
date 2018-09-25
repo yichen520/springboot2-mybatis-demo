@@ -39,6 +39,8 @@ public interface MinitorService {
 
     List<ExamineCount> countemployeePunish(Map map, HttpServletRequest httpServletRequest);
 
-    boolean itemadd(List<ExamineDetail> examineDetails);
+    boolean itemadd(String examineTypeId,List<ExamineDetail> examineDetails);
+
+    int itemAlldeleteByType(String examineTypeId );
 
 }

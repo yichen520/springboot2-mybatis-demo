@@ -24,4 +24,5 @@ public interface ExamineDetailMapper {
 
     List<ExamineItemsDetail> selectByitemsWithKey(String examineTypeId);
 
+    int itemAlldeleteByType(String examineTypeId );
 }
