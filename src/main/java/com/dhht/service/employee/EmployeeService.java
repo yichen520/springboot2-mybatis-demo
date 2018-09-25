@@ -16,6 +16,8 @@ public interface EmployeeService {
 
     int insertEmployee(Employee employee, User user);
 
+    int insertEmployeeImport(Employee employee);
+
     int updateEmployee(Employee employee,User user);
 
     int deleteEmployee(String id,User user);
@@ -47,4 +49,6 @@ public interface EmployeeService {
     PageInfo selectEmployeeInfo(String code,int status,String name,int pageNum,int pageSize);
 
     String selectMaxEmployeeCode();
+
+
 }

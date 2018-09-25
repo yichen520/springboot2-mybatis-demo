@@ -928,6 +928,12 @@ public class SealServiceImpl implements SealService {
             String code = makeDepartmentService.makeDepartmentCode(name);
             seal.setMakeDepartmentCode(code);
         }
+        if(user.getRoleId().equals("BADW")){
+            String telphone = user.getTelphone();
+            RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
+            String code = recordDepartment.getDepartmentCode();
+            seal.setRecordDepartmentCode(code);
+        }
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
         list = chooseSealStatus(seal, status);

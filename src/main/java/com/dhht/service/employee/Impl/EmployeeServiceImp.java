@@ -108,6 +108,58 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     /**
+     * 导数据用
+     * @param employee
+     * @return
+     */
+    @Override
+    public int insertEmployeeImport(Employee employee) {
+        try {
+            MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(employee.getEmployeeDepartmentCode());
+            List<RecordDepartment> recordDepartments =recordDepartmentService.selectByDistrictId(makeDepartmentSimple.getDepartmentAddress());
+            if(recordDepartments.size()==0){
+                return ResultUtil.noRecordDepartment;
+            }
+            RecordDepartment recordDepartment = recordDepartments.get(0);
+            employee.setId(UUIDUtil.generate());
+            employee.setEmployeeCode(getEmployeeCode(makeDepartmentSimple.getDepartmentCode()));
+            employee.setEmployeeImage("");
+            employee.setOfficeCode(recordDepartment.getDepartmentCode());
+            employee.setOfficeName(recordDepartment.getDepartmentName());
+            employee.setRegisterName(recordDepartment.getPrincipalName());
+            employee.setRegisterTime(DateUtil.getCurrentTime());
+            employee.setFlag(UUIDUtil.generate());
+            employee.setVersion(1);
+            employee.setVersionTime(DateUtil.getCurrentTime());
+            String operateUUid = UUIDUtil.generate();
+//            boolean o = historyService.insertOperateRecord(user,employee.getFlag(),employee.getId(),"employee",SyncOperateType.SAVE,operateUUid);
+            if (isRepeatEmployeeId(employee.getEmployeeId())) {
+                return ResultUtil.isWrongId;
+            }
+
+            if(userService.findByUserName("CYRY"+employee.getTelphone())!=null){
+                return ResultUtil.isHave;
+            }
+            int e = employeeDao.insert(employee);
+            int u = userService.insert(employee.getTelphone(),"CYRY",employee.getEmployeeName(),employee.getDistrictId());
+
+            if (u==ResultUtil.isSend&&e>0) {
+//                SyncEntity syncEntity =  ((EmployeeServiceImp) AopContext.currentProxy()).getSyncDate(employee, SyncDataType.EMPLOYEE, SyncOperateType.SAVE);
+                return ResultUtil.isSuccess;
+            } else if (u == 1) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isHave;
+            } else {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isFail;
+            }
+        }catch (Exception e){
+            System.out.println(e.toString());
+            return ResultUtil.isError;
+        }
+    }
+
+    /**
      * 更新从业人员
      * @param employee
      * @return
@@ -543,6 +595,7 @@ public class EmployeeServiceImp implements EmployeeService {
         }
         return makeDepartmentCode+stringBuffer.toString()+code;
     }
+
 
     /**
      * 数据同步

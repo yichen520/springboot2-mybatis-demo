@@ -327,6 +327,9 @@
             <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
                 AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
             </if>
+          <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+            AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+          </if>
 
         </where>
         order by personal_date desc
@@ -347,6 +350,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -369,6 +375,9 @@
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
       </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+      </if>
 
     </where>
     order by record_date desc
@@ -388,6 +397,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -409,6 +421,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -433,7 +448,7 @@
       <if test="isLoss !=null and isLoss !=''">
         AND is_loss =  #{isLoss,jdbcType=BIT}
       </if>
-      <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+      <if test="useDepartmentCode !=null and useDeparselectIsRecordtmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
       <if test="useDepartmentName !=null and useDepartmentName !=''">
@@ -444,6 +459,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -482,6 +500,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
