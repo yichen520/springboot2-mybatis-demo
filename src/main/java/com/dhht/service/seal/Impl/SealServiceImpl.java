@@ -378,6 +378,15 @@ public class SealServiceImpl implements SealService {
                     fileService.register(idCardPhotoId, "认证合一身份证照片注册 ");
                     fileService.register(fieldPhotoId, "认证合一现场照片注册");
 
+                    SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(faceCompareRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity5 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(microsealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
+                    SyncEntity syncEntity6 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.RECORD);
+
+
                 } else {
                     return ResultUtil.isError;
                 }
@@ -400,7 +409,7 @@ public class SealServiceImpl implements SealService {
 
     /**
      * 印章主页面
-     *
+     * 根据制作单位
      * @param useDepartmentName
      * @param useDepartmentCode
      * @param status
@@ -416,6 +425,7 @@ public class SealServiceImpl implements SealService {
         }
 
         Employee employee = employeeService.selectByPhone(telphone);
+
 
         Seal seal = new Seal();
         seal.setUseDepartmentCode(useDepartmentCode);
@@ -559,7 +569,7 @@ public class SealServiceImpl implements SealService {
                        String certificateType, String certificateNo, String agentTelphone, String agentPhotoId, String idcardFrontId, String idcardReverseId,
                        String entryType, int confidence, String fieldPhotoId, String idCardPhotoId) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
-        seal1.setSealStatusCode("03");
+
         FaceCompareRecord faceCompareRecordResult = null;
         FaceCompareRecord TrustedIdentityAuthenticationResult = null;
 
@@ -627,10 +637,13 @@ public class SealServiceImpl implements SealService {
         }
         sealAgent.setEntryType(entryType);
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
-
+        seal1.setSealStatusCode("04");
         seal1.setGetterId(saId);
         int updateByPrimaryKey = sealDao.updateByPrimaryKey(seal1);
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
+            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.PERSONAL);
+            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
+            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.PERSONAL);
             return ResultUtil.isSuccess;
         } else {
             return ResultUtil.isFail;
@@ -732,6 +745,7 @@ public class SealServiceImpl implements SealService {
             SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.LOSS);
             SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.LOSS);
             SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.LOSS);
+            SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.LOSS);
             return ResultUtil.isSuccess;
         } else {
             return ResultUtil.isFail;
@@ -824,6 +838,7 @@ public class SealServiceImpl implements SealService {
             SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.LOGOUT);
             SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.LOGOUT);
             SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.LOGOUT);
+            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.LOGOUT);
             return ResultUtil.isSuccess;
         } else {
             return ResultUtil.isFail;
@@ -970,22 +985,6 @@ public class SealServiceImpl implements SealService {
         return result;
     }
 
-    /**
-     * 数据同步
-     *
-     * @param object
-     * @param dataType
-     * @param operateType
-     * @return
-     */
-    @Sync()
-    public SyncEntity getSyncDate(Object object, int dataType, int operateType) {
-        SyncEntity syncEntity = new SyncEntity();
-        syncEntity.setObject(object);
-        syncEntity.setDataType(dataType);
-        syncEntity.setOperateType(operateType);
-        return syncEntity;
-    }
 
     @Override
     public PageInfo<Seal> Infoseal(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
@@ -1291,6 +1290,22 @@ public class SealServiceImpl implements SealService {
     }
 
 
+    /**
+     * 数据同步
+     *
+     * @param object
+     * @param dataType
+     * @param operateType
+     * @return
+     */
+    @Sync()
+    public SyncEntity getSyncDate(Object object, int dataType, int operateType) {
+        SyncEntity syncEntity = new SyncEntity();
+        syncEntity.setObject(object);
+        syncEntity.setDataType(dataType);
+        syncEntity.setOperateType(operateType);
+        return syncEntity;
+    }
 
 }
 
