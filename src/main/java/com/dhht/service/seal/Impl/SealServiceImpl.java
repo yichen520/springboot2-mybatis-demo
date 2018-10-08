@@ -1233,17 +1233,20 @@ public class SealServiceImpl implements SealService {
             seal.setIsLogout(true);
             list = sealDao.selectIsLogout(seal);
         }else if(status.equals("07")){ //待交付
-            if(seal.getIsChipseal()){
-                seal.setIsRecord(true);
-                seal.setIsMake(true);
-                seal.setIsPersonal(true);
-                list=sealDao.selectWaitDeliver(seal);
-            }else{
-                seal.setIsRecord(true);
-                seal.setIsMake(true);
-                seal.setIsPersonal(false);
-                list=sealDao.selectWaitDeliver(seal);
-            }
+//            if(seal.getIsChipseal()){
+//                seal.setIsRecord(true);
+//                seal.setIsMake(true);
+//                seal.setIsPersonal(true);
+//                seal.setIsChipseal(true);
+//                list=sealDao.selectWaitDeliver(seal);
+//            }else{
+//                seal.setIsRecord(true);
+//                seal.setIsMake(true);
+//                seal.setIsPersonal(false);
+//                seal.setIsChipseal(false);
+//                list=sealDao.selectWaitDeliver(seal);
+//            }
+            list=sealDao.selectWaitDeliver(seal);
         }
         return list;
     }
