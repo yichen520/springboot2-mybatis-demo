@@ -949,6 +949,15 @@ public class SealServiceImpl implements SealService {
             String code = recordDepartment.getDepartmentCode();
             seal.setRecordDepartmentCode(code);
         }
+        if(user.getRoleId().equals("CYRY")){
+            String telphone = user.getTelphone();
+            if (telphone == null) {
+                return new PageInfo<>();
+            }
+
+            Employee employee = employeeService.selectByPhone(telphone);
+            seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
+        }
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
         list = chooseSealStatus(seal, status);
@@ -1254,19 +1263,6 @@ public class SealServiceImpl implements SealService {
             seal.setIsLogout(true);
             list = sealDao.selectIsLogout(seal);
         }else if(status.equals("07")){ //待交付
-//            if(seal.getIsChipseal()){
-//                seal.setIsRecord(true);
-//                seal.setIsMake(true);
-//                seal.setIsPersonal(true);
-//                seal.setIsChipseal(true);
-//                list=sealDao.selectWaitDeliver(seal);
-//            }else{
-//                seal.setIsRecord(true);
-//                seal.setIsMake(true);
-//                seal.setIsPersonal(false);
-//                seal.setIsChipseal(false);
-//                list=sealDao.selectWaitDeliver(seal);
-//            }
             list=sealDao.selectWaitDeliver(seal);
         }
         return list;
