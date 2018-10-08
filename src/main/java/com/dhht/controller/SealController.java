@@ -462,11 +462,11 @@ public class SealController implements InitializingBean {
     public JsonObjectBO verifySeal(@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String id = (String) map.get("id");
-        String isPass = (String) map.get("status");
+        String verify_type_name = (String) map.get("status");
         String rejectReason = (String) map.get("reason");
         String rejectRemark = (String) map.get("remark");
         try{
-            int a  = sealService.verifySeal(id,isPass,rejectReason,rejectRemark);
+            int a  = sealService.verifySeal(id,rejectReason,rejectRemark,verify_type_name);
             if(a==ResultUtil.isSuccess){
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("核验成功");

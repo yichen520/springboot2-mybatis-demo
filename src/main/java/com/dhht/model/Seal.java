@@ -82,11 +82,13 @@ public class Seal extends SealKey {
 
     private boolean isChipseal;  //是否芯片章
 
-    private String isPass;  //是否通过
+    private boolean isPass;  //是否通过
 
     private String rejectReason;// 退回理由
 
     private String rejectRemark;//  退回备注
+
+    private String verifyTypeName;
 
 
     public void setIsChipseal(boolean isChipseal) {

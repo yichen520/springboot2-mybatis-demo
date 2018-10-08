@@ -987,17 +987,23 @@ public class SealServiceImpl implements SealService {
 
     //印章核验
     @Override
-    public int verifySeal(String id, String isPass, String rejectReason, String rejectRemark) {
+    public int verifySeal(String id, String rejectReason, String rejectRemark, String verify_type_name) {
         Seal seal = sealDao.selectByPrimaryKey(id);
-        seal.setIsPass(isPass);
+        if(!verify_type_name.equals("0")) {
+            seal.setPass(true);
+        }else{
+            seal.setPass(false);
+        }
         seal.setRejectReason(rejectReason);
         seal.setRejectRemark(rejectRemark);
+        seal.setVerifyTypeName(verify_type_name);
         int updateVerifySeal = sealDao.updateByPrimaryKey(seal);
         if(updateVerifySeal<0){
             return ResultUtil.isFail;
         }else{
             return ResultUtil.isSuccess;
         }
+
     }
 
 
