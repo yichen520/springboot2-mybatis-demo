@@ -26,6 +26,8 @@ public interface SealDao {
 
     int insertSealMaterial(SealMaterial sealMaterial);
 
+//    int insertVerifySeal(String id,boolean isPass,String rejectReason,String rejectRemark);
+
     List<Seal> selectByCodeAndName(Seal seal);
 
     List<Seal> selectUndelivered(Seal seal);

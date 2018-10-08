@@ -985,6 +985,21 @@ public class SealServiceImpl implements SealService {
         return result;
     }
 
+    //印章核验
+    @Override
+    public int verifySeal(String id, String isPass, String rejectReason, String rejectRemark) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        seal.setIsPass(isPass);
+        seal.setRejectReason(rejectReason);
+        seal.setRejectRemark(rejectRemark);
+        int updateVerifySeal = sealDao.updateByPrimaryKey(seal);
+        if(updateVerifySeal<0){
+            return ResultUtil.isFail;
+        }else{
+            return ResultUtil.isSuccess;
+        }
+    }
+
 
     @Override
     public PageInfo<Seal> Infoseal(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {

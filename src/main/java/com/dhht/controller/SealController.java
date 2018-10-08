@@ -457,6 +457,30 @@ public class SealController implements InitializingBean {
         }
     }
 
+    @Log("核验")
+    @RequestMapping(value = "/verifySeal",method = RequestMethod.POST)
+    public JsonObjectBO verifySeal(@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String id = (String) map.get("id");
+        String isPass = (String) map.get("status");
+        String rejectReason = (String) map.get("reason");
+        String rejectRemark = (String) map.get("remark");
+        try{
+            int a  = sealService.verifySeal(id,isPass,rejectReason,rejectRemark);
+            if(a==ResultUtil.isSuccess){
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("核验成功");
+            }else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("核验失败");
+            }
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("核验失败");
+        }
+
+    }
     /**
      * 根据名字进行了查询
      */
