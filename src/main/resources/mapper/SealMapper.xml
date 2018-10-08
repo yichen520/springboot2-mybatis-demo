@@ -631,11 +631,11 @@ SELECT
   </select>
   
   <select id="indexCountAdd" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
   </select>
 
   <select id="indexCountDel" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m') AND is_logout = 1
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') AND is_logout = 1
   </select>
   
   <select id="indexCountSealByDepartment" resultMap="indexCountResultMap">
@@ -647,14 +647,14 @@ SELECT
   </select>
 
   <select id="indexCountPieChart" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
   </select>
   
   <select id="indexCountAllSealByMakeDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
   </select>
   
   <select id="indexCountSealTypeByMakeDepartment" resultMap="indexSealTypeResultMap" parameterType="java.lang.String">
-    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m') GROUP BY seal_type_code
+    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') GROUP BY seal_type_code
   </select>
 </mapper>
