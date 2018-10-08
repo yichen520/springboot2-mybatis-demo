@@ -41,6 +41,10 @@
     <result column="loss_person_id" property="lossPersonId" jdbcType="CHAR"/>
     <result column="logout_person_id" property="logoutPersonId" jdbcType="CHAR"/>
     <result column="is_chipseal" property="isChipseal" jdbcType="BIT"></result>
+    <result column="is_pass" property="isPass" jdbcType="BIT"></result>
+    <result column="reject_reason" property="rejectReason" jdbcType="CHAR"></result>
+    <result column="reject_remark" property="rejectRemark" jdbcType="VARCHAR"></result>
+    <result column="verify_type_name" property="verifyTypeName" jdbcType="CHAR"></result>
   </resultMap>
   
   <resultMap id="indexCountResultMap" type="com.dhht.model.IndexCount">
@@ -116,7 +120,7 @@
     record_department_code, record_department_name, make_department_code, make_department_name, 
     seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
     seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal
+      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal,is_pass,reject_reason,reject_remark,verify_type_name
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
     select 
@@ -190,7 +194,11 @@
       getter_id = #{getterId},
       loss_person_id = #{lossPersonId},
       logout_person_id = #{logoutPersonId},
-      is_chipseal = #{isChipseal}
+      is_chipseal = #{isChipseal},
+      is_pass = #{isPass},
+      reject_reason = #{rejectReason},
+      reject_remark = #{rejectRemark},
+      verify_type_name = #{verifyTypeName}
     where id = #{id,jdbcType=CHAR}
       and seal_code = #{sealCode,jdbcType=VARCHAR}
   </update>
@@ -312,9 +320,11 @@
         SELECT * from seal
         <where>
             is_record = 1 AND is_make =1 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
-            <if test="isPersonal !=null and isPersonal !=''">
-                is_personal = #{isPersonal}
-            </if>
+
+            AND
+            ((is_personal = 1 and is_chipseal = 1) or
+            (is_personal = 0 and is_chipseal = 0))
+
             <if test="useDepartmentCode !=null and useDepartmentCode !=''">
                 And use_department_code LIKE  "%"#{useDepartmentCode}"%"
             </if>
@@ -327,6 +337,9 @@
             <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
                 AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
             </if>
+          <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+            AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+          </if>
 
         </where>
         order by personal_date desc
@@ -347,6 +360,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -369,10 +385,14 @@
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
       </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+      </if>
 
     </where>
-    order by record_date desc
+    order by seal_code desc
   </select>
+
   <select id="selectIsRecord" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT * from seal
     <where>
@@ -388,6 +408,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -409,6 +432,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -433,7 +459,7 @@
       <if test="isLoss !=null and isLoss !=''">
         AND is_loss =  #{isLoss,jdbcType=BIT}
       </if>
-      <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+      <if test="useDepartmentCode !=null and useDeparselectIsRecordtmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
       <if test="useDepartmentName !=null and useDepartmentName !=''">
@@ -444,6 +470,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -482,6 +511,9 @@
       </if>
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+      </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+        AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
 
     </where>
@@ -600,11 +632,11 @@ SELECT
   </select>
   
   <select id="indexCountAdd" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
   </select>
 
   <select id="indexCountDel" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m') AND is_logout = 1
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') AND is_logout = 1
   </select>
   
   <select id="indexCountSealByDepartment" resultMap="indexCountResultMap">
@@ -616,14 +648,14 @@ SELECT
   </select>
 
   <select id="indexCountPieChart" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
   </select>
   
   <select id="indexCountAllSealByMakeDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m')
+    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
   </select>
   
   <select id="indexCountSealTypeByMakeDepartment" resultMap="indexSealTypeResultMap" parameterType="java.lang.String">
-    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(now(),'%Y-%m') GROUP BY seal_type_code
+    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') GROUP BY seal_type_code
   </select>
 </mapper>

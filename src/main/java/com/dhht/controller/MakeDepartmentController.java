@@ -219,6 +219,24 @@ public class MakeDepartmentController {
     }
 
 
+    /**
+     * 根据名字获取id
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/makeDepartmentCode")
+    public JsonObjectBO makeDepartmentCode(@RequestBody Map map){
+        String name = (String)map.get("name");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            String makeDepartmentCode = makeDepartmentService.makeDepartmentCode(name);
+            jsonObject.put("makeDepartmentCode",makeDepartmentCode);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+    }
 
 
 
