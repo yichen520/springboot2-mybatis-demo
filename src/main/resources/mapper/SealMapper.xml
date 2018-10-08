@@ -313,8 +313,9 @@
         <where>
             is_record = 1 AND is_make =1 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
 
-            AND (is_personal = 1 and is_chipseal = 1) OR
-            (is_personal = 0 and is_chipseal = 0)
+            AND
+            ((is_personal = 1 and is_chipseal = 1) or
+            (is_personal = 0 and is_chipseal = 0))
 
             <if test="useDepartmentCode !=null and useDepartmentCode !=''">
                 And use_department_code LIKE  "%"#{useDepartmentCode}"%"
