@@ -22,4 +22,6 @@ public interface ChipGrantMapper {
     int updateByPrimaryKey(ChipGrant record);
 
     List<ChipCountVO> selectGrantRecord(@Param("department")String department, @Param("startTime")String startTime, @Param("endTime")String endTime, @Param("districtid")String districtid);
+
+    List<ChipGrant> selectChipGrantinfo(@Param("districtId")String districtId, @Param("makeDepartment")String makeDepartment,  @Param("startTime")String startTime, @Param("endTime")String endTime,@Param("receiver") String receiver);
 }

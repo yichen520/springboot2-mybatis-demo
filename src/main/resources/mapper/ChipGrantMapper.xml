@@ -7,6 +7,7 @@
     <result column="chip_code_start" property="chipCodeStart" jdbcType="VARCHAR" />
     <result column="chip_code_end" property="chipCodeEnd" jdbcType="VARCHAR" />
     <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="receiver_tel" property="receiverTel" jdbcType="VARCHAR" />
     <result column="grant_num" property="grantNum" jdbcType="INTEGER" />
     <result column="grant_time" property="grantTime" jdbcType="TIMESTAMP" />
     <result column="granter_id" property="granterId" jdbcType="CHAR" />
@@ -21,6 +22,7 @@
     <result column="chip_code_start" property="chipCodeStart" jdbcType="VARCHAR" />
     <result column="chip_code_end" property="chipCodeEnd" jdbcType="VARCHAR" />
     <result column="receiver" property="receiver" jdbcType="VARCHAR" />
+    <result column="receiver_tel" property="receiverTel" jdbcType="VARCHAR" />
     <result column="grant_num" property="grantNum" jdbcType="INTEGER" />
     <result column="grant_time" property="grantTime" jdbcType="TIMESTAMP" />
     <result column="granter_id" property="granterId" jdbcType="CHAR" />
@@ -30,10 +32,11 @@
     <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
     <result column="make_department_code" property="makeDepartmentCode" jdbcType="VARCHAR" />
     <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
+    <result column="district_id" property="districtId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, chip_apply_id, chip_code_start, chip_code_end, receiver, grant_num, grant_time, 
-    granter_id, granter, grant_way, memo, record_time
+    granter_id, granter, grant_way, memo, record_time,receiver_tel,district_id
   </sql>
   <select id="selectGrantRecord" resultMap="ChipCountResultMap"  parameterType="java.lang.String">
     SELECT g.*,a.make_department_name,a.make_department_code from chip_grant g join chip_apply a
@@ -52,6 +55,31 @@
     and make_department_name like '%${makeDepartmentName}%'
 
   </select>
+
+  <select id="selectChipGrantinfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from chip_grant
+    where district_id = #{districtId}
+
+    <if test="makeDepartment != ''and makeDepartment != null" >
+    and (SELECT b.make_department_name from chip_grant a LEFT JOIN chip_apply b on a.chip_apply_id = b.id) = #{makeDepartment}
+  </if>
+    <if test="receiver != ''and receiver != null" >
+      and receiver = #{receiver}
+    </if>
+    <if test="startTime == ''and startTime == null and  endTime != ''and endTime != null" >
+      and grant_time &lt; #{endTime}
+    </if>
+    <if test="startTime != '' and startTime != null and  endTime != ''and endTime != null" >
+      and grant_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != ''and startTime != null and  endTime == ''and endTime == null" >
+      and grant_time &gt; #{startTime}
+    </if>
+  </select>
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -66,12 +94,13 @@
     insert into chip_grant (id, chip_apply_id, chip_code_start, 
       chip_code_end, receiver, grant_num, 
       grant_time, granter_id, granter, 
-      grant_way, memo, record_time
+      grant_way, memo, record_time,receiver_tel,district_id
       )
     values (#{id,jdbcType=CHAR}, #{chipApplyId,jdbcType=CHAR}, #{chipCodeStart,jdbcType=VARCHAR}, 
       #{chipCodeEnd,jdbcType=VARCHAR}, #{receiver,jdbcType=VARCHAR}, #{grantNum,jdbcType=INTEGER}, 
       #{grantTime,jdbcType=TIMESTAMP}, #{granterId,jdbcType=CHAR}, #{granter,jdbcType=VARCHAR}, 
-      #{grantWay,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{recordTime,jdbcType=TIMESTAMP}
+      #{grantWay,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{recordTime,jdbcType=TIMESTAMP},
+      #{receiverTel,jdbcType=VARCHAR}, #{districtId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.ChipGrant" >
