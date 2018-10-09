@@ -91,7 +91,10 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileInfo getFileInfo(String id) {
-        return fileMapper.getById(id);
+        FileInfo fileInfo = fileMapper.getById(id);
+//        fileInfo.getFilePath();
+//        fileInfo.getId();
+        return fileInfo;
     }
 
     @Override

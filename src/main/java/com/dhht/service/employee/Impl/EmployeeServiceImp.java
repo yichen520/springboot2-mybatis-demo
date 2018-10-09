@@ -76,6 +76,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setEmployeeImage("");
             employee.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
             employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
+            employee.setMakeDepartmentName(makeDepartmentSimple.getDepartmentName());
             employee.setOfficeCode(recordDepartment.getDepartmentCode());
             employee.setOfficeName(recordDepartment.getDepartmentName());
             employee.setRegisterName(recordDepartment.getPrincipalName());
@@ -194,7 +195,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setVersion(employee.getVersion() + 1);
             employee.setVersionTime(DateUtil.getCurrentTime());
             employee.setId(UUIDUtil.generate());
-            String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime","familyDistrictIds","familyDistrictName","nowDistrictIds","nowDistrictName","districtId"};
+            String ignore[] = new String[]{"id", "employeeDepartmentCode", "version", "flag", "versionTime", "registerTime","versionStatus","effectiveTime","familyDistrictIds","familyDistrictName","nowDistrictIds","nowDistrictName","districtId","makeDepartmentName"};
             String operateUUid = UUIDUtil.generate();
             boolean o = historyService.insertOperateRecord(updateUser,employee.getFlag(),employee.getId(),"employee",SyncOperateType.UPDATE,operateUUid);
             boolean od = historyService.insertUpdateRecord(employee,oldDate,operateUUid,ignore);
