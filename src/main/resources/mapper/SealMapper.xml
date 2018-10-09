@@ -51,7 +51,7 @@
     <id column="id" property="id" jdbcType="CHAR" />
     <result column="seal_id" property="sealId" jdbcType="CHAR"/>
     <result column="employee_id" property="employeeId" jdbcType="CHAR"/>
-    <result column="emplyee_name" property="emplyeeName" jdbcType="VARCHAR"/>
+    <result column="emplyee_name" property="employeeName" jdbcType="VARCHAR"/>
     <result column="employee_code" property="employeeCode" jdbcType="CHAR"/>
     <result column="operate_type" property="operateType" jdbcType="CHAR"/>
     <result column="operate_time" property="operateTime" />
@@ -240,19 +240,19 @@
   </select>
 
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
-        select emplyee_name AS emplyeeName ,employee_id as employeeId ,employee_code as employeeCode
+        select emplyee_name AS employeeName ,employee_id as employeeId ,employee_code as employeeCode
      FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = "00";
 </select>
 
   <select id="selectOperationRecordByCodeAndType" resultType="com.dhht.model.SealOperationRecord">
-        select emplyee_name AS emplyeeName ,employee_id as employeeId ,employee_code as employeeCode,operate_time as operateTime
+        select emplyee_name AS employeeName ,employee_id as employeeId ,employee_code as employeeCode,operate_time as operateTime
      FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = #{type};
 </select>
   <insert id="insertSealOperationRecord" parameterType="com.dhht.model.SealOperationRecord">
     INSERT INTO seal_operate_record (id, seal_id, employee_id,emplyee_name,employee_code,
       operate_type, operate_time)
     values (#{id}, #{sealId}, #{employeeId},
-      #{emplyeeName}, #{employeeCode}, #{operateType},
+      #{employeeName}, #{employeeCode}, #{operateType},
       #{operateTime})
   </insert>
 

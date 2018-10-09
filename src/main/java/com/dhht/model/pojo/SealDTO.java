@@ -22,7 +22,7 @@ public class SealDTO {
 
     private String employeeId;  //从业人员id
 
-    private String emplyeeName;  //从业人员名字
+    private String employeeName;  //从业人员名字
 
     private String employeeCode;  //从业人员code
 
