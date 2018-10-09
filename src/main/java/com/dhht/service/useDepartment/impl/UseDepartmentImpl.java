@@ -159,7 +159,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     public PageInfo<UseDepartment> selectByDistrict(String id,String departmentStatus,int pageNum, int pageSize) {
         List<UseDepartment> list = new ArrayList<UseDepartment>();
-        PageHelper.startPage(pageNum, pageSize, false);
+        PageHelper.startPage(pageNum, pageSize);
         String districtIds[] = StringUtil.DistrictUtil(id);
         if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
             list = useDepartmentDao.find(null,districtIds[0],null,departmentStatus);
