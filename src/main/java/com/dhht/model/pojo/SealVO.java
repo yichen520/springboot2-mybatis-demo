@@ -29,7 +29,9 @@ public class SealVO  {
 
     private String LogoutBussinessLicense;//注销营业执照
 
-    private SealOperationRecord sealOperationRecord;
+    private List<SealOperationRecord> sealOperationRecords;
+
+//    private SealOperationRecord sealOperationRecord;
 
     private List<SealAgent> sealAgents;
 

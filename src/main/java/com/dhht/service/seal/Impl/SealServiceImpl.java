@@ -894,6 +894,7 @@ public class SealServiceImpl implements SealService {
         sealVo.setProxy(sealAgent.getProxyId());
         sealVo.setMakeDepartment(makedepartment);
         sealVo.setUseDepartment(useDepartment);
+        sealVo.setSealOperationRecords(sealDao.selectSealOperationRecord(id,null));
 //        SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
 //        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode, "06");
@@ -1090,54 +1091,54 @@ public class SealServiceImpl implements SealService {
     }
 
 
-    /**
-     * 挂失和注销的详细信息
-     *
-     * @param id
-     * @return
-     */
-    @Override
-    public SealVO lossAndLogoutDetail(String id) {
-        Seal seal = sealDao.selectByPrimaryKey(id);
-        SealVO sealVO = new SealVO();
-        List<SealAgent> sealAgents = new ArrayList<>();
-        String AgentId = seal.getAgentId();
-        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(AgentId);  //备案经办人
-        if (!seal.getIsLogout() && seal.getIsLoss()) {  //只有挂失但是没有注销
-            String lossId = seal.getLossPersonId();
-            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办
-            sealAgents.add(sealAgent);
-            if(sealAgent1!=null) {
-                sealAgents.add(sealAgent1);
-            }
-            sealVO.setSealAgents(sealAgents);
-            sealVO.setSeal(seal);
-            sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
-            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "04");
-            sealVO.setSealOperationRecord(sealOperationRecord);
-//            String employeeId = sealOperationRecord.getEmployeeId();
-//            Employee employee = employeeService.selectEmployeeByEmployeeID(employeeId);
-
-        } else if (seal.getIsLogout()) {
-            String logoutPersonId = seal.getLogoutPersonId();
-            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(logoutPersonId);
-            sealAgents.add(sealAgent);
-            if(sealAgent1!=null) {
-                sealAgents.add(sealAgent1);
-            }
-            sealVO.setSealAgents(sealAgents);
-            if(sealDao.selectSealMaterial(seal.getSealCode(),"01")!=null){
-                sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
-            }
-            sealVO.setLogoutBussinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"07").getFilePath());
-            sealVO.setSeal(seal);
-            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "05");
-            sealVO.setSealOperationRecord(sealOperationRecord);
-        }
-        return sealVO;
-
-
-    }
+//    /**
+//     * 挂失和注销的详细信息
+//     *
+//     * @param id
+//     * @return
+//     */
+//    @Override
+//    public SealVO lossAndLogoutDetail(String id) {
+//        Seal seal = sealDao.selectByPrimaryKey(id);
+//        SealVO sealVO = new SealVO();
+//        List<SealAgent> sealAgents = new ArrayList<>();
+//        String AgentId = seal.getAgentId();
+//        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(AgentId);  //备案经办人
+//        if (!seal.getIsLogout() && seal.getIsLoss()) {  //只有挂失但是没有注销
+//            String lossId = seal.getLossPersonId();
+//            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办
+//            sealAgents.add(sealAgent);
+//            if(sealAgent1!=null) {
+//                sealAgents.add(sealAgent1);
+//            }
+//            sealVO.setSealAgents(sealAgents);
+//            sealVO.setSeal(seal);
+//            sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
+//            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "04");
+//            sealVO.setSealOperationRecord(sealOperationRecord);
+////            String employeeId = sealOperationRecord.getEmployeeId();
+////            Employee employee = employeeService.selectEmployeeByEmployeeID(employeeId);
+//
+//        } else if (seal.getIsLogout()) {
+//            String logoutPersonId = seal.getLogoutPersonId();
+//            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(logoutPersonId);
+//            sealAgents.add(sealAgent);
+//            if(sealAgent1!=null) {
+//                sealAgents.add(sealAgent1);
+//            }
+//            sealVO.setSealAgents(sealAgents);
+//            if(sealDao.selectSealMaterial(seal.getSealCode(),"01")!=null){
+//                sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
+//            }
+//            sealVO.setLogoutBussinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"07").getFilePath());
+//            sealVO.setSeal(seal);
+//            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "05");
+//            sealVO.setSealOperationRecord(sealOperationRecord);
+//        }
+//        return sealVO;
+//
+//
+//    }
 
     /**
      * 人证合一

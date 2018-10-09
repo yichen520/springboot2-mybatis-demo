@@ -20,6 +20,8 @@ public interface SealDao {
 
     List<Seal> selectByCodeAndType(String useDepartmentCode);
 
+    List<SealOperationRecord> selectSealOperationRecord(@Param("id") String id,@Param("operateType") String operateType);
+
     int updateByPrimaryKey(Seal record);
 
     int insertSealOperationRecord(SealOperationRecord sealOperationRecord);

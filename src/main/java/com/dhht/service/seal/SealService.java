@@ -63,8 +63,8 @@ public interface SealService {
    //查找最新的印章信息
    Seal selectLastSeal();
 
-   //挂失和注销的经办人信息
-   SealVO lossAndLogoutDetail(String id);
+//   //挂失和注销的经办人信息
+//   SealVO lossAndLogoutDetail(String id);
 
    //制作单位查询
    PageInfo<Seal> mdSeal(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);

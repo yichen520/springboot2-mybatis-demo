@@ -47,6 +47,16 @@
     <result column="verify_type_name" property="verifyTypeName" jdbcType="CHAR"></result>
   </resultMap>
   
+  <resultMap id="SealOperationRecordMap" type="com.dhht.model.SealOperationRecord">
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="seal_id" property="sealId" jdbcType="CHAR"/>
+    <result column="employee_id" property="employeeId" jdbcType="CHAR"/>
+    <result column="emplyee_name" property="emplyeeName" jdbcType="VARCHAR"/>
+    <result column="employee_code" property="employeeCode" jdbcType="CHAR"/>
+    <result column="operate_type" property="operateType" jdbcType="CHAR"/>
+    <result column="operate_time" property="operateTime" />
+  </resultMap>
+  
   <resultMap id="indexCountResultMap" type="com.dhht.model.IndexCount">
     <result column="count(id)" property="value"/>
     <result column="make_department_code" property="comment"/>
@@ -522,6 +532,14 @@
 
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type="01"
+  </select>
+
+  <select id="selectSealOperationRecord" resultMap="SealOperationRecordMap">
+    select * from seal_operate_record where seal_id = #{id}
+    <if test="operateType !=null and operateType!=''">
+      and operate_type = #{operateType}
+    </if>
+
   </select>
 
   <select id="SelectByCodeAndFlag03" resultType="com.dhht.model.SealOperationRecord">

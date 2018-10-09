@@ -43,6 +43,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -436,26 +437,26 @@ public class SealController implements InitializingBean {
     }
 
 
-    /**
-     * 挂失和注销详情
-     */
-    @Log("挂失和注销详情")
-    @RequestMapping(value = "/LossAndLogoutDetail", method = RequestMethod.POST)
-    public JsonObjectBO LossAndLogoutDetail(@RequestBody Map map) {
-        JSONObject jsonObject = new JSONObject();
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String id = (String) map.get("id");
-        try {
-            SealVO sealVO = sealService.lossAndLogoutDetail(id);
-            jsonObject.put("sealVO", sealVO);
-            jsonObjectBO.setCode(1);
-            jsonObjectBO.setData(jsonObject);
-            return jsonObjectBO;
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("查看挂失和注销详情失败");
-        }
-    }
+//    /**
+//     * 挂失和注销详情
+//     */
+//    @Log("挂失和注销详情")
+//    @RequestMapping(value = "/LossAndLogoutDetail", method = RequestMethod.POST)
+//    public JsonObjectBO LossAndLogoutDetail(@RequestBody Map map) {
+//        JSONObject jsonObject = new JSONObject();
+//        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+//        String id = (String) map.get("id");
+//        try {
+//            SealVO sealVO = sealService.lossAndLogoutDetail(id);
+//            jsonObject.put("sealVO", sealVO);
+//            jsonObjectBO.setCode(1);
+//            jsonObjectBO.setData(jsonObject);
+//            return jsonObjectBO;
+//        } catch (Exception e) {
+//            logger.error(e.getMessage(), e);
+//            return JsonObjectBO.exception("查看挂失和注销详情失败");
+//        }
+//    }
 
     @Log("核验")
     @RequestMapping(value = "/verifySeal",method = RequestMethod.POST)
