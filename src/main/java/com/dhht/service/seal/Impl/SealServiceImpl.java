@@ -949,6 +949,15 @@ public class SealServiceImpl implements SealService {
             String code = recordDepartment.getDepartmentCode();
             seal.setRecordDepartmentCode(code);
         }
+        if(user.getRoleId().equals("CYRY")){
+            String telphone = user.getTelphone();
+            if (telphone == null) {
+                return new PageInfo<>();
+            }
+
+            Employee employee = employeeService.selectByPhone(telphone);
+            seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
+        }
         List<Seal> list = new ArrayList<Seal>();
         PageHelper.startPage(pageNum, pageSize);
         list = chooseSealStatus(seal, status);
@@ -983,6 +992,27 @@ public class SealServiceImpl implements SealService {
         list = chooseSealStatus(seal, status);
         PageInfo<Seal> result = new PageInfo<>(list);
         return result;
+    }
+
+    //印章核验
+    @Override
+    public int verifySeal(String id, String rejectReason, String rejectRemark, String verify_type_name) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        if(!verify_type_name.equals("0")) {
+            seal.setPass(true);
+        }else{
+            seal.setPass(false);
+        }
+        seal.setRejectReason(rejectReason);
+        seal.setRejectRemark(rejectRemark);
+        seal.setVerifyTypeName(verify_type_name);
+        int updateVerifySeal = sealDao.updateByPrimaryKey(seal);
+        if(updateVerifySeal<0){
+            return ResultUtil.isFail;
+        }else{
+            return ResultUtil.isSuccess;
+        }
+
     }
 
 
@@ -1233,19 +1263,6 @@ public class SealServiceImpl implements SealService {
             seal.setIsLogout(true);
             list = sealDao.selectIsLogout(seal);
         }else if(status.equals("07")){ //待交付
-//            if(seal.getIsChipseal()){
-//                seal.setIsRecord(true);
-//                seal.setIsMake(true);
-//                seal.setIsPersonal(true);
-//                seal.setIsChipseal(true);
-//                list=sealDao.selectWaitDeliver(seal);
-//            }else{
-//                seal.setIsRecord(true);
-//                seal.setIsMake(true);
-//                seal.setIsPersonal(false);
-//                seal.setIsChipseal(false);
-//                list=sealDao.selectWaitDeliver(seal);
-//            }
             list=sealDao.selectWaitDeliver(seal);
         }
         return list;

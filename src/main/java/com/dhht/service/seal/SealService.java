@@ -69,5 +69,8 @@ public interface SealService {
    //制作单位查询
    PageInfo<Seal> mdSeal(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
 
+   //印章核验
+   int verifySeal(String id,String rejectReason,String rejectRemark,String verify_type_name);
+
 }
 

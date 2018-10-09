@@ -10,10 +10,13 @@
     <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
     <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="address_detail" property="addressDetail" jdbcType="VARCHAR" />
+    <result column="apply_flag" property="applyFlag" jdbcType="INTEGER" />
+    <result column="ungrant_num" property="ungrantnum" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, chip_num, get_time, address, make_department_code, make_department_name, apply_time, 
-    memo
+    id, chip_num, get_time, address,address_detail, make_department_code, make_department_name, apply_time,
+    memo,apply_flag,ungrant_num
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -21,6 +24,61 @@
     from chip_apply
     where id = #{id,jdbcType=CHAR}
   </select>
+  <select id="selectByApplyTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from chip_apply
+    where
+    make_department_code = #{departmentCode}
+    <if test="startTime == ''and startTime == null and  endTime != ''and endTime != null" >
+      and apply_time &lt; #{endTime}
+    </if>
+    <if test="startTime != '' and startTime != null and  endTime != ''and endTime != null" >
+      and apply_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != ''and startTime != null and  endTime == ''and endTime == null" >
+      and apply_time &gt; #{startTime}
+    </if>
+  </select>
+  <select id="selectChipApplyMakedepartment" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from chip_apply
+    where address = #{districtId}
+  </select>
+  <select id="selectChipGrantMakedepartment" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from chip_apply
+    where address = #{districtId}
+    and apply_flag != 0
+  </select>
+
+
+
+  <select id="selectChipGrant" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from chip_apply
+    where address = #{districtId}
+    <if test="makeDepartment != ''and makeDepartment != null" >
+      and make_department_name = #{makeDepartment}
+    </if>
+    <if test="grantFlag != ''and grantFlag != null" >
+      and apply_flag = #{grantFlag}
+    </if>
+    <if test="startTime == ''and startTime == null and  endTime != ''and endTime != null" >
+      and apply_time &lt; #{endTime}
+    </if>
+    <if test="startTime != '' and startTime != null and  endTime != ''and endTime != null" >
+      and apply_time BETWEEN #{startTime} and #{endTime}
+    </if>
+    <if test="startTime != ''and startTime != null and  endTime == ''and endTime == null" >
+      and apply_time &gt; #{startTime}
+    </if>
+
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from chip_apply
     where id = #{id,jdbcType=CHAR}
@@ -28,10 +86,11 @@
   <insert id="insert" parameterType="com.dhht.model.ChipApply" >
     insert into chip_apply (id, chip_num, get_time, 
       address, make_department_code, make_department_name, 
-      apply_time, memo)
+      apply_time, memo,address_detail,ungrant_num)
     values (#{id,jdbcType=CHAR}, #{chipNum,jdbcType=INTEGER}, #{getTime,jdbcType=TIMESTAMP}, 
       #{address,jdbcType=VARCHAR}, #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, 
-      #{applyTime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR})
+      #{applyTime,jdbcType=TIMESTAMP}, #{memo,jdbcType=VARCHAR},
+      #{addressDetail,jdbcType=VARCHAR},#{ungrantnum,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.ChipApply" >
     insert into chip_apply
@@ -115,6 +174,13 @@
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
+  <update id="updateChipNum">
+    update chip_apply set apply_flag = #{num},ungrant_num = #{ungrantnum}
+   where id = #{chipApplyId}
+  </update>
+
+
+
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.ChipApply" >
     update chip_apply
     set chip_num = #{chipNum,jdbcType=INTEGER},
