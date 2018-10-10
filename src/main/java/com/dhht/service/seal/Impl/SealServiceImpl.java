@@ -918,7 +918,11 @@ public class SealServiceImpl implements SealService {
         if(LogoutBussinessLicense!=null){
             sealVo.setLogoutBussinessLicense(LogoutBussinessLicense.getFilePath());
         }
-        SealMaterial sealCard = sealDao.selectSealMaterial(sealCode,"02");
+        SealMaterial sealCardImage = sealDao.selectSealMaterial(sealCode,"02");
+        if(sealCardImage!=null){
+            sealVo.setSealCardImage(sealCardImage.getFilePath());
+        }
+        SealMaterial sealCard = sealDao.selectSealMaterial(sealCode,"03");
         if(sealCard!=null){
             sealVo.setSealCard(sealCard.getFilePath());
         }

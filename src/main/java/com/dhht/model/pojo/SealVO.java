@@ -31,6 +31,8 @@ public class SealVO  {
 
     private String sealCard;
 
+    private String sealCardImage;
+
     private List<SealOperationRecord> sealOperationRecords;
 
 //    private SealOperationRecord sealOperationRecord;
