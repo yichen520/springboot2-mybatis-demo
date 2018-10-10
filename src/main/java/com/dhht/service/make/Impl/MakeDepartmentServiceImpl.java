@@ -270,7 +270,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         SealVO sealVO = new SealVO();
         sealVO.setSeal(seal);
         sealVO.setSealAgents(sealAgents);
-        sealVO.setSealOperationRecord(sealOperationRecord);
+        List<SealOperationRecord> list = new ArrayList<>();
+        list.add(sealOperationRecord);
+        sealVO.setSealOperationRecords(list);
         return sealVO;
 
     }
