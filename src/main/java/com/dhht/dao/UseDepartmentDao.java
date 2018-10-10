@@ -37,7 +37,7 @@ public interface UseDepartmentDao {
 
     int updateById(UseDepartment useDepartment);
 
-    List<UseDepartment> find(@Param("code") String code,@Param("districtId")String districtId,@Param("name")String name,@Param("departmentStatus")String departmentStatus);
+    List<UseDepartment> find(@Param("code") String code,@Param("districtId")String districtId,@Param("name")String name,@Param("departmentStatus")String departmentStatus,@Param("pageNum")int pagestart,@Param("pageSize")int pageSize);
 
     List<UseDepartment> selectByName(@Param("name") String name);
 

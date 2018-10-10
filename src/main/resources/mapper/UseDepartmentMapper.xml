@@ -122,8 +122,10 @@
 
 
   <select id="find"  parameterType="java.lang.String"  resultType="com.dhht.model.UseDepartment">
-    SELECT id,`name` as name,code as code,legal_name as legalName,department_status as departmentStatus,district_id as districtId ,flag,version FROM use_department AS a RIGHT JOIN
-    (SELECT flag as f, MAX(version) as v from use_department GROUP BY flag ) AS b ON a.flag=b.f AND a.version = b.v
+    SELECT a.id ,`name` as name,code as code,legal_name as legalName,
+    department_status as departmentStatus,district_id as districtId ,flag,version FROM use_department a
+    JOIN (select id from use_department limit #{pageNum}, #{pageSize}) b ON a.id = b.id
+
     <where>
       <if test="districtId !=null and districtId !=''">
         district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
@@ -143,9 +145,7 @@
       <if test="departmentStatus =='02'">
         AND department_status ='02'
       </if>
-
     </where>
-    order BY updateTime DESC
   </select>
 
 
