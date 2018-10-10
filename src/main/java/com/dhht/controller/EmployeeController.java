@@ -31,7 +31,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/make/employee")
-public class EmployeeController  implements InitializingBean {
+public class EmployeeController  {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
@@ -233,25 +233,25 @@ public class EmployeeController  implements InitializingBean {
         }
     }
 
-    /**
-     * redis存储最大的从业人员编号
-     * @throws Exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        String emoloyeeCode = employeeService.selectMaxEmployeeCode();
-        if(emoloyeeCode == null) {
-            redisTemplate.opsForValue().set("employeeCode", 0);
-            return;
-        }
-        String temp = emoloyeeCode.substring(19);
-        Integer code = Integer.parseInt(temp);
-        if(!redisTemplate.hasKey("employeeCode")){
-            redisTemplate.opsForValue().set("employeeCode", code);
-        }else {
-            redisTemplate.opsForValue().getAndSet("employeeCode",code);
-        }
-    }
+//    /**
+//     * redis存储最大的从业人员编号
+//     * @throws Exception
+//     */
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        String emoloyeeCode = employeeService.selectMaxEmployeeCode();
+//        if(emoloyeeCode == null) {
+//            redisTemplate.opsForValue().set("employeeCode", 0);
+//            return;
+//        }
+//        String temp = emoloyeeCode.substring(19);
+//        Integer code = Integer.parseInt(temp);
+//        if(!redisTemplate.hasKey("employeeCode")){
+//            redisTemplate.opsForValue().set("employeeCode", code);
+//        }else {
+//            redisTemplate.opsForValue().getAndSet("employeeCode",code);
+//        }
+//    }
 
 
 }
