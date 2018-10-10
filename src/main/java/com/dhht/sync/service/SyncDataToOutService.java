@@ -43,7 +43,7 @@ public class SyncDataToOutService {
 		resultToOut.setCreateTime(new Date());
 		resultToOut.setDataType(dataType);
 		resultToOut.setOperateType(operateType);
-		resultToOut.setJsonData(strToByteArray(text));
+		resultToOut.setJsonData(text);
 		resultToOutDao.insert(resultToOut);
 		writeJsonFile(resultToOut);
 	}
@@ -51,7 +51,7 @@ public class SyncDataToOutService {
 	private void writeJsonFile(Object dataObj) {
 		String objJson = JSON.toJSONString(dataObj);
 
-		File file = new File(ftpConfig.getTEMP_DATA_DIR()+ "/" + generateFileName());
+		File file = new File(ftpConfig.getTEMP_DATA_DIR()+ "/" + generateFileName()+".json");
 
 		FileOutputStream fileOutputStream = null;
 		FileChannel channel = null;

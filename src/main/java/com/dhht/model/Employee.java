@@ -63,6 +63,8 @@ public class Employee {
     @EntityComment("从业人员人员家庭联系人电话")
     private String contactTelphone;
 
+    private String makeDepartmentName;
+
     private String officeCode;
 
     private String officeName;

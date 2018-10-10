@@ -3,6 +3,7 @@ package com.dhht.service.recordDepartment.Impl;
 import com.dhht.annotation.Sync;
 import com.dhht.dao.*;
 import com.dhht.model.*;
+import com.dhht.service.make.Impl.MakeDepartmentServiceImpl;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
@@ -133,8 +134,10 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
         recordDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         int r = recordDepartmentMapper.insert(recordDepartment);
         int u = userService.insert(recordDepartment.getTelphone(),"BADW",recordDepartment.getDepartmentName(),recordDepartment.getDepartmentAddress());
+
         boolean o = historyService.insertOperateRecord(updateUser,recordDepartment.getFlag(),recordDepartment.getId(),"recordDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
         if(r==1&&u==ResultUtil.isSend&&o){
+            SyncEntity syncEntity = ((RecordDepartmentServiceImp) AopContext.currentProxy()).getSyncData(recordDepartment, SyncDataType.RECORDDEPARTMENT, SyncOperateType.SAVE);
             return ResultUtil.isSuccess;
         }else if(u==ResultUtil.isHave){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -154,6 +157,19 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
     public RecordDepartment selectByCode(String code) {
         RecordDepartment recordDepartment = recordDepartmentMapper.selectByCode(code);
         return recordDepartment;
+    }
+
+    /**
+     * 备案单位数据同步
+     * @return
+     */
+    //@Sync()
+    public SyncEntity getSyncData(Object object,int dataType,int operateType ){
+        SyncEntity syncEntity = new SyncEntity();
+        syncEntity.setObject(object);
+        syncEntity.setDataType(dataType);
+        syncEntity.setOperateType(operateType);
+        return syncEntity;
     }
 
     /**
@@ -294,8 +310,6 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      */
     @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
     public ExamineRecord addExamine(User user, ExamineRecord examineRecord){
-
-
         String id = UUIDUtil.generate();
         examineRecord.setId(id);
         examineRecord.setExaminerName(user.getUserName());
