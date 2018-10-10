@@ -124,22 +124,22 @@ public class EmployeeController  implements InitializingBean {
     }
 
 
-    /**
-     * 从业人员的添加--import用
-     * @param employee
-     * @return
-     */
-    @Log("从业人员添加")
-    @RequestMapping(value = "/insertEmployeeImport")
-    public JsonObjectBO insertEmployeeImport(@RequestBody Employee employee, HttpServletRequest httpServletRequest) {
-//        User user = (User) httpServletRequest.getSession().getAttribute("user");
-        try {
-            return ResultUtil.getResult(employeeService.insertEmployeeImport(employee));
-        } catch (Exception e) {
-            logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception("添加失败！");
-        }
-    }
+//    /**
+//     * 从业人员的添加--import用
+//     * @param employee
+//     * @return
+//     */
+//    @Log("从业人员添加")
+//    @RequestMapping(value = "/insertEmployeeImport")
+//    public JsonObjectBO insertEmployeeImport(@RequestBody Employee employee, HttpServletRequest httpServletRequest) {
+////        User user = (User) httpServletRequest.getSession().getAttribute("user");
+//        try {
+//            return ResultUtil.getResult(employeeService.insertEmployeeImport(employee));
+//        } catch (Exception e) {
+//            logger.error(e.getMessage(),e);
+//            return JsonObjectBO.exception("添加失败！");
+//        }
+//    }
 
 
     /**

@@ -117,6 +117,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartment.setFlag(UUIDUtil.generate());
         makedepartment.setVersion(1);
         makedepartment.setRegisterTime(DateUtil.getCurrentTime());
+        makedepartment = (Makedepartment)StringUtil.deleteSpace(makedepartment);
         boolean o = historyService.insertOperateRecord(updateUser,makedepartment.getFlag(),makedepartment.getId(),"makDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
         int m = makedepartmentMapper.insert(makedepartment);
         if(makedepartment.getBusinessLicenseUrl()!=null) {
@@ -154,6 +155,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             makedepartment.setFlag(makedepartment.getFlag());
             makedepartment.setVersion(makedepartment.getVersion() + 1);
             makedepartment.setRegisterTime(oldDate.getRegisterTime());
+            makedepartment = (Makedepartment)StringUtil.deleteSpace(makedepartment);
             if (isInsert(makedepartment)) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return ResultUtil.isHaveCode;

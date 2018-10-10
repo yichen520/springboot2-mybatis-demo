@@ -68,6 +68,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         useDepartment.setFlag(Id);
         useDepartment.setVersion(0);
         useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
+        useDepartment = (UseDepartment)StringUtil.deleteSpace(useDepartment);
         int useDepartmentResult = useDepartmentDao.insert(useDepartment);
         boolean f = registerFile(useDepartment);
         boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
@@ -89,6 +90,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     public JsonObjectBO update(UseDepartment useDepartment,User updateUser) {
             useDepartmentDao.deleteById(useDepartment.getId());
             UseDepartment oldUseDepartment = useDepartmentDao.selectById(useDepartment.getId());
+            useDepartment = (UseDepartment)StringUtil.deleteSpace(useDepartment);
             if (oldUseDepartment == null) {
                 return JsonObjectBO.error("修改失败");
             } else {
@@ -100,7 +102,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 useDepartment.setFlag(oldUseDepartment.getFlag());
                 useDepartment.setDepartmentStatus(oldUseDepartment.getDepartmentStatus());
                 String operateUUid = UUIDUtil.generate();
-                String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime"};
+                String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime","specialBusinessLicenceScanning"};
                 int r = useDepartmentDao.insert(useDepartment);
                 boolean f = registerFile(useDepartment);
                 boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.UPDATE,operateUUid);
