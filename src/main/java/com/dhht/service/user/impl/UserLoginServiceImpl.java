@@ -242,7 +242,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 
             }
             if (currentUser==null){
-                return JsonObjectBO.error("账号密码错误,请重新输入");
+                return JsonObjectBO.error("账号账号或密码错误,请重新输入");
             }
             if (user.getIsLocked()){
                 return JsonObjectBO.error("该用户已被锁定，请联系管理员！");
@@ -276,7 +276,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception(e.getMessage());
+            return JsonObjectBO.error("账号账号或密码错误,请重新输入");
         }
     }
 

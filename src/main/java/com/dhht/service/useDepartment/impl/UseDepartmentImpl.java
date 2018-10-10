@@ -68,6 +68,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         useDepartment.setFlag(Id);
         useDepartment.setVersion(0);
         useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
+        useDepartment = (UseDepartment)StringUtil.deleteSpace(useDepartment);
         int useDepartmentResult = useDepartmentDao.insert(useDepartment);
         boolean f = registerFile(useDepartment);
         boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
@@ -89,6 +90,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     public JsonObjectBO update(UseDepartment useDepartment,User updateUser) {
             useDepartmentDao.deleteById(useDepartment.getId());
             UseDepartment oldUseDepartment = useDepartmentDao.selectById(useDepartment.getId());
+            useDepartment = (UseDepartment)StringUtil.deleteSpace(useDepartment);
             if (oldUseDepartment == null) {
                 return JsonObjectBO.error("修改失败");
             } else {
@@ -100,7 +102,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 useDepartment.setFlag(oldUseDepartment.getFlag());
                 useDepartment.setDepartmentStatus(oldUseDepartment.getDepartmentStatus());
                 String operateUUid = UUIDUtil.generate();
-                String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime"};
+                String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime","specialBusinessLicenceScanning"};
                 int r = useDepartmentDao.insert(useDepartment);
                 boolean f = registerFile(useDepartment);
                 boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.UPDATE,operateUUid);
@@ -127,6 +129,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         PageHelper.startPage(pageNum, pageSize);
+        int pagetotal = pageNum * pageSize;
         if (code == null && districtId == null && name == null) {
             PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,departmentStatus,pageNum,pageSize);
             jsonObject.put("useDepartment", result);
@@ -136,10 +139,10 @@ public class UseDepartmentImpl implements UseDepartmentService {
             return jsonObjectBO;
         } else if(districtId != null){
             String districtIds = StringUtil.getDistrictId(districtId);
-            list = useDepartmentDao.find(code,districtIds,name,departmentStatus);
+            list = useDepartmentDao.find(code,districtIds,name,departmentStatus,pagetotal,pageSize);
         }
         else {
-             list = useDepartmentDao.find(code,districtId,name,departmentStatus);
+             list = useDepartmentDao.find(code,districtId,name,departmentStatus,pagetotal,pageSize);
         }
         list = setDistrictName(list);
         PageInfo<UseDepartment> result = new PageInfo<>(list);
@@ -159,14 +162,16 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     public PageInfo<UseDepartment> selectByDistrict(String id,String departmentStatus,int pageNum, int pageSize) {
         List<UseDepartment> list = new ArrayList<UseDepartment>();
-        PageHelper.startPage(pageNum, pageSize);
         String districtIds[] = StringUtil.DistrictUtil(id);
+
+        int pagestart = pageNum * pageSize;
         if (districtIds[1].equals("00") && districtIds[2].equals("00")) {
-            list = useDepartmentDao.find(null,districtIds[0],null,departmentStatus);
+
+            list = useDepartmentDao.find(null,districtIds[0],null,departmentStatus,pagestart,pageSize);
         } else if (!districtIds[1].equals("00") && districtIds[2].equals("00")) {
-            list = useDepartmentDao.find(null,districtIds[0] + districtIds[1],null,departmentStatus);
+            list = useDepartmentDao.find(null,districtIds[0] + districtIds[1],null,departmentStatus,pagestart,pageSize);
         } else {
-            list = useDepartmentDao.find(null,id,null,departmentStatus);
+            list = useDepartmentDao.find(null,id,null,departmentStatus,pagestart,pageSize);
         }
         for (UseDepartment useDepartment:list) {
             useDepartment.setDistrictName(districtService.selectByDistrictId(useDepartment.getDistrictId()));
@@ -263,7 +268,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         }
         return false;
     }
-
+    @Override
     public UseDepartment selectByCode(String useDepartmentCode){
         UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);
         return useDepartment;

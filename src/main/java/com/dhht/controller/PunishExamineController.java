@@ -6,6 +6,7 @@ import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.service.employee.EmployeeService;
+import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.punish.PunishService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.user.UserLoginService;
@@ -40,6 +41,8 @@ public class PunishExamineController {
     private PunishService punishService;
     @Autowired
     private RecordDepartmentService recordDepartmentService;
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
 
 
     @Value("${sms.template.employeepunish}")
@@ -159,5 +162,21 @@ public class PunishExamineController {
         return JsonObjectBO.success("查询成功",jsonObject);
     }
 
+    @RequestMapping(value = "makedepartment/examine/examinedetail")
+    public JsonObjectBO examinedetail(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        if (user == null){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
+        String id = (String)map.get("id");
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<ExamineRecordDetail> list= makeDepartmentService.selectExamineDetailByID(id);
+            jsonObject.put("makeDepartment", list);
+        }catch (Exception e){
+            return JsonObjectBO.exception(e.getMessage());
+        }
+        return JsonObjectBO.success("查询成功",jsonObject);
+    }
 
 }

@@ -142,7 +142,10 @@
 
 
   <select id="find"  parameterType="java.lang.String"  resultType="com.dhht.model.UseDepartment">
-    SELECT id,`name` as name,code as code,legal_name as legalName,department_status as departmentStatus,district_id as districtId ,flag,version FROM use_department AS a
+    SELECT a.id ,`name` as name,code as code,legal_name as legalName,
+    department_status as departmentStatus,district_id as districtId ,flag,version FROM use_department a
+    JOIN (select id from use_department limit #{pageNum}, #{pageSize}) b ON a.id = b.id
+
     <where>
       <if test="districtId !=null and districtId !=''">
         district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"

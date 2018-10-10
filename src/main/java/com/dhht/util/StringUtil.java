@@ -5,6 +5,9 @@ package com.dhht.util;
 import com.dhht.common.JsonObjectBO;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -327,5 +330,35 @@ public class StringUtil {
             }
         }
         return ss.toLowerCase();
+    }
+
+    /**
+     * 为实体类去除空格
+     * @param o
+     * @return
+     */
+    public static Object deleteSpace(Object o){
+        Class clz = o.getClass();
+        Field[] fields = clz.getDeclaredFields();
+        for(Field field:fields){
+            try {
+                if(field.getGenericType().toString().equals("class java.lang.String")) {
+                    String fieldName = field.getName();
+                    String methodName = (new StringBuilder()).append(Character.toUpperCase(fieldName.charAt(0))).append(fieldName.substring(1)).toString();
+                    Method m = (Method) clz.getMethod("get" + methodName);
+                    String value = (String) m.invoke(o);
+                    if(value!=null){
+                        PropertyDescriptor pd = new PropertyDescriptor(fieldName, clz);
+                        Method setMethod = pd.getWriteMethod();
+                        if (setMethod != null) {
+                            setMethod.invoke(o, value.trim());
+                        }
+                    }
+                }
+            }catch (Exception e){
+                continue;
+            }
+        }
+        return o;
     }
 }

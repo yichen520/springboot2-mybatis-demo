@@ -24,6 +24,7 @@ public class UseDepartment {
     private String englishAhhr;//单位英语缩写
     @EntityComment("使用单位类型")
     private String departmentType;//单位使用单位类型代码
+    @EntityComment("使用单位查询密码")
     private String queryPassword;//查询密码
     @EntityComment("使用单位法定代表人姓名")
     private String legalName;//法定代表人
@@ -37,6 +38,7 @@ public class UseDepartment {
     private String legalEnglishsurname;
     @EntityComment("使用单位法人英文名")
     private String legalEnglishname;
+    @EntityComment("使用单位法人国籍")
     private String legalCountry;//国籍
     //    private String departmentAddress;//单位地址
     @EntityComment("行政区域划分")
@@ -53,7 +55,7 @@ public class UseDepartment {
     private String departmentStatus;//企业状态  0-正常 1-注销
     @EntityComment("使用单位数字证书")
     private String departmentCertificate;//使用单位数字证书
-    @EntityComment("使用单位数字证书")
+    @EntityComment("使用单位数字证书类型")
     private String departmentCertificateType;//使用单位数字证书类型
     @EntityComment("使用单位成立日期")
     private Date foundDate;
@@ -69,6 +71,7 @@ public class UseDepartment {
     private String registeredCapital;
     @EntityComment(value = "使用单位营业执照扫面件",type = 2)
     private String businessLicenseUrl;
+    @EntityComment(value = "使用单位特种行业许可证",type = 2)
     private String specialBusinessLicenceScanning;
     @EntityComment(value = "使用单位法人身份证正面扫面件",type = 2)
     private String idCardFrontId;

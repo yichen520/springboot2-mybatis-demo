@@ -3,6 +3,7 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.config.InterceptorConfig;
 import com.dhht.model.DistrictMenus;
 import com.dhht.model.Role;
 import com.dhht.model.User;
@@ -198,9 +199,11 @@ public class UserController {
      */
     @Log("获取验证码")
     @RequestMapping(value = "/getCheckCode")
-    public JsonObjectBO getCheckCode(@RequestBody Map map){
+    public JsonObjectBO getCheckCode(HttpServletRequest request,@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        String username = (String)map.get("username");
+
+           String  username = (String)map.get("username");
+
         try{
         if (userPasswordService.getCheckCode(username)== ResultUtil.isSuccess){
             return JsonObjectBO.success("获取验证码成功",null);
