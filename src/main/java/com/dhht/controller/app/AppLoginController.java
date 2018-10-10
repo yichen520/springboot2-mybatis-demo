@@ -37,7 +37,7 @@ public class AppLoginController {
         try {
             return   userLoginService.validateAppUser(request, userDomain);
         } catch (Exception e) {
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.error("账号账号或密码错误,请重新输入");
         }
    }
 
