@@ -190,7 +190,7 @@
   </insert>
 
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-      select * from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
+      select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
   </select>
 
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
@@ -281,7 +281,9 @@
   </select>
 
     <select id="selectWaitDeliver" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-        SELECT * from seal
+        SELECT
+      <include refid="Base_Column_List" />
+      from seal
         <where>
             is_record = 1 AND is_make =1 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
 
@@ -310,7 +312,7 @@
     </select>
 
   <select id="selectPersonal" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-    SELECT * from seal
+    SELECT  <include refid="Base_Column_List" /> from seal
     <where>
       is_record = 1 AND is_make =1 and is_personal =1 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
@@ -334,18 +336,19 @@
   </select>
 
   <select id="selectUndelivered" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-    SELECT * from seal
+    SELECT  <include refid="Base_Column_List" /> from seal
     <where>
       is_record = 1 AND is_deliver =0 and is_logout = 0 AND is_loss = 0
+        <if test="districtId !=null and districtId!=''">
+            AND district_id like #{districtId}"%"
+        </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
       <if test="useDepartmentName !=null and useDepartmentName !=''">
         AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
       </if>
-      <if test="districtId !=null and districtId!=''">
-        AND district_id like #{districtId}"%"
-      </if>
+
       <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
         AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
       </if>
@@ -354,11 +357,11 @@
       </if>
 
     </where>
-    order by seal_code desc
+    order by record_date desc
   </select>
 
   <select id="selectIsRecord" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-    SELECT * from seal
+    SELECT  <include refid="Base_Column_List" /> from seal
     <where>
       is_record = 1 and is_deliver = 0 AND is_logout = 0 AND is_loss = 0 and is_make = 0 and is_personal= 0
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
@@ -382,7 +385,7 @@
   </select>
 
   <select id="selectIsDeliver" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-    SELECT * from seal
+    SELECT  <include refid="Base_Column_List" /> from seal
     <where>
       is_record = 1 and is_deliver = 1
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
@@ -406,7 +409,7 @@
   </select>
 
   <select id="selectIsLoss" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-    SELECT * from seal
+    SELECT  <include refid="Base_Column_List" /> from seal
     <where>
       <if test="isRecord !=null and isRecord !=''">
         AND is_record =  #{isRecord,jdbcType=BIT}
@@ -444,7 +447,7 @@
   </select>
 
   <select id="selectIsLogout" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-    SELECT * from seal
+    SELECT  <include refid="Base_Column_List" /> from seal
     <where>
       <if test="isRecord !=null and isRecord !=''">
         AND is_record =  #{isRecord,jdbcType=BIT}
@@ -502,21 +505,21 @@
 
 
   <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">
-    SELECT * FROM seal
+    SELECT  <include refid="Base_Column_List" /> FROM seal
     <where>
       make_department_code = #{makeDepartmentCode}
     </where>
   </select>
 
   <select id="selectByMakeDepartmentCodeAndIsMake" resultMap="BaseResultMap">
-    SELECT * FROM seal
+    SELECT  <include refid="Base_Column_List" /> FROM seal
     <where>
       make_department_code = #{makeDepartmentCode} and is_make = true
     </where>
   </select>
 
 <select id="selectLastSeal" resultMap="BaseResultMap">
-select * from seal where seal_code = (select max(seal_code) from seal)
+select  <include refid="Base_Column_List" /> from seal where seal_code = (select max(seal_code) from seal)
 </select>
   <!---统计模块-->
   <select id="countAddSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
