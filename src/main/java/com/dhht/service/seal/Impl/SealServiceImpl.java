@@ -910,7 +910,18 @@ public class SealServiceImpl implements SealService {
         } else {
             sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
         }
-
+        SealMaterial lossBusinessLicense = sealDao.selectSealMaterial(sealCode,"01");
+        if(lossBusinessLicense!=null){
+            sealVo.setLossBusinessLicense(lossBusinessLicense.getFilePath());
+        }
+        SealMaterial LogoutBussinessLicense = sealDao.selectSealMaterial(sealCode,"07");
+        if(LogoutBussinessLicense!=null){
+            sealVo.setLogoutBussinessLicense(LogoutBussinessLicense.getFilePath());
+        }
+        SealMaterial sealCard = sealDao.selectSealMaterial(sealCode,"02");
+        if(sealCard!=null){
+            sealVo.setSealCard(sealCard.getFilePath());
+        }
 //        sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }
