@@ -226,7 +226,7 @@ public class SealController implements InitializingBean {
 //        Seal seal = sealOperator.getSeal();
         String id = (String)map.get("id");
         String sealedCardId = (String)map.get("sealedCardId");//印鉴留存卡
-        String imageDataId = (String)map.get("imageDataId");//印章图像数据
+        String imageDataId = (String)map.get("sealedDataId");//印章图像数据
         try {
             int a = sealService.sealUpload(user, id,  sealedCardId,  imageDataId);
             if (a < 0) {

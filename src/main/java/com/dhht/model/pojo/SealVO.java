@@ -29,9 +29,9 @@ public class SealVO  {
 
     private String LogoutBussinessLicense;//注销营业执照
 
-    private String sealCard;
+    private String sealCard;  //印鉴留存卡
 
-    private String sealCardImage;
+    private String sealCardImage;//印鉴留存卡图片
 
     private List<SealOperationRecord> sealOperationRecords;
 
