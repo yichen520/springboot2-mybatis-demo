@@ -78,7 +78,7 @@ public class AutoUploadTempFileToFtp implements InitializingBean{
 		                	
 		                	uploadResult = ftpManager.upload(uploadFile);
 		                	if(uploadResult) {
-		                		uploadFile.delete();
+		                		//uploadFile.delete();
 		                	}
 		                }
 		            } catch (Throwable e) {
