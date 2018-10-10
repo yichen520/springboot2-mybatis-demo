@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service("recordDepartmentIndexService")
-public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexService {
+public class  recordDepartmentIndexServiceImp implements RecordDepartmentIndexService {
 
     @Autowired
     private MakedepartmentMapper makedepartmentMapper;

@@ -73,11 +73,32 @@
     where id= #{id}
   </update>
 
-  <update id="delete" parameterType="java.lang.String" >
-    UPDATE use_department
-    SET is_delete = TRUE,department_status = '02'
-    where id= #{id}
-  </update>
+  <insert id="delete" parameterType="com.dhht.model.UseDepartment" >
+    insert into use_department (id,code, `name`,
+    nation_name, english_name,
+    english_ahhr, department_type,
+    query_password, legal_name, legal_id,
+    legal_id_type, legal_telphone, legal_country,
+    district_id, address,
+    telphone, postal_code, department_status,
+    department_certificate, department_certificate_type,is_delete,version,flag,updateTime,found_date,start_date,
+    end_date,registration_department,management_range,registered_capital,special_business_licence_scanning,legal_englishsurname,legal_englishname,
+    idcard_front_id,idcard_reverse_id,business_license_url
+    )
+    values (#{id,jdbcType=CHAR},#{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR},
+    #{nationName,jdbcType=VARCHAR}, #{englishName,jdbcType=VARCHAR},
+    #{englishAhhr,jdbcType=VARCHAR}, #{departmentType,jdbcType=CHAR},
+    #{queryPassword,jdbcType=VARCHAR}, #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR},
+    #{legalIdType,jdbcType=VARCHAR}, #{legalTelphone,jdbcType=VARCHAR}, #{legalCountry,jdbcType=VARCHAR},
+    #{districtId,jdbcType=CHAR}, #{address,jdbcType=VARCHAR},
+    #{telphone,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{departmentStatus,jdbcType=CHAR},
+    #{departmentCertificate,jdbcType=VARCHAR}, #{departmentCertificateType,jdbcType=VARCHAR},0,
+    #{version},#{flag,jdbcType=VARCHAR},#{updateTime},#{foundDate},#{startDate},#{endDate},
+    #{registrationDepartment,jdbcType=VARCHAR},#{managementRange},#{registeredCapital},
+    #{specialBusinessLicenceScanning},#{legalEnglishsurname},#{legalEnglishname},
+    #{idCardFrontId,jdbcType=VARCHAR},#{idCardReverseId,jdbcType=VARCHAR},#{businessLicenseUrl,jdbcType=VARCHAR}
+    )
+  </insert>
 
 <!--<select id="selectByCode">-->
    <!--SELECT * from use_department as a RIGHT JOIN(-->
@@ -117,7 +138,6 @@
     select
     <include refid="Base_Column_List" />
     from use_department where is_delete = 0
-    order BY version desc
   </select>
 
 
@@ -145,6 +165,7 @@
       <if test="departmentStatus =='02'">
         AND department_status ='02'
       </if>
+      and is_delete = 0
     </where>
   </select>
 
@@ -167,7 +188,7 @@
   </select>
 
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT * from use_department WHERE
+    SELECT <include refid="Base_Column_List"/> from use_department WHERE
       `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%" AND is_delete = 0 LIMIT 0,20
   </select>
 
@@ -178,69 +199,55 @@
 
   <!--统计部分-->
   <select id="indexCountAdd" resultType="java.lang.Integer" parameterType="java.lang.String">
-     SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and date_format(start_date,'%Y-%m')=date_format(now(),'%Y-%m') AND department_status = "01"
+     SELECT count(id) from use_department  where district_id like '${districtId}%' and date_format(start_date,'%Y-%m')=date_format(now(),'%Y-%m')
+     AND department_status = "01" AND is_delete = 0
   </select>
 
   <select id="indexCountDel" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and date_format(start_date,'%Y-%m')=date_format(now(),'%Y-%m') AND department_status = "02"
+    SELECT count(id) from use_department  where district_id like '${districtId}%' and date_format(start_date,'%Y-%m')=date_format(now(),'%Y-%m')
+    AND department_status = "02"  AND is_delete = 0
   </select>
   <select id="countAllDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%'
+    SELECT count(id) from use_department  where district_id like '${districtId}%'  AND is_delete = 0
   </select>
 
   <select id="countWorkDepartment"  resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and department_status = "01"
+    SELECT count(id) from use_department
+    where district_id like '${districtId}%' and department_status = "01"  AND is_delete = 0
   </select>
 
   <select id="countDelDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
-      SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and department_status = "02"
+    SELECT count(id) from use_department
+     where district_id like '${districtId}%' and department_status = "02"  AND is_delete = 0
   </select>
 
   <select id="countAddByStartTime" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and department_status = "01" and start_date &gt; #{startTime}
+    SELECT count(id) from use_department
+     where district_id like '${districtId}%' and department_status = "01" and start_date &gt; #{startTime}  AND is_delete = 0
   </select>
 
   <select id="countAddByEndTime" resultType="java.lang.Integer" parameterType="java.lang.String">
-     SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and department_status = "01" and start_date &lt; #{endTime}
+     SELECT count(id) from use_department  where district_id like '${districtId}%' and department_status = "01"
+     and start_date &lt; #{endTime}  AND is_delete = 0
   </select>
 
   <select id="countAddByTime" resultType="java.lang.Integer" parameterType="java.lang.String">
-     SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%'
-    and department_status = "01" and start_date BETWEEN #{startTime} and #{endTime}
+     SELECT count(id) from use_department  where district_id like '${districtId}%'
+    and department_status = "01" and start_date BETWEEN #{startTime} and #{endTime}  AND is_delete = 0
   </select>
 
   <select id="countDelByStartTime" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and department_status = "02" and end_date &gt; #{startTime}
+    SELECT count(id) from use_department
+     where district_id like '${districtId}%' and department_status = "02" and end_date &gt; #{startTime}  AND is_delete = 0
   </select>
 
   <select id="countDelByEndTime" resultType="java.lang.Integer" parameterType="java.lang.String">
-     SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and department_status = "02" and end_date &lt; #{endTime}
+     SELECT count(id) from use_department
+      where district_id like '${districtId}%' and department_status = "02" and end_date &lt; #{endTime}  AND is_delete = 0
   </select>
 
   <select id="countDelByTime" resultType="java.lang.Integer" parameterType="java.lang.String">
-     SELECT count(id) from use_department as a RIGHT JOIN(
-    select flag,MAX(version) as ver from use_department GROUP BY flag
-    )as b on a.flag=b.flag and  a.version=b.ver where district_id like '${districtId}%' and department_status = "02"
-    and end_date BETWEEN #{startTime} and #{endTime}
+     SELECT count(id) from use_department  where district_id like '${districtId}%' and department_status = "02"
+    and end_date BETWEEN #{startTime} and #{endTime}  AND is_delete = 0
   </select>
 </mapper>

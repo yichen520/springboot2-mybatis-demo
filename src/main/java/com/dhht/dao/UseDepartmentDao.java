@@ -17,7 +17,7 @@ public interface UseDepartmentDao {
 
     int deleteById(@Param("id")String id);
 
-    int delete(@Param("id") String id);
+    int delete(UseDepartment useDepartment);
 
     List<UseDepartment> selectByDepartmentStatus(@Param("departmentStatus") String departmentStatus);
 

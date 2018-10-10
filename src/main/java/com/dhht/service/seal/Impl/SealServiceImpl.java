@@ -225,7 +225,7 @@ public class SealServiceImpl implements SealService {
                 sealOperationRecord.setId(UUIDUtil.generate());
                 sealOperationRecord.setSealId(sealId);
                 sealOperationRecord.setEmployeeId(employee.getEmployeeId());
-                sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+                sealOperationRecord.setEmployeeName(employee.getEmployeeName());
                 sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
                 sealOperationRecord.setOperateType("00");
                 sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
@@ -418,27 +418,34 @@ public class SealServiceImpl implements SealService {
     @Override
     public PageInfo<Seal> sealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
 
+        try {
+            String telphone = user.getTelphone();
+            if (telphone == null) {
+                return new PageInfo<>();
+            }
 
-        String telphone = user.getTelphone();
-        if (telphone == null) {
+            Employee employee = employeeService.selectByPhone(telphone);
+            if(employee==null){
+                return new PageInfo<>();
+            }
+
+
+            Seal seal = new Seal();
+            seal.setUseDepartmentCode(useDepartmentCode);
+            seal.setUseDepartmentName(useDepartmentName);
+
+            seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
+            List<Seal> list = new ArrayList<Seal>();
+            PageHelper.startPage(pageNum, pageSize);
+
+            list = chooseSealStatus(seal, status);
+
+            PageInfo<Seal> result = new PageInfo<>(list);
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
             return new PageInfo<>();
         }
-
-        Employee employee = employeeService.selectByPhone(telphone);
-
-
-        Seal seal = new Seal();
-        seal.setUseDepartmentCode(useDepartmentCode);
-        seal.setUseDepartmentName(useDepartmentName);
-
-        seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
-        List<Seal> list = new ArrayList<Seal>();
-        PageHelper.startPage(pageNum, pageSize);
-
-        list = chooseSealStatus(seal, status);
-
-        PageInfo<Seal> result = new PageInfo<>(list);
-        return result;
     }
 
     /**
@@ -468,7 +475,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(id);
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
         sealOperationRecord.setOperateType("01");
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -536,7 +543,7 @@ public class SealServiceImpl implements SealService {
                 sealOperationRecord.setSealId(id);
                 sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
                 sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-                sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+                sealOperationRecord.setEmployeeName(employee.getEmployeeName());
                 sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
                 sealOperationRecord.setOperateType("02");
                 int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -593,7 +600,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(id);
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("03");
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -727,7 +734,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperateType("04");
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -829,7 +836,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperateType("05");
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -903,7 +910,18 @@ public class SealServiceImpl implements SealService {
         } else {
             sealVo.setMicromoulageImageId(microsealMaterial.getFilePath());
         }
-
+        SealMaterial lossBusinessLicense = sealDao.selectSealMaterial(sealCode,"01");
+        if(lossBusinessLicense!=null){
+            sealVo.setLossBusinessLicense(lossBusinessLicense.getFilePath());
+        }
+        SealMaterial LogoutBussinessLicense = sealDao.selectSealMaterial(sealCode,"07");
+        if(LogoutBussinessLicense!=null){
+            sealVo.setLogoutBussinessLicense(LogoutBussinessLicense.getFilePath());
+        }
+        SealMaterial sealCard = sealDao.selectSealMaterial(sealCode,"02");
+        if(sealCard!=null){
+            sealVo.setSealCard(sealCard.getFilePath());
+        }
 //        sealVo.setSealOperationRecord(sealOperationRecord);
         return sealVo;
     }

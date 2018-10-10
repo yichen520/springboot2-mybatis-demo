@@ -186,9 +186,14 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public JsonObjectBO delete(UseDepartment useDepartment,User updateUser) {
         String id = useDepartment.getId();
-        int a = useDepartmentDao.delete(id);
+        int d = useDepartmentDao.deleteById(id);
+        useDepartment = useDepartmentDao.selectById(id);
+        useDepartment.setId(UUIDUtil.generate());
+        useDepartment.setDepartmentStatus("02");
+        useDepartment.setVersion(useDepartment.getVersion()+1);
+        int a = useDepartmentDao.delete(useDepartment);
         boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.DELETE,UUIDUtil.generate());
-        if(a>0&&operateResult) {
+        if(a>0&&operateResult&&d>0) {
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.DELETE);
             return JsonObjectBO.success("删除成功", null);
         }else{
