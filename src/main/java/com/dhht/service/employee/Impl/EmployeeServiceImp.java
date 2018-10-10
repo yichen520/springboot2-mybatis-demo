@@ -550,13 +550,13 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     /**
-     * 查询最大的从业人员你的编号，用于redis
+     * 查询最大的从业人员你的编号
      * @return
      */
     @Override
-    public String selectMaxEmployeeCode() {
+    public String selectMaxEmployeeCode(String code) {
         try {
-            return employeeDao.selectMaxEmployeeCode();
+            return employeeDao.selectMaxEmployeeCode(code);
         }catch (Exception e){
             return null;
         }
@@ -581,22 +581,16 @@ public class EmployeeServiceImp implements EmployeeService {
      * @return
      */
     public String getEmployeeCode(String makeDepartmentCode){
-        String code = "";
-        Jedis jedis = new Jedis();
-        if(redisTemplate.hasKey("employeeCode")){
-            code = jedis.incrBy("employeeCode",1).toString();
-        }else{
-            redisTemplate.opsForValue().set("employeeCode",0);
-            code = redisTemplate.opsForValue().get("employeeCode").toString();
-        }
-        int length = code.length();
+        String code = selectMaxEmployeeCode(makeDepartmentCode);
+        Integer temp = Integer.parseInt(code.substring(18))+1;
+        int length = temp.toString().length();
         StringBuffer stringBuffer = new StringBuffer();
         if(length<4){
             for(int i = 0;i<4-length;i++){
                 stringBuffer.append("0");
             }
         }
-        return makeDepartmentCode+stringBuffer.toString()+code;
+        return makeDepartmentCode+stringBuffer.toString()+temp.toString();
     }
 
 

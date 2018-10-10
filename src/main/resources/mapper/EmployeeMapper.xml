@@ -68,8 +68,8 @@
     ORDER BY register_time DESC
   </select>
 
-  <select id="selectMaxEmployeeCode" resultType="java.lang.String">
-    SELECT Max(employee_code) from employee where version_status = 0;
+  <select id="selectMaxEmployeeCode" resultType="java.lang.String" parameterType="java.lang.String">
+    SELECT Max(employee_code) from employee where version_status = 0 and employee_department_code = #{code,jdbcType=VARCHAR};
   </select>
   
   <select id="operationByDepartmentCode" resultMap="BaseResultMap" parameterType="java.lang.String">
