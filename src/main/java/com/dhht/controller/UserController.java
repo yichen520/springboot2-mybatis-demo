@@ -1,5 +1,6 @@
 package com.dhht.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
@@ -14,6 +15,8 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jws.soap.SOAPBinding;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Administrator on 2017/8/16.
@@ -46,7 +50,11 @@ public class UserController {
 
     @Autowired
     private UserPasswordService userPasswordService;
+    @Autowired
+    private StringRedisTemplate template;
 
+    @Value("${expireTime}")
+    private long expireTime;
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
     /***
@@ -307,8 +315,11 @@ public class UserController {
     @RequestMapping(value = "/appChangePwd")
     public JsonObjectBO AppChangePwd(HttpServletRequest httpServletRequest,@RequestBody Map map){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
-        String phone = user.getTelphone();
+        User user = validatetoken(httpServletRequest);
+        if (user == null){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
+        String phone = user.getUserName();
         String checkcode = (String)map.get("checkcode");
         String passWord = (String)map.get("passWord");
         try {
@@ -392,6 +403,17 @@ public class UserController {
             }
         }
 
+    }
+    public  User validatetoken(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("token");
+        if(template.hasKey(token)){
+            template.expire(token,expireTime,TimeUnit.SECONDS);
+            String user = template.opsForValue().get(token);
+            User currentUser =  JSON.parseObject(user,User.class);
+            return currentUser;
+        }else {
+            return null;
+        }
     }
 
 
