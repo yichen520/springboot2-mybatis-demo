@@ -1350,7 +1350,6 @@ public class SealServiceImpl implements SealService {
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitDeliver(seal);
         }
-        list = sealDao.selectSealByBADW(seal);
         return list;
     }
 
