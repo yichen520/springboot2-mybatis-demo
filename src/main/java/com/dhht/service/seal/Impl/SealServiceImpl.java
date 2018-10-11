@@ -978,6 +978,11 @@ public class SealServiceImpl implements SealService {
             String BadwDistrictId = recordDepartment.getDepartmentAddress();
             seal.setDistrictId(BadwDistrictId);
             seal.setRecordDepartmentCode(code);
+            List<Seal> list = new ArrayList<Seal>();
+            PageHelper.startPage(pageNum, pageSize);
+            list = selectSealByBADW(seal, status);
+            PageInfo<Seal> result = new PageInfo<>(list);
+            return result;
         }
         if(user.getRoleId().equals("CYRY")){
             String telphone = user.getTelphone();
@@ -1264,7 +1269,57 @@ public class SealServiceImpl implements SealService {
         }
         return sealType;
     }
+    //用于备案单位印章查询
+    public List<Seal> selectSealByBADW(Seal seal, String status) {
+        List<Seal> list = new ArrayList<Seal>();
+        if (status.equals("03")) {  //已备案
+            seal.setIsRecord(true);
+            seal.setIsDeliver(false);
+            seal.setIsMake(false);
+            seal.setIsPersonal(false);
+            seal.setIsLogout(false);
+            seal.setIsLoss(false);
+        } else if (status.equals("01")) {  //已制作
+            seal.setIsRecord(true);
+            seal.setIsDeliver(false);
+            seal.setIsMake(true);
+            seal.setIsPersonal(false);
+            seal.setIsLogout(false);
+            seal.setIsLoss(false);
+        } else if (status.equals("02")) {  //已个人化
+            seal.setIsRecord(true);
+            seal.setIsDeliver(false);
+            seal.setIsMake(true);
+            seal.setIsPersonal(true);
+            seal.setIsLogout(false);
+            seal.setIsLoss(false);
+        } else if (status.equals("00")) {    //未交付
+            seal.setIsRecord(true);
+            seal.setIsDeliver(false);
+            seal.setIsLogout(false);
+            seal.setIsLoss(false);
+        } else if (status.equals("04")) {    //已交付
+            seal.setIsRecord(true);
+            seal.setIsDeliver(true);
+        } else if (status.equals("05")) {  //已经挂失
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsLoss(true);
+        } else if (status.equals("06")) {   //已注销
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsLogout(true);
+        }else if(status.equals("07")){ //待交付
+            list=sealDao.selectWaitdeliveredByBADW(seal);
+            return list;
+        }
+        list = sealDao.selectSealByBADW(seal);
+        return list;
+    }
 
+    //用于印章管理
     public List<Seal> chooseSealStatus(Seal seal, String status) {
         List<Seal> list = new ArrayList<Seal>();
         if (status.equals("03")) {  //已备案
@@ -1295,6 +1350,7 @@ public class SealServiceImpl implements SealService {
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitDeliver(seal);
         }
+        list = sealDao.selectSealByBADW(seal);
         return list;
     }
 
