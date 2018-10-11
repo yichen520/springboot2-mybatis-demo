@@ -48,7 +48,7 @@ public interface EmployeeService {
 
     PageInfo selectEmployeeInfo(String code,int status,String name,int pageNum,int pageSize);
 
-    String selectMaxEmployeeCode();
+    String selectMaxEmployeeCode(String code);
 
 
 }

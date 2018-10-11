@@ -419,22 +419,27 @@ public class SealServiceImpl implements SealService {
     public PageInfo<Seal> sealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
 
         try {
-            String telphone = user.getTelphone();
-            if (telphone == null) {
-                return new PageInfo<>();
-            }
-
-            Employee employee = employeeService.selectByPhone(telphone);
-            if(employee==null){
-                return new PageInfo<>();
-            }
-
-
             Seal seal = new Seal();
             seal.setUseDepartmentCode(useDepartmentCode);
             seal.setUseDepartmentName(useDepartmentName);
+            if(user.getRoleId().equals("BADW")){
+                String userName = user.getUserName();
+                String telphone = userName.substring(4,15);
+                RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
+                seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
 
-            seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
+            }else {
+                String telphone = user.getTelphone();
+                if (telphone == null) {
+                    return new PageInfo<>();
+                }
+
+                Employee employee = employeeService.selectByPhone(telphone);
+                if (employee == null) {
+                    return new PageInfo<>();
+                }
+                seal.setMakeDepartmentCode(employee.getEmployeeDepartmentCode());
+            }
             List<Seal> list = new ArrayList<Seal>();
             PageHelper.startPage(pageNum, pageSize);
 
@@ -918,7 +923,11 @@ public class SealServiceImpl implements SealService {
         if(LogoutBussinessLicense!=null){
             sealVo.setLogoutBussinessLicense(LogoutBussinessLicense.getFilePath());
         }
-        SealMaterial sealCard = sealDao.selectSealMaterial(sealCode,"02");
+        SealMaterial sealCardImage = sealDao.selectSealMaterial(sealCode,"02");
+        if(sealCardImage!=null){
+            sealVo.setSealCardImage(sealCardImage.getFilePath());
+        }
+        SealMaterial sealCard = sealDao.selectSealMaterial(sealCode,"03");
         if(sealCard!=null){
             sealVo.setSealCard(sealCard.getFilePath());
         }

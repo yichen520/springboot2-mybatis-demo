@@ -11,6 +11,7 @@ import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value="/seal/useDepartment")
-public class UseDepartmentController {
+public class UseDepartmentController  {
 
 
     @Autowired
@@ -35,6 +36,8 @@ public class UseDepartmentController {
     private HistoryService historyService;
 
     private static Logger logger = LoggerFactory.getLogger(UseDepartmentController.class);
+
+
 
     /***
      * 添加
@@ -52,8 +55,6 @@ public class UseDepartmentController {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception(e.toString());
         }
-
-
     }
 
     /**
@@ -182,4 +183,5 @@ public class UseDepartmentController {
             return JsonObjectBO.exception(e.toString());
         }
     }
+
 }

@@ -31,7 +31,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/make/employee")
-public class EmployeeController  implements InitializingBean {
+public class EmployeeController  {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
@@ -124,6 +124,23 @@ public class EmployeeController  implements InitializingBean {
     }
 
 
+//    /**
+//     * 从业人员的添加--import用
+//     * @param employee
+//     * @return
+//     */
+//    @Log("从业人员添加")
+//    @RequestMapping(value = "/insertEmployeeImport")
+//    public JsonObjectBO insertEmployeeImport(@RequestBody Employee employee, HttpServletRequest httpServletRequest) {
+////        User user = (User) httpServletRequest.getSession().getAttribute("user");
+//        try {
+//            return ResultUtil.getResult(employeeService.insertEmployeeImport(employee));
+//        } catch (Exception e) {
+//            logger.error(e.getMessage(),e);
+//            return JsonObjectBO.exception("添加失败！");
+//        }
+//    }
+
 
     /**
      * 修改从业人员
@@ -215,25 +232,25 @@ public class EmployeeController  implements InitializingBean {
         }
     }
 
-    /**
-     * redis存储最大的从业人员编号
-     * @throws Exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        String emoloyeeCode = employeeService.selectMaxEmployeeCode();
-        if(emoloyeeCode == null) {
-            redisTemplate.opsForValue().set("employeeCode", 0);
-            return;
-        }
-        String temp = emoloyeeCode.substring(19);
-        Integer code = Integer.parseInt(temp);
-        if(!redisTemplate.hasKey("employeeCode")){
-            redisTemplate.opsForValue().set("employeeCode", code);
-        }else {
-            redisTemplate.opsForValue().getAndSet("employeeCode",code);
-        }
-    }
+//    /**
+//     * redis存储最大的从业人员编号
+//     * @throws Exception
+//     */
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        String emoloyeeCode = employeeService.selectMaxEmployeeCode();
+//        if(emoloyeeCode == null) {
+//            redisTemplate.opsForValue().set("employeeCode", 0);
+//            return;
+//        }
+//        String temp = emoloyeeCode.substring(19);
+//        Integer code = Integer.parseInt(temp);
+//        if(!redisTemplate.hasKey("employeeCode")){
+//            redisTemplate.opsForValue().set("employeeCode", code);
+//        }else {
+//            redisTemplate.opsForValue().getAndSet("employeeCode",code);
+//        }
+//    }
 
 
 }

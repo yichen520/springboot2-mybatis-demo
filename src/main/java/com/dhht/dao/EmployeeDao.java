@@ -31,7 +31,7 @@ public interface EmployeeDao {
 
     int update(Employee record);
 
-    String selectMaxEmployeeCode();
+    String selectMaxEmployeeCode(@Param("code") String code);
 
     //查询某个制作单位下的从业人员
     List<Employee> selectByDepartmentCode(@Param("employeeDepartmentCode") String employeeDepartmentCode);
