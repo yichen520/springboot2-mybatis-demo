@@ -146,8 +146,7 @@ public class EmployeeController  {
      * 修改从业人员
      * @param employee
      * @return
-     */
-    @Log("修改从业人员")
+     */    @Log("修改从业人员")
     @RequestMapping(value = "/update")
     public JsonObjectBO update(@RequestBody Employee employee,HttpServletRequest httpServletRequest) {
         User user = (User)httpServletRequest.getSession().getAttribute("user");

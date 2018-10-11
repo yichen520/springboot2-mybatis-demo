@@ -78,7 +78,6 @@ public class SealController implements InitializingBean {
             redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(seal.getSealCode().substring(6)));
         }
 
-
     }
 
 
