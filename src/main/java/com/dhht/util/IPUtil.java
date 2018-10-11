@@ -16,14 +16,14 @@ public class IPUtil {
 
         String ip = request.getHeader("X-Forwarded-For");
         String ip1 = request.getHeader("x-real-ip");
-        Enumeration<String> headerNames = request.getHeaderNames();
-
-        if (headerNames != null) {
-            while (headerNames.hasMoreElements()) {
-                System.out.println(headerNames.nextElement()+"  : " );
-            }
-        }
-        System.out.println(request.getHeaderNames());
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//
+//        if (headerNames != null) {
+//            while (headerNames.hasMoreElements()) {
+//                System.out.println(headerNames.nextElement()+"  : " );
+//            }
+//        }
+//        System.out.println(request.getHeaderNames());
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
