@@ -975,6 +975,8 @@ public class SealServiceImpl implements SealService {
             String telphone = user.getTelphone();
             RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
             String code = recordDepartment.getDepartmentCode();
+            String BadwDistrictId = recordDepartment.getDepartmentAddress();
+            seal.setDistrictId(BadwDistrictId);
             seal.setRecordDepartmentCode(code);
         }
         if(user.getRoleId().equals("CYRY")){
@@ -1027,9 +1029,9 @@ public class SealServiceImpl implements SealService {
     public int verifySeal(String id, String rejectReason, String rejectRemark, String verify_type_name) {
         Seal seal = sealDao.selectByPrimaryKey(id);
         if(!verify_type_name.equals("0")) {
-            seal.setPass(true);
+            seal.setIsPass(true);
         }else{
-            seal.setPass(false);
+            seal.setIsPass(false);
         }
         seal.setRejectReason(rejectReason);
         seal.setRejectRemark(rejectRemark);

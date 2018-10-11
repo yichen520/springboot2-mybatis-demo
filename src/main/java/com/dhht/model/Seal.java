@@ -98,4 +98,14 @@ public class Seal extends SealKey {
     public boolean getIsChipseal() {
         return isChipseal;
     }
+
+    public void setIsPass(boolean isPass) {
+        this.isPass= isPass;
+    }
+
+    public boolean getIsPass() {
+        return isPass;
+    }
+
+
 }
