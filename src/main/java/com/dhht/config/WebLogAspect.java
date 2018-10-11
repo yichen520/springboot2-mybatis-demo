@@ -106,7 +106,7 @@ public class WebLogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         // 设置IP地址
-        sysLog.setIp(request.getRemoteAddr());
+        sysLog.setIp(IPUtil.getIpAddr(request));
         User users = (User)request.getSession(true).getAttribute("user");
         if(users == null){
             sysLog.setLogUser("匿名");

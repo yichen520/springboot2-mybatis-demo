@@ -308,7 +308,7 @@ public class RecordDepartmentServiceImp implements RecordDepartmentService{
      * @param examineRecord
      * @return
      */
-    @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
+   // @Sync(DataType =SyncDataType.EXAMINE,OperateType = SyncOperateType.SAVE)
     public ExamineRecord addExamine(User user, ExamineRecord examineRecord){
         String id = UUIDUtil.generate();
         examineRecord.setId(id);
