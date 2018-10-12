@@ -57,7 +57,7 @@ public interface SealDao {
     SealOperationRecord SelectByCodeAndFlag03(@Param("id") String id, @Param("flag") String flag);
 
 
-    List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode);
+    List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("districtId") String districtId);
 
     List<Seal> selectByMakeDepartmentCodeAndIsMake(@Param("makeDepartmentCode") String makeDepartmentCode);
 

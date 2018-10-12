@@ -617,6 +617,9 @@
     SELECT  <include refid="Base_Column_List" /> FROM seal
     <where>
       make_department_code = #{makeDepartmentCode}
+      <if test="districtId !=null and districtId!=''">
+        and district_id like #{districtId}"%"
+      </if>
     </where>
   </select>
 
