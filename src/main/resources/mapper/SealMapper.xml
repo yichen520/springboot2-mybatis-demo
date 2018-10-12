@@ -488,7 +488,7 @@
   </select>
 
   <select id="selectSealByBADW"  parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List" /> from seal
+    select distinct <include refid="Base_Column_List" /> from seal
     <where>
       (
       <if test="isRecord !=null and isRecord !=''">
