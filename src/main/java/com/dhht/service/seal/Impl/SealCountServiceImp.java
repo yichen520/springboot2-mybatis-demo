@@ -276,7 +276,18 @@ public class SealCountServiceImp implements SealCuontService {
             for (String makeDepartmentCode : makeDepartmentCodes) { //根据传入的code进行遍历
                 List<SealCount> count = new ArrayList<>();
                 String countName = makedepartmentMapper.selectByDepartmentCode(makeDepartmentCode).getDepartmentName(); //更加code查找name
-                List<Seal> seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode); //根据code查找seal中的所有印章
+                List<Seal> seals = null;
+                if(user.getRoleId().equals("BADW")){
+                    if(districtIds==null){
+                        String districtId = user.getDistrictId();
+                        seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode, districtId);
+                    }else {
+                        String districtId= districtIds.get(0);
+                         seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode, districtId);
+                    }
+                }else {
+                     seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode,null); //根据code查找seal中的所有印章
+                }
                 Set<String> set = new HashSet<>();
                 for (Seal seal : seals) {
                     set.add(seal.getSealTypeCode());

@@ -20,10 +20,10 @@ public class ApplicationTests {
 
     @Test
     public void contextLoads(){
-        List<SealCode> sealCodes = sealCodeService.info("330000");
-        for (SealCode sealCode:sealCodes) {
-            System.out.println(sealCode.toString());
-        }
+//        List<SealCode> sealCodes = sealCodeService.info("330000");
+//        for (SealCode sealCode:sealCodes) {
+//            System.out.println(sealCode.toString());
+//        }
     }
 
 }
