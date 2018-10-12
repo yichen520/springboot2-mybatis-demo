@@ -11,6 +11,7 @@ import com.dhht.model.pojo.SealVO;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.seal.SealCodeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.FileStoreService;
@@ -73,6 +74,9 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private FaceCompareRecordMapper faceCompareRecordMapper;
+
+    @Autowired
+    private SealCodeService sealCodeService;
 
     //相似度参数
     @Value("${face.similarity}")
@@ -190,8 +194,10 @@ public class SealServiceImpl implements SealService {
             //循环加入seal
             for (Seal seal : seals) {
 //                Seal seal1 = new Seal();
-                String sealcode = SealSerialNum(districtId);
-
+//                String sealcode = SealSerialNum(districtId);
+                  String sealcode1 = sealCodeService.getMaxSealCode(districtId);
+                String serial = "00000000";
+                String sealcode = districtId + serial.substring(0, serial.length() - sealcode1.length()) + sealcode1;
 
                 seal.setSealCode(sealcode);
 
