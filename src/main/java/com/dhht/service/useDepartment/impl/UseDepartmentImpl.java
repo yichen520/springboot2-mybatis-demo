@@ -128,10 +128,14 @@ public class UseDepartmentImpl implements UseDepartmentService {
         List<UseDepartment> list = new ArrayList<>();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        PageHelper.startPage(pageNum, pageSize);
-        int pagetotal = pageNum * pageSize;
+       // PageHelper.startPage(pageNum, pageSize);
+        int pagetotal = (pageNum-1) * pageSize;
         if (code == null && districtId == null && name == null) {
-            PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,departmentStatus,pageNum,pageSize);
+            PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,departmentStatus,pagetotal,pageSize);
+            int total = useDepartmentDao.findcount(code,districtId,name,departmentStatus);
+            result.setPageNum(pageNum);
+            result.setPageSize(pageSize);
+            result.setTotal(total);
             jsonObject.put("useDepartment", result);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
@@ -146,6 +150,10 @@ public class UseDepartmentImpl implements UseDepartmentService {
         }
         list = setDistrictName(list);
         PageInfo<UseDepartment> result = new PageInfo<>(list);
+         int total = useDepartmentDao.findcount(code,districtId,name,departmentStatus);
+         result.setTotal(total);
+        result.setPageNum(pageNum);
+        result.setPageSize(pageSize);
         jsonObject.put("useDepartment", result);
         jsonObjectBO.setData(jsonObject);
         jsonObjectBO.setCode(1);

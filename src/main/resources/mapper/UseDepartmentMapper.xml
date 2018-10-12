@@ -141,7 +141,7 @@
   </select>
 
 
-  <select id="find"  parameterType="java.lang.String"  resultType="com.dhht.model.UseDepartment">
+  <select id="find"    resultType="com.dhht.model.UseDepartment">
     SELECT a.id ,`name` as name,code as code,legal_name as legalName,
     department_status as departmentStatus,district_id as districtId ,flag,version FROM use_department a
     JOIN (select id from use_department limit #{pageNum}, #{pageSize}) b ON a.id = b.id
@@ -150,12 +150,8 @@
       <if test="districtId !=null and districtId !=''">
         district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
       </if>
-      <if test="name !=null and name !=''">
-        AND `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%"
-      </if>
-      <if test="code !=null and code !=''">
-        AND code LIKE  "%"#{code,jdbcType=VARCHAR}"%"
-      </if>
+      and is_delete = 0
+
       <if test="departmentStatus =='01'">
         AND department_status = '01'
       </if>
@@ -165,8 +161,38 @@
       <if test="departmentStatus =='02'">
         AND department_status ='02'
       </if>
-      and is_delete = 0
+      <if test="name !=null and name !=''">
+        AND `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%"
+      </if>
+        <if test="code !=null and code !=''">
+            AND code like "%"#{code,jdbcType=VARCHAR}"%"
+        </if>
+
     </where>
+  </select>
+  
+  <select id="findcount" resultType="java.lang.Integer">
+ SELECT count(1) from use_department FORCE INDEX(STATUS) WHERE
+      <if test="departmentStatus =='01'">
+           department_status = '01'
+      </if>
+      <if test="departmentStatus =='00'">
+           department_status in("01","02")
+      </if>
+      <if test="departmentStatus =='02'">
+           department_status ='02'
+      </if>
+      and is_delete = 0
+      <if test="districtId !=null and districtId !=''">
+          AND district_id LIKE  #{districtId,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="name !=null and name !=''">
+          AND `name` LIKE  "%"#{name,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="code !=null and code !=''">
+      AND code like "%"#{code,jdbcType=VARCHAR}"%"
+    </if>
+
   </select>
 
 
