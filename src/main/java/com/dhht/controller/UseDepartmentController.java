@@ -53,7 +53,7 @@ public class UseDepartmentController  {
         return jsonObjectBO;}
         catch (Exception e){
             logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
+            return JsonObjectBO.exception("添加失败");
         }
     }
 
