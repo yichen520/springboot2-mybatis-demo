@@ -1031,8 +1031,10 @@ public class SealServiceImpl implements SealService {
 
     //印章核验
     @Override
-    public int verifySeal(String id, String rejectReason, String rejectRemark, String verify_type_name) {
+    public int verifySeal(User user,String id, String rejectReason, String rejectRemark, String verify_type_name) {
         Seal seal = sealDao.selectByPrimaryKey(id);
+        String telphone = user.getTelphone();
+        Employee employee = employeeService.selectByPhone(telphone);
         if(!verify_type_name.equals("0")) {
             seal.setIsPass(true);
         }else{
@@ -1042,7 +1044,17 @@ public class SealServiceImpl implements SealService {
         seal.setRejectRemark(rejectRemark);
         seal.setVerifyTypeName(verify_type_name);
         int updateVerifySeal = sealDao.updateByPrimaryKey(seal);
-        if(updateVerifySeal<0){
+
+        SealOperationRecord sealOperationRecord = new SealOperationRecord();
+        sealOperationRecord.setId(UUIDUtil.generate());
+        sealOperationRecord.setOperateType("06");  //核验的操作人
+        sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+        sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeId(employee.getEmployeeId());
+        sealOperationRecord.setSealId(id);
+        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        if(updateVerifySeal<0||insertSealOperationRecord<0){
             return ResultUtil.isFail;
         }else{
             return ResultUtil.isSuccess;
