@@ -15,4 +15,6 @@ public interface SealCodeService {
 
     boolean lockSealCode(String districtId);
 
+    String getMaxSealCode(String districtId);
+
 }

@@ -167,7 +167,6 @@ public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexSer
 
     /**
      * 获取当前月
-     *
      * @return
      */
     public int getMonth() {
@@ -191,7 +190,7 @@ public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexSer
                 return i;
             }
         });
-        return list;
+        return list.subList(0,10);
     }
 
 }

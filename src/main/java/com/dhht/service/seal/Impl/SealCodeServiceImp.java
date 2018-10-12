@@ -108,6 +108,7 @@ public class SealCodeServiceImp implements  SealCodeService {
      * @param districtId
      * @return
      */
+    @Override
     public String getMaxSealCode(String districtId){
         String num = "";
         Jedis jedis = new Jedis();
