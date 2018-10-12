@@ -48,12 +48,16 @@ public interface SealDao {
 
     List<Seal> selectWaitDeliver(Seal seal);
 
+    List<Seal> selectSealByBADW(Seal seal);
+
+    List<Seal> selectWaitdeliveredByBADW(Seal seal);
+
     SealOperationRecord SelectByCodeAndFlag(@Param("sealCode") String sealcode);
 
     SealOperationRecord SelectByCodeAndFlag03(@Param("id") String id, @Param("flag") String flag);
 
 
-    List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode);
+    List<Seal> selectByMakeDepartmentCode(@Param("makeDepartmentCode") String makeDepartmentCode,@Param("districtId") String districtId);
 
     List<Seal> selectByMakeDepartmentCodeAndIsMake(@Param("makeDepartmentCode") String makeDepartmentCode);
 

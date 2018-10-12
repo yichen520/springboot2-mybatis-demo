@@ -36,4 +36,19 @@ public class SealCodeServiceImp implements  SealCodeService {
     public String selectSealCode(String code) {
         return sealDao.selectSealCode(code);
     }
+
+    @Override
+    public List<SealCode> info(String districtId) {
+        return null;
+    }
+
+    @Override
+    public int updateSealCode(SealCode sealCode) {
+        return 0;
+    }
+
+    @Override
+    public boolean lockSealCode(String districtId) {
+        return false;
+    }
 }
