@@ -9,5 +9,10 @@ public interface SealCodeService {
 
     String selectSealCode(String code);
 
+    List<SealCode> info(String districtId);
+
+    int updateSealCode(SealCode sealCode);
+
+    boolean lockSealCode(String districtId);
 
 }

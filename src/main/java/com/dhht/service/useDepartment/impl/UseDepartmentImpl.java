@@ -192,6 +192,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
         useDepartment = useDepartmentDao.selectById(id);
         useDepartment.setId(UUIDUtil.generate());
         useDepartment.setDepartmentStatus("02");
+        useDepartment.setEndDate(DateUtil.getCurrentTime());
         useDepartment.setVersion(useDepartment.getVersion()+1);
         int a = useDepartmentDao.delete(useDepartment);
         boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.DELETE,UUIDUtil.generate());
@@ -237,7 +238,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public List<UseDepartment> selectUseDepartment(String useDepartmentName) {
         List<UseDepartment> useDepartment = useDepartmentDao.selectByName(useDepartmentName);
-        return useDepartment;
+        return setDistrictName(useDepartment);
     }
 
     /**
