@@ -131,7 +131,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
        // PageHelper.startPage(pageNum, pageSize);
         int pagetotal = (pageNum-1) * pageSize;
         if (code == null && districtId == null && name == null) {
-            PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,departmentStatus,pageNum,pageSize);
+            PageInfo<UseDepartment> result =selectByDistrict(localDistrictId,departmentStatus,pagetotal,pageSize);
             int total = useDepartmentDao.findcount(code,districtId,name,departmentStatus);
             result.setPageNum(pageNum);
             result.setPageSize(pageSize);
