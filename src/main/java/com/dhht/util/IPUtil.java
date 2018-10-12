@@ -1,6 +1,9 @@
 package com.dhht.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 public class IPUtil {
     /**
@@ -11,7 +14,16 @@ public class IPUtil {
      */
     public static String getIpAddr(HttpServletRequest request) {
 
-        String ip = request.getHeader("x-forwarded-for");
+        String ip = request.getHeader("X-Forwarded-For");
+        String ip1 = request.getHeader("x-real-ip");
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//
+//        if (headerNames != null) {
+//            while (headerNames.hasMoreElements()) {
+//                System.out.println(headerNames.nextElement()+"  : " );
+//            }
+//        }
+//        System.out.println(request.getHeaderNames());
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
@@ -21,6 +33,10 @@ public class IPUtil {
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
+        if(StringUtils.isNotBlank(ip)) {
+            ip = ip.split(",")[0];
+        }
+        return ip;
+       // return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
     }
 }

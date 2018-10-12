@@ -48,6 +48,10 @@ public interface SealDao {
 
     List<Seal> selectWaitDeliver(Seal seal);
 
+    List<Seal> selectSealByBADW(Seal seal);
+
+    List<Seal> selectWaitdeliveredByBADW(Seal seal);
+
     SealOperationRecord SelectByCodeAndFlag(@Param("sealCode") String sealcode);
 
     SealOperationRecord SelectByCodeAndFlag03(@Param("id") String id, @Param("flag") String flag);
