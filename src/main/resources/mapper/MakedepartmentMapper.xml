@@ -87,6 +87,11 @@
     legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail, 
     telphone, postal_code,  department_status,version,flag,version_time,register_time,business_license_url,special_license_url,idcard_front_id,idcard_reverse_id
   </sql>
+
+  <select id="selectSimpleByName" resultMap="SimpleResultMap" parameterType="java.lang.String">
+    select <include refid="Simple_Column_list"/> from make_department where  department_name like '%${departmentName}%' and department_address like #'${districtId}%' limit 0,10
+  </select>
+
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
     select
     <include refid="Simple_Column_list" />

@@ -67,7 +67,6 @@ public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexSer
 
     /**
      * 折线数据
-     *
      * @param districtId
      * @return
      */
@@ -190,6 +189,9 @@ public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexSer
                 return i;
             }
         });
+        if(list.size()<=10){
+            return list;
+        }
         return list.subList(0,10);
     }
 

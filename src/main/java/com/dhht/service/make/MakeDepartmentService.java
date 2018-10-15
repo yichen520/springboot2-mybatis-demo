@@ -42,4 +42,6 @@ public interface MakeDepartmentService {
 
      String makeDepartmentCode(String name);
 
+     List<MakeDepartmentSimple> selectSimpleByDepartmentName(String districtId,String departmentName);
+
 }

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "seal/sealCode")
+@RequestMapping(value = "seal/sealcode")
 public class SealCodeController implements InitializingBean {
     @Autowired
     private RedisTemplate redisTemplate;
@@ -81,6 +81,7 @@ public class SealCodeController implements InitializingBean {
      * @param sealCode
      * @return
      */
+    @RequestMapping("/lock")
     public JsonObjectBO lock(@RequestBody SealCode sealCode){
         try {
             boolean result = sealCodeService.lockSealCode(sealCode.getDistrictId());

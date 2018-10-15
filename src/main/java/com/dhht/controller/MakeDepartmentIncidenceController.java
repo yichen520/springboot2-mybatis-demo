@@ -132,21 +132,19 @@ public class MakeDepartmentIncidenceController implements InitializingBean {
 
     @Log("查看制作单位列表")
     @RequestMapping(value = "/makeDepartment")
-    public JsonObjectBO commoninfo(HttpServletRequest httpServletRequest){
-        User user =(User)httpServletRequest.getSession().getAttribute("user");
-        String status = "01";
-        JSONObject jsonObject = new JSONObject();
-        List<MakeDepartmentSimple> list = new ArrayList<>();
+    public JsonObjectBO commoninfo(HttpServletRequest httpServletRequest,@RequestBody Map map){
         try {
-                list = makeDepartmentService.selectInfo(user.getDistrictId(),null,status);
-                jsonObject.put("makeDepartment", list);
+            User user =(User)httpServletRequest.getSession().getAttribute("user");
+            String name = (String)map.get("name");
+
+            List<MakeDepartmentSimple> makeDepartmentSimples = makeDepartmentService.selectSimpleByDepartmentName(user.getDistrictId(),name);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("makeDepartment",makeDepartmentSimples);
+            return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
-            logger.error(e.getMessage(),e);
-            return JsonObjectBO.exception(e.toString());
-        }finally {
-            PageHelper.clearPage();
+            return JsonObjectBO.exception("获取制作单位列表失败");
         }
-        return JsonObjectBO.success("查询成功",jsonObject);
+
     }
 
 
