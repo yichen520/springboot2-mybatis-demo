@@ -296,7 +296,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
      * @return
      */
     @Override
-    public MakeDepartmentSimple selectSimpleByDepartmentName(String districtId,String departmentName){
+    public List<MakeDepartmentSimple> selectSimpleByDepartmentName(String districtId,String departmentName){
         return makedepartmentMapper.selectSimpleByName(departmentName,districtId);
     }
 

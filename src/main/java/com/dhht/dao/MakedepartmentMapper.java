@@ -21,7 +21,7 @@ public interface MakedepartmentMapper {
 
     Makedepartment selectDetailByName(@Param("name") String name);
 
-    MakeDepartmentSimple selectSimpleByName(@Param("departmentName") String makeDepartmentName,@Param("districtId") String districtId);
+    List<MakeDepartmentSimple> selectSimpleByName(@Param("departmentName") String makeDepartmentName,@Param("districtId") String districtId);
 
     int insert(Makedepartment makedepartment);
 
