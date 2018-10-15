@@ -276,7 +276,6 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         list.add(sealOperationRecord);
         sealVO.setSealOperationRecords(list);
         return sealVO;
-
     }
 
     /**
@@ -290,6 +289,15 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return makedepartments;
     }
 
+    /**
+     * 模糊查找制作单位简略信息
+     * @param districtId
+     * @param departmentName
+     * @return
+     */
+    public MakeDepartmentSimple selectSimpleByDepartmentName(String districtId,String departmentName){
+        return makedepartmentMapper.selectSimpleByName(departmentName,districtId);
+    }
 
     /**
      * 根据法人电话获取制作单位

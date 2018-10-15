@@ -17,9 +17,11 @@ public interface MakedepartmentMapper {
 
     Makedepartment selectDetailById(@Param("id") String id);
 
-   Makedepartment selectDetailByCode(@Param("code") String code);
+    Makedepartment selectDetailByCode(@Param("code") String code);
 
-   Makedepartment selectDetailByName(@Param("name") String name);
+    Makedepartment selectDetailByName(@Param("name") String name);
+
+    MakeDepartmentSimple selectSimpleByName(@Param("departmentName") String makeDepartmentName,@Param("districtId") String districtId);
 
     int insert(Makedepartment makedepartment);
 
