@@ -113,10 +113,10 @@ public class SealCodeServiceImp implements  SealCodeService {
         String num = "";
         Jedis jedis = new Jedis();
         if(redisTemplate.hasKey(districtId)){
-            num = jedis.incrBy("districtId", 1).toString();
+            num = jedis.incrBy(districtId, 1).toString();
         }else {
             redisTemplate.opsForValue().set("districtId",0);
-            num = jedis.incrBy("districtId", 1).toString();
+            num = jedis.incrBy(districtId, 1).toString();
         }
         return num;
     }

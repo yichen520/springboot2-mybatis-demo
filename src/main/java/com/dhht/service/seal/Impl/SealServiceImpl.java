@@ -115,21 +115,6 @@ public class SealServiceImpl implements SealService {
         return sealVcode;
     }
 
-    public String SealSerialNum(String districtId) {
-        String num;
-        Jedis jedis = new Jedis();
-        if (redisTemplate.hasKey("SealSerialNum")) {
-//            redisTemplate.opsForValue().set("SealSerialNum", Integer.parseInt(selectLastSeal().getSealCode().substring(6)));
-            num = jedis.incrBy("SealSerialNum", 1).toString();
-        } else {
-            redisTemplate.opsForValue().set("SealSerialNum",0);
-            num = jedis.incrBy("SealSerialNum", 1).toString();
-        }
-        int length = num.length();
-        String serial = "00000000";
-        String sealSerialNum = districtId + serial.substring(0, serial.length() - length) + num;
-        return sealSerialNum;
-    }
 
     @Override
     public int insert(Seal seal) {
