@@ -81,6 +81,9 @@ public class SealCodeServiceImp implements  SealCodeService {
         if(!redisTemplate.hasKey(key)){
             return ResultUtil.isError;
         }
+        if(isInsertSealCode(key,value)){
+            return ResultUtil.isSmallSealCode;
+        }
         redisTemplate.opsForValue().set(key,value);
         String newValue = redisTemplate.opsForValue().get(key).toString();
         if(value.equals(newValue)){
@@ -119,5 +122,21 @@ public class SealCodeServiceImp implements  SealCodeService {
             num = jedis.incrBy(districtId, 1).toString();
         }
         return num;
+    }
+
+    /**
+     * 判断是否比原来的值大
+     * @param key
+     * @param value
+     * @return
+     */
+    public boolean isInsertSealCode(String key,String value){
+        Integer tempValue = Integer.parseInt(value);
+        String tempMaxValue = getMaxSealCode(key);
+        Integer tempMax = Integer.parseInt(tempMaxValue);
+        if(tempValue<=tempMax){
+            return false;
+        }
+        return true;
     }
 }

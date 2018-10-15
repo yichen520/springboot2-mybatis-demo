@@ -28,6 +28,7 @@ public class ResultUtil {
     public static final int isLoss = 23;
     public static final int isLogout = 24;
     public static final int isIncidenceId = 25;
+    public static final int isSmallSealCode = 26;
 
 
 
@@ -84,6 +85,8 @@ public class ResultUtil {
                 return JsonObjectBO.error("该印章已被注销");
             case 25:
                 return JsonObjectBO.error("案件编号不可以重复");
+            case 26:
+                return JsonObjectBO.error("印章流水号设置值小于已有流水号");
                 default:
                     return null;
         }
