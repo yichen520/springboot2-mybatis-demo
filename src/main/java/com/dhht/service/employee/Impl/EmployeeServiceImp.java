@@ -537,6 +537,11 @@ public class EmployeeServiceImp implements EmployeeService {
         return pageInfo;
     }
 
+    /**
+     * 设置从业人员区域编码
+     * @param employee
+     * @return
+     */
     public Employee setEmployeeDistrict(Employee employee){
         String familyDistrictId = employee.getFamilyDistrictId();
         employee.setFamilyDistrictIds(StringUtil.getDistrictIds(familyDistrictId));
@@ -556,8 +561,13 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public String selectMaxEmployeeCode(String code) {
         try {
-            return employeeDao.selectMaxEmployeeCode(code);
+            String maxCode = employeeDao.selectMaxEmployeeCode(code);
+            if(maxCode == null){
+                return code+"0000";
+            }
+            return maxCode;
         }catch (Exception e){
+           e.printStackTrace();
             return null;
         }
     }
