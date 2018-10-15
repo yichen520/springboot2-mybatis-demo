@@ -1040,7 +1040,8 @@ public class SealServiceImpl implements SealService {
     public int verifySeal(User user,String id, String rejectReason, String rejectRemark, String verify_type_name) {
         Seal seal = sealDao.selectByPrimaryKey(id);
         String telphone = user.getTelphone();
-        Employee employee = employeeService.selectByPhone(telphone);
+        RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
+//        Employee employee = employeeService.selectByPhone(telphone);
         if(!verify_type_name.equals("0")) {
             seal.setIsPass(true);
         }else{
@@ -1054,10 +1055,10 @@ public class SealServiceImpl implements SealService {
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setOperateType("06");  //核验的操作人
-        sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+        sealOperationRecord.setEmployeeCode(recordDepartment.getDepartmentCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
-        sealOperationRecord.setEmployeeId(employee.getEmployeeId());
+        sealOperationRecord.setEmployeeName(recordDepartment.getDepartmentName());
+        sealOperationRecord.setEmployeeId(recordDepartment.getId());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
         if(updateVerifySeal<0||insertSealOperationRecord<0){
