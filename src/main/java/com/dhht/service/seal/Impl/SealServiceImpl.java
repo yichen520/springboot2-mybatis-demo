@@ -1043,7 +1043,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeCode(recordDepartment.getDepartmentCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeName(recordDepartment.getDepartmentName());
-        sealOperationRecord.setEmployeeId(recordDepartment.getId());
+        sealOperationRecord.setEmployeeId(recordDepartment.getCertificateNo());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
         if(updateVerifySeal<0||insertSealOperationRecord<0){
