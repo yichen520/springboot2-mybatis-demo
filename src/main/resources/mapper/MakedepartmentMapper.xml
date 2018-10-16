@@ -89,7 +89,7 @@
   </sql>
 
   <select id="selectSimpleByName" resultMap="SimpleResultMap" parameterType="java.lang.String">
-    select <include refid="Simple_Column_list"/> from make_department where  department_name like '%${departmentName}%' and department_address like #'${districtId}%' limit 0,10
+    select <include refid="Simple_Column_list"/> from make_department where  department_name like '%${departmentName}%' and department_address like '${districtId}%' limit 0,10
   </select>
 
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
