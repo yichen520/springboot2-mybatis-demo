@@ -73,7 +73,7 @@ public class EmployeeServiceImp implements EmployeeService {
             employee.setId(UUIDUtil.generate());
             employee.setFamilyDistrictId(employee.getFamilyDistrictIds().get(2));
             employee.setNowDistrictId(employee.getNowDistrictIds().get(2));
-            employee.setEmployeeImage("");
+            //employee.setEmployeeImage("");
             employee.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
             employee.setEmployeeDepartmentCode(makeDepartmentSimple.getDepartmentCode());
             employee.setMakeDepartmentName(makeDepartmentSimple.getDepartmentName());
@@ -188,7 +188,7 @@ public class EmployeeServiceImp implements EmployeeService {
             }
             employee.setEmployeeCode(oldDate.getEmployeeCode());
             employee.setOfficeCode(oldDate.getOfficeCode());
-            employee.setEmployeeImage(oldDate.getEmployeeImage());
+            //employee.setEmployeeImage(oldDate.getEmployeeImage());
             employee.setOfficeName(oldDate.getOfficeName());
             employee.setRegisterName(oldDate.getRegisterName());
             employee.setRegisterTime(oldDate.getRegisterTime());
