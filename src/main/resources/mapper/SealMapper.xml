@@ -552,6 +552,7 @@
 
       )
     </where>
+    order by record_date desc
   </select>
 
   <select id="selectWaitdeliveredByBADW" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
@@ -594,6 +595,7 @@
       district_id = #{districtId}
       )
     </where>
+    order by record_date desc
   </select>
 
 
