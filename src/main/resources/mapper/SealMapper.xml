@@ -257,6 +257,7 @@
         AND district_id like #{districtId}"%"
       </if>
     </where>
+    order by record_date desc
   </select>
 
   <select id="selectIsMake" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
