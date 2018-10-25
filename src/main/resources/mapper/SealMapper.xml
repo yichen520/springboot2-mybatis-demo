@@ -309,7 +309,7 @@
           </if>
 
         </where>
-        order by personal_date desc
+        order by record_date desc
     </select>
 
   <select id="selectPersonal" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
