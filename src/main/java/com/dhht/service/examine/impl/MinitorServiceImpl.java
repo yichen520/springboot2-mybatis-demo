@@ -31,7 +31,9 @@ public class MinitorServiceImpl implements MinitorService {
 
     @Override
     public List<Examine> info(String districtId, String name, String remark) {
-        return   examineMapper.selectExamine(districtId,name,remark);
+        String dis1 = districtId.substring(0,2)+"0000";
+        String dis2 = districtId.substring(0,4)+"00";
+        return   examineMapper.selectExamine(dis1,dis2,districtId,name,remark);
     }
 
 

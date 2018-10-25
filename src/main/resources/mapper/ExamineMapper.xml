@@ -25,7 +25,7 @@
     select
     <include refid="Base_Column_List" />
     from examine_type
-    where district_id like '${districtId}%'
+    where district_id = #{dis1} or district_id = #{dis2} or district_id = #{dis3}
     <if test="name != null">
       and  `name`  like '%${name}%'
     </if>
