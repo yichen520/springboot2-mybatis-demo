@@ -90,6 +90,53 @@ public class Seal extends SealKey {
 
     private String verifyTypeName;
 
+    public Boolean getIsRecord() {
+        return isRecord;
+    }
+
+    public void setIsRecord(Boolean isRecord) {
+        this.isRecord = isRecord;
+    }
+
+    public Boolean getIsMake() {
+        return isMake;
+    }
+
+    public void setIsMake(Boolean isMake) {
+        this.isMake = isMake;
+    }
+
+    public Boolean getIsPersonal() {
+        return isPersonal;
+    }
+
+    public void setIsPersonal(Boolean isPersonal) {
+        this.isPersonal = isPersonal;
+    }
+
+    public Boolean getIsDeliver() {
+        return isDeliver;
+    }
+
+    public void setIsDeliver(Boolean isDeliver) {
+        this.isDeliver = isDeliver;
+    }
+
+    public Boolean getIsLogout() {
+        return isLogout;
+    }
+
+    public void setIsLogout(Boolean isLogout) {
+        this.isLogout = isLogout;
+    }
+
+    public Boolean getLoss() {
+        return isLoss;
+    }
+
+    public void setLoss(Boolean loss) {
+        isLoss = loss;
+    }
 
     public void setIsChipseal(boolean isChipseal) {
         this.isChipseal= isChipseal;

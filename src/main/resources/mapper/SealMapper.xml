@@ -450,22 +450,22 @@
   <select id="selectIsLogout" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" /> from seal
     <where>
-      <if test="isRecord !=null and isRecord !=''">
+      <if test="isRecord !=null ">
         AND is_record =  #{isRecord,jdbcType=BIT}
       </if>
-      <if test="isMake !=null and isMake !=''">
+      <if test="isMake !=null ">
         AND is_make =  #{isMake,jdbcType=BIT}
       </if>
-      <if test="isPersonal !=null and isPersonal !=''">
+      <if test="isPersonal !=null ">
         AND is_personal =  #{isPersonal,jdbcType=BIT}
       </if>
-      <if test="isDeliver !=null and isDeliver !=''">
+      <if test="isDeliver !=null ">
         AND is_deliver =  #{isDeliver,jdbcType=BIT}
       </if>
-      <if test="isLoss !=null and isLoss !=''">
+      <if test="isLoss !=null ">
         or is_loss =  #{isLoss,jdbcType=BIT}
       </if>
-      <if test="isLogout !=null and isLogout !=''">
+      <if test="isLogout !=null ">
         AND is_logout =  #{isLogout,jdbcType=BIT}
       </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
@@ -492,22 +492,22 @@
     select distinct <include refid="Base_Column_List" /> from seal
     <where>
       (
-      <if test="isRecord !=null and isRecord !=''">
+      <if test="isRecord !=null ">
        is_record = #{isRecord,jdbcType=BIT}
     </if>
-      <if test="isMake !=null and isMake !=''">
+      <if test="isMake !=null ">
         AND is_make = #{isMake,jdbcType=BIT}
       </if>
-      <if test="isPersonal !=null and isPersonal !=''">
+      <if test="isPersonal !=null ">
         AND is_personal = #{isPersonal,jdbcType=BIT}
       </if>
-      <if test="isDeliver !=null and isDeliver !=''">
-        AND is_deliver = #{isDeliver,jdbcType=BIT}
+      <if test="isDeliver !=null ">
+        AND is_deliver =  #{isDeliver,jdbcType=BIT}
       </if>
-      <if test="isLoss !=null and isLoss !=''">
+      <if test="isLoss !=null ">
         and is_loss = #{isLoss,jdbcType=BIT}
       </if>
-      <if test="isLogout !=null and isLogout !=''">
+      <if test="isLogout !=null ">
         AND is_logout = #{isLogout,jdbcType=BIT}
       </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
@@ -525,22 +525,22 @@
       OR
       (
       district_id = #{districtId}
-      <if test="isRecord !=null and isRecord !=''">
+      <if test="isRecord !=null ">
         AND is_record = #{isRecord,jdbcType=BIT}
       </if>
-      <if test="isMake !=null and isMake !=''">
+      <if test="isMake !=null ">
         AND is_make = #{isMake,jdbcType=BIT}
       </if>
-      <if test="isPersonal !=null and isPersonal !=''">
+      <if test="isPersonal !=null ">
         AND is_personal = #{isPersonal,jdbcType=BIT}
       </if>
-      <if test="isDeliver !=null and isDeliver !=''">
-        AND is_deliver = #{isDeliver,jdbcType=BIT}
+      <if test="isDeliver !=null ">
+        AND is_deliver =  #{isDeliver,jdbcType=BIT}
       </if>
-      <if test="isLoss !=null and isLoss !=''">
+      <if test="isLoss !=null ">
         and is_loss = #{isLoss,jdbcType=BIT}
       </if>
-      <if test="isLogout !=null and isLogout !=''">
+      <if test="isLogout !=null ">
         AND is_logout = #{isLogout,jdbcType=BIT}
       </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
