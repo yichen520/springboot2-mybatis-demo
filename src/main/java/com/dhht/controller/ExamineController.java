@@ -98,7 +98,7 @@ public class ExamineController {
         try {
             JSONObject jsonObject = new JSONObject();
             PageHelper.startPage(pageNum, pageSize);
-            PageInfo<Examine> pageInfo = new PageInfo<Examine>(minitorService.info(districtId,name,remark));
+            PageInfo<Examine> pageInfo = new PageInfo<Examine>(minitorService.info(user.getDistrictId(),name,remark));
             jsonObject.put("examine", pageInfo);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){

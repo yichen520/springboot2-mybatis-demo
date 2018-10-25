@@ -28,4 +28,8 @@ public interface ExamineMapper {
     ExamineCount selectExamineCountByDistrict(@Param("district")String district,@Param("month")String month) ;
 
     ExamineCount selectExamineCountByCityDistrict(@Param("district")String district,@Param("month")String month);
+
+    List<Examine> selectExamine1(@Param("dis1")String substring, @Param("name")String name, @Param("remark")String remark);
+
+    List<Examine> selectExamine2(@Param("dis1")String dis1, @Param("dis2")String substring,@Param("name") String name,@Param("remark") String remark);
 }

@@ -34,6 +34,34 @@
     </if>
   </select>
 
+    <select id="selectExamine1" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from examine_type
+        where  district_id like '${dis1}%'
+        <if test="name != null">
+            and  `name`  like '%${name}%'
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+    </select>
+
+    <select id="selectExamine2" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from examine_type
+        where district_id = #{dis1} or district_id like '${dis2}%'
+        <if test="name != null">
+            and  `name`  like '%${name}%'
+        </if>
+        <if test="remark != null">
+            and remark like '%${remark}%'
+        </if>
+    </select>
+
+
+
 
 
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">

@@ -31,9 +31,19 @@ public class MinitorServiceImpl implements MinitorService {
 
     @Override
     public List<Examine> info(String districtId, String name, String remark) {
-        String dis1 = districtId.substring(0,2)+"0000";
-        String dis2 = districtId.substring(0,4)+"00";
-        return   examineMapper.selectExamine(dis1,dis2,districtId,name,remark);
+
+        if(districtId.substring(2,6).equals("0000") ){
+            return  examineMapper.selectExamine1(districtId.substring(0,2),name,remark);
+        }
+       else if(districtId.substring(4,6) .equals( "00")){
+            String dis1 = districtId.substring(0,2)+"0000";
+            return  examineMapper.selectExamine2(dis1,districtId.substring(0,4),name,remark);
+        }
+        else {
+            String dis1 = districtId.substring(0, 2) + "0000";
+            String dis2 = districtId.substring(0, 4) + "00";
+            return examineMapper.selectExamine(dis1, dis2, districtId, name, remark);
+        }
     }
 
 
@@ -136,6 +146,7 @@ public class MinitorServiceImpl implements MinitorService {
      */
     @Override
     public List<Examine> selectExamineForm(String districtId) {
+
         String dis1 = districtId.substring(0,2)+"0000";
         String dis2 = districtId.substring(0,4)+"00";
         return examineMapper.selectExamineForm(dis1,dis2,districtId);
