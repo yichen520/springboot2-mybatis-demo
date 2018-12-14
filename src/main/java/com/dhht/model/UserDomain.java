@@ -3,8 +3,6 @@ package com.dhht.model;
 public class UserDomain {
     private String username;
     private String  password;
-    private String  validateCode;
-    private String  role;
 
     public UserDomain(String username, String password) {
         this.username = username;
@@ -30,19 +28,4 @@ public class UserDomain {
         this.password = password;
     }
 
-    public String getValidateCode() {
-        return validateCode;
-    }
-
-    public void setValidateCode(String validateCode) {
-        this.validateCode = validateCode;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
