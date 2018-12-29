@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhht.dao.MakeDepartmentAttachInfoMapper">
+  <resultMap id="BaseResultMap" type="com.dhht.model.MakeDepartmentAttachInfo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_address" jdbcType="VARCHAR" property="bankAddress" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="address_detail" jdbcType="VARCHAR" property="addressDetail" />
+    <result column="promise_time" jdbcType="VARCHAR" property="promiseTime" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="make_department_flag" jdbcType="VARCHAR" property="makeDepartmentFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bank_account, bank_name, bank_address, latitude, longitude, address_detail, promise_time, 
+    remarks, update_time, is_delete, make_department_flag
+  </sql>
+
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from make_department_attach_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByMakeDepartmentFlag" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from make_department_attach_info where  make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR}
+  </select>
+
+  <update id="deleteByMakeDepartmentFlag" parameterType="java.lang.String">
+    update make_department_attach_info set is_delete = true where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insert" parameterType="com.dhht.model.MakeDepartmentAttachInfo">
+    insert into make_department_attach_info (id, bank_account, bank_name, 
+      bank_address, latitude, longitude, 
+      address_detail, promise_time, remarks, 
+      update_time, is_delete, make_department_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{bankAddress,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, 
+      #{addressDetail,jdbcType=VARCHAR}, #{promiseTime,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=BIT}, #{makeDepartmentFlag,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <update id="updateById" parameterType="com.dhht.model.MakeDepartmentAttachInfo">
+    update make_department_attach_info
+    set
+      bank_account = #{bankAccount,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_address = #{bankAddress,jdbcType=VARCHAR},
+      latitude = #{latitude,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=VARCHAR},
+      address_detail = #{addressDetail,jdbcType=VARCHAR},
+      promise_time = #{promiseTime,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
