@@ -30,6 +30,10 @@ public interface SealDao {
 
     int insertSealMaterial(SealMaterial sealMaterial);
 
+    int logoutSeal(@Param("useDepartmentCode") String useDepartmentCode);
+
+    List<Seal> allUndertakeSeal(@Param("makeDepartmentCode") String makeDepartmentCode);
+
 //    int insertVerifySeal(String id,boolean isPass,String rejectReason,String rejectRemark);
 
     List<Seal> selectByCodeAndName(Seal seal);

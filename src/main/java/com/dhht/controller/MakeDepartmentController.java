@@ -7,6 +7,7 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.SealVO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.sync.SyncDataType;
@@ -46,6 +47,9 @@ public class MakeDepartmentController {
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private SealService sealService;
 
     private static Logger logger = LoggerFactory.getLogger(MakeDepartmentController.class);
 
@@ -87,14 +91,6 @@ public class MakeDepartmentController {
         }
         return JsonObjectBO.success("查询成功",jsonObject);
     }
-
-    /**
-     * 展示制作单位的列表
-     * @param map
-     * @param httpServletRequest
-     * @return
-     */
-
 
 
 
@@ -238,6 +234,26 @@ public class MakeDepartmentController {
         }
     }
 
+    /**
+     * 查看制作单位所以待承接的印章
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/selectAllUndertakeSeal")
+    public JsonObjectBO selectAllUndertakeSeal(@RequestBody Map map,HttpServletRequest httpServletRequest){
+        User user =(User)httpServletRequest.getSession().getAttribute("user");
+        String tel = user.getTelphone();
+        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByLegalTephone(tel);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<Seal> seals = sealService.waitUndertake(makedepartment.getDepartmentCode());
+            jsonObject.put("seals",seals);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.toString());
+        }
+    }
 
 
     /**

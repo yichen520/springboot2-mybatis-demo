@@ -15,6 +15,7 @@ import com.dhht.service.seal.SealCodeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.FileStoreService;
+import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
@@ -42,6 +43,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
+import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 
 
 @Service("sealService")
@@ -77,6 +79,14 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private SealCodeService sealCodeService;
+
+
+
+    @Autowired
+    private SmsSendService smsSendService;
+
+    @Value("${sms.template.insertUser}")
+    private int userCode ;
 
     //相似度参数
     @Value("${face.similarity}")
@@ -124,7 +134,7 @@ public class SealServiceImpl implements SealService {
 
 
     /**
-     * 印章备案
+     * 印章申请
      *
      * @param seals
      * @param user
@@ -176,6 +186,7 @@ public class SealServiceImpl implements SealService {
 
             }
 
+
             //循环加入seal
             for (Seal seal : seals) {
 //                Seal seal1 = new Seal();
@@ -209,6 +220,13 @@ public class SealServiceImpl implements SealService {
                 seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
                 seal.setIsRecord(true);
                 seal.setRecordDate(DateUtil.getCurrentTime());
+                seal.setIsUndertake(true);
+                seal.setUndertakeDate(DateUtil.getCurrentTime());
+                if(seal.getSealReason().equals("03")){
+                    if(seal.getSealTypeCode().equals("01")){
+                        int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                    }
+                }
 
 
                 //操作记录
@@ -265,7 +283,9 @@ public class SealServiceImpl implements SealService {
 
 
                 seal.setAgentId(saId);
-                int sealInsert = sealDao.insert(seal);
+                seal.setIsUndertake(true);
+                seal.setUndertakeDate(DateUtil.getCurrentTime());
+                int sealInsert = sealDao.insertSelective(seal);
 
                 //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
                 if (sealInsert > 0 && sealOperationRecordInsert > 0 && sealAgentInsert > 0) {
@@ -466,6 +486,11 @@ public class SealServiceImpl implements SealService {
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
 
+        String useDepartmentCode = seal1.getUseDepartmentCode();
+        UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
+        String useDepartmentTel = useDepartment.getLegalTelphone();
+        String useDepartmentName = useDepartment.getLegalName();
+
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealId(id);
@@ -492,8 +517,17 @@ public class SealServiceImpl implements SealService {
         sealMaterialLists.add(sealMaterial1);
         int insertSealMaterial = sealDao.insertSealMateriallist(sealMaterialLists);
 
+        ArrayList<String> params = new ArrayList<String>();
+        params.add(useDepartmentName);
+        params.add( createRandomVcode());
+        Boolean b = smsSendService.sendSingleMsgByTemplate(telphone,userCode,params);
+
+        seal1.setIsEarlywarning(true);
+        seal1.setEarlywarningDate(DateUtil.getCurrentTime());
         seal1.setIsMake(true);
         seal1.setMakeDate(DateUtil.getCurrentTime());
+        seal1.setIsApply(true);
+        seal1.setApplyDate(DateUtil.getCurrentTime());
 //        seal1.setDistrictId(seal1.getDistrictId());
         int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
@@ -1052,6 +1086,12 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isSuccess;
         }
 
+    }
+
+    @Override
+    public List<Seal> waitUndertake(String makeDepartmentCode) {
+        List<Seal> seals = sealDao.allUndertakeSeal(makeDepartmentCode);
+        return seals;
     }
 
 
