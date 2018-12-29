@@ -142,3 +142,7 @@ sms:
         newUserName: 150917
         makedepartmentpunish: 160963
         employeepunish: 160972
+
+
+#省级区域设定
+province: 330000
