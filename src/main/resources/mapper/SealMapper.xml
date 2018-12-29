@@ -2,49 +2,56 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dhht.dao.SealDao" >
   <resultMap id="BaseResultMap" type="com.dhht.model.Seal" >
-    <id column="id" property="id" jdbcType="CHAR" />
-    <id column="seal_code" property="sealCode" jdbcType="VARCHAR" />
-    <result column="seal_name" property="sealName" jdbcType="VARCHAR" />
-    <result column="seal_status_code" property="sealStatusCode" jdbcType="CHAR" />
-    <result column="use_department_code" property="useDepartmentCode" jdbcType="CHAR" />
-    <result column="use_department_name" property="useDepartmentName" jdbcType="VARCHAR" />
-    <result column="record_department_code" property="recordDepartmentCode" jdbcType="CHAR" />
-    <result column="record_department_name" property="recordDepartmentName" jdbcType="VARCHAR" />
-    <result column="make_department_code" property="makeDepartmentCode" jdbcType="CHAR" />
-    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
-    <result column="seal_type_code" property="sealTypeCode" jdbcType="CHAR" />
-    <result column="materials_code" property="materialsCode" jdbcType="CHAR" />
-    <result column="mimeograph_description" property="mimeographDescription" jdbcType="VARCHAR" />
-    <result column="seal_shape_code" property="sealShapeCode" jdbcType="VARCHAR" />
-    <result column="seal_size" property="sealSize" jdbcType="VARCHAR" />
-    <result column="seal_center_image" property="sealCenterImage" jdbcType="VARCHAR" />
-    <result column="seal_specification" property="sealSpecification" jdbcType="VARCHAR" />
-    <result column="seal_make_type_code" property="sealMakeTypeCode" jdbcType="VARCHAR" />
-    <result column="seal_record_type_code" property="sealRecordTypeCode" jdbcType="VARCHAR" />
-    <result column="record_date" property="recordDate" jdbcType="TIMESTAMP" />
-    <result column="is_record" property="isRecord" jdbcType="BIT"/>
-    <result column="make_date" property="makeDate" jdbcType="TIMESTAMP" />
-    <result column="is_make" property="isMake" jdbcType="BIT"/>
-    <result column="personal_date" property="personalDate"  jdbcType="TIMESTAMP"/>
-    <result column="is_personal" property="isPersonal" jdbcType="BIT"/>
-    <result column="deliver_date" property="deliverDate"  />
-    <result column="is_deliver" property="isDeliver" jdbcType="BIT"/>
-    <result column="logout_date" property="logoutDate"  jdbcType="TIMESTAMP"/>
-    <result column="is_logout" property="isLogout" jdbcType="BIT"/>
-    <result column="loss_date" property="lossDate" jdbcType="TIMESTAMP" />
-    <result column="is_loss" property="isLoss" jdbcType="BIT"/>
-    <result column="remark" property="remark" jdbcType="VARCHAR"/>
-    <result column="seal_reason" property="sealReason" jdbcType="VARCHAR"/>
-    <result column="agent_id" property="agentId" jdbcType="CHAR"/>
-    <result column="district_id" property="districtId" jdbcType="VARCHAR"/>
-    <result column="getter_id" property="getterId" jdbcType="CHAR"/>
-    <result column="loss_person_id" property="lossPersonId" jdbcType="CHAR"/>
-    <result column="logout_person_id" property="logoutPersonId" jdbcType="CHAR"/>
-    <result column="is_chipseal" property="isChipseal" jdbcType="BIT"></result>
-    <result column="is_pass" property="isPass" jdbcType="BIT"></result>
-    <result column="reject_reason" property="rejectReason" jdbcType="CHAR"></result>
-    <result column="reject_remark" property="rejectRemark" jdbcType="VARCHAR"></result>
-    <result column="verify_type_name" property="verifyTypeName" jdbcType="CHAR"></result>
+      <id column="id" property="id" jdbcType="CHAR" />
+      <id column="seal_code" property="sealCode" jdbcType="VARCHAR" />
+      <result column="seal_name" property="sealName" jdbcType="VARCHAR" />
+      <result column="seal_status_code" property="sealStatusCode" jdbcType="CHAR" />
+      <result column="use_department_code" property="useDepartmentCode" jdbcType="CHAR" />
+      <result column="use_department_name" property="useDepartmentName" jdbcType="VARCHAR" />
+      <result column="record_department_code" property="recordDepartmentCode" jdbcType="CHAR" />
+      <result column="record_department_name" property="recordDepartmentName" jdbcType="VARCHAR" />
+      <result column="make_department_code" property="makeDepartmentCode" jdbcType="CHAR" />
+      <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
+      <result column="seal_type_code" property="sealTypeCode" jdbcType="CHAR" />
+      <result column="materials_code" property="materialsCode" jdbcType="CHAR" />
+      <result column="mimeograph_description" property="mimeographDescription" jdbcType="VARCHAR" />
+      <result column="seal_shape_code" property="sealShapeCode" jdbcType="VARCHAR" />
+      <result column="seal_size" property="sealSize" jdbcType="VARCHAR" />
+      <result column="seal_center_image" property="sealCenterImage" jdbcType="VARCHAR" />
+      <result column="seal_specification" property="sealSpecification" jdbcType="VARCHAR" />
+      <result column="seal_make_type_code" property="sealMakeTypeCode" jdbcType="VARCHAR" />
+      <result column="seal_record_type_code" property="sealRecordTypeCode" jdbcType="VARCHAR" />
+      <result column="record_date" property="recordDate" jdbcType="TIMESTAMP" />
+      <result column="is_record" property="isRecord" jdbcType="BIT" />
+      <result column="make_date" property="makeDate" jdbcType="TIMESTAMP" />
+      <result column="is_make" property="isMake" jdbcType="BIT" />
+      <result column="personal_date" property="personalDate" jdbcType="TIMESTAMP" />
+      <result column="is_personal" property="isPersonal" jdbcType="BIT" />
+      <result column="deliver_date" property="deliverDate" jdbcType="TIMESTAMP" />
+      <result column="is_deliver" property="isDeliver" jdbcType="BIT" />
+      <result column="is_logout" property="isLogout" jdbcType="BIT" />
+      <result column="loss_date" property="lossDate" jdbcType="TIMESTAMP" />
+      <result column="is_loss" property="isLoss" jdbcType="BIT" />
+      <result column="remark" property="remark" jdbcType="VARCHAR" />
+      <result column="logout_date" property="logoutDate" jdbcType="TIMESTAMP" />
+      <result column="seal_reason" property="sealReason" jdbcType="VARCHAR" />
+      <result column="district_id" property="districtId" jdbcType="VARCHAR" />
+      <result column="agent_id" property="agentId" jdbcType="CHAR" />
+      <result column="getter_id" property="getterId" jdbcType="CHAR" />
+      <result column="loss_person_id" property="lossPersonId" jdbcType="CHAR" />
+      <result column="logout_person_id" property="logoutPersonId" jdbcType="CHAR" />
+      <result column="is_chipseal" property="isChipseal" jdbcType="BIT" />
+      <result column="is_pass" property="isPass" jdbcType="BIT" />
+      <result column="reject_reason" property="rejectReason" jdbcType="CHAR" />
+      <result column="reject_remark" property="rejectRemark" jdbcType="VARCHAR" />
+      <result column="verify_type_name" property="verifyTypeName" jdbcType="CHAR" />
+      <result column="is_earlywarning" property="isEarlywarning" jdbcType="BIT" />
+      <result column="is_apply" property="isApply" jdbcType="BIT" />
+      <result column="apply_date" property="applyDate" jdbcType="TIMESTAMP" />
+      <result column="earlywarning_date" property="earlywarningDate" jdbcType="TIMESTAMP" />
+      <result column="missingpost_remark" property="missingpostRemark" jdbcType="VARCHAR" />
+      <result column="is_undertake" property="isUndertake" jdbcType="BIT" />
+      <result column="undertake_date" property="undertakeDate" jdbcType="TIMESTAMP" />
   </resultMap>
   
   <resultMap id="SealOperationRecordMap" type="com.dhht.model.SealOperationRecord">
@@ -71,13 +78,17 @@
     <result column="record_department_code" property="recordDepartmentCode"/>
   </resultMap>
 
-  <sql id="Base_Column_List" >
-    id, seal_code, seal_name, seal_status_code, use_department_code, use_department_name, 
-    record_department_code, record_department_name, make_department_code, make_department_name, 
-    seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
-    seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal,is_pass,reject_reason,reject_remark,verify_type_name
-  </sql>
+    <sql id="Base_Column_List" >
+        id, seal_code, seal_name, seal_status_code, use_department_code, use_department_name,
+        record_department_code, record_department_name, make_department_code, make_department_name,
+        seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
+        seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,
+        record_date, is_record, make_date, is_make, personal_date, is_personal, deliver_date,
+        is_deliver, is_logout, loss_date, is_loss, remark, logout_date, seal_reason, district_id,
+        agent_id, getter_id, loss_person_id, logout_person_id, is_chipseal, is_pass, reject_reason,
+        reject_remark, verify_type_name, is_earlywarning, is_apply, apply_date, earlywarning_date,
+        missingpost_remark, is_undertake, undertake_date
+    </sql>
   <select id="selectRecordDepartmentCode" resultMap="recordDepartmentCodeResult">
     SELECT record_department_code from seal GROUP BY record_department_code
   </select>
@@ -100,72 +111,503 @@
   </delete>
 
   <insert id="insert" parameterType="com.dhht.model.Seal" >
-    insert into seal (id, seal_code, seal_name, 
-      seal_status_code, use_department_code, use_department_name, 
-      record_department_code, record_department_name, 
-      make_department_code, make_department_name, seal_type_code,
-      materials_code, mimeograph_description, seal_shape_code, 
-      seal_size, seal_center_image, seal_specification, 
-      seal_make_type_code, seal_record_type_code,record_date,is_record,make_date,is_make,personal_date,is_personal,deliver_date
-      ,is_deliver,logout_date,is_logout,loss_date,is_loss,remark,seal_reason,district_id,agent_id,getter_id,loss_person_id,logout_person_id,is_chipseal,verify_type_name
-      )
-    values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR}, 
-      #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR}, 
-      #{recordDepartmentCode,jdbcType=CHAR}, #{recordDepartmentName,jdbcType=VARCHAR}, 
-      #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, #{sealTypeCode,jdbcType=CHAR},
-      #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR}, 
-      #{sealSize,jdbcType=VARCHAR}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR},
-      #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR},#{recordDate},#{isRecord},#{makeDate},#{isMake},
-      #{personalDate},#{isPersonal},#{deliverDate},#{isDeliver},#{logoutDate},#{isLogout},#{lossDate},#{isLoss},#{remark},#{sealReason},#{districtId},#{agentId},#{getterId},#{lossPersonId},#{logoutPersonId},
-      #{isChipseal},0)
-  </insert>
+        insert into seal (id, seal_code, seal_name,
+                          seal_status_code, use_department_code, use_department_name,
+                          record_department_code, record_department_name,
+                          make_department_code, make_department_name, seal_type_code,
+                          materials_code, mimeograph_description, seal_shape_code,
+                          seal_size, seal_center_image, seal_specification,
+                          seal_make_type_code, seal_record_type_code, record_date,
+                          is_record, make_date, is_make,
+                          personal_date, is_personal, deliver_date,
+                          is_deliver, is_logout, loss_date,
+                          is_loss, remark, logout_date,
+                          seal_reason, district_id, agent_id,
+                          getter_id, loss_person_id, logout_person_id,
+                          is_chipseal, is_pass, reject_reason,
+                          reject_remark, verify_type_name, is_earlywarning,
+                          is_apply, apply_date, earlywarning_date,
+                          missingpost_remark, is_undertake, undertake_date
+        )
+        values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR},
+                #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR},
+                #{recordDepartmentCode,jdbcType=CHAR}, #{recordDepartmentName,jdbcType=VARCHAR},
+                #{makeDepartmentCode,jdbcType=CHAR}, #{makeDepartmentName,jdbcType=VARCHAR}, #{sealTypeCode,jdbcType=CHAR},
+                #{materialsCode,jdbcType=CHAR}, #{mimeographDescription,jdbcType=VARCHAR}, #{sealShapeCode,jdbcType=VARCHAR},
+                #{sealSize,jdbcType=VARCHAR}, #{sealCenterImage,jdbcType=VARCHAR}, #{sealSpecification,jdbcType=VARCHAR},
+                #{sealMakeTypeCode,jdbcType=VARCHAR}, #{sealRecordTypeCode,jdbcType=VARCHAR}, #{recordDate,jdbcType=TIMESTAMP},
+                #{isRecord,jdbcType=BIT}, #{makeDate,jdbcType=TIMESTAMP}, #{isMake,jdbcType=BIT},
+                #{personalDate,jdbcType=TIMESTAMP}, #{isPersonal,jdbcType=BIT}, #{deliverDate,jdbcType=TIMESTAMP},
+                #{isDeliver,jdbcType=BIT}, #{isLogout,jdbcType=BIT}, #{lossDate,jdbcType=TIMESTAMP},
+                #{isLoss,jdbcType=BIT}, #{remark,jdbcType=VARCHAR}, #{logoutDate,jdbcType=TIMESTAMP},
+                #{sealReason,jdbcType=VARCHAR}, #{districtId,jdbcType=VARCHAR}, #{agentId,jdbcType=CHAR},
+                #{getterId,jdbcType=CHAR}, #{lossPersonId,jdbcType=CHAR}, #{logoutPersonId,jdbcType=CHAR},
+                #{isChipseal,jdbcType=BIT}, #{isPass,jdbcType=BIT}, #{rejectReason,jdbcType=CHAR},
+                #{rejectRemark,jdbcType=VARCHAR}, #{verifyTypeName,jdbcType=CHAR}, #{isEarlywarning,jdbcType=BIT},
+                #{isApply,jdbcType=BIT}, #{applyDate,jdbcType=TIMESTAMP}, #{earlywarningDate,jdbcType=TIMESTAMP},
+                #{missingpostRemark,jdbcType=VARCHAR}, #{isUndertake,jdbcType=BIT}, #{undertakeDate,jdbcType=TIMESTAMP}
+               )
+    </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Seal" >
-    update seal
-    set seal_name = #{sealName,jdbcType=VARCHAR},
-      seal_status_code = #{sealStatusCode,jdbcType=CHAR},
-      use_department_code = #{useDepartmentCode,jdbcType=CHAR},
-      use_department_name = #{useDepartmentName,jdbcType=VARCHAR},
-      record_department_code = #{recordDepartmentCode,jdbcType=CHAR},
-      record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
-      make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
-      make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
-      seal_type_code = #{sealTypeCode,jdbcType=CHAR},
-      materials_code = #{materialsCode,jdbcType=CHAR},
-      mimeograph_description = #{mimeographDescription,jdbcType=VARCHAR},
-      seal_shape_code = #{sealShapeCode,jdbcType=VARCHAR},
-      seal_size = #{sealSize,jdbcType=VARCHAR},
-      seal_center_image = #{sealCenterImage,jdbcType=VARCHAR},
-      seal_specification = #{sealSpecification,jdbcType=VARCHAR},
-      seal_make_type_code = #{sealMakeTypeCode,jdbcType=VARCHAR},
-      seal_record_type_code = #{sealRecordTypeCode,jdbcType=VARCHAR},
-      record_date = #{recordDate},
-      is_record = #{isRecord},
-      make_date = #{makeDate},
-      is_make = #{isMake},
-      personal_date = #{personalDate},
-      is_personal = #{isPersonal},
-      deliver_date = #{deliverDate},
-      is_deliver = #{isDeliver},
-      logout_date = #{logoutDate},
-      is_logout = #{isLogout},
-      loss_date = #{lossDate},
-      is_loss = #{isLoss},
-      remark = #{remark},
-      seal_reason = #{sealReason},
-      district_id = #{districtId},
-      agent_id = #{agentId},
-      getter_id = #{getterId},
-      loss_person_id = #{lossPersonId},
-      logout_person_id = #{logoutPersonId},
-      is_chipseal = #{isChipseal},
-      is_pass = #{isPass},
-      reject_reason = #{rejectReason},
-      reject_remark = #{rejectRemark},
-      verify_type_name = #{verifyTypeName}
-    where id = #{id,jdbcType=CHAR}
-      and seal_code = #{sealCode,jdbcType=VARCHAR}
-  </update>
+    <insert id="insertSelective" parameterType="com.dhht.model.Seal" >
+        insert into seal
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="sealCode != null" >
+                seal_code,
+            </if>
+            <if test="sealName != null" >
+                seal_name,
+            </if>
+            <if test="sealStatusCode != null" >
+                seal_status_code,
+            </if>
+            <if test="useDepartmentCode != null" >
+                use_department_code,
+            </if>
+            <if test="useDepartmentName != null" >
+                use_department_name,
+            </if>
+            <if test="recordDepartmentCode != null" >
+                record_department_code,
+            </if>
+            <if test="recordDepartmentName != null" >
+                record_department_name,
+            </if>
+            <if test="makeDepartmentCode != null" >
+                make_department_code,
+            </if>
+            <if test="makeDepartmentName != null" >
+                make_department_name,
+            </if>
+            <if test="sealTypeCode != null" >
+                seal_type_code,
+            </if>
+            <if test="materialsCode != null" >
+                materials_code,
+            </if>
+            <if test="mimeographDescription != null" >
+                mimeograph_description,
+            </if>
+            <if test="sealShapeCode != null" >
+                seal_shape_code,
+            </if>
+            <if test="sealSize != null" >
+                seal_size,
+            </if>
+            <if test="sealCenterImage != null" >
+                seal_center_image,
+            </if>
+            <if test="sealSpecification != null" >
+                seal_specification,
+            </if>
+            <if test="sealMakeTypeCode != null" >
+                seal_make_type_code,
+            </if>
+            <if test="sealRecordTypeCode != null" >
+                seal_record_type_code,
+            </if>
+            <if test="recordDate != null" >
+                record_date,
+            </if>
+            <if test="isRecord != null" >
+                is_record,
+            </if>
+            <if test="makeDate != null" >
+                make_date,
+            </if>
+            <if test="isMake != null" >
+                is_make,
+            </if>
+            <if test="personalDate != null" >
+                personal_date,
+            </if>
+            <if test="isPersonal != null" >
+                is_personal,
+            </if>
+            <if test="deliverDate != null" >
+                deliver_date,
+            </if>
+            <if test="isDeliver != null" >
+                is_deliver,
+            </if>
+            <if test="isLogout != null" >
+                is_logout,
+            </if>
+            <if test="lossDate != null" >
+                loss_date,
+            </if>
+            <if test="isLoss != null" >
+                is_loss,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="logoutDate != null" >
+                logout_date,
+            </if>
+            <if test="sealReason != null" >
+                seal_reason,
+            </if>
+            <if test="districtId != null" >
+                district_id,
+            </if>
+            <if test="agentId != null" >
+                agent_id,
+            </if>
+            <if test="getterId != null" >
+                getter_id,
+            </if>
+            <if test="lossPersonId != null" >
+                loss_person_id,
+            </if>
+            <if test="logoutPersonId != null" >
+                logout_person_id,
+            </if>
+            <if test="isChipseal != null" >
+                is_chipseal,
+            </if>
+            <if test="isPass != null" >
+                is_pass,
+            </if>
+            <if test="rejectReason != null" >
+                reject_reason,
+            </if>
+            <if test="rejectRemark != null" >
+                reject_remark,
+            </if>
+            <if test="verifyTypeName != null" >
+                verify_type_name,
+            </if>
+            <if test="isEarlywarning != null" >
+                is_earlywarning,
+            </if>
+            <if test="isApply != null" >
+                is_apply,
+            </if>
+            <if test="applyDate != null" >
+                apply_date,
+            </if>
+            <if test="earlywarningDate != null" >
+                earlywarning_date,
+            </if>
+            <if test="missingpostRemark != null" >
+                missingpost_remark,
+            </if>
+            <if test="isUndertake != null" >
+                is_undertake,
+            </if>
+            <if test="undertakeDate != null" >
+                undertake_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=CHAR},
+            </if>
+            <if test="sealCode != null" >
+                #{sealCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sealName != null" >
+                #{sealName,jdbcType=VARCHAR},
+            </if>
+            <if test="sealStatusCode != null" >
+                #{sealStatusCode,jdbcType=CHAR},
+            </if>
+            <if test="useDepartmentCode != null" >
+                #{useDepartmentCode,jdbcType=CHAR},
+            </if>
+            <if test="useDepartmentName != null" >
+                #{useDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDepartmentCode != null" >
+                #{recordDepartmentCode,jdbcType=CHAR},
+            </if>
+            <if test="recordDepartmentName != null" >
+                #{recordDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="makeDepartmentCode != null" >
+                #{makeDepartmentCode,jdbcType=CHAR},
+            </if>
+            <if test="makeDepartmentName != null" >
+                #{makeDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="sealTypeCode != null" >
+                #{sealTypeCode,jdbcType=CHAR},
+            </if>
+            <if test="materialsCode != null" >
+                #{materialsCode,jdbcType=CHAR},
+            </if>
+            <if test="mimeographDescription != null" >
+                #{mimeographDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="sealShapeCode != null" >
+                #{sealShapeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sealSize != null" >
+                #{sealSize,jdbcType=VARCHAR},
+            </if>
+            <if test="sealCenterImage != null" >
+                #{sealCenterImage,jdbcType=VARCHAR},
+            </if>
+            <if test="sealSpecification != null" >
+                #{sealSpecification,jdbcType=VARCHAR},
+            </if>
+            <if test="sealMakeTypeCode != null" >
+                #{sealMakeTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sealRecordTypeCode != null" >
+                #{sealRecordTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null" >
+                #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isRecord != null" >
+                #{isRecord,jdbcType=BIT},
+            </if>
+            <if test="makeDate != null" >
+                #{makeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isMake != null" >
+                #{isMake,jdbcType=BIT},
+            </if>
+            <if test="personalDate != null" >
+                #{personalDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isPersonal != null" >
+                #{isPersonal,jdbcType=BIT},
+            </if>
+            <if test="deliverDate != null" >
+                #{deliverDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeliver != null" >
+                #{isDeliver,jdbcType=BIT},
+            </if>
+            <if test="isLogout != null" >
+                #{isLogout,jdbcType=BIT},
+            </if>
+            <if test="lossDate != null" >
+                #{lossDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isLoss != null" >
+                #{isLoss,jdbcType=BIT},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="logoutDate != null" >
+                #{logoutDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sealReason != null" >
+                #{sealReason,jdbcType=VARCHAR},
+            </if>
+            <if test="districtId != null" >
+                #{districtId,jdbcType=VARCHAR},
+            </if>
+            <if test="agentId != null" >
+                #{agentId,jdbcType=CHAR},
+            </if>
+            <if test="getterId != null" >
+                #{getterId,jdbcType=CHAR},
+            </if>
+            <if test="lossPersonId != null" >
+                #{lossPersonId,jdbcType=CHAR},
+            </if>
+            <if test="logoutPersonId != null" >
+                #{logoutPersonId,jdbcType=CHAR},
+            </if>
+            <if test="isChipseal != null" >
+                #{isChipseal,jdbcType=BIT},
+            </if>
+            <if test="isPass != null" >
+                #{isPass,jdbcType=BIT},
+            </if>
+            <if test="rejectReason != null" >
+                #{rejectReason,jdbcType=CHAR},
+            </if>
+            <if test="rejectRemark != null" >
+                #{rejectRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="verifyTypeName != null" >
+                #{verifyTypeName,jdbcType=CHAR},
+            </if>
+            <if test="isEarlywarning != null" >
+                #{isEarlywarning,jdbcType=BIT},
+            </if>
+            <if test="isApply != null" >
+                #{isApply,jdbcType=BIT},
+            </if>
+            <if test="applyDate != null" >
+                #{applyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="earlywarningDate != null" >
+                #{earlywarningDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="missingpostRemark != null" >
+                #{missingpostRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="isUndertake != null" >
+                #{isUndertake,jdbcType=BIT},
+            </if>
+            <if test="undertakeDate != null" >
+                #{undertakeDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Seal" >
+        update seal
+        <set >
+            <if test="sealName != null" >
+                seal_name = #{sealName,jdbcType=VARCHAR},
+            </if>
+            <if test="sealStatusCode != null" >
+                seal_status_code = #{sealStatusCode,jdbcType=CHAR},
+            </if>
+            <if test="useDepartmentCode != null" >
+                use_department_code = #{useDepartmentCode,jdbcType=CHAR},
+            </if>
+            <if test="useDepartmentName != null" >
+                use_department_name = #{useDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDepartmentCode != null" >
+                record_department_code = #{recordDepartmentCode,jdbcType=CHAR},
+            </if>
+            <if test="recordDepartmentName != null" >
+                record_department_name = #{recordDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="makeDepartmentCode != null" >
+                make_department_code = #{makeDepartmentCode,jdbcType=CHAR},
+            </if>
+            <if test="makeDepartmentName != null" >
+                make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="sealTypeCode != null" >
+                seal_type_code = #{sealTypeCode,jdbcType=CHAR},
+            </if>
+            <if test="materialsCode != null" >
+                materials_code = #{materialsCode,jdbcType=CHAR},
+            </if>
+            <if test="mimeographDescription != null" >
+                mimeograph_description = #{mimeographDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="sealShapeCode != null" >
+                seal_shape_code = #{sealShapeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sealSize != null" >
+                seal_size = #{sealSize,jdbcType=VARCHAR},
+            </if>
+            <if test="sealCenterImage != null" >
+                seal_center_image = #{sealCenterImage,jdbcType=VARCHAR},
+            </if>
+            <if test="sealSpecification != null" >
+                seal_specification = #{sealSpecification,jdbcType=VARCHAR},
+            </if>
+            <if test="sealMakeTypeCode != null" >
+                seal_make_type_code = #{sealMakeTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sealRecordTypeCode != null" >
+                seal_record_type_code = #{sealRecordTypeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null" >
+                record_date = #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isRecord != null" >
+                is_record = #{isRecord,jdbcType=BIT},
+            </if>
+            <if test="makeDate != null" >
+                make_date = #{makeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isMake != null" >
+                is_make = #{isMake,jdbcType=BIT},
+            </if>
+            <if test="personalDate != null" >
+                personal_date = #{personalDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isPersonal != null" >
+                is_personal = #{isPersonal,jdbcType=BIT},
+            </if>
+            <if test="deliverDate != null" >
+                deliver_date = #{deliverDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeliver != null" >
+                is_deliver = #{isDeliver,jdbcType=BIT},
+            </if>
+            <if test="isLogout != null" >
+                is_logout = #{isLogout,jdbcType=BIT},
+            </if>
+            <if test="lossDate != null" >
+                loss_date = #{lossDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isLoss != null" >
+                is_loss = #{isLoss,jdbcType=BIT},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="logoutDate != null" >
+                logout_date = #{logoutDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sealReason != null" >
+                seal_reason = #{sealReason,jdbcType=VARCHAR},
+            </if>
+            <if test="districtId != null" >
+                district_id = #{districtId,jdbcType=VARCHAR},
+            </if>
+            <if test="agentId != null" >
+                agent_id = #{agentId,jdbcType=CHAR},
+            </if>
+            <if test="getterId != null" >
+                getter_id = #{getterId,jdbcType=CHAR},
+            </if>
+            <if test="lossPersonId != null" >
+                loss_person_id = #{lossPersonId,jdbcType=CHAR},
+            </if>
+            <if test="logoutPersonId != null" >
+                logout_person_id = #{logoutPersonId,jdbcType=CHAR},
+            </if>
+            <if test="isChipseal != null" >
+                is_chipseal = #{isChipseal,jdbcType=BIT},
+            </if>
+            <if test="isPass != null" >
+                is_pass = #{isPass,jdbcType=BIT},
+            </if>
+            <if test="rejectReason != null" >
+                reject_reason = #{rejectReason,jdbcType=CHAR},
+            </if>
+            <if test="rejectRemark != null" >
+                reject_remark = #{rejectRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="verifyTypeName != null" >
+                verify_type_name = #{verifyTypeName,jdbcType=CHAR},
+            </if>
+            <if test="isEarlywarning != null" >
+                is_earlywarning = #{isEarlywarning,jdbcType=BIT},
+            </if>
+            <if test="isApply != null" >
+                is_apply = #{isApply,jdbcType=BIT},
+            </if>
+            <if test="applyDate != null" >
+                apply_date = #{applyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="earlywarningDate != null" >
+                earlywarning_date = #{earlywarningDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="missingpostRemark != null" >
+                missingpost_remark = #{missingpostRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="isUndertake != null" >
+                is_undertake = #{isUndertake,jdbcType=BIT},
+            </if>
+            <if test="undertakeDate != null" >
+                undertake_date = #{undertakeDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=CHAR}
+        and seal_code = #{sealCode,jdbcType=VARCHAR}
+    </update>
 
   <select id="selectSealMaterial" resultType="com.dhht.model.SealMaterial">
       select file_path as filePath from seal_material where seal_code = #{sealCode} and `type` = #{type};
