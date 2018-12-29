@@ -1097,6 +1097,14 @@ public class SealServiceImpl implements SealService {
         return seals;
     }
 
+    @Override
+    public List<Seal> selectSealByDistrictId(String districtId) {
+        String districtId1 = districtId.substring(0,4);
+        List<Seal> seals = sealDao.selectLikeDistrictId1(districtId1);
+
+        return seals;
+    }
+
 
     @Override
     public PageInfo<Seal> Infoseal(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {

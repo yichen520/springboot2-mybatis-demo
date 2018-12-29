@@ -100,6 +100,8 @@ public interface SealDao {
 
     List<Seal> selectByDistrictId(@Param("districtId") String districtId);
 
+    List<Seal> selectLikeDistrictId1(@Param("districtId") String districtId);
+
     int countAddSealByDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     int countLossSealByDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);

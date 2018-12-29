@@ -1123,6 +1123,10 @@ select  <include refid="Base_Column_List" /> from seal where seal_code = (select
     from seal where  district_id = #{districtId}
   </select>
 
+    <select id="selectLikeDistrictId1" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> from seal where district_id like #{districtId}"%" and is_apply = true 
+    </select>
+
   <select id="countAddSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
     SELECT count(id) from seal where district_id  =  #{districtId} AND seal_type_code=#{sealTypeCode}
     AND is_record = true AND is_make = true  AND make_date BETWEEN  #{startTime} and #{endTime}

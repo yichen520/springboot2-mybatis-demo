@@ -503,6 +503,23 @@ public class SealController implements InitializingBean {
         }
     }
 
+    @Log("查找印章备案信息")
+    @RequestMapping(value = "selectSealByDistrictId")
+    public JsonObjectBO selectSealByDistrictId(@RequestBody Map map){
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String districtId = (String) map.get("districtId");
+        try{
+            List<Seal> seals = sealService.selectSealByDistrictId(districtId);
+            jsonObject.put("seals", seals);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setData(jsonObject);
+            return jsonObjectBO;
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("查看印章信息失败");
+        }
+    }
 
     /**
      * 查看印章详情
