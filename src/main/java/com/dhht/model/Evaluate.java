@@ -17,11 +17,7 @@ public class Evaluate {
 
     private String makeDepartmentName;
 
-    private String memo;
-
-    private int pageSize;
-
-    private int pageNum;
+    private Integer score;
 
     public String getId() {
         return id;
@@ -79,27 +75,11 @@ public class Evaluate {
         this.makeDepartmentName = makeDepartmentName == null ? null : makeDepartmentName.trim();
     }
 
-    public String getMemo() {
-        return memo;
+    public Integer getScore() {
+        return score;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo == null ? null : memo.trim();
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }

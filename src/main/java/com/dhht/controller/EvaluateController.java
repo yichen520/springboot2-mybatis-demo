@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author 徐正平
@@ -33,7 +34,7 @@ public class EvaluateController extends BaseController {
     @RequestMapping("/insert")
     public JsonObjectBO insert( @RequestBody Evaluate evaluate){
         try {
-            return  ResultUtil.getResult(evaluateService.insert(evaluate,currentUser()));
+            return  ResultUtil.getResultInfo(evaluateService.insert(evaluate,currentUser()));
         }catch (Exception e){
             e.printStackTrace();
             logger.error(e.getMessage(), e);
@@ -57,9 +58,10 @@ public class EvaluateController extends BaseController {
 
     @Log("删除评价")
     @RequestMapping("/delete")
-    public JsonObjectBO info(  String id){
+    public JsonObjectBO info(@RequestBody Map map){
+        String id = (String) map.get("id");
         try {
-            return  ResultUtil.getResult(evaluateService.deleteEvaluate(id));
+            return  ResultUtil.getResultInfo(evaluateService.deleteEvaluate(id));
         }catch (Exception e){
             e.printStackTrace();
             logger.error(e.getMessage(), e);

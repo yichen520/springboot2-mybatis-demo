@@ -51,7 +51,11 @@ public class InterceptorConfig implements HandlerInterceptor {
             return true;
         }
         //登录不做要求
-        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/getCheckCode")||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().equals("/make/employee/insertEmployeeImport")){
+        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/getCheckCode")||request.getRequestURI().equals("/app/login")||
+                request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().equals("/make/employee/insertEmployeeImport")
+                || request.getRequestURI().equals("/evaluate/insert")
+                || request.getRequestURI().equals("/evaluate/delete")
+                || request.getRequestURI().equals("/evaluate/info")){
             return true;
         }
         //获取session是否存在
