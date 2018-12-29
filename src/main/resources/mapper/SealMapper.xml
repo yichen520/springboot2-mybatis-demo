@@ -624,6 +624,9 @@
 
    </update>
 
+    <select id="selectByTypeAndUseDepartmentCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from  seal where use_department_code = #{useDepartmentCode} and seal_type_code = "01"
+    </select>
     <select id="allUndertakeSeal" parameterType="java.lang.String" resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from seal where make_department_code = #{makeDepartmentCode} and is_undertake = 0
     </select>
@@ -1119,6 +1122,10 @@ select  <include refid="Base_Column_List" /> from seal where seal_code = (select
     SELECT  seal_type_code AS sealTypeCode ,seal_code AS sealCode
     from seal where  district_id = #{districtId}
   </select>
+
+    <select id="selectLikeDistrictId1" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> from seal where district_id like #{districtId}"%" and is_apply = true
+    </select>
 
   <select id="countAddSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
     SELECT count(id) from seal where district_id  =  #{districtId} AND seal_type_code=#{sealTypeCode}

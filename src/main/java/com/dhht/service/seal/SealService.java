@@ -74,5 +74,10 @@ public interface SealService {
 
    //待承接的印章信息
    List<Seal> waitUndertake(String MakedepartmentCode);
+
+   //印章备案信息查询
+   List<Seal> selectSealByDistrictId(String districtId);
+
+
 }
 

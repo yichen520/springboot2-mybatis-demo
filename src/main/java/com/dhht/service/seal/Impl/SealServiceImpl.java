@@ -224,7 +224,10 @@ public class SealServiceImpl implements SealService {
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
                 if(seal.getSealReason().equals("03")){
                     if(seal.getSealTypeCode().equals("01")){
-                        int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode);
+                        if(seal1!=null) {
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                        }
                     }
                 }
 
@@ -1091,6 +1094,14 @@ public class SealServiceImpl implements SealService {
     @Override
     public List<Seal> waitUndertake(String makeDepartmentCode) {
         List<Seal> seals = sealDao.allUndertakeSeal(makeDepartmentCode);
+        return seals;
+    }
+
+    @Override
+    public List<Seal> selectSealByDistrictId(String districtId) {
+        String districtId1 = districtId.substring(0,4);
+        List<Seal> seals = sealDao.selectLikeDistrictId1(districtId1);
+
         return seals;
     }
 
