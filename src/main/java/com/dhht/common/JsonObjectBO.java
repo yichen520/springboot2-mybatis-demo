@@ -9,6 +9,7 @@ public class JsonObjectBO {
     private int code;  //业务状态（编码）
     private String message;  //反馈信息
     private JSONObject data;  //业务数据
+    private String exceptionMessage;
 
     // 成功
     public static final int SUCCESS = 1;
@@ -52,6 +53,13 @@ public class JsonObjectBO {
         JsonObjectBO ResponseBo = new JsonObjectBO();
         ResponseBo.setCode(EXCEPTION);
         ResponseBo.setMessage(msg);
+        return ResponseBo;
+    }
+    public static JsonObjectBO exceptionWithMessage(String msg,String exceptionMessage) {
+        JsonObjectBO ResponseBo = new JsonObjectBO();
+        ResponseBo.setCode(EXCEPTION);
+        ResponseBo.setMessage(msg);
+        ResponseBo.setExceptionMessage(exceptionMessage);
         return ResponseBo;
     }
 
@@ -128,6 +136,13 @@ public class JsonObjectBO {
         return json.toString();
     }
 
+    public String getExceptionMessage() {
+        return exceptionMessage;
+    }
+
+    public void setExceptionMessage(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
+    }
 //    public void writeJson(Object object) {
 //        WebUtil.writeJson(object);
 //    }
