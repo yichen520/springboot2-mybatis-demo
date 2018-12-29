@@ -32,7 +32,7 @@
   </delete>
 
   <update id="deleteByMakeDepartmentFlag" parameterType="java.lang.String">
-     update make_department_seal_price set is_delete = true where id = #{id,jdbcType=VARCHAR}
+     update make_department_seal_price set is_delete = true where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR}
   </update>
 
   <insert id="insert" parameterType="com.dhht.model.MakeDepartmentSealPrice" >
