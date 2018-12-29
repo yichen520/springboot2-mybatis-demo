@@ -10,7 +10,7 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!--数据库链接URL，用户名、密码 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.0.0.21:8739/dev_seal_V1_0?characterEncoding=utf8" userId="dev_seal" password="oxq39k">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.0.0.21:8739/dev_seal_V1_0?characterEncoding=utf8" userId="dev_seal" password="Tpf9Lt">
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -29,10 +29,9 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-        <table tableName="make_department_incidence" domainObjectName="Incidence" schema="" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+        <table tableName="make_department_evaluate" domainObjectName="Evaluate" schema="" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" ></table>
-        <table tableName="suspicious" domainObjectName="Suspicious" schema="" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" ></table>
+
 
     </context>
 </generatorConfiguration>
