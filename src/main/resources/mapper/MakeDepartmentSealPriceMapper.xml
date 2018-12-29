@@ -23,7 +23,7 @@
   </select>
 
   <select id="selectByMakeDepartmentFlag" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List"/> from make_department_seal_price where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR}
+    select <include refid="Base_Column_List"/> from make_department_seal_price where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR} and is_delete = false 
   </select>
 
   <delete id="deleteById" parameterType="java.lang.String" >
@@ -32,7 +32,7 @@
   </delete>
 
   <update id="deleteByMakeDepartmentFlag" parameterType="java.lang.String">
-     update make_department_seal_price set is_delete = true where id = #{id,jdbcType=VARCHAR}
+     update make_department_seal_price set is_delete = true where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR}
   </update>
 
   <insert id="insert" parameterType="com.dhht.model.MakeDepartmentSealPrice" >
