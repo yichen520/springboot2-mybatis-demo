@@ -224,7 +224,10 @@ public class SealServiceImpl implements SealService {
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
                 if(seal.getSealReason().equals("03")){
                     if(seal.getSealTypeCode().equals("01")){
-                        int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode);
+                        if(seal1!=null) {
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                        }
                     }
                 }
 

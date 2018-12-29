@@ -32,6 +32,8 @@ public interface SealDao {
 
     int logoutSeal(@Param("useDepartmentCode") String useDepartmentCode);
 
+    Seal selectByTypeAndUseDepartmentCode(@Param("useDepartmentCode") String useDepartmentCode);
+
     List<Seal> allUndertakeSeal(@Param("makeDepartmentCode") String makeDepartmentCode);
 
 //    int insertVerifySeal(String id,boolean isPass,String rejectReason,String rejectRemark);
