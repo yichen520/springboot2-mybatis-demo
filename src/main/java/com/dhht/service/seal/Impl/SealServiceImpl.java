@@ -15,7 +15,6 @@ import com.dhht.service.seal.SealCodeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.FileStoreService;
-import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
@@ -43,7 +42,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 
 
 @Service("sealService")
@@ -89,13 +87,6 @@ public class SealServiceImpl implements SealService {
 
     @Resource(name = "fastDFSStoreServiceImpl")
     private FileStoreService fastDFSStoreServiceImpl;
-
-    @Value("${sms.template.insertUser}")
-    private int userCode ;
-
-
-    @Autowired
-    private SmsSendService smsSendService;
 
     @Autowired
     private FileService fileService;
@@ -274,7 +265,7 @@ public class SealServiceImpl implements SealService {
 
 
                 seal.setAgentId(saId);
-                int sealInsert = sealDao.insertSelective(seal);
+                int sealInsert = sealDao.insert(seal);
 
                 //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
                 if (sealInsert > 0 && sealOperationRecordInsert > 0 && sealAgentInsert > 0) {
@@ -475,9 +466,6 @@ public class SealServiceImpl implements SealService {
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
 
-        String useDepartmentCode = seal1.getUseDepartmentCode();
-        UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
-        String useDepartmentTelphone = useDepartment.getLegalTelphone();
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealId(id);
@@ -504,14 +492,6 @@ public class SealServiceImpl implements SealService {
         sealMaterialLists.add(sealMaterial1);
         int insertSealMaterial = sealDao.insertSealMateriallist(sealMaterialLists);
 
-        String code = createRandomVcode();
-        ArrayList<String> params = new ArrayList<String>();
-        params.add(user.getUserName());
-        params.add(code);
-        Boolean b = smsSendService.sendSingleMsgByTemplate(useDepartmentTelphone,userCode,params);
-
-        seal1.setIsEarlywarning(true);
-        seal1.setEarlywarningDate(DateUtil.getCurrentTime());
         seal1.setIsMake(true);
         seal1.setMakeDate(DateUtil.getCurrentTime());
 //        seal1.setDistrictId(seal1.getDistrictId());
@@ -519,13 +499,10 @@ public class SealServiceImpl implements SealService {
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;
         } else {
-
-
-
-//            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-//            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-//            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-//            SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+            SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
             return ResultUtil.isSuccess;
         }
 
@@ -626,8 +603,6 @@ public class SealServiceImpl implements SealService {
 
         seal1.setIsDeliver(true);
         seal1.setDeliverDate(DateUtil.getCurrentTime());
-        seal1.setIsApply(true);
-        seal1.setApplyDate(DateUtil.getCurrentTime());
 
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();

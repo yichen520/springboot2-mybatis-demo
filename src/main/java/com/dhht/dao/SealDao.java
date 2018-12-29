@@ -16,8 +16,6 @@ public interface SealDao {
 
     int insert(Seal record);
 
-    int insertSelective(Seal record);
-
     Seal selectByPrimaryKey(@Param("id") String id);
 
     List<Seal> selectByCodeAndType(String useDepartmentCode);
