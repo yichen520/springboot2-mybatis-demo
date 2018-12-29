@@ -90,6 +90,20 @@ public class Seal extends SealKey {
 
     private String verifyTypeName;
 
+    private Boolean isEarlywarning;
+
+    private Boolean isApply;
+
+    private Date applyDate;
+
+    private Date earlywarningDate;
+
+    private String missingpostRemark;
+
+    private Boolean isUndertake;
+
+    private Date undertakeDate;
+
     public Boolean getIsRecord() {
         return isRecord;
     }
@@ -155,4 +169,59 @@ public class Seal extends SealKey {
     }
 
 
+    public Boolean getIsEarlywarning() {
+        return isEarlywarning;
+    }
+
+    public void setIsEarlywarning(Boolean isEarlywarning) {
+        this.isEarlywarning = isEarlywarning;
+    }
+
+    public Boolean getIsApply() {
+        return isApply;
+    }
+
+    public void setIsApply(Boolean isApply) {
+        this.isApply = isApply;
+    }
+
+    public Date getApplyDate() {
+        return applyDate;
+    }
+
+    public void setApplyDate(Date applyDate) {
+        this.applyDate = applyDate;
+    }
+
+    public Date getEarlywarningDate() {
+        return earlywarningDate;
+    }
+
+    public void setEarlywarningDate(Date earlywarningDate) {
+        this.earlywarningDate = earlywarningDate;
+    }
+
+    public String getMissingpostRemark() {
+        return missingpostRemark;
+    }
+
+    public void setMissingpostRemark(String missingpostRemark) {
+        this.missingpostRemark = missingpostRemark == null ? null : missingpostRemark.trim();
+    }
+
+    public Boolean getIsUndertake() {
+        return isUndertake;
+    }
+
+    public void setIsUndertake(Boolean isUndertake) {
+        this.isUndertake = isUndertake;
+    }
+
+    public Date getUndertakeDate() {
+        return undertakeDate;
+    }
+
+    public void setUndertakeDate(Date undertakeDate) {
+        this.undertakeDate = undertakeDate;
+    }
 }
