@@ -3,6 +3,7 @@ package com.dhht.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
+import com.dhht.common.Cache;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.District;
 import com.dhht.model.DistrictMenus;
@@ -12,6 +13,7 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.sms.SmsSingleSender;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,17 +36,20 @@ public class DistrictController implements InitializingBean
      private StringRedisTemplate template;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Value("${province}")
+    private String  provinceDistrictId;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         List<DistrictMenus> district = districtService.selectAllDistrict();
+        List<DistrictMenus> districtMenus = districtService.selectOneDistrict(provinceDistrictId);
         if(district== null) {
             return ;
         }
         if(!template.hasKey("District")){
             template.opsForValue().append("District", JSON.toJSONString(district));
         }
-
+        Cache.put("provinceDistrict",districtMenus);
     }
 
 
