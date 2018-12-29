@@ -1124,7 +1124,7 @@ select  <include refid="Base_Column_List" /> from seal where seal_code = (select
   </select>
 
     <select id="selectLikeDistrictId1" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List" /> from seal where district_id like #{districtId}"%" and is_apply = true 
+    select <include refid="Base_Column_List" /> from seal where district_id like #{districtId}"%" and is_apply = true
     </select>
 
   <select id="countAddSealByDistrictId"  resultType="java.lang.Integer" parameterType="java.lang.String">
