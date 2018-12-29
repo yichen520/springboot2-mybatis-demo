@@ -72,5 +72,7 @@ public interface SealService {
    //印章核验
    int verifySeal(User user,String id,String rejectReason,String rejectRemark,String verify_type_name);
 
+   //待承接的印章信息
+   List<Seal> waitUndertake(String MakedepartmentCode);
 }
 

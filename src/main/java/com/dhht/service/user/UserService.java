@@ -2,6 +2,7 @@ package com.dhht.service.user;
 
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.SMSCode;
+import com.dhht.model.Seal;
 import com.dhht.model.User;
 import com.github.pagehelper.PageInfo;
 import com.dhht.model.UserDomain;

@@ -16,6 +16,8 @@ public interface SealDao {
 
     int insert(Seal record);
 
+    int insertSelective(Seal record);
+
     Seal selectByPrimaryKey(@Param("id") String id);
 
     List<Seal> selectByCodeAndType(String useDepartmentCode);
@@ -27,6 +29,10 @@ public interface SealDao {
     int insertSealOperationRecord(SealOperationRecord sealOperationRecord);
 
     int insertSealMaterial(SealMaterial sealMaterial);
+
+    int logoutSeal(@Param("useDepartmentCode") String useDepartmentCode);
+
+    List<Seal> allUndertakeSeal(@Param("makeDepartmentCode") String makeDepartmentCode);
 
 //    int insertVerifySeal(String id,boolean isPass,String rejectReason,String rejectRemark);
 
