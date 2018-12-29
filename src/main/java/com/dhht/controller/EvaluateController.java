@@ -34,7 +34,7 @@ public class EvaluateController extends BaseController {
     @RequestMapping("/insert")
     public JsonObjectBO insert( @RequestBody Evaluate evaluate){
         try {
-            return  ResultUtil.getResultInfo(evaluateService.insert(evaluate,currentUser()));
+            return  ResultUtil.getResult(evaluateService.insert(evaluate,currentUser()));
         }catch (Exception e){
             e.printStackTrace();
             logger.error(e.getMessage(), e);
@@ -61,7 +61,7 @@ public class EvaluateController extends BaseController {
     public JsonObjectBO info(@RequestBody Map map){
         String id = (String) map.get("id");
         try {
-            return  ResultUtil.getResultInfo(evaluateService.deleteEvaluate(id));
+            return  ResultUtil.getResult(evaluateService.deleteEvaluate(id));
         }catch (Exception e){
             e.printStackTrace();
             logger.error(e.getMessage(), e);
