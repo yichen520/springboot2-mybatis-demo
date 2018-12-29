@@ -23,7 +23,7 @@
   </select>
 
   <select id="selectByMakeDepartmentFlag" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List"/> from make_department_seal_price where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR} and is_delete = false 
+    select <include refid="Base_Column_List"/> from make_department_seal_price where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR} and is_delete = false
   </select>
 
   <delete id="deleteById" parameterType="java.lang.String" >
