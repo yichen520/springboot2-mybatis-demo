@@ -30,6 +30,7 @@ public class ResultUtil {
     public static final int isIncidenceId = 25;
     public static final int isSmallSealCode = 26;
     public static final int isNoLoginUser = 50;
+    public static final int isSendVerificationCode=27;
 
 
     public static JsonObjectBO getResult(int type){
@@ -88,6 +89,8 @@ public class ResultUtil {
                 return JsonObjectBO.error("案件编号不可以重复");
             case 26:
                 return JsonObjectBO.error("印章流水号设置值小于已有流水号");
+            case 27:
+                return JsonObjectBO.ok("验证码已发送");
             case 50:
                 return JsonObjectBO.error("会话失效,请重新登录");
                 default:

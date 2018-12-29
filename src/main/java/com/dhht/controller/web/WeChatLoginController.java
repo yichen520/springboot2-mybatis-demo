@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.dhht.util.MenuUtil.genMenu;
 
 @RestController
-public class LoginController {
+public class WeChatLoginController {
 
     @Autowired
     private UserLoginService userLoginService;
@@ -73,7 +73,6 @@ public class LoginController {
         Map<String,Object> map=new HashMap<>();
         try {
             request.getSession().invalidate();
-
             map.put("status", "ok");
             map.put("message","退出登录成功");
             return map;
