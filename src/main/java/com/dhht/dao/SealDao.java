@@ -22,9 +22,13 @@ public interface SealDao {
 
     List<Seal> selectByCodeAndType(String useDepartmentCode);
 
+    Seal selectByTypeAndUseDepartmentCode(@Param("useDepartmentCode") String useDepartmentCode);
+
     List<SealOperationRecord> selectSealOperationRecord(@Param("id") String id,@Param("operateType") String operateType);
 
     int updateByPrimaryKey(Seal record);
+
+    int updateByPrimaryKeySelective(Seal record);
 
     int insertSealOperationRecord(SealOperationRecord sealOperationRecord);
 

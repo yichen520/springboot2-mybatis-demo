@@ -54,7 +54,9 @@ public class InterceptorConfig implements HandlerInterceptor {
         if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/getCheckCode")
                 ||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().equals("/make/employee/insertEmployeeImport")||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().contains("/web") || request.getRequestURI().equals("/evaluate/insert")
                 || request.getRequestURI().equals("/evaluate/delete")
-                || request.getRequestURI().equals("/evaluate/info")){
+                || request.getRequestURI().equals("/evaluate/info")
+                || request.getRequestURI().equals("/seal/record/sealRecord")
+                ){
             return true;
         }
         //获取session是否存在

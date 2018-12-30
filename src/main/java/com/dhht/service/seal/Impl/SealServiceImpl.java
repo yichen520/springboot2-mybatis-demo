@@ -224,7 +224,10 @@ public class SealServiceImpl implements SealService {
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
                 if(seal.getSealReason().equals("03")){
                     if(seal.getSealTypeCode().equals("01")){
-                        int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode);
+                        if(seal1!=null) {
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                        }
                     }
                 }
 
@@ -384,19 +387,18 @@ public class SealServiceImpl implements SealService {
                         return ResultUtil.isError;
                     }
 
-                    fileService.register(moulageId, "印模图像注册");
-                    fileService.register(moulageImageId, "印模图像注册");
-                    fileService.register(idCardPhotoId, "认证合一身份证照片注册 ");
-                    fileService.register(fieldPhotoId, "认证合一现场照片注册");
-
-                    SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
-                    SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.RECORD);
-                    SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal, SyncDataType.SEAL, SyncOperateType.RECORD);
-                    SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(faceCompareRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
-                    SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
-                    SyncEntity syncEntity5 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(microsealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
-                    SyncEntity syncEntity6 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.RECORD);
-
+//                    fileService.register(moulageId, "印模图像注册");
+//                    fileService.register(moulageImageId, "印模图像注册");
+//                    fileService.register(idCardPhotoId, "认证合一身份证照片注册 ");
+//                    fileService.register(fieldPhotoId, "认证合一现场照片注册");
+//
+//                    SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
+//                    SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.RECORD);
+//                    SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal, SyncDataType.SEAL, SyncOperateType.RECORD);
+//                    SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(faceCompareRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
+//                    SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
+//                    SyncEntity syncEntity5 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(microsealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
+//                    SyncEntity syncEntity6 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.RECORD);
 
                 } else {
                     return ResultUtil.isError;
@@ -522,12 +524,10 @@ public class SealServiceImpl implements SealService {
         params.add( createRandomVcode());
         Boolean b = smsSendService.sendSingleMsgByTemplate(telphone,userCode,params);
 
-        seal1.setIsEarlywarning(true);
-        seal1.setEarlywarningDate(DateUtil.getCurrentTime());
+
         seal1.setIsMake(true);
         seal1.setMakeDate(DateUtil.getCurrentTime());
-        seal1.setIsApply(true);
-        seal1.setApplyDate(DateUtil.getCurrentTime());
+
 //        seal1.setDistrictId(seal1.getDistrictId());
         int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
@@ -637,7 +637,10 @@ public class SealServiceImpl implements SealService {
 
         seal1.setIsDeliver(true);
         seal1.setDeliverDate(DateUtil.getCurrentTime());
-
+        seal1.setIsEarlywarning(true);
+        seal1.setEarlywarningDate(DateUtil.getCurrentTime());
+        seal1.setIsApply(true);
+        seal1.setApplyDate(DateUtil.getCurrentTime());
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
         if (!isLegalPerson(certificateNo, name, useDepartment.getCode())) { //判断不是法人
@@ -686,6 +689,39 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isFail;
         }
 
+    }
+
+    /**
+     *交付后备案
+     * @param user   当前操作人（从业人员）
+     * @param sealId  印章id
+     * @return
+     */
+    @Override
+    public int newsealRecord(User user, String sealId) {
+        Seal seal = sealDao.selectByPrimaryKey(sealId);
+        seal.setIsApply(true);
+        seal.setApplyDate(DateUtil.getCurrentTime());
+        seal.setIsEarlywarning(true);
+        seal.setEarlywarningDate(DateUtil.getCurrentTime());
+       int result = sealDao.updateByPrimaryKeySelective(seal);
+        //印章操作
+        String telphone = user.getTelphone();
+        Employee employee = employeeService.selectByPhone(telphone);
+        SealOperationRecord sealOperationRecord = new SealOperationRecord();
+        sealOperationRecord.setId(UUIDUtil.generate());
+        sealOperationRecord.setSealId(sealId);
+        sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+        sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+        sealOperationRecord.setOperateType("03");
+        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        if(result==1 && insertSealOperationRecord==1){
+            return ResultUtil.isSuccess;
+        }else {
+            return ResultUtil.isFail;
+        }
     }
 
     /**

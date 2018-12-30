@@ -637,7 +637,9 @@
                        )
     </foreach >
   </insert>
-
+    <select id="selectByTypeAndUseDepartmentCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from  seal where use_department_code = #{useDepartmentCode} and seal_type_code = "01"
+    </select>
   <select id="selectByCodeAndType" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
       select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
   </select>

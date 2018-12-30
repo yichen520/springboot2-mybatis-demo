@@ -74,5 +74,7 @@ public interface SealService {
 
    //待承接的印章信息
    List<Seal> waitUndertake(String MakedepartmentCode);
+
+   int newsealRecord(User user, String sealId);
 }
 

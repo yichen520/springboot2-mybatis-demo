@@ -176,6 +176,37 @@ public class SealController implements InitializingBean {
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("备案失败");
         }
+    }
+
+    /**
+     * 备案
+     *
+     * @param httpServletRequest
+     * @param
+     * @return
+     */
+    @Log("印章交付后备案")
+    @RequestMapping("/newRecord")
+    public JsonObjectBO newRecord(HttpServletRequest httpServletRequest, @RequestBody Map map) {
+        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+        String sealId = (String)map.get("id");
+
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            int a = sealService.newsealRecord(user,sealId);
+
+            if (a == ResultUtil.isSuccess) {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("备案成功");
+            } else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("添加失败");
+            }
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("备案失败");
+        }
 
 
     }
