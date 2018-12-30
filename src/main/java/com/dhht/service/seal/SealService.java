@@ -76,5 +76,10 @@ public interface SealService {
    List<Seal> waitUndertake(String MakedepartmentCode);
 
    int newsealRecord(User user, String sealId);
+
+   //印章备案信息查询
+   List<Seal> selectSealByDistrictId(String districtId);
+
+
 }
 

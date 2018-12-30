@@ -54,7 +54,7 @@
     select
     <include refid="Base_Column_List" />
     from use_department
-    where  code= #{code,jdbcType=CHAR} AND is_delete = 0
+    where  code= #{useDepartmentCode,jdbcType=CHAR} AND is_delete = 0
 
   </select>
 

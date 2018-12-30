@@ -19,5 +19,6 @@ public interface PunishService {
     List<EmployeePunishRecord>  findEmployeePunish(String makedepartmentName, String startTime, String endTime, String districtId);
 
     boolean sendcode(String phoneNumber, int templateId, ArrayList<String> params);
+
     boolean sendcode1(String phoneNumber, int templateId, ArrayList<String> params);
 }

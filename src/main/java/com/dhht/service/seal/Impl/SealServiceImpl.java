@@ -165,8 +165,8 @@ public class SealServiceImpl implements SealService {
             if (useDepartment == null) {
                 return ResultUtil.isNoDepartment;
             }
-            String telphone = user.getTelphone();
-            Employee employee = employeeService.selectByPhone(telphone); //获取从业人员
+            String phone = user.getTelphone();
+            Employee employee = employeeService.selectByPhone(phone); //获取从业人员
             if (employee == null) {
                 return ResultUtil.isNoEmployee;
             }
@@ -1127,6 +1127,14 @@ public class SealServiceImpl implements SealService {
     @Override
     public List<Seal> waitUndertake(String makeDepartmentCode) {
         List<Seal> seals = sealDao.allUndertakeSeal(makeDepartmentCode);
+        return seals;
+    }
+
+    @Override
+    public List<Seal> selectSealByDistrictId(String districtId) {
+        String districtId1 = districtId.substring(0,4);
+        List<Seal> seals = sealDao.selectLikeDistrictId1(districtId1);
+
         return seals;
     }
 

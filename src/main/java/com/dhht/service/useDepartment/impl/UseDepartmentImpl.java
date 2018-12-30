@@ -102,7 +102,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 useDepartment.setFlag(oldUseDepartment.getFlag());
                 useDepartment.setDepartmentStatus(oldUseDepartment.getDepartmentStatus());
                 String operateUUid = UUIDUtil.generate();
-                String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime","specialBusinessLicenceScanning"};
+                String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime","specialBusinessLicenceScanning","managerPhone","managerName"};
                 int r = useDepartmentDao.insert(useDepartment);
                 boolean f = registerFile(useDepartment);
                 boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.UPDATE,operateUUid);

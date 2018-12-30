@@ -430,7 +430,7 @@ public class EmployeeServiceImp implements EmployeeService {
     public Employee selectByPhone(String phone) {
 
         Employee employee =  employeeDao.selectByPhone(phone);
-        return setEmployeeDistrict(employee);
+        return employee;
     }
 
     /**

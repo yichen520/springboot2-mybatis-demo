@@ -77,6 +77,11 @@ public class UseDepartment {
     private String idCardFrontId;
     @EntityComment(value = "使用单位法人身份证反面扫面件",type = 2)
     private String idCardReverseId;
+    @EntityComment(value ="注册经办人姓名")
+    private String  managerName;
+    @EntityComment(value = "注册经办人手机")
+    private String managerPhone;
+
     private Boolean isDelete;
     private Integer version;
     private String flag;

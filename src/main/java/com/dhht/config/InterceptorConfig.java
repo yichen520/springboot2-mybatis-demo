@@ -47,12 +47,14 @@ public class InterceptorConfig implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         boolean judgeIsMoblie = JudgeIsMoblie(request);
-        if(judgeIsMoblie==true){
+
+        //app端、微信小程序端和门户网站端不拦截
+        if(judgeIsMoblie==true|| request.getRequestURI().contains("/weChat")||request.getRequestURI().contains("/portal") ){
             return true;
         }
-        //登录不做要求
+
         if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/getCheckCode")
-                ||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().equals("/make/employee/insertEmployeeImport")||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().contains("/web") || request.getRequestURI().equals("/evaluate/insert")
+                ||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().equals("/make/employee/insertEmployeeImport")||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")|| request.getRequestURI().equals("/evaluate/insert")
                 || request.getRequestURI().equals("/evaluate/delete")
                 || request.getRequestURI().equals("/evaluate/info")
                 || request.getRequestURI().equals("/seal/record/sealRecord")
