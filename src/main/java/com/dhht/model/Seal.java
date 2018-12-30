@@ -46,7 +46,7 @@ public class Seal extends SealKey {
 
     private Date recordDate;    //备案日期
 
-    private Boolean isRecord;   //是否备案
+    private Boolean isRecord;   //是否申请
 
     private Date makeDate;  //制作日期
 
@@ -90,19 +90,19 @@ public class Seal extends SealKey {
 
     private String verifyTypeName;
 
-    private Boolean isEarlywarning;
+    private Boolean isEarlywarning;  //是否预警
 
-    private Boolean isApply;
+    private Boolean isApply; //是否备案
 
-    private Date applyDate;
+    private Date applyDate; //是否备案
 
-    private Date earlywarningDate;
+    private Date earlywarningDate;  //预警日期
 
-    private String missingpostRemark;
+    private String missingpostRemark;  //遗失补刻备注
 
-    private Boolean isUndertake;
+    private Boolean isUndertake; //是否承接
 
-    private Date undertakeDate;
+    private Date undertakeDate;  //承接日期
 
     public Boolean getIsRecord() {
         return isRecord;

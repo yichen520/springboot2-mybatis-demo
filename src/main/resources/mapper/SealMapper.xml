@@ -940,6 +940,100 @@
     order by logout_date desc
   </select>
 
+    <select id="selectIsApply" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+        SELECT  <include refid="Base_Column_List" /> from seal
+        <where>
+            <if test="isRecord !=null ">
+                AND is_record =  #{isRecord,jdbcType=BIT}
+            </if>
+            <if test="isMake !=null ">
+                AND is_make =  #{isMake,jdbcType=BIT}
+            </if>
+            <if test="isPersonal !=null ">
+                AND is_personal =  #{isPersonal,jdbcType=BIT}
+            </if>
+            <if test="isDeliver !=null ">
+                AND is_deliver =  #{isDeliver,jdbcType=BIT}
+            </if>
+            <if test="isLoss !=null ">
+                or is_loss =  #{isLoss,jdbcType=BIT}
+            </if>
+            <if test="isLogout !=null ">
+            AND is_logout =  #{isLogout,jdbcType=BIT}
+        </if>
+            <if test="isApply !=null ">
+                AND is_apply =  #{isApply,jdbcType=BIT}
+            </if>
+            <if test="isUndertake !=null ">
+                AND is_undertake =  #{isUndertake,jdbcType=BIT}
+            </if>
+            <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+                And use_department_code LIKE  "%"#{useDepartmentCode}"%"
+            </if>
+            <if test="useDepartmentName !=null and useDepartmentName !=''">
+                AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="districtId !=null and districtId!=''">
+                AND district_id like #{districtId}"%"
+            </if>
+            <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
+                AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+            </if>
+            <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+                AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+            </if>
+
+        </where>
+        order by apply_date desc
+    </select>
+
+    <select id="selectIsUndertake" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
+        SELECT  <include refid="Base_Column_List" /> from seal
+        <where>
+            <if test="isRecord !=null ">
+                AND is_record =  #{isRecord,jdbcType=BIT}
+            </if>
+            <if test="isMake !=null ">
+                AND is_make =  #{isMake,jdbcType=BIT}
+            </if>
+            <if test="isPersonal !=null ">
+                AND is_personal =  #{isPersonal,jdbcType=BIT}
+            </if>
+            <if test="isDeliver !=null ">
+                AND is_deliver =  #{isDeliver,jdbcType=BIT}
+            </if>
+            <if test="isLoss !=null ">
+                or is_loss =  #{isLoss,jdbcType=BIT}
+            </if>
+            <if test="isLogout !=null ">
+                AND is_logout =  #{isLogout,jdbcType=BIT}
+            </if>
+            <if test="isApply !=null ">
+                AND is_apply =  #{isApply,jdbcType=BIT}
+            </if>
+            <if test="isUndertake !=null ">
+                AND is_undertake =  #{isUndertake,jdbcType=BIT}
+            </if>
+            <if test="useDepartmentCode !=null and useDepartmentCode !=''">
+                And use_department_code LIKE  "%"#{useDepartmentCode}"%"
+            </if>
+            <if test="useDepartmentName !=null and useDepartmentName !=''">
+                AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="districtId !=null and districtId!=''">
+                AND district_id like #{districtId}"%"
+            </if>
+            <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
+                AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+            </if>
+            <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+                AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+            </if>
+
+        </where>
+        order by undertake_date desc
+    </select>
+
   <select id="selectSealByBADW"  parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     select distinct <include refid="Base_Column_List" /> from seal
     <where>
@@ -962,6 +1056,9 @@
       <if test="isLogout !=null ">
         AND is_logout = #{isLogout,jdbcType=BIT}
       </if>
+        <if test="isUndertake !=null ">
+            AND is_undertake = #{isUndertake,jdbcType=BIT}
+        </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE "%"#{useDepartmentCode}"%"
       </if>
