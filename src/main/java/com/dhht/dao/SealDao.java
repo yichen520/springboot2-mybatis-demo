@@ -58,6 +58,10 @@ public interface SealDao {
 
     List<Seal> selectIsLogout(Seal seal);
 
+    List<Seal> selectIsApply(Seal seal);
+
+    List<Seal> selectIsUndertake(Seal seal);
+
     List<Seal> selectWaitDeliver(Seal seal);
 
     List<Seal> selectSealByBADW(Seal seal);

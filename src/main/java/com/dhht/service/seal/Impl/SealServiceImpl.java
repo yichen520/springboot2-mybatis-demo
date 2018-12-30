@@ -529,14 +529,14 @@ public class SealServiceImpl implements SealService {
         seal1.setMakeDate(DateUtil.getCurrentTime());
 
 //        seal1.setDistrictId(seal1.getDistrictId());
-        int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
+        int updateByPrimaryKey1 = sealDao.updateByPrimaryKeySelective(seal1);
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;
         } else {
-            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-            SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+//            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+//            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+//            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+//            SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
             return ResultUtil.isSuccess;
         }
 
@@ -639,8 +639,7 @@ public class SealServiceImpl implements SealService {
         seal1.setDeliverDate(DateUtil.getCurrentTime());
         seal1.setIsEarlywarning(true);
         seal1.setEarlywarningDate(DateUtil.getCurrentTime());
-        seal1.setIsApply(true);
-        seal1.setApplyDate(DateUtil.getCurrentTime());
+//
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
         if (!isLegalPerson(certificateNo, name, useDepartment.getCode())) { //判断不是法人
@@ -1399,6 +1398,8 @@ public class SealServiceImpl implements SealService {
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
+        }else if (status.equals("08")) {   //待承接
+            seal.setIsUndertake(false);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
@@ -1410,7 +1411,7 @@ public class SealServiceImpl implements SealService {
     //用于印章管理
     public List<Seal> chooseSealStatus(Seal seal, String status) {
         List<Seal> list = new ArrayList<Seal>();
-        if (status.equals("03")) {  //已备案
+        if (status.equals("03")) {  //已申请
             list = sealDao.selectIsRecord(seal);
         } else if (status.equals("01")) {  //已制作
             list = sealDao.selectIsMake(seal);
@@ -1435,6 +1436,21 @@ public class SealServiceImpl implements SealService {
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
             list = sealDao.selectIsLogout(seal);
+        }
+        else if (status.equals("08")) {   //待承接
+            seal.setIsApply(false);
+            seal.setIsDeliver(false);
+            seal.setIsRecord(false);
+            seal.setIsMake(false);
+            seal.setIsUndertake(false);
+            list = sealDao.selectIsUndertake(seal);
+        }else if (status.equals("09")) {   //已备案
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsUndertake(true);
+            seal.setIsApply(true);
+            list = sealDao.selectIsApply(seal);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitDeliver(seal);
         }
