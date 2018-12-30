@@ -740,10 +740,12 @@ public class SealServiceImpl implements SealService {
     @Override
     public int underTake(User user, String sealId) {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
-        seal.setIsApply(true);
-        seal.setApplyDate(DateUtil.getCurrentTime());
+
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
+        seal.setIsRecord(true);
+        seal.setRecordDate(DateUtil.getCurrentTime());
+        seal.setSealStatusCode("03");
         int result = sealDao.updateByPrimaryKeySelective(seal);
         //印章操作
         String telphone = user.getTelphone();
