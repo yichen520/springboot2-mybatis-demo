@@ -42,7 +42,7 @@ public interface EmployeeDao {
 
     List<Employee> selectWorkEmployee(@Param("employeeDepartmentCode") String employeeDepartmentCode);
 
-    Employee selectByPhone(@Param("phone") String phone);
+    Employee selectByPhone(String phone);
 
     Employee selectByEmployeeId(@Param("employeeId") String employeeId);
 
