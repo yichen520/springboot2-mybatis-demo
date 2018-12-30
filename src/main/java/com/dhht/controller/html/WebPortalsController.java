@@ -1,27 +1,34 @@
 package com.dhht.controller.html;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.Cache;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.controller.web.BaseController;
 import com.dhht.model.*;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.punish.PunishService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.WeChatUserService;
+import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/portal")
-public class WebPortalsController {
+public class WebPortalsController extends BaseController {
 
     @Autowired
     private MakeDepartmentService makeDepartmentService;
@@ -31,6 +38,13 @@ public class WebPortalsController {
     private UseDepartmentService useDepartmentService;
     @Autowired
     private WeChatUserService weChatUserService;
+    @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
+    private PunishService punishService;
+    @Value("${sms.template.makedepartmentpunish}")
+    private int makedepartmentpunish ;
 
 
     /**
@@ -104,10 +118,32 @@ public class WebPortalsController {
             return JsonObjectBO.exception("推送失败");
         }
     }
-
-
-
-
-
+    @Log("验证手机号")
+    @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
+    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
+        try {
+            return userLoginService.checkPhoneAndIDCard(smsCode);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("发送短信发生异常");
+        }
+    }
+    @RequestMapping(value = "/sendCode")
+    public JsonObjectBO punishEmployeeCode( @RequestBody Map map){
+        User user = currentUser();
+        if (user == null){
+            return   JsonObjectBO.sessionLose("session失效");
+        }
+        String phone = (String)map.get("telphone");
+        String code = StringUtil.createRandomVcode();
+        ArrayList<String> params = new ArrayList<String>();
+        params.add(code);
+        if (punishService.sendcode1(phone,makedepartmentpunish,params)){
+            return  JsonObjectBO.ok("获取验证码成功");
+        }else{
+            return JsonObjectBO.error("获取验证码失败");
+        }
+    }
 
 }

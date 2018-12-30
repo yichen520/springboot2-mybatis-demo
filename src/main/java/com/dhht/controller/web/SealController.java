@@ -124,6 +124,7 @@ public class SealController implements InitializingBean {
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
         String districtId = user.getDistrictId();
         String agentTelphone = sealDTO.getTelphone();
+        String  captcha =sealDTO.getCaptcha();
         String agentName = sealDTO.getName();
         String certificateNo = sealDTO.getCertificateNo();
         String certificateType = sealDTO.getCertificateType();
@@ -143,7 +144,7 @@ public class SealController implements InitializingBean {
             int a = sealService.sealRecord(seals,user,useDepartmentCode,districtId, agentTelphone,
                     agentName,certificateNo, certificateType,
                     agentPhotoId,  idCardFrontId,  idCardReverseId,   proxyId,  idCardPhotoId, confidence,
-             fieldPhotoId,entryType);
+             fieldPhotoId,entryType,captcha);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
@@ -160,7 +161,10 @@ public class SealController implements InitializingBean {
             } else if(a==ResultUtil.isNoProxy){
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("缺少授权委托书");
-            } else {
+            } else if(a==ResultUtil.isCodeError){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("验证码错误,请重新输入");
+            }else {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("添加失败");
             }
@@ -200,10 +204,39 @@ public class SealController implements InitializingBean {
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("备案失败");
         }
+    }
+    /**
+     * 备案
+     *
+     * @param httpServletRequest
+     * @param
+     * @return
+     */
+    @Log("印章承接")
+    @RequestMapping("/underTake")
+    public JsonObjectBO underTake(HttpServletRequest httpServletRequest, @RequestBody Map map) {
+        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+        String sealId = (String)map.get("id");
+
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            int a = sealService.underTake(user,sealId);
+
+            if (a == ResultUtil.isSuccess) {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("承接成功");
+            } else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("承接失败");
+            }
+            return jsonObjectBO;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("备案失败");
+        }
 
 
     }
-
     /**
      * 印章信息
 

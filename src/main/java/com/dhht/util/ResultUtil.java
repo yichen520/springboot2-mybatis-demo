@@ -30,6 +30,7 @@ public class ResultUtil {
     public static final int isIncidenceId = 25;
     public static final int isSmallSealCode = 26;
     public static final int isNoLoginUser = 50;
+    public static final int isCodeError = 51;
     public static final int isSendVerificationCode=27;
 
 
@@ -93,6 +94,8 @@ public class ResultUtil {
                 return JsonObjectBO.ok("验证码已发送");
             case 50:
                 return JsonObjectBO.error("会话失效,请重新登录");
+            case 51:
+                return JsonObjectBO.error("验证码错误,");
                 default:
                     return null;
         }

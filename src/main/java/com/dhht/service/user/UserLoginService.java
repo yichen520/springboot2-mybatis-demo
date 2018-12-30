@@ -35,6 +35,8 @@ public interface UserLoginService {
 
     JsonObjectBO checkAPPPhoneAndIDCard(SMSCode smsCode);
 
+    JsonObjectBO checkPhone(SMSCode smsCode);
+
 }
 
 

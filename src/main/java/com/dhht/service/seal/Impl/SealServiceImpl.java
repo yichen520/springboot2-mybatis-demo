@@ -2,6 +2,7 @@ package com.dhht.service.seal.Impl;
 
 import com.dhht.annotation.Sync;
 import com.dhht.common.ImageGenerate;
+import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
 import com.dhht.face.AFR;
 import com.dhht.model.*;
@@ -17,6 +18,7 @@ import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.FileStoreService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.service.user.UserLoginService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
@@ -79,6 +81,9 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private SealCodeService sealCodeService;
+
+    @Autowired
+    private UserLoginService userLoginService;
 
 
 
@@ -156,8 +161,16 @@ public class SealServiceImpl implements SealService {
     public int sealRecord(List<Seal> seals, User user, String useDepartmentCode, String districtId, String agentTelphone,
                           String agentName, String certificateNo, String certificateType,
                           String agentPhotoId, String idcardFrontId, String idcardReverseId, String proxyId, String idCardPhotoId, int confidence,
-                          String fieldPhotoId, String entryType) {
+                          String fieldPhotoId, String entryType,String captcha) {
         try {
+            SMSCode smsCode = new SMSCode();
+            smsCode.setPhone(agentTelphone);
+            smsCode.setSmscode(captcha);
+           JsonObjectBO jsonObjectBO = userLoginService.checkPhone(smsCode);
+           //这里返回是code、要返回到JsonObjectBO
+           if (jsonObjectBO.getCode()!=1){
+               return ResultUtil.isCodeError;
+           }
             FaceCompareRecord faceCompareRecord = null;
             FaceCompareRecord TrustedIdentityAuthenticationResult = null;
             List<Seal> list = sealDao.selectByCodeAndType(useDepartmentCode);
@@ -723,6 +736,34 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isFail;
         }
     }
+
+    //承接
+    @Override
+    public int underTake(User user, String sealId) {
+        Seal seal = sealDao.selectByPrimaryKey(sealId);
+        seal.setIsUndertake(true);
+        seal.setUndertakeDate(DateUtil.getCurrentTime());
+        int result = sealDao.updateByPrimaryKeySelective(seal);
+        //印章操作
+        String telphone = user.getTelphone();
+        Employee employee = employeeService.selectByPhone(telphone);
+        SealOperationRecord sealOperationRecord = new SealOperationRecord();
+        sealOperationRecord.setId(UUIDUtil.generate());
+        sealOperationRecord.setSealId(sealId);
+        sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+        sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+        sealOperationRecord.setOperateType("03");
+        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        if(result==1 && insertSealOperationRecord==1){
+            return ResultUtil.isSuccess;
+        }else {
+            return ResultUtil.isFail;
+        }
+    }
+
+
 
     /**
      * 挂失

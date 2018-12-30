@@ -126,7 +126,23 @@ public class UserLoginServiceImpl implements UserLoginService {
         return JsonObjectBO.ok("效验通过");
 
     }
+    @Override
+    public JsonObjectBO checkPhone(SMSCode smsCode) {
+        Long nowtime =System.currentTimeMillis();
 
+        SMSCode sms = smsCodeDao.getSms(smsCode.getPhone());
+        if (sms ==null){
+            return JsonObjectBO.error("请点击发送验证码");
+        }
+        if(!sms.getSmscode().equals(smsCode.getSmscode())){
+            return JsonObjectBO.error("验证码错误");
+        }
+        if(nowtime-sms.getLastTime()>smsexpireTime){
+            return JsonObjectBO.error("验证码超时，请重新发送");
+        }
+        return JsonObjectBO.ok("效验通过");
+
+    }
 
     /**
      * 验证用户 输入错误次数等

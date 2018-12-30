@@ -141,12 +141,10 @@ public class UserPasswordServiceImpl implements UserPasswordService{
      * @return
      */
     @Override
-    public int getCheckCode(String username) {
+    public int getCheckCode(String telphone) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         String code = createRandomVcode();
-        User user = userDao.findByUserName(username);
-        String phone = user.getTelphone();
-        int a = sendMessage(phone,code,checkCode1);
+        int a = sendMessage(telphone,code,checkCode1);
         if(a<0){
             jsonObjectBO.setCode(-1);
             jsonObjectBO.setMessage("验证码获取失败");

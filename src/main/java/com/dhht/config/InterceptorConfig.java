@@ -53,11 +53,16 @@ public class InterceptorConfig implements HandlerInterceptor {
             return true;
         }
 
-        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/getCheckCode")
+        if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/Code")
                 ||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().equals("/make/employee/insertEmployeeImport")||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")|| request.getRequestURI().equals("/evaluate/insert")
                 || request.getRequestURI().equals("/evaluate/delete")
                 || request.getRequestURI().equals("/evaluate/info")
                 || request.getRequestURI().equals("/seal/record/sealRecord")
+                ||request.getRequestURI().equals("/seal/record/getCheckCode")
+                ||request.getRequestURI().equals("/seal/record/newRecord")
+                ||request.getRequestURI().equals("/seal/record/underTake")
+
+
                 ){
             return true;
         }

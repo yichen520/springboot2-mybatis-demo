@@ -67,4 +67,6 @@ public class SealDTO {
     private Integer pageNum;
 
     private Integer pageSize;
+
+    private String captcha;
 }
