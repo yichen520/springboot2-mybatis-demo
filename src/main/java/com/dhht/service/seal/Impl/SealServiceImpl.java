@@ -712,7 +712,7 @@ public class SealServiceImpl implements SealService {
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
         seal1.setSealStatusCode("04");
         seal1.setGetterId(saId);
-        int updateByPrimaryKey = sealDao.updateByPrimaryKey(seal1);
+        int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal1);
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
             SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.PERSONAL);
             SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
