@@ -11,6 +11,7 @@ import com.dhht.model.pojo.SealVO;
 
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.message.NotifyService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.SealCodeService;
 import com.dhht.service.seal.SealService;
@@ -84,6 +85,9 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private UserLoginService userLoginService;
+
+    @Autowired
+    private NotifyService notifyService;
 
 
 
@@ -652,6 +656,23 @@ public class SealServiceImpl implements SealService {
         seal1.setDeliverDate(DateUtil.getCurrentTime());
         seal1.setIsEarlywarning(true);
         seal1.setEarlywarningDate(DateUtil.getCurrentTime());
+
+        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal1.getMakeDepartmentCode());
+        User user1 = new User();
+        user1.setId(UUIDUtil.generate());
+        user1.setTelphone(makeDepartmentSimple.getTelphone());
+        user1.setUserName(makeDepartmentSimple.getDepartmentName());
+        user1.setRealName(makeDepartmentSimple.getLegalName());
+        user1.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+        Notify notify = new Notify();
+        notify.setId(UUIDUtil.generate());
+        notify.setNotifyTitle("备案预警");
+        notify.setNotifyContent("您的"+seal1.getSealName()+"编号"+seal1.getSealCode()+"请尽快备案");
+        int notifyResult = notifyService.insertNotify(notify,user1);
+        if(notifyResult==ResultUtil.isFail){
+            return ResultUtil.isFail;
+        }
+
 //
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
