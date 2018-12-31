@@ -840,7 +840,7 @@
   <select id="selectIsDeliver" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" /> from seal
     <where>
-      is_record = 1 and is_deliver = 1
+        seal_status_code = #{sealStatusCode}
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
