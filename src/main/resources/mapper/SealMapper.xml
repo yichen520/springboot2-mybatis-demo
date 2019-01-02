@@ -1149,9 +1149,9 @@
       <if test="isLogout !=null ">
         AND is_logout = #{isLogout,jdbcType=BIT}
       </if>
-        <if test="isUndertake !=null ">
-            AND is_undertake = #{isUndertake,jdbcType=BIT}
-        </if>
+      <if test="isUndertake !=null ">
+       AND is_undertake = #{isUndertake,jdbcType=BIT}
+      </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE "%"#{useDepartmentCode}"%"
       </if>
@@ -1184,6 +1184,9 @@
       </if>
       <if test="isLogout !=null ">
         AND is_logout = #{isLogout,jdbcType=BIT}
+      </if>
+      <if test="isUndertake !=null ">
+        AND is_undertake = #{isUndertake,jdbcType=BIT}
       </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE "%"#{useDepartmentCode}"%"

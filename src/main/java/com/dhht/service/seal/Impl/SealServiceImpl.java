@@ -1480,6 +1480,11 @@ public class SealServiceImpl implements SealService {
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
         }else if (status.equals("08")) {   //待承接
+            seal.setIsApply(false);
+            seal.setIsDeliver(false);
+            seal.setIsRecord(false);
+            seal.setIsMake(false);
+            seal.setIsUndertake(false);
             seal.setIsUndertake(false);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
