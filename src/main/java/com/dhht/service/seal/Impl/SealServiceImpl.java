@@ -245,7 +245,7 @@ public class SealServiceImpl implements SealService {
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
                 if(seal.getSealReason().equals("03")){
                     if(seal.getSealTypeCode().equals("01")){
-                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode);
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null);
                         if(seal1!=null) {
                             int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
                         }
@@ -343,17 +343,9 @@ public class SealServiceImpl implements SealService {
                     String localPath = new ImageGenerate().seal(map);
                     File file = new File(localPath);
                   BufferedImage image = ImageUtil.getBufferedImage(localPath);
-////                   ImageIO.write(image,"bmp",new File(localPath));
-//                    String ca = localPath.substring(0,localPath.lastIndexOf("."));
-//                    String savePath = ca+".bmp";
-//                    ImageUtil.image2RGB565Bmp(localPath,savePath);
                     ImageGenerate imageGenerate = new ImageGenerate();
                     imageGenerate.saveGridImage(new File(localPath),image); //设置dpi
                     BufferedImage image1 = ImageUtil.getBufferedImage(localPath);
-
-//                    String ca = localPath.substring(0,localPath.lastIndexOf("."));
-//                    String savePath = ca+".bmp";
-//                    ImageUtil.image2RGB565Bmp(localPath,savePath);
                     ImageIO.write(image1,"bmp",new File(localPath));
                     File file2 =  new File(localPath);
                     InputStream inputStream = new FileInputStream(file2);
@@ -687,7 +679,7 @@ public class SealServiceImpl implements SealService {
             }
         }
         notify.setNotifyUser(userId);
-        notify.setNotifyContent("您的"+seal1.getSealName()+"编号"+seal1.getSealCode()+"请尽快备案");
+        notify.setNotifyContent("您的"+seal1.getSealName()+"编号"+seal1.getSealCode()+"的印章请尽快备案");
         int notifyResult = notifyService.insertNotify(notify,user1);
         if(notifyResult==ResultUtil.isFail){
             return ResultUtil.isFail;
@@ -806,6 +798,7 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isFail;
         }
     }
+
 
 
 
@@ -1219,7 +1212,6 @@ public class SealServiceImpl implements SealService {
     public List<Seal> selectSealByDistrictId(String districtId) {
         String districtId1 = districtId.substring(0,4);
         List<Seal> seals = sealDao.selectLikeDistrictId1(districtId1);
-
         return seals;
     }
 
@@ -1601,6 +1593,27 @@ public class SealServiceImpl implements SealService {
         syncEntity.setDataType(dataType);
         syncEntity.setOperateType(operateType);
         return syncEntity;
+    }
+
+
+    /**
+     * 公章变更
+     * @param
+     * @return
+     */
+    @Override
+    public int cachetChange(String code,Seal seal,User user) {
+        UseDepartment useDepartment = useDepartmentService.selectByCode(code);
+        if(useDepartment==null){
+            return ResultUtil.isNoDepartment;
+        }
+        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(code,null);
+        if(seal1!=null) {
+            int logoutSeal = sealDao.logoutSeal(code);
+        }
+        return ResultUtil.isSuccess;
+
+
     }
 
 }

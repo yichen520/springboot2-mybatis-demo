@@ -82,5 +82,10 @@ public interface SealService {
 
 
    int underTake(User user, String sealId);
+
+
+   //----------------------------------------以下是小程序端口-------------------------------------//
+   int cachetChange(String code,Seal seal,User user);
+
 }
 
