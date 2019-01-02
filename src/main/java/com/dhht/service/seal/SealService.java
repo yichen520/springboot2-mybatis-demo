@@ -21,7 +21,7 @@ public interface SealService {
                   String fieldPhotoId,String entryType,String captcha);
 
    //印章主界面
-   PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize);
+   PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize,String sealType,String recordDepartmentName,String sealCode);
 
    //印模上传
    int sealUpload(User user ,String id,  String sealedCardId, String imageDataId);

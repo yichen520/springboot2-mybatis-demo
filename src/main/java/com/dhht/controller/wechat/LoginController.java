@@ -54,6 +54,7 @@ public class LoginController {
     @RequestMapping("/verificationCode")
     public JsonObjectBO sendVerificationCode(@RequestBody Map map){
         try {
+            System.out.println("进入方法");
             String mobilePhone = (String)map.get("mobilePhone");
             int result = weChatUserService.sendMessage(mobilePhone);
             return ResultUtil.getResult(result);

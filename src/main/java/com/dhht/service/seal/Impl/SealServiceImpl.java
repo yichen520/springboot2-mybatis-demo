@@ -449,10 +449,13 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public PageInfo<Seal> sealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
+    public PageInfo<Seal> sealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize,String sealType,String recordDepartmentName,String sealCode) {
 
         try {
             Seal seal = new Seal();
+            seal.setSealTypeCode(sealType);
+            seal.setRecordDepartmentName(recordDepartmentName);
+            seal.setSealCode(sealCode);
             seal.setUseDepartmentCode(useDepartmentCode);
             seal.setUseDepartmentName(useDepartmentName);
             if(user.getRoleId().equals("BADW")){

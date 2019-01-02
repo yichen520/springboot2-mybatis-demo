@@ -251,10 +251,13 @@ public class SealController implements InitializingBean {
         String useDepartmentName = sealDTO.getSeal().getUseDepartmentName();
         String useDepartmentCode = sealDTO.getSeal().getUseDepartmentCode();
         String status = sealDTO.getSeal().getSealStatusCode();
+        String sealType = sealDTO.getSeal().getSealTypeCode();
+        String recordDepartmentName = sealDTO.getSeal().getRecordDepartmentName();
+        String sealCode = sealDTO.getSeal().getSealCode();
         int pageNum = sealDTO.getPageNum();
         int pageSize = sealDTO.getPageSize();
         try {
-            PageInfo<Seal> seal = sealService.sealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize);
+            PageInfo<Seal> seal = sealService.sealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize,sealType,recordDepartmentName,sealCode);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
