@@ -141,4 +141,7 @@ seal:
    template:
         filepath: C:/temp
 
+#省级区域设定
+province: 330000
+
 
