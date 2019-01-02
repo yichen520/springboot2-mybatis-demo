@@ -55,6 +55,7 @@ import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 @Transactional
 public class SealServiceImpl implements SealService {
 
+
     @Autowired
     private SealDao sealDao;
 
@@ -1659,7 +1660,7 @@ public class SealServiceImpl implements SealService {
         seal.setUndertakeDate(DateUtil.getCurrentTime());
         if (seal.getSealReason().equals("03")) {
             if (seal.getSealTypeCode().equals("01")) {
-                Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode());
+                Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null);
                 if (seal1 != null) {
                     int logoutSeal = sealDao.logoutSeal(seal.getUseDepartmentCode());
                 }
@@ -1718,9 +1719,28 @@ public class SealServiceImpl implements SealService {
         }
         return ResultUtil.isSuccess;
 
-
     }
 
+    @Override
+    public PageInfo<Seal> portalSealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize, String sealType, String recordDepartmentName, String sealCode) {
+
+        try {
+            Seal seal = new Seal();
+            seal.setSealTypeCode(sealType);
+            seal.setRecordDepartmentName(recordDepartmentName);
+            seal.setSealCode(sealCode);
+            seal.setUseDepartmentCode(useDepartmentCode);
+            seal.setUseDepartmentName(useDepartmentName);
+            List<Seal> list = new ArrayList<Seal>();
+            PageHelper.startPage(pageNum, pageSize);
+            list = chooseSealStatus(seal, status);
+            PageInfo<Seal> result = new PageInfo<>(list);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new PageInfo<>();
+        }
+    }
 }
 
 
