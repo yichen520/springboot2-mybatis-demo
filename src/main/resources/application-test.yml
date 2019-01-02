@@ -31,7 +31,7 @@ spring:
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
 
-          url: jdbc:mysql://10.0.0.21:8739/test_seal_V1_0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          url: jdbc:mysql://10.0.0.21:8739/test_seal_hunan?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: test_seal
           password: Tpf9Lt
 
