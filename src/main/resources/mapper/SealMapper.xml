@@ -716,6 +716,15 @@
   SELECT * from seal
   <where>
     is_record = 1 AND is_make =1 and is_personal =0 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
+      <if test="sealCode !=null and sealCode !=''">
+          And seal_code LIKE  "%"#{sealCode}"%"
+      </if>
+      <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+          AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+      </if>
+      <if test="sealTypeCode !=null and sealTypeCode !=''">
+          And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+      </if>
     <if test="useDepartmentCode !=null and useDepartmentCode !=''">
       And use_department_code LIKE  "%"#{useDepartmentCode}"%"
     </if>
@@ -759,6 +768,15 @@
           <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
             AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
           </if>
+            <if test="sealCode !=null and sealCode !=''">
+                And seal_code LIKE  "%"#{sealCode}"%"
+            </if>
+            <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+                AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="sealTypeCode !=null and sealTypeCode !=''">
+                And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+            </if>
 
         </where>
         order by record_date desc
@@ -783,6 +801,15 @@
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
+        <if test="sealCode !=null and sealCode !=''">
+            And seal_code LIKE  "%"#{sealCode}"%"
+        </if>
+        <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+            AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="sealTypeCode !=null and sealTypeCode !=''">
+            And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+        </if>
 
     </where>
     order by personal_date desc
@@ -808,6 +835,15 @@
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
+        <if test="sealCode !=null and sealCode !=''">
+            And seal_code LIKE  "%"#{sealCode}"%"
+        </if>
+        <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+            AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="sealTypeCode !=null and sealTypeCode !=''">
+            And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+        </if>
 
     </where>
     order by record_date desc
@@ -832,6 +868,15 @@
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
+        <if test="sealCode !=null and sealCode !=''">
+            And seal_code LIKE  "%"#{sealCode}"%"
+        </if>
+        <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+            AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="sealTypeCode !=null and sealTypeCode !=''">
+            And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+        </if>
 
     </where>
     order by record_date desc
@@ -841,6 +886,15 @@
     SELECT  <include refid="Base_Column_List" /> from seal
     <where>
         seal_status_code = #{sealStatusCode}
+        <if test="sealCode !=null and sealCode !=''">
+            And seal_code LIKE  "%"#{sealCode}"%"
+        </if>
+        <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+            AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="sealTypeCode !=null and sealTypeCode !=''">
+        And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+      </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
@@ -894,6 +948,15 @@
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
+        <if test="sealCode !=null and sealCode !=''">
+            And seal_code LIKE  "%"#{sealCode}"%"
+        </if>
+        <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+            AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="sealTypeCode !=null and sealTypeCode !=''">
+            And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+        </if>
 
     </where>
     order by loss_date desc
@@ -935,6 +998,15 @@
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
+        <if test="sealCode !=null and sealCode !=''">
+            And seal_code LIKE  "%"#{sealCode}"%"
+        </if>
+        <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+            AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+        </if>
+        <if test="sealTypeCode !=null and sealTypeCode !=''">
+            And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+        </if>
 
     </where>
     order by logout_date desc
@@ -981,6 +1053,15 @@
             </if>
             <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
                 AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+            </if>
+            <if test="sealCode !=null and sealCode !=''">
+                And seal_code LIKE  "%"#{sealCode}"%"
+            </if>
+            <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+                AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="sealTypeCode !=null and sealTypeCode !=''">
+                And seal_type_code LIKE  "%"#{sealTypeCode}"%"
             </if>
 
         </where>
@@ -1029,7 +1110,15 @@
             <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
                 AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
             </if>
-
+            <if test="sealCode !=null and sealCode !=''">
+                And seal_code LIKE  "%"#{sealCode}"%"
+            </if>
+            <if test="recordDepartmentName !=null and recordDepartmentName !=''">
+                AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="sealTypeCode !=null and sealTypeCode !=''">
+                And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+            </if>
         </where>
         order by undertake_date desc
     </select>
