@@ -11,6 +11,7 @@ import com.dhht.model.pojo.SealVO;
 
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.message.NotifyService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.SealCodeService;
 import com.dhht.service.seal.SealService;
@@ -19,6 +20,7 @@ import com.dhht.service.tools.FileStoreService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.service.user.UserLoginService;
+import com.dhht.service.user.UserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.*;
@@ -56,6 +58,9 @@ public class SealServiceImpl implements SealService {
     private SealDao sealDao;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private EmployeeService employeeService;
 
     @Autowired
@@ -84,6 +89,9 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private UserLoginService userLoginService;
+
+    @Autowired
+    private NotifyService notifyService;
 
 
 
@@ -652,6 +660,32 @@ public class SealServiceImpl implements SealService {
         seal1.setDeliverDate(DateUtil.getCurrentTime());
         seal1.setIsEarlywarning(true);
         seal1.setEarlywarningDate(DateUtil.getCurrentTime());
+
+        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal1.getMakeDepartmentCode());
+        User user1 = new User();
+        user1.setId(UUIDUtil.generate());
+        user1.setTelphone(makeDepartmentSimple.getTelphone());
+        user1.setUserName(makeDepartmentSimple.getDepartmentName());
+        user1.setRealName(makeDepartmentSimple.getLegalName());
+        user1.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+        Notify notify = new Notify();
+        notify.setId(UUIDUtil.generate());
+        notify.setNotifyTitle("备案预警");
+        List<Employee> employees = employeeService.selectAllByDepartmentCode(makeDepartmentSimple.getDepartmentCode());
+        List<String> userId = new ArrayList<>();
+        for(Employee employeeId:employees){
+            User user2 = userService.findByUserName("CYRY"+employeeId.getTelphone());
+            if(user2!=null) {
+                userId.add(user2.getId());
+            }
+        }
+        notify.setNotifyUser(userId);
+        notify.setNotifyContent("您的"+seal1.getSealName()+"编号"+seal1.getSealCode()+"请尽快备案");
+        int notifyResult = notifyService.insertNotify(notify,user1);
+        if(notifyResult==ResultUtil.isFail){
+            return ResultUtil.isFail;
+        }
+
 //
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
@@ -1465,6 +1499,7 @@ public class SealServiceImpl implements SealService {
         } else if (status.equals("00")) {    //未交付
             list = sealDao.selectUndelivered(seal);
         } else if (status.equals("04")) {    //已交付
+            seal.setSealStatusCode("04");
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
