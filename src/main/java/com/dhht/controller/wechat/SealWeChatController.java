@@ -2,7 +2,10 @@ package com.dhht.controller.wechat;
 
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.controller.web.BaseController;
+import com.dhht.model.Makedepartment;
 import com.dhht.model.Seal;
+import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.model.pojo.SealDTO;
 import com.dhht.service.seal.SealService;
@@ -21,14 +24,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/weChat")
-public class SealWeChatController {
+public class SealWeChatController extends BaseController {
 
     @Autowired
     private SealService sealService;
-    @Log("印章备案")
+    @Log("小程序印章")
     @RequestMapping("/sealRecord")
-    public JsonObjectBO sealRecord(HttpServletRequest httpServletRequest, @RequestBody SealDTO sealDTO) {
-        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+    public JsonObjectBO sealRecord(@RequestBody Seal seal, @RequestBody SealDTO sealDTO, @RequestBody UseDepartment useDepartment, @RequestBody Makedepartment makedepartment) {
+        User user = currentUser();
         String districtId = user.getDistrictId();
         String agentTelphone = sealDTO.getTelphone();
         String  captcha =sealDTO.getCaptcha();
