@@ -70,9 +70,9 @@ public class UseDepartmentImpl implements UseDepartmentService {
         useDepartment.setUpdateTime(new Date(System.currentTimeMillis()));
         useDepartment = (UseDepartment)StringUtil.deleteSpace(useDepartment);
         int useDepartmentResult = useDepartmentDao.insert(useDepartment);
-        boolean f = registerFile(useDepartment);
+       // boolean f = registerFile(useDepartment);
         boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.SAVE,UUIDUtil.generate());
-        if(useDepartmentResult<0&&!operateResult&&!f){
+        if(useDepartmentResult<0&&!operateResult){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
@@ -104,10 +104,11 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 String operateUUid = UUIDUtil.generate();
                 String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime","specialBusinessLicenceScanning","managerPhone","managerName"};
                 int r = useDepartmentDao.insert(useDepartment);
-                boolean f = registerFile(useDepartment);
+                //先不做文件注册，推送
+               // boolean f = registerFile(useDepartment);
                 boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.UPDATE,operateUUid);
                 boolean operateDetailResult = historyService.insertUpdateRecord(useDepartment,oldUseDepartment,operateUUid,ignore);
-                if (r == 1&&operateDetailResult&&operateResult&&f) {
+                if (r == 1&&operateDetailResult&&operateResult) {
                     SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
                     return JsonObjectBO.success("修改成功", null);
                 } else {
