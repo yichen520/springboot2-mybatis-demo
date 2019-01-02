@@ -47,7 +47,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             stringRedisTemplate.opsForValue().append(mobilePhone,code);
         }
         expire(mobilePhone);
-        boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,userCode,params);
+        boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,150656,params);
         if(result){
            return ResultUtil.isSendVerificationCode;
         }else {

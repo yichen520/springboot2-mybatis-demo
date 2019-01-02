@@ -13,6 +13,8 @@ public interface DistrictService {
     //查询指定区域
     List<DistrictMenus> selectOneDistrict(String id);
 
+    List<DistrictMenus> selectTempOneDistrict(String id);
+
     //生成区域下带制作单位单位列表
     List<DistrictMenus> selectMakeDepartmentMenus(String id);
 

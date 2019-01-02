@@ -54,7 +54,7 @@ public class WebPortalsController extends BaseController {
     @RequestMapping(value = "/districtInfo",method = RequestMethod.GET)
     public JsonObjectBO getDistrictId(){
         try {
-            List<DistrictMenus> districtMenus = (List<DistrictMenus>) Cache.get("provinceDistrict");
+            List<DistrictMenus> districtMenus = (List<DistrictMenus>) Cache.get("tempProvinceDistrict");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("districtMenus", districtMenus);
             return JsonObjectBO.success("获取区域成功", jsonObject);
@@ -145,5 +145,7 @@ public class WebPortalsController extends BaseController {
             return JsonObjectBO.error("获取验证码失败");
         }
     }
+
+
 
 }
