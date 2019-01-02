@@ -115,6 +115,7 @@ public class WebPortalsController extends BaseController {
             weChatUserService.sendMessage(useDepartment.getManagerPhone());
             return useDepartmentService.insert(useDepartment,user);
         }catch (Exception e) {
+            e.printStackTrace();
             return JsonObjectBO.exception("推送失败");
         }
     }
