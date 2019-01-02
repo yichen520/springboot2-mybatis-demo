@@ -43,6 +43,7 @@ public class DistrictController implements InitializingBean
     public void afterPropertiesSet() throws Exception {
         List<DistrictMenus> district = districtService.selectAllDistrict();
         List<DistrictMenus> districtMenus = districtService.selectOneDistrict(provinceDistrictId);
+        List<DistrictMenus> tempDistrictMenus = districtService.selectTempOneDistrict(provinceDistrictId);
         if(district== null) {
             return ;
         }
@@ -50,6 +51,7 @@ public class DistrictController implements InitializingBean
             template.opsForValue().append("District", JSON.toJSONString(district));
         }
         Cache.put("provinceDistrict",districtMenus);
+        Cache.put("tempProvinceDistrict",tempDistrictMenus);
     }
 
 
