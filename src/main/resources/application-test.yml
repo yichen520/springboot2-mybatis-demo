@@ -33,7 +33,7 @@ spring:
 
           url: jdbc:mysql://10.0.0.21:8739/test_seal_V1_0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: test_seal
-          password: jh39gm
+          password: Tpf9Lt
 
           #配置初始化大小/最小/最大
           initial-size: 1
