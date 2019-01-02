@@ -31,6 +31,7 @@ import dhht.idcard.trusted.identify.GuangRayIdentifier;
 import dhht.idcard.trusted.identify.IdentifyResult;
 import io.micrometer.core.instrument.Meter;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.poi.ddf.EscherSerializationListener;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -1607,14 +1608,14 @@ public class SealServiceImpl implements SealService {
 
     @Override
     public int sealWeChatRecord(User user, SealWeChatDTO sealDTO) {
-        SMSCode smsCode = new SMSCode();
-        smsCode.setPhone(sealDTO.getTelphone());
-        smsCode.setSmscode(sealDTO.getCaptcha());
-        JsonObjectBO jsonObjectBO = userLoginService.checkPhone(smsCode);
-        //这里返回是code、要返回到JsonObjectBO
-        if (jsonObjectBO.getCode() != 1) {
-            return ResultUtil.isCodeError;
-        }
+//        SMSCode smsCode = new SMSCode();
+//        smsCode.setPhone(sealDTO.getTelphone());
+//        smsCode.setSmscode(sealDTO.getCaptcha());
+//        JsonObjectBO jsonObjectBO = userLoginService.checkPhone(smsCode);
+//        //这里返回是code、要返回到JsonObjectBO
+//        if (jsonObjectBO.getCode() != 1) {
+//            return ResultUtil.isCodeError;
+//        }
         List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
         UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
         if (useDepartment == null) {
@@ -1663,6 +1664,9 @@ public class SealServiceImpl implements SealService {
                 Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null);
                 if (seal1 != null) {
                     int logoutSeal = sealDao.logoutSeal(seal.getUseDepartmentCode());
+                }
+                else {
+                    return ResultUtil.isNoSeal;
                 }
             }
         }

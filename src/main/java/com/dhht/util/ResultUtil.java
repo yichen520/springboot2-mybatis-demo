@@ -32,6 +32,7 @@ public class ResultUtil {
     public static final int isNoLoginUser = 50;
     public static final int isCodeError = 51;
     public static final int isSendVerificationCode=27;
+    public static final int isNoSeal=53;
 
 
     public static JsonObjectBO getResult(int type){

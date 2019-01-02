@@ -26,7 +26,7 @@ public class SealWeChatController extends BaseController {
 
     @Autowired
     private SealService sealService;
-    @Log("小程序印章")
+    @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
         User user = currentUser();
@@ -53,12 +53,16 @@ public class SealWeChatController extends BaseController {
             } else if(a==ResultUtil.isCodeError){
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("验证码错误,请重新输入");
+            }else if(a==ResultUtil.isNoSeal){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("印章刻制原因选择错误,该企业还没有公章");
             }else {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("添加失败");
             }
             return jsonObjectBO;
         } catch (Exception e) {
+            e.printStackTrace();
             return JsonObjectBO.exception("备案失败");
         }
     }
