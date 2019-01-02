@@ -4,6 +4,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealVO;
+import com.dhht.model.pojo.SealWeChatDTO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -82,5 +83,9 @@ public interface SealService {
 
 
    int underTake(User user, String sealId);
+
+    int sealWeChatRecord(User user, SealWeChatDTO sealDTO);
+
+    PageInfo<Seal> portalSealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize, String sealType, String recordDepartmentName, String sealCode);
 }
 

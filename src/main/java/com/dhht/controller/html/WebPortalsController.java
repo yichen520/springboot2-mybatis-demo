@@ -6,14 +6,17 @@ import com.dhht.common.Cache;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.model.*;
+import com.dhht.model.pojo.SealDTO;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.punish.PunishService;
+import com.dhht.service.seal.SealService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.WeChatUserService;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +49,8 @@ public class WebPortalsController extends BaseController {
     private PunishService punishService;
     @Value("${sms.template.makedepartmentpunish}")
     private int makedepartmentpunish ;
-
+    @Autowired
+    private SealService sealService;
 
     /**
      * 省级区域数据
@@ -144,6 +149,33 @@ public class WebPortalsController extends BaseController {
             return  JsonObjectBO.ok("获取验证码成功");
         }else{
             return JsonObjectBO.error("获取验证码失败");
+        }
+    }
+
+    @Log("印章信息")
+    @RequestMapping("/sealInfo")
+    public JsonObjectBO sealInfo(@RequestBody SealDTO sealDTO) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        String useDepartmentName = sealDTO.getSeal().getUseDepartmentName();
+        String useDepartmentCode = sealDTO.getSeal().getUseDepartmentCode();
+        String status = sealDTO.getSeal().getSealStatusCode();
+        String sealType = sealDTO.getSeal().getSealTypeCode();
+        String recordDepartmentName = sealDTO.getSeal().getRecordDepartmentName();
+        String sealCode = sealDTO.getSeal().getSealCode();
+        int pageNum = sealDTO.getPageNum();
+        int pageSize = sealDTO.getPageSize();
+        User user =null;
+        try {
+            PageInfo<Seal> seal = sealService.portalSealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize,sealType,recordDepartmentName,sealCode);
+            jsonObject.put("seal", seal);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("查询成功");
+            return jsonObjectBO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("印章信息获取失败");
         }
     }
 

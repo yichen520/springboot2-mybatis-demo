@@ -3,11 +3,9 @@ package com.dhht.controller.wechat;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.Seal;
-import com.dhht.model.UseDepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.model.pojo.SealDTO;
+import com.dhht.model.pojo.SealWeChatDTO;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,31 +28,12 @@ public class SealWeChatController extends BaseController {
     private SealService sealService;
     @Log("小程序印章")
     @RequestMapping("/sealRecord")
-    public JsonObjectBO sealRecord(@RequestBody Seal seal, @RequestBody SealDTO sealDTO, @RequestBody UseDepartment useDepartment, @RequestBody Makedepartment makedepartment) {
+    public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
         User user = currentUser();
-        String districtId = user.getDistrictId();
-        String agentTelphone = sealDTO.getTelphone();
-        String  captcha =sealDTO.getCaptcha();
-        String agentName = sealDTO.getName();
-        String certificateNo = sealDTO.getCertificateNo();
-        String certificateType = sealDTO.getCertificateType();
-        String agentPhotoId = sealDTO.getAgentPhotoId();
-        String idCardFrontId = sealDTO.getIdCardFrontId();//身份证正面扫描件
-        String idCardReverseId = sealDTO.getIdCardReverseId();//身份证反面扫描件
-        String proxyId = sealDTO.getProxyId();
-        String faceCompareRecordId = sealDTO.getFaceCompareRecordId();
-        String idCardPhotoId =sealDTO.getAgentPhotoId();
-        String fieldPhotoId = sealDTO.getFieldPhotoId();
-        String useDepartmentCode =sealDTO.getUseDepartmentCode();
-        String entryType = sealDTO.getEntryType();
-        int confidence = sealDTO.getConfidence();
-        List<Seal> seals = sealDTO.getSeals();
+
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-            int a = sealService.sealRecord(seals,user,useDepartmentCode,districtId, agentTelphone,
-                    agentName,certificateNo, certificateType,
-                    agentPhotoId,  idCardFrontId,  idCardReverseId,   proxyId,  idCardPhotoId, confidence,
-                    fieldPhotoId,entryType,captcha);
+            int a = sealService.sealWeChatRecord(user,sealDTO);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
