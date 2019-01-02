@@ -14,7 +14,7 @@ public interface SealService {
 
    int insert(Seal seal);
 
-   //印章备案
+   //印章申请
    int sealRecord(List<Seal> seals, User user,String useDepartmentCode, String districtId, String agentTelphone,
                   String agentName, String certificateNo, String certificateType,
                   String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,

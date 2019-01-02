@@ -874,7 +874,7 @@ public class SealServiceImpl implements SealService {
         }
         seal1.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
         seal1.setRecordDepartmentName(recordDepartment.getDepartmentName());
-        int updateByPrimaryKey = sealDao.updateByPrimaryKey(seal1);
+        int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal1);
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
@@ -977,7 +977,7 @@ public class SealServiceImpl implements SealService {
         seal1.setLogoutPersonId(saId);
 
 
-        int updateByPrimaryKey = sealDao.updateByPrimaryKey(seal1);
+        int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal1);
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setOperateType("07");
