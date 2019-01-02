@@ -61,7 +61,7 @@ public class InterceptorConfig implements HandlerInterceptor {
                 ||request.getRequestURI().equals("/seal/record/getCheckCode")
                 ||request.getRequestURI().equals("/seal/record/newRecord")
                 ||request.getRequestURI().equals("/seal/record/underTake")
-
+                ||request.getRequestURI().equals("/seal/record/sealInfo")
 
                 ){
             return true;
