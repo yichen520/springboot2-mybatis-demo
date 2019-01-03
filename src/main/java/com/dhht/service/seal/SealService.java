@@ -96,5 +96,7 @@ public interface SealService {
    //小程序申请
    int sealWeChatRecord(User user, SealWeChatDTO sealDTO);
 
+
+
 }
 
