@@ -1522,8 +1522,8 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectIsLoss(seal);
         } else if (status.equals("06")) {   //已注销
             seal.setIsRecord(true);
-            seal.setIsMake(true);
-            seal.setIsDeliver(true);
+//            seal.setIsMake(true);
+//            seal.setIsDeliver(true);
             seal.setIsLogout(true);
             list = sealDao.selectIsLogout(seal);
         }
