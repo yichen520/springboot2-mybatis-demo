@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.CourierMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Courier" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="recipients_id" property="recipientsId" jdbcType="CHAR" />
+    <result column="seal_id" property="sealId" jdbcType="CHAR" />
+    <result column="courier_no" property="courierNo" jdbcType="VARCHAR" />
+    <result column="courier_type" property="courierType" jdbcType="VARCHAR" />
+    <result column="postal" property="postal" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, recipients_id, seal_id, courier_no, courier_type, postal
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from courier
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from courier
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.Courier" >
+    insert into courier (id, recipients_id, seal_id, 
+      courier_no, courier_type, postal
+      )
+    values (#{id,jdbcType=CHAR}, #{recipientsId,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, 
+      #{courierNo,jdbcType=VARCHAR}, #{courierType,jdbcType=VARCHAR}, #{postal,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.Courier" >
+    insert into courier
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recipientsId != null" >
+        recipients_id,
+      </if>
+      <if test="sealId != null" >
+        seal_id,
+      </if>
+      <if test="courierNo != null" >
+        courier_no,
+      </if>
+      <if test="courierType != null" >
+        courier_type,
+      </if>
+      <if test="postal != null" >
+        postal,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="recipientsId != null" >
+        #{recipientsId,jdbcType=CHAR},
+      </if>
+      <if test="sealId != null" >
+        #{sealId,jdbcType=CHAR},
+      </if>
+      <if test="courierNo != null" >
+        #{courierNo,jdbcType=VARCHAR},
+      </if>
+      <if test="courierType != null" >
+        #{courierType,jdbcType=VARCHAR},
+      </if>
+      <if test="postal != null" >
+        #{postal,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Courier" >
+    update courier
+    <set >
+      <if test="recipientsId != null" >
+        recipients_id = #{recipientsId,jdbcType=CHAR},
+      </if>
+      <if test="sealId != null" >
+        seal_id = #{sealId,jdbcType=CHAR},
+      </if>
+      <if test="courierNo != null" >
+        courier_no = #{courierNo,jdbcType=VARCHAR},
+      </if>
+      <if test="courierType != null" >
+        courier_type = #{courierType,jdbcType=VARCHAR},
+      </if>
+      <if test="postal != null" >
+        postal = #{postal,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Courier" >
+    update courier
+    set recipients_id = #{recipientsId,jdbcType=CHAR},
+      seal_id = #{sealId,jdbcType=CHAR},
+      courier_no = #{courierNo,jdbcType=VARCHAR},
+      courier_type = #{courierType,jdbcType=VARCHAR},
+      postal = #{postal,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>
