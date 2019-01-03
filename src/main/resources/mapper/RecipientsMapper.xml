@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.RecipientsMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.Recipients" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="recipients_name" property="recipientsName" jdbcType="VARCHAR" />
+    <result column="recipients_address" property="recipientsAddress" jdbcType="VARCHAR" />
+    <result column="recipients_telphone" property="recipientsTelphone" jdbcType="VARCHAR" />
+    <result column="login_telphone" property="loginTelphone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, recipients_name, recipients_address, recipients_telphone, login_telphone
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from recipients
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from recipients
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.Recipients" >
+    insert into recipients (id, recipients_name, recipients_address, 
+      recipients_telphone, login_telphone)
+    values (#{id,jdbcType=CHAR}, #{recipientsName,jdbcType=VARCHAR}, #{recipientsAddress,jdbcType=VARCHAR}, 
+      #{recipientsTelphone,jdbcType=VARCHAR}, #{loginTelphone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.Recipients" >
+    insert into recipients
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recipientsName != null" >
+        recipients_name,
+      </if>
+      <if test="recipientsAddress != null" >
+        recipients_address,
+      </if>
+      <if test="recipientsTelphone != null" >
+        recipients_telphone,
+      </if>
+      <if test="loginTelphone != null" >
+        login_telphone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="recipientsName != null" >
+        #{recipientsName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsAddress != null" >
+        #{recipientsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsTelphone != null" >
+        #{recipientsTelphone,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTelphone != null" >
+        #{loginTelphone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Recipients" >
+    update recipients
+    <set >
+      <if test="recipientsName != null" >
+        recipients_name = #{recipientsName,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsAddress != null" >
+        recipients_address = #{recipientsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="recipientsTelphone != null" >
+        recipients_telphone = #{recipientsTelphone,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTelphone != null" >
+        login_telphone = #{loginTelphone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Recipients" >
+    update recipients
+    set recipients_name = #{recipientsName,jdbcType=VARCHAR},
+      recipients_address = #{recipientsAddress,jdbcType=VARCHAR},
+      recipients_telphone = #{recipientsTelphone,jdbcType=VARCHAR},
+      login_telphone = #{loginTelphone,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectAllByTelphone" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" />
+    from recipients
+    where login_telphone = #{loginTelphone,jdbcType=VARCHAR}
+  </select>
+</mapper>
