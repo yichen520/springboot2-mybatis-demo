@@ -626,7 +626,7 @@
 
     <select id="selectByTypeAndUseDepartmentCode"  resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from  seal where use_department_code = #{useDepartmentCode}
-        and seal_type_code = "01"
+        and seal_type_code = "01" and is_logout = false
         <if test="isUndertake !=null and isUndertake !=''">
             AND is_undertake = #{isUndertake,jdbcType=BIT}
         </if>
