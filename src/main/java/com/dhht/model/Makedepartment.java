@@ -57,4 +57,5 @@ public class Makedepartment {
     private Date registerTime;
     private MakeDepartmentPunish makeDepartmentPunish;
     private List<Employee> employeeList;
+    private float score;
     }

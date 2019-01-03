@@ -11,6 +11,7 @@ import com.dhht.model.pojo.SealVO;
 
 import com.dhht.model.pojo.SealWeChatDTO;
 import com.dhht.service.employee.EmployeeService;
+import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.message.NotifyService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
@@ -95,6 +96,10 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private NotifyService notifyService;
+    @Autowired
+    private MakeDepartmentSealPriceMapper makeDepartmentSealPriceMapper;
+    @Autowired
+    private SealOperationRecordMapper sealOperationRecordMapper;
 
 
     @Autowired
@@ -262,7 +267,7 @@ public class SealServiceImpl implements SealService {
                     sealOperationRecord.setId(UUIDUtil.generate());
                     sealOperationRecord.setSealId(sealId);
                     sealOperationRecord.setEmployeeId(employee.getEmployeeId());
-                    sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+                    sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
                     sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
                     sealOperationRecord.setOperateType(type1);
                     sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
@@ -523,7 +528,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(id);
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setOperateType("02");
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -598,7 +603,7 @@ public class SealServiceImpl implements SealService {
                 sealOperationRecord.setSealId(id);
                 sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
                 sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-                sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+                sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
                 sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
                 sealOperationRecord.setOperateType("03");
                 int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -655,7 +660,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(id);
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("04");
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -763,7 +768,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(sealId);
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("05");
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -793,7 +798,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(sealId);
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
-        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("001");
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -882,7 +887,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperateType("06");
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -984,7 +989,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperateType("07");
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -1194,7 +1199,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperateType("06");  //核验的操作人
         sealOperationRecord.setEmployeeCode(recordDepartment.getDepartmentCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-        sealOperationRecord.setEmployeeName(recordDepartment.getDepartmentName());
+        sealOperationRecord.setEmplyeeName(recordDepartment.getDepartmentName());
         sealOperationRecord.setEmployeeId(recordDepartment.getCertificateNo());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
@@ -1678,7 +1683,7 @@ public class SealServiceImpl implements SealService {
             sealOperationRecord.setId(UUIDUtil.generate());
             sealOperationRecord.setSealId(sealId);
             sealOperationRecord.setEmployeeId(user.getId());
-            sealOperationRecord.setEmployeeName(user.getUserName());
+            sealOperationRecord.setEmplyeeName(user.getUserName());
             sealOperationRecord.setEmployeeCode(user.getRealName());
             sealOperationRecord.setOperateType(type1);
             sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
@@ -1695,7 +1700,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setId(saId);
         sealAgent.setName(user.getUserName());
         sealAgent.setTelphone(sealDTO.getTelphone());
-        sealAgent.setBusinessType("00");
+        sealAgent.setBusinessType("000");
         int sealAgentInsert = sealAgentMapper.insert(sealAgent);
         seal.setAgentId(saId);
         seal.setIsUndertake(true);
@@ -1744,6 +1749,20 @@ public class SealServiceImpl implements SealService {
             e.printStackTrace();
             return new PageInfo<>();
         }
+    }
+
+    @Override
+    public MakeDepartmentSealPrice sealPrice(User user, Map map) {
+        String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
+        String sealType=(String)map.get("sealType");
+        MakeDepartmentSealPrice makeDepartmentSealPrice = new MakeDepartmentSealPrice(sealType,makeDepartmentFlag);
+        return makeDepartmentSealPriceMapper.selectBySealTypeAndMakeDepartment(makeDepartmentSealPrice);
+    }
+
+    @Override
+    public List<Seal> sealProgress(User user, Map map) {
+        String telphone =(String)map.get("telphone");
+        return sealDao.selectSealByTelphone(telphone);
     }
 }
 

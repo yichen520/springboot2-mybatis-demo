@@ -139,4 +139,6 @@ public interface SealDao {
     int indexCountAllSealByMakeDepartment(@Param("makeDepartmentCode") String makeDepartmentCode);
 
     List<IndexCount> indexCountSealTypeByMakeDepartment(@Param("makeDepartmentCode") String makeDepartmentCode);
+
+    List<Seal> selectSealByTelphone(String telphone);
 }

@@ -30,6 +30,7 @@
     <result column="legal_document_url" property="legalDocumentUrl" jdbcType="VARCHAR"/>
     <result column="idcard_front_id" property="idCardFrontId" jdbcType="VARCHAR"/>
     <result column="idcard_reverse_id" property="idCardReverseId" jdbcType="VARCHAR"/>
+    <result column="score" property="score" jdbcType="FLOAT"/>
     <association property="makeDepartmentPunish"  resultMap="makeDepartmentPunishResultMap" javaType="com.dhht.model.MakeDepartmentPunish"></association>
 
   </resultMap>
@@ -197,6 +198,18 @@
   <select id="selectDetailById" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/>
     from make_department where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="makeDepartmentSort" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select b.*, AVG(a.score) as score from make_department_evaluate a
+    JOIN make_department b on b.flag = a.make_department_id and b.delete_status =0 and b.department_address LIKE '${districtId}%'
+    GROUP BY a.make_department_id ORDER BY score
+  </select>
+
+  <select id="makeDepartmentSortBySealNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+  SELECT b.* ,count(1) as score from  seal a  JOIN make_department b
+  on a.make_department_code = b.department_code and b.delete_status =0
+  and b.department_address LIKE '${districtId}%'  GROUP BY a.make_department_code ORDER BY score
   </select>
 
   <select id="selectDetailByName" resultMap="BaseResultMap" parameterType="java.lang.String">

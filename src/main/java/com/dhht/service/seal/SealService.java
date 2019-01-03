@@ -8,6 +8,7 @@ import com.dhht.model.pojo.SealWeChatDTO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SealService {
 
@@ -92,5 +93,8 @@ public interface SealService {
    //----------------------------------------以下是小程序端口-------------------------------------//
    int cachetChange(String code,Seal seal,User user);
 
+   MakeDepartmentSealPrice sealPrice(User user, Map map);
+
+   List<Seal> sealProgress(User user, Map map);
 }
 

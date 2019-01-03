@@ -70,4 +70,8 @@ public interface MakedepartmentMapper {
     int countDelDepartmentByEndTime(@Param("districtId") String districtId,@Param("endTime") String endTime);
 
     int countDelDepartmentByTime(@Param("districtId") String districtId,@Param("startTime") String startTime,@Param("endTime") String endTime);
+
+    List<Makedepartment> makeDepartmentSort(@Param("districtId")String districtId);
+
+ List<Makedepartment> makeDepartmentSortBySealNum(@Param("districtId")String districtId);
 }

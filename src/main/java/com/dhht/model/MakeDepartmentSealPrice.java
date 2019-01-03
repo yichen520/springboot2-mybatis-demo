@@ -22,4 +22,10 @@ public class MakeDepartmentSealPrice {
 
     private Boolean isDelete;
 
+    public MakeDepartmentSealPrice(String sealType, String makeDepartmentFlag) {
+        this.sealType = sealType;
+        this.makeDepartmentFlag = makeDepartmentFlag;
+    }
+    public MakeDepartmentSealPrice() {
+    }
 }
