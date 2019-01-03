@@ -620,7 +620,7 @@
   </select>
 
    <update id="logoutSeal" parameterType="java.lang.String">
-       update seal set  is_logout = true and logout_date = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where use_department_code = #{useDepartmentCode} and seal_type_code = "01"
+       update seal set  is_logout = true , logout_date = NOW() where use_department_code = #{useDepartmentCode} and seal_type_code = "01"
 
    </update>
 

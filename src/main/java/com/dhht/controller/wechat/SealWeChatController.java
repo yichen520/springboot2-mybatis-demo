@@ -68,4 +68,43 @@ public class SealWeChatController extends BaseController {
     }
 
 
+    @Log("小程序印章变更")
+    @RequestMapping("/cachetChange")
+    public JsonObjectBO cachetChange(@RequestBody SealWeChatDTO sealDTO) {
+        User user = currentUser();
+
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            int a = sealService.cachetChange(sealDTO,user);
+
+            if (a == ResultUtil.isSuccess) {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("变更成功");
+            } else if(a==ResultUtil.isNoDepartment){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("备案单位或制作单位不存在");
+            }else if(a==ResultUtil.isNoEmployee){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("从业人员不存在");
+            } else if(a==ResultUtil.isNoProxy){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("缺少授权委托书");
+            } else if(a==ResultUtil.isCodeError){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("验证码错误,请重新输入");
+            }else if(a==ResultUtil.isNoSeal){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("印章刻制原因选择错误,该企业还没有公章");
+            }else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("添加失败");
+            }
+            return jsonObjectBO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("变更失败");
+        }
+    }
+
+
 }

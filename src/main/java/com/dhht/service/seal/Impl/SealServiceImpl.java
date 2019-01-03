@@ -1712,16 +1712,19 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int cachetChange(String code,Seal seal,User user) {
-        UseDepartment useDepartment = useDepartmentService.selectByCode(code);
+    public int cachetChange(SealWeChatDTO sealDTO,User user) {
+        UseDepartment useDepartment = useDepartmentService.selectByCode(sealDTO.getUseDepartmentCode());
         if(useDepartment==null){
             return ResultUtil.isNoDepartment;
         }
-        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(code,null);
+        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),true);
         if(seal1!=null) {
-            int logoutSeal = sealDao.logoutSeal(code);
+            int logoutSeal = sealDao.logoutSeal(sealDTO.getUseDepartmentCode());
         }
-        return ResultUtil.isSuccess;
+        Seal seal = sealDTO.getSeal();
+        seal.setSealTypeCode("01");
+        sealDTO.setSeal(seal);
+        return sealWeChatRecord(user,sealDTO);
 
     }
 
