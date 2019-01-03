@@ -103,4 +103,10 @@
       postal = #{postal,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+  
+  <select id="selectByRecipients" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" />
+    from courier
+    where recipients_id = #{recipientsId,jdbcType=CHAR}
+  </select>
 </mapper>

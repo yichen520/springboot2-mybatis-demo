@@ -3,6 +3,8 @@ package com.dhht.dao;
 import com.dhht.model.Courier;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CourierMapper {
     int deleteByPrimaryKey(String id);
@@ -16,4 +18,6 @@ public interface CourierMapper {
     int updateByPrimaryKeySelective(Courier record);
 
     int updateByPrimaryKey(Courier record);
+
+    List<Courier> selectByRecipients(String recipientsId);
 }

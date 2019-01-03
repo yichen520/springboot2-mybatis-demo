@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
+import com.dhht.model.Courier;
 import com.dhht.model.Recipients;
 import com.dhht.model.User;
+import com.dhht.service.courier.CourierService;
 import com.dhht.service.recipients.RecipientsService;
 import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ import java.util.Map;
 public class RecipientsController extends BaseController {
     @Autowired
     private RecipientsService recipientsService;
+
+    @Autowired
+    private CourierService courierService;
 
 
     @Log("邮寄用户信息添加")
@@ -103,6 +108,44 @@ public class RecipientsController extends BaseController {
             List<Recipients> recipientsLists = recipientsService.recipientsList(user);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("recipientsLists",recipientsLists);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("查询失败");
+        }
+    }
+
+
+    @Log("邮件信息增加")
+    @RequestMapping("/insertCourier")
+    public JsonObjectBO insertCourier(@RequestBody Courier courier){
+        User user = currentUser();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            int insertCourier = courierService.insertCourier(courier);
+            if (insertCourier == ResultUtil.isSuccess) {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("新增成功");
+            } else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("新增失败");
+            }
+            return jsonObjectBO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("新增失败");
+        }
+    }
+
+
+    @Log("邮件信息查询")
+    @RequestMapping("/courierList")
+    public JsonObjectBO courierList(String recipientsId){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            List<Courier> couriers = courierService.courierList(recipientsId);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("couriers",couriers);
             return JsonObjectBO.success("查询成功",jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
