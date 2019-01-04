@@ -5,13 +5,13 @@
     <id column="id" property="id" jdbcType="CHAR" />
     <result column="seal_id" property="sealId" jdbcType="CHAR" />
     <result column="employee_id" property="employeeId" jdbcType="CHAR" />
-    <result column="emplyee_name" property="emplyeeName" jdbcType="VARCHAR" />
+    <result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
     <result column="employee_code" property="employeeCode" jdbcType="CHAR" />
     <result column="operate_type" property="operateType" jdbcType="CHAR" />
     <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, seal_id, employee_id, emplyee_name, employee_code, operate_type, operate_time
+    id, seal_id, employee_id, employee_name, employee_code, operate_type, operate_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -32,10 +32,10 @@
   </delete>
   <insert id="insert" parameterType="com.dhht.model.SealOperationRecord" >
     insert into seal_operate_record (id, seal_id, employee_id, 
-      emplyee_name, employee_code, operate_type, 
+      employee_name, employee_code, operate_type,
       operate_time)
     values (#{id,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, #{employeeId,jdbcType=CHAR}, 
-      #{emplyeeName,jdbcType=VARCHAR}, #{employeeCode,jdbcType=CHAR}, #{operateType,jdbcType=CHAR}, 
+      #{employeeName,jdbcType=VARCHAR}, #{employeeCode,jdbcType=CHAR}, #{operateType,jdbcType=CHAR},
       #{operateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.SealOperationRecord" >
@@ -50,8 +50,8 @@
       <if test="employeeId != null" >
         employee_id,
       </if>
-      <if test="emplyeeName != null" >
-        emplyee_name,
+      <if test="employeeName != null" >
+        employee_name,
       </if>
       <if test="employeeCode != null" >
         employee_code,
@@ -73,8 +73,8 @@
       <if test="employeeId != null" >
         #{employeeId,jdbcType=CHAR},
       </if>
-      <if test="emplyeeName != null" >
-        #{emplyeeName,jdbcType=VARCHAR},
+      <if test="employeeName != null" >
+        #{employeeName,jdbcType=VARCHAR},
       </if>
       <if test="employeeCode != null" >
         #{employeeCode,jdbcType=CHAR},
@@ -96,8 +96,8 @@
       <if test="employeeId != null" >
         employee_id = #{employeeId,jdbcType=CHAR},
       </if>
-      <if test="emplyeeName != null" >
-        emplyee_name = #{emplyeeName,jdbcType=VARCHAR},
+      <if test="employeeName != null" >
+        employee_name = #{employeeName,jdbcType=VARCHAR},
       </if>
       <if test="employeeCode != null" >
         employee_code = #{employeeCode,jdbcType=CHAR},
@@ -115,7 +115,7 @@
     update seal_operate_record
     set seal_id = #{sealId,jdbcType=CHAR},
       employee_id = #{employeeId,jdbcType=CHAR},
-      emplyee_name = #{emplyeeName,jdbcType=VARCHAR},
+      employee_name = #{employeeName,jdbcType=VARCHAR},
       employee_code = #{employeeCode,jdbcType=CHAR},
       operate_type = #{operateType,jdbcType=CHAR},
       operate_time = #{operateTime,jdbcType=TIMESTAMP}

@@ -12,7 +12,7 @@ public class SealOperationRecord {
 
     private String employeeId;
 
-    private String emplyeeName;
+    private String employeeName;
 
     private String employeeCode;
 
@@ -45,11 +45,11 @@ public class SealOperationRecord {
 //    }
 //
 //    public String getEmplyeeName() {
-//        return emplyeeName;
+//        return employee_name;
 //    }
 //
-//    public void setEmplyeeName(String emplyeeName) {
-//        this.emplyeeName = emplyeeName == null ? null : emplyeeName.trim();
+//    public void setEmplyeeName(String employee_name) {
+//        this.employee_name = employee_name == null ? null : employee_name.trim();
 //    }
 //
 //    public String getEmployeeCode() {
