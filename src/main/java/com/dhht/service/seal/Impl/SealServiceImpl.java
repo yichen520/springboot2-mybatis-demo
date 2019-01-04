@@ -48,6 +48,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
@@ -1770,7 +1771,8 @@ public class SealServiceImpl implements SealService {
 
     @Override
     public List<Seal> portalSealInfoByCode(String code) {
-        return sealDao.selectByCode(code);
+        List<Seal> seals = sealDao.selectByCode(code);
+        return seals;
     }
 }
 
