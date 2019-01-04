@@ -102,5 +102,7 @@ public interface SealService {
    MakeDepartmentSealPrice sealPrice(User user, Map map);
 
    List<Seal> sealProgress(User user, Map map);
+
+    List<Seal> portalSealInfoByCode(String cdode);
 }
 

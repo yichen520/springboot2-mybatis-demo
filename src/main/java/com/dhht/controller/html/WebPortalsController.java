@@ -153,20 +153,13 @@ public class WebPortalsController extends BaseController {
 
     @Log("印章信息")
     @RequestMapping("/sealInfo")
-    public JsonObjectBO sealInfo(@RequestBody SealDTO sealDTO) {
+    public JsonObjectBO sealInfo(String code) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        String useDepartmentName = sealDTO.getSeal().getUseDepartmentName();
-        String useDepartmentCode = sealDTO.getSeal().getUseDepartmentCode();
-        String status = sealDTO.getSeal().getSealStatusCode();
-        String sealType = sealDTO.getSeal().getSealTypeCode();
-        String recordDepartmentName = sealDTO.getSeal().getRecordDepartmentName();
-        String sealCode = sealDTO.getSeal().getSealCode();
-        int pageNum = sealDTO.getPageNum();
-        int pageSize = sealDTO.getPageSize();
+
         User user =null;
         try {
-            PageInfo<Seal> seal = sealService.portalSealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize,sealType,recordDepartmentName,sealCode);
+            List<Seal> seal = sealService.portalSealInfoByCode(code);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
@@ -174,7 +167,7 @@ public class WebPortalsController extends BaseController {
             return jsonObjectBO;
         } catch (Exception e) {
             e.printStackTrace();
-            return JsonObjectBO.exception("印章信息获取失败");
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"印章信息获取失败");
         }
     }
 
