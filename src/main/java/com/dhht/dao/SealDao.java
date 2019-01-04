@@ -22,7 +22,9 @@ public interface SealDao {
 
     List<Seal> selectByCodeAndType(String useDepartmentCode);
 
-    Seal selectByTypeAndUseDepartmentCode(@Param("useDepartmentCode") String useDepartmentCode,@Param("isUndertake") Boolean isUndertake);
+    List<Seal> selectByCodeAndType05(String useDepartmentCode);
+
+    Seal selectByTypeAndUseDepartmentCode(@Param("useDepartmentCode") String useDepartmentCode,@Param("isUndertake") Boolean isUndertake,@Param("sealTypeCode") String sealTypeCode);
 
     List<SealOperationRecord> selectSealOperationRecord(@Param("id") String id,@Param("operateType") String operateType);
 
@@ -34,7 +36,7 @@ public interface SealDao {
 
     int insertSealMaterial(SealMaterial sealMaterial);
 
-    int logoutSeal(@Param("useDepartmentCode") String useDepartmentCode);
+    int logoutSeal(@Param("useDepartmentCode") String useDepartmentCode,@Param("sealTypeCode") String sealTypeCode);
 
 
 

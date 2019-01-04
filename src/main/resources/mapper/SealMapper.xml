@@ -631,13 +631,13 @@
   </select>
 
    <update id="logoutSeal" parameterType="java.lang.String">
-       update seal set  is_logout = true , logout_date = NOW() where use_department_code = #{useDepartmentCode} and seal_type_code = "01"
+       update seal set  is_logout = true , logout_date = NOW() where use_department_code = #{useDepartmentCode} and seal_type_code = #{sealTypeCode}
 
    </update>
 
     <select id="selectByTypeAndUseDepartmentCode"  resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from  seal where use_department_code = #{useDepartmentCode}
-        and seal_type_code = "01" and is_logout = false
+        and seal_type_code = #{sealTypeCode} and is_logout = false
         <if test="isUndertake !=null and isUndertake !=''">
             AND is_undertake = #{isUndertake,jdbcType=BIT}
         </if>
@@ -659,6 +659,11 @@
   <select id="selectByCodeAndType"  parameterType="java.lang.String" resultMap="BaseResultMap">
       select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
   </select>
+
+    <select id="selectByCodeAndType05"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and  is_logout!=TRUE
+    </select>
+
 
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
         select emplyee_name AS employeeName ,employee_id as employeeId ,employee_code as employeeCode

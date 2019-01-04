@@ -189,6 +189,7 @@ public class SealServiceImpl implements SealService {
             FaceCompareRecord faceCompareRecord = null;
             FaceCompareRecord TrustedIdentityAuthenticationResult = null;
             List<Seal> list = sealDao.selectByCodeAndType(useDepartmentCode);
+            List<Seal> list1 = sealDao.selectByCodeAndType05(useDepartmentCode);
             UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);  //根据usedepartment查询对应的使用公司
             if (useDepartment == null) {
                 return ResultUtil.isNoDepartment;
@@ -205,11 +206,15 @@ public class SealServiceImpl implements SealService {
             }
 
             for (Seal seal : seals) {
-                if (seal.getSealTypeCode().equals("05")) {
+                if (seal.getSealTypeCode().equals("05")&&!seal.getSealReason().equals("03")) {
                     if (list.size() != 0) {
-                        return ResultUtil.isHaveSeal;    //该公司的法务印章已经存在
+                        return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
                     }
 
+                }else if(seal.getSealTypeCode().equals("01")&&!seal.getSealReason().equals("03")){
+                    if (list1.size() != 0) {
+                        return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
+                    }
                 }
 
             }
@@ -252,9 +257,16 @@ public class SealServiceImpl implements SealService {
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
                 if(seal.getSealReason().equals("03")){
                     if(seal.getSealTypeCode().equals("01")){
-                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null);
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"01");
                         if(seal1!=null) {
-                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode);
+                            logoutAbout(seal1,employee);
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"01");
+                        }
+                    }else if(seal.getSealTypeCode().equals("05")){
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"05");
+                        if(seal1!=null) {
+                            logoutAbout(seal1,employee);
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"05");
                         }
                     }
                 }
@@ -1666,9 +1678,9 @@ public class SealServiceImpl implements SealService {
         seal.setUndertakeDate(DateUtil.getCurrentTime());
         if (seal.getSealReason().equals("03")) {
             if (seal.getSealTypeCode().equals("01")) {
-                Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null);
+                Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null,"01");
                 if (seal1 != null) {
-                    int logoutSeal = sealDao.logoutSeal(seal.getUseDepartmentCode());
+                    int logoutSeal = sealDao.logoutSeal(seal.getUseDepartmentCode(),"01");
                 }
                 else {
                     return ResultUtil.isNoSeal;
@@ -1722,9 +1734,9 @@ public class SealServiceImpl implements SealService {
         if(useDepartment==null){
             return ResultUtil.isNoDepartment;
         }
-        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),true);
+        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),true,"01");
         if(seal1!=null) {
-            int logoutSeal = sealDao.logoutSeal(sealDTO.getUseDepartmentCode());
+            int logoutSeal = sealDao.logoutSeal(sealDTO.getUseDepartmentCode(),"01");
         }
         Seal seal = sealDTO.getSeal();
         seal.setSealTypeCode("01");
@@ -1766,6 +1778,35 @@ public class SealServiceImpl implements SealService {
     public List<Seal> sealProgress(User user, Map map) {
         String telphone =(String)map.get("telphone");
         return sealDao.selectSealByTelphone(telphone);
+    }
+
+    /**
+     * 挂失相关操作
+     * @param seal
+     * @param employee
+     * @return
+     */
+    public int logoutAbout(Seal seal,Employee employee){
+        String agentId = seal.getAgentId();
+        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
+        sealAgent.setId(UUIDUtil.generate());
+        sealAgent.setBusinessType("03");
+        int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+        SealOperationRecord sealOperationRecord = new SealOperationRecord();
+        sealOperationRecord.setId(UUIDUtil.generate());
+        sealOperationRecord.setSealId(seal.getId());
+        sealOperationRecord.setEmployeeId(employee.getEmployeeId());
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+        sealOperationRecord.setOperateType("07");
+        sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+        int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+        if(sealAgentInsert<0&&sealOperationRecordInsert<0 ){
+            return ResultUtil.isFail;
+        }else{
+            return ResultUtil.isSuccess;
+        }
+
     }
 }
 
