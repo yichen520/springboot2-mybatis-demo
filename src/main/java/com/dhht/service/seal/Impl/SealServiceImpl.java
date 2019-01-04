@@ -1785,6 +1785,7 @@ public class SealServiceImpl implements SealService {
     public List<Seal> portalSealInfoByCode(String code) {
         List<Seal> seals = sealDao.selectByCode(code);
         return seals;
+    }
     /**
      * 挂失相关操作
      * @param seal
