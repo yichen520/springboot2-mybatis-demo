@@ -117,7 +117,6 @@ public class WebPortalsController extends BaseController {
             user.setUserName("系统");
             user.setRealName("工商推送");
             //给注册经办人发送验证短信
-            weChatUserService.sendMessage(useDepartment.getManagerPhone());
             return useDepartmentService.insert(useDepartment,user);
         }catch (Exception e) {
             e.printStackTrace();
