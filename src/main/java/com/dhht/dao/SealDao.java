@@ -143,4 +143,6 @@ public interface SealDao {
     List<IndexCount> indexCountSealTypeByMakeDepartment(@Param("makeDepartmentCode") String makeDepartmentCode);
 
     List<Seal> selectSealByTelphone(String telphone);
+
+    List<Seal> selectByCode(String useDepartmentCode);
 }
