@@ -11,6 +11,7 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.service.user.WeChatUserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.CompareFieldsUtil;
@@ -44,6 +45,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
     private HistoryService historyService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private WeChatUserService weChatUserService;
 
     private final String IDCARD_FRONT_FILE = "使用单位法人身份证正面照片";
     private final String IDCARD_REVERSE_FILE = "使用单位法人身份证反面照片";
@@ -76,6 +79,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
+            weChatUserService.sendMessage(useDepartment.getManagerPhone());
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.SAVE);
             return JsonObjectBO.success("添加成功",null);
         }
