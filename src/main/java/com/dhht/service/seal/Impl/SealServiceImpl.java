@@ -562,10 +562,10 @@ public class SealServiceImpl implements SealService {
         sealMaterialLists.add(sealMaterial1);
         int insertSealMaterial = sealDao.insertSealMateriallist(sealMaterialLists);
 
-        ArrayList<String> params = new ArrayList<String>();
-        params.add(useDepartmentName);
-        params.add( createRandomVcode());
-        Boolean b = smsSendService.sendSingleMsgByTemplate(telphone,userCode,params);
+//        ArrayList<String> params = new ArrayList<String>();
+//        params.add(useDepartmentName);
+//        params.add( createRandomVcode());
+//        Boolean b = smsSendService.sendSingleMsgByTemplate(telphone,userCode,params);
 
 
         seal1.setIsMake(true);

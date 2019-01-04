@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/weChat/recopients")
-public class RecipientsController extends BaseController {
+public class RecipientsController extends WeChatBaseController {
     @Autowired
     private RecipientsService recipientsService;
 
@@ -31,12 +31,12 @@ public class RecipientsController extends BaseController {
     @Log("邮寄用户信息添加")
     @RequestMapping("/insertRecipients")
     public JsonObjectBO insertRecipients(@RequestBody Recipients recipients){
-        User user = currentUser();
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
 
         try {
 //            Recipients recipients = (Recipients)map.get("recipients");
-            int a = recipientsService.insertRecipients(recipients,user);
+            int a = recipientsService.insertRecipients(recipients,telPhone);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
@@ -54,12 +54,12 @@ public class RecipientsController extends BaseController {
     @Log("邮寄用户信息修改")
     @RequestMapping("/updateRecipients")
     public JsonObjectBO updateRecipients(@RequestBody Recipients recipients){
-        User user = currentUser();
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
 
         try {
 //            Recipients recipients = (Recipients)map.get("Recipients");
-            int a = recipientsService.updateRecipients(recipients,user);
+            int a = recipientsService.updateRecipients(recipients,telPhone);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
@@ -78,7 +78,7 @@ public class RecipientsController extends BaseController {
     @Log("邮寄用户信息删除")
     @RequestMapping("/deleteRecipients")
     public JsonObjectBO deleteRecipients(@RequestBody Map map){
-        User user = currentUser();
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
 
         try {
@@ -102,10 +102,10 @@ public class RecipientsController extends BaseController {
     @Log("邮寄用户信息查询")
     @RequestMapping("/recipientsInfo")
     public JsonObjectBO recipientsInfo(){
-        User user = currentUser();
-
+//        User user = currentUser();
+        String telPhone = currentUserMobilePhone();
         try {
-            List<Recipients> recipientsLists = recipientsService.recipientsList(user);
+            List<Recipients> recipientsLists = recipientsService.recipientsList(telPhone);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("recipientsLists",recipientsLists);
             return JsonObjectBO.success("查询成功",jsonObject);
@@ -119,7 +119,7 @@ public class RecipientsController extends BaseController {
     @Log("邮件信息增加")
     @RequestMapping("/insertCourier")
     public JsonObjectBO insertCourier(@RequestBody Courier courier){
-        User user = currentUser();
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
             int insertCourier = courierService.insertCourier(courier);
