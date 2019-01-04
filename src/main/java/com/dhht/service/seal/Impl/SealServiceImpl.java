@@ -271,7 +271,7 @@ public class SealServiceImpl implements SealService {
                     sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
                     sealOperationRecord.setOperateType(type1);
                     sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-                    int sealOperationRecordInsert = sealDao.insertSealOperationRecord(sealOperationRecord); //保存操作记录
+                    int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
                     type1 = type1.substring(0,1)+"1";
                     if(sealOperationRecordInsert < 0){
                         return ResultUtil.isFail;
@@ -531,7 +531,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setOperateType("02");
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-        int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord1 = sealOperationRecordMapper.insertSelective(sealOperationRecord);
 
 
         List<SealMaterial> sealMaterialLists = new ArrayList<>();  //批量存入数据库
@@ -606,7 +606,7 @@ public class SealServiceImpl implements SealService {
                 sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
                 sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
                 sealOperationRecord.setOperateType("03");
-                int insertSealOperationRecord1 = sealDao.insertSealOperationRecord(sealOperationRecord);
+                int insertSealOperationRecord1 = sealOperationRecordMapper.insertSelective(sealOperationRecord);
                 seal1.setIsPersonal(true);
                 seal1.setPersonalDate(DateUtil.getCurrentTime());
                 int updateByPrimaryKey1 = sealDao.updateByPrimaryKey(seal1);
@@ -663,7 +663,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("04");
-        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
 
         seal1.setIsDeliver(true);
         seal1.setDeliverDate(DateUtil.getCurrentTime());
@@ -771,7 +771,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("05");
-        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord =    sealOperationRecordMapper.insertSelective(sealOperationRecord);
         if(result==1 && insertSealOperationRecord==1){
             return ResultUtil.isSuccess;
         }else {
@@ -801,7 +801,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("001");
-        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
         if(result==1 && insertSealOperationRecord==1){
             return ResultUtil.isSuccess;
         }else {
@@ -890,7 +890,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());
         sealOperationRecord.setSealId(id);
-        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
 
         //营业执照
         SealMaterial sealMaterial = new SealMaterial();
@@ -992,7 +992,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmplyeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());
         sealOperationRecord.setSealId(id);
-        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
 
         if (sealAgentResult > 0 && insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
             SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.LOGOUT);
@@ -1054,7 +1054,7 @@ public class SealServiceImpl implements SealService {
         sealVo.setProxy(sealAgent.getProxyId());
         sealVo.setMakeDepartment(makedepartment);
         sealVo.setUseDepartment(useDepartment);
-        sealVo.setSealOperationRecords(sealDao.selectSealOperationRecord(id,null));
+        sealVo.setSealOperationRecords(sealOperationRecordMapper.selectSealOperationRecord(id,null));
 //        SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
 //        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode, "06");
@@ -1202,7 +1202,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmplyeeName(recordDepartment.getDepartmentName());
         sealOperationRecord.setEmployeeId(recordDepartment.getCertificateNo());
         sealOperationRecord.setSealId(id);
-        int insertSealOperationRecord = sealDao.insertSealOperationRecord(sealOperationRecord);
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
         if(updateVerifySeal<0||insertSealOperationRecord<0){
             return ResultUtil.isFail;
         }else{
@@ -1687,7 +1687,7 @@ public class SealServiceImpl implements SealService {
             sealOperationRecord.setEmployeeCode(user.getRealName());
             sealOperationRecord.setOperateType(type1);
             sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-            int sealOperationRecordInsert = sealDao.insertSealOperationRecord(sealOperationRecord); //保存操作记录
+            int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
             type1 = type1.substring(0, 1) + "1";
             if (sealOperationRecordInsert < 0) {
                 return ResultUtil.isFail;

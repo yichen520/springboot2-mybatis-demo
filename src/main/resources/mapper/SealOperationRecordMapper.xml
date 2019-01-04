@@ -121,4 +121,12 @@
       operate_time = #{operateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=CHAR}
   </update>
+  <select id="selectSealOperationRecord" resultMap="BaseResultMap">
+    select * from seal_operate_record where seal_id = #{id}
+    <if test="operateType !=null and operateType!=''">
+      and operate_type = #{operateType}
+    </if>
+
+  </select>
+
 </mapper>
