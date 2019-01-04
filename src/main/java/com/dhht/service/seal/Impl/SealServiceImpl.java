@@ -1779,6 +1779,11 @@ public class SealServiceImpl implements SealService {
         String telphone =(String)map.get("telphone");
         return sealDao.selectSealByTelphone(telphone);
     }
+//
+//    @Override
+//    public List<Seal> portalSealInfoByCode(String cdode) {
+//        return null;
+//    }
 
     /**
      * 挂失相关操作
