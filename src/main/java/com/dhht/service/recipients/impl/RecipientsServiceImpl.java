@@ -21,9 +21,9 @@ public class RecipientsServiceImpl implements RecipientsService {
     private RecipientsMapper recipientsMapper;
 
     @Override
-    public int insertRecipients(Recipients recipients,User user) {
+    public int insertRecipients(Recipients recipients,String telPhone) {
         recipients.setId(UUIDUtil.generate());
-        recipients.setLoginTelphone(user.getTelphone());
+        recipients.setLoginTelphone(telPhone);
         int recipientsMapperInsert  = recipientsMapper.insertSelective(recipients);
         if(recipientsMapperInsert<0){
             return ResultUtil.isFail;
@@ -33,7 +33,7 @@ public class RecipientsServiceImpl implements RecipientsService {
     }
 
     @Override
-    public int updateRecipients(Recipients recipients,User user) {
+    public int updateRecipients(Recipients recipients,String telPhone) {
         int recipientsUpdate = recipientsMapper.updateByPrimaryKeySelective(recipients);
         if(recipientsUpdate<0){
             return ResultUtil.isFail;
@@ -53,9 +53,9 @@ public class RecipientsServiceImpl implements RecipientsService {
     }
 
     @Override
-    public List<Recipients> recipientsList(User user){
-        String loginTelPhone = user.getTelphone();
-        List<Recipients> recipientsList = recipientsMapper.selectAllByTelphone(loginTelPhone);
+    public List<Recipients> recipientsList(String telPhone){
+
+        List<Recipients> recipientsList = recipientsMapper.selectAllByTelphone(telPhone);
         return recipientsList;
 
     }

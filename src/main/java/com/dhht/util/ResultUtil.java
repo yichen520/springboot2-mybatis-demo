@@ -68,7 +68,7 @@ public class ResultUtil {
             case 14:
                 return JsonObjectBO.error("该区域暂时没有备案单位，请联系管理员");
             case 15:
-                return JsonObjectBO.error("法定专用章印章信息重复");
+                return JsonObjectBO.error("该印章信息重复");
             case 16:
                 return JsonObjectBO.error("备案单位或制作单位不存在");
             case 17:

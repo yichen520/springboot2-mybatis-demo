@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface RecipientsService {
 
-    int insertRecipients(Recipients recipients,User user);
+    int insertRecipients(Recipients recipients,String currentUserMobilePhone);
 
-    int updateRecipients(Recipients recipients,User user);
+    int updateRecipients(Recipients recipients,String  currentUserMobilePhone);
 
     int deleteRecipients(String id);
 
-    List<Recipients> recipientsList(User user);
+    List<Recipients> recipientsList(String telPhone);
 }
