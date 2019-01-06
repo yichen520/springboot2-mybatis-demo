@@ -11,6 +11,7 @@ import com.dhht.service.District.DistrictService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.service.useDepartment.UseDepartmentService;
+import com.dhht.service.user.WeChatUserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
 import com.dhht.util.CompareFieldsUtil;
@@ -46,6 +47,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
     private HistoryService historyService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private WeChatUserService weChatUserService;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -80,6 +83,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
+            weChatUserService.sendMessage(useDepartment.getManagerPhone());
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.SAVE);
             return JsonObjectBO.success("添加成功",null);
         }

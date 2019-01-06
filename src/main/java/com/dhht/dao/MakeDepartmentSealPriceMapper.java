@@ -19,4 +19,6 @@ public interface MakeDepartmentSealPriceMapper {
     MakeDepartmentSealPrice selectById(@Param("makeDepartmentFlag") String id);
 
     List<MakeDepartmentSealPrice> selectByMakeDepartmentFlag(@Param("makeDepartmentFlag") String makeDepartmentFlag);
+
+    MakeDepartmentSealPrice selectBySealTypeAndMakeDepartment(MakeDepartmentSealPrice makeDepartmentSealPrice);
 }

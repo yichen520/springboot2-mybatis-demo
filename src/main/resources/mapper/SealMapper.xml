@@ -89,6 +89,17 @@
         reject_remark, verify_type_name, is_earlywarning, is_apply, apply_date, earlywarning_date,
         missingpost_remark, is_undertake, undertake_date
     </sql>
+    <sql id="Base_Column_List_seal">
+       a.id as id, seal_code, seal_name, seal_status_code, use_department_code, use_department_name,
+        record_department_code, record_department_name, make_department_code, make_department_name,
+        seal_type_code, materials_code, mimeograph_description, seal_shape_code, seal_size,
+        seal_center_image, seal_specification, seal_make_type_code, seal_record_type_code,
+        record_date, is_record, make_date, is_make, personal_date, is_personal, deliver_date,
+        is_deliver, is_logout, loss_date, is_loss, remark, logout_date, seal_reason, district_id,
+        agent_id, getter_id, loss_person_id, logout_person_id, is_chipseal, is_pass, reject_reason,
+        reject_remark, verify_type_name, is_earlywarning, is_apply, apply_date, earlywarning_date,
+        missingpost_remark, is_undertake, undertake_date
+    </sql>
   <select id="selectRecordDepartmentCode" resultMap="recordDepartmentCodeResult">
     SELECT record_department_code from seal GROUP BY record_department_code
   </select>
@@ -620,13 +631,13 @@
   </select>
 
    <update id="logoutSeal" parameterType="java.lang.String">
-       update seal set  is_logout = true and logout_date = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where use_department_code = #{useDepartmentCode} and seal_type_code = "01"
+       update seal set  is_logout = true , logout_date = NOW() where use_department_code = #{useDepartmentCode} and seal_type_code = #{sealTypeCode}
 
    </update>
 
     <select id="selectByTypeAndUseDepartmentCode"  resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from  seal where use_department_code = #{useDepartmentCode}
-        and seal_type_code = "01"
+        and seal_type_code = #{sealTypeCode} and is_logout = false
         <if test="isUndertake !=null and isUndertake !=''">
             AND is_undertake = #{isUndertake,jdbcType=BIT}
         </if>
@@ -649,10 +660,22 @@
       select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
   </select>
 
+    <select id="selectByCodeAndType05"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and  is_logout!=TRUE
+    </select>
+
+
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
         select emplyee_name AS employeeName ,employee_id as employeeId ,employee_code as employeeCode
      FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = "00";
 </select>
+
+    <select id="selectSealByTelphone" resultMap="BaseResultMap"  parameterType="java.lang.String">
+        select <include refid="Base_Column_List_seal" />
+     FROM  seal a join seal_agent sa on a.agent_id = sa.id  AND sa.telphone = #{telphone} and sa.business_type in ("000","00")
+</select>
+
+
 
   <select id="selectOperationRecordByCodeAndType" resultType="com.dhht.model.SealOperationRecord">
         select emplyee_name AS employeeName ,employee_id as employeeId ,employee_code as employeeCode,operate_time as operateTime
@@ -1260,6 +1283,12 @@
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type= #{flag}
   </select>
 
+    <select id="sealList" resultMap="BaseResultMap">
+        SELECT  <include refid="Base_Column_List" /> FROM seal
+        <where>
+                use_department_code = #{useDepartmentCode}
+        </where>
+    </select>
 
   <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" /> FROM seal

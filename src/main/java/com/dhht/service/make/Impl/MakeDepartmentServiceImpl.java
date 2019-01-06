@@ -489,5 +489,21 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return syncEntity;
     }
 
+    /**
+     *
+     * @param map 区域
+     * @return
+     */
+    @Override
+    public List<Makedepartment> makeDepartmentSort(Map map) {
+        String type =(String)map.get("type");
+        String districtId = (String)map.get("districtId");
+        districtId= StringUtil.getDistrictId(districtId);
+        if(type.equals("0")){
+            return   makedepartmentMapper.makeDepartmentSort(districtId);
+        }else {
+            return makedepartmentMapper.makeDepartmentSortBySealNum(districtId);
+        }
 
+    }
 }

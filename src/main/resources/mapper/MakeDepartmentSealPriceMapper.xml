@@ -25,7 +25,10 @@
   <select id="selectByMakeDepartmentFlag" resultMap="BaseResultMap" parameterType="java.lang.String">
     select <include refid="Base_Column_List"/> from make_department_seal_price where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR} and is_delete = false
   </select>
-
+  <select id="selectBySealTypeAndMakeDepartment" resultMap="BaseResultMap" parameterType="com.dhht.model.MakeDepartmentSealPrice">
+    select <include refid="Base_Column_List"/> from make_department_seal_price where make_department_flag = #{makeDepartmentFlag,jdbcType=VARCHAR} and is_delete = false
+    and seal_type = #{sealType} limit 1
+  </select>
   <delete id="deleteById" parameterType="java.lang.String" >
     delete from make_department_seal_price
     where id = #{id,jdbcType=VARCHAR}

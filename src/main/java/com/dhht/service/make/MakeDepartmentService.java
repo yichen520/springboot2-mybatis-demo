@@ -7,6 +7,7 @@ import com.dhht.model.pojo.SealVO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MakeDepartmentService {
      List<MakeDepartmentSimple> selectInfo(String districtId,String name,String status);
@@ -44,4 +45,5 @@ public interface MakeDepartmentService {
 
      List<MakeDepartmentSimple> selectSimpleByDepartmentName(String districtId,String departmentName);
 
+    List<Makedepartment> makeDepartmentSort(Map map);
 }

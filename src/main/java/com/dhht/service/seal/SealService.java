@@ -8,6 +8,7 @@ import com.dhht.model.pojo.SealWeChatDTO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SealService {
 
@@ -15,7 +16,7 @@ public interface SealService {
 
    int insert(Seal seal);
 
-   //印章备案
+   //印章申请
    int sealRecord(List<Seal> seals, User user,String useDepartmentCode, String districtId, String agentTelphone,
                   String agentName, String certificateNo, String certificateType,
                   String agentPhotoId, String idcardFrontId, String idcardReverseId,  String proxyId,String idCardPhotoId,int confidence,
@@ -84,13 +85,26 @@ public interface SealService {
 
    int underTake(User user, String sealId);
 
-    int sealWeChatRecord(User user, SealWeChatDTO sealDTO);
+
 
     List<Seal> portalSealInfo( String useDepartmentName, String useDepartmentCode, String status, String sealType, String recordDepartmentName, String sealCode);
 
 
    //----------------------------------------以下是小程序端口-------------------------------------//
-   int cachetChange(String code,Seal seal,User user);
+   //小程序变更
+   int cachetChange(SealWeChatDTO sealDTO,User user);
 
+   //小程序申请
+   int sealWeChatRecord(User user, SealWeChatDTO sealDTO);
+
+
+
+   MakeDepartmentSealPrice sealPrice(User user, Map map);
+
+   List<Seal> sealProgress(User user, Map map);
+
+   List<Seal> portalSealInfoByCode(String cdode);
+
+   List<Seal> sealListForWeChat(String useDepartment);
 }
 

@@ -176,7 +176,7 @@ public class SealController implements InitializingBean {
     }
 
     /**
-     * 备案
+     * 印章交付后备案
      *
      * @param httpServletRequest
      * @param
@@ -206,7 +206,7 @@ public class SealController implements InitializingBean {
         }
     }
     /**
-     * 备案
+     * 承接
      *
      * @param httpServletRequest
      * @param
