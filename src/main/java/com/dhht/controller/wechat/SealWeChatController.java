@@ -10,6 +10,7 @@ import com.dhht.model.pojo.SealDTO;
 import com.dhht.model.pojo.SealWeChatDTO;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +35,8 @@ public class SealWeChatController extends BaseController {
     private MakeDepartmentService makeDepartmentService;
     @Autowired
     private MakeDepartmentSealPriceMapper makeDepartmentSealPriceMapper;
+    @Autowired
+    private UserPasswordService userPasswordService;
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
@@ -158,6 +161,23 @@ public class SealWeChatController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
             return JsonObjectBO.exception("变更失败");
+        }
+    }
+
+    @Log("获取验证码")
+    @RequestMapping(value = "/getCheckCode")
+    public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map){
+        String  telphone = (String)map.get("telphone");
+        try{
+            if (userPasswordService.getCheckCode(telphone)== ResultUtil.isSuccess){
+                return JsonObjectBO.success("获取验证码成功",null);
+            }else{
+                return  JsonObjectBO.error("获取验证码失败");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("获取验证码失败");
         }
     }
 
