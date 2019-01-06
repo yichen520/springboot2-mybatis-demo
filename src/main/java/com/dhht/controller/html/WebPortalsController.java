@@ -20,12 +20,10 @@ import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +50,8 @@ public class WebPortalsController extends BaseController {
     @Autowired
     private SealService sealService;
 
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     /**
      * 省级区域数据
      * @return
@@ -70,13 +70,12 @@ public class WebPortalsController extends BaseController {
 
     /**
      * 制作单位信息
-     * @param districtIds
+     * @param districtId
      * @return
      */
-    @RequestMapping(value = "/makeDepartmentInfo",method = RequestMethod.POST)
-    public JsonObjectBO getMakeDepartmentByDistrictId(@RequestBody List<String> districtIds){
+    @RequestMapping(value = "/makeDepartmentInfo",method = RequestMethod.GET)
+    public JsonObjectBO getMakeDepartmentByDistrictId(@RequestParam String districtId){
         try {
-            String districtId = districtIds.get(2);
             JSONObject jsonObject = new JSONObject();
             List<MakeDepartmentSimple> makeDepartmentSimples = makeDepartmentService.selectInfo(districtId,null,"01");
             jsonObject.put("makeDepartment",makeDepartmentSimples);
@@ -152,22 +151,23 @@ public class WebPortalsController extends BaseController {
         }
     }
 
-    @Log("印章信息")
-    @RequestMapping("/sealInfo")
-    public JsonObjectBO sealInfo(@RequestBody SealDTO sealDTO) {
+    @RequestMapping(value = "/useInfo",method = RequestMethod.GET)
+    public JsonObjectBO useInfo(@RequestParam String name){
+        try {
+            List<UseDepartment> useDepartments = useDepartmentService.selectUseDepartment(name);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("useInfo",useDepartments);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("获取使用单位失败");
+        }
+    }
+    @RequestMapping(value = "/sealInfo",method = RequestMethod.GET)
+    public JsonObjectBO sealInfo(@RequestParam String code) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        String useDepartmentName = sealDTO.getSeal().getUseDepartmentName();
-        String useDepartmentCode = sealDTO.getSeal().getUseDepartmentCode();
-        String status = sealDTO.getSeal().getSealStatusCode();
-        String sealType = sealDTO.getSeal().getSealTypeCode();
-        String recordDepartmentName = sealDTO.getSeal().getRecordDepartmentName();
-        String sealCode = sealDTO.getSeal().getSealCode();
-        int pageNum = sealDTO.getPageNum();
-        int pageSize = sealDTO.getPageSize();
-        User user =null;
         try {
-            PageInfo<Seal> seal = sealService.portalSealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize,sealType,recordDepartmentName,sealCode);
+            List<Seal> seal = sealService.portalSealInfo(null, code, "09", null,null,null);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);

@@ -86,7 +86,7 @@ public interface SealService {
 
     int sealWeChatRecord(User user, SealWeChatDTO sealDTO);
 
-    PageInfo<Seal> portalSealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize, String sealType, String recordDepartmentName, String sealCode);
+    List<Seal> portalSealInfo( String useDepartmentName, String useDepartmentCode, String status, String sealType, String recordDepartmentName, String sealCode);
 
 
    //----------------------------------------以下是小程序端口-------------------------------------//
