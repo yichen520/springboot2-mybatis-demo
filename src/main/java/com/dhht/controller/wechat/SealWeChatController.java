@@ -2,6 +2,7 @@ package com.dhht.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
+import com.dhht.common.CurrentUser;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
@@ -14,16 +15,16 @@ import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.util.ResultUtil;
+import com.dhht.util.UUIDUtil;
 import dhht.idcard.trusted.identify.GuangRayIdentifier;
 import dhht.idcard.trusted.identify.IdentifyResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -227,6 +228,42 @@ public class SealWeChatController extends BaseController {
         return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
     }
     }
+
+    @RequestMapping(value="/upload",produces="application/json;charset=UTF-8")
+    public JsonObjectBO singleFileUpload(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return JsonObjectBO.error("请选择上传文件");
+        }
+        try {
+            byte[] fileBuff = null;
+            InputStream inputStream = file.getInputStream();
+            if(inputStream != null){
+                int len1 = inputStream.available();
+                fileBuff = new byte[len1];
+                inputStream.read(fileBuff);
+            }
+            inputStream.close();
+
+            String fileName = file.getOriginalFilename();
+            String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+            User user = new User();
+            user.setId(UUIDUtil.generate());
+            user.setRealName("微信小程序可信身份");
+            FileInfo fileInfo = fileService.save(fileBuff, fileName, ext, "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getRealName());
+
+            if(fileInfo != null){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("file",fileInfo);
+                return JsonObjectBO.success("文件上传成功",jsonObject);
+            }else {
+                return JsonObjectBO.error("文件上传失败");
+            }
+        } catch (Exception e) {
+            return JsonObjectBO.exception("上传文件失败");
+        }
+    }
+
 
 
 }
