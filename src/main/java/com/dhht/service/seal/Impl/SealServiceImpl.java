@@ -1786,6 +1786,13 @@ public class SealServiceImpl implements SealService {
         List<Seal> seals = sealDao.selectByCode(code);
         return seals;
     }
+
+    @Override
+    public List<Seal> sealListForWeChat(String useDepartmentCode) {
+        List<Seal> sealList = sealDao.sealList(useDepartmentCode);
+        return sealList;
+    }
+
     /**
      * 挂失相关操作
      * @param seal

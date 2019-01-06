@@ -1283,6 +1283,12 @@
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type= #{flag}
   </select>
 
+    <select id="sealList" resultMap="BaseResultMap">
+        SELECT  <include refid="Base_Column_List" /> FROM seal
+        <where>
+                use_department_code = #{useDepartmentCode}
+        </where>
+    </select>
 
   <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" /> FROM seal

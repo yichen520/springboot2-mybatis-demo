@@ -104,5 +104,7 @@ public interface SealService {
    List<Seal> sealProgress(User user, Map map);
 
    List<Seal> portalSealInfoByCode(String cdode);
+
+   List<Seal> sealListForWeChat(String useDepartment);
 }
 

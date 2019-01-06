@@ -38,8 +38,6 @@ public interface SealDao {
 
     int logoutSeal(@Param("useDepartmentCode") String useDepartmentCode,@Param("sealTypeCode") String sealTypeCode);
 
-
-
     List<Seal> allUndertakeSeal(@Param("makeDepartmentCode") String makeDepartmentCode);
 
 //    int insertVerifySeal(String id,boolean isPass,String rejectReason,String rejectRemark);
@@ -96,6 +94,8 @@ public interface SealDao {
     List<SealCode> selectRecordDepartmentCode();
 
     String selectSealCode(@Param("code") String code);
+
+    List<Seal> sealList(@Param("useDepartmentCode") String useDepartmentCode);
 
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);

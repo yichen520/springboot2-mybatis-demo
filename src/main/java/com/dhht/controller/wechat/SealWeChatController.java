@@ -6,15 +6,22 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
 import com.dhht.model.*;
+import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealDTO;
 import com.dhht.model.pojo.SealWeChatDTO;
+import com.dhht.model.pojo.TrustedIdentityAuthenticationVO;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.tools.FileService;
 import com.dhht.util.ResultUtil;
+import dhht.idcard.trusted.identify.GuangRayIdentifier;
+import dhht.idcard.trusted.identify.IdentifyResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -34,6 +41,9 @@ public class SealWeChatController extends BaseController {
     private MakeDepartmentService makeDepartmentService;
     @Autowired
     private MakeDepartmentSealPriceMapper makeDepartmentSealPriceMapper;
+    @Autowired
+    private FileService fileService;
+
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
@@ -159,6 +169,63 @@ public class SealWeChatController extends BaseController {
             e.printStackTrace();
             return JsonObjectBO.exception("变更失败");
         }
+    }
+
+    /**
+     * 可信身份认证
+     * @param map
+     * @return
+     */
+    @Log("可信身份认证")
+    @RequestMapping(value = "/TrustedIdentityAuthentication", method = RequestMethod.POST)
+    public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        TrustedIdentityAuthenticationVO result = new TrustedIdentityAuthenticationVO();
+        String certificateNo = (String) map.get("certificateNo");
+        String name = (String) map.get("name");
+        String fieldPhotoId = (String) map.get("fieldPhotoId");
+        FileInfoVO fieldFileInfo = fileService.readFile(fieldPhotoId);
+        byte[] fileDate = fieldFileInfo.getFileData();
+        float fileDatetoKb =fileDate.length/1024;
+        if(fileDatetoKb>25||fileDatetoKb<10){
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("重新上传，图片大小请小于25kb大于10kb");
+        }else {
+            BASE64Encoder base64Encoder = new BASE64Encoder();
+            String photoDate = base64Encoder.encode(fileDate);
+            IdentifyResult identifyResult = GuangRayIdentifier.identify(certificateNo, name, photoDate);
+            result.setFieldPhotoId(fieldPhotoId);
+            result.setCertificateNo(certificateNo);
+            result.setName(name);
+            result.setIsPass(identifyResult.isPassed());
+            result.setMessage(identifyResult.getMessage());
+            jsonObject.put("identifyResult",result);
+            if(identifyResult.isPassed()){
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage(identifyResult.getMessage());
+            }else {
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("验证失败");
+            }
+        }
+        return jsonObjectBO;
+    }
+
+    @RequestMapping(value = "/sealList", method = RequestMethod.POST)
+    public JsonObjectBO sealList(@RequestBody Map map) {
+        try{
+        JSONObject jsonObject = new JSONObject();
+        String useDepartmentCode = (String)map.get("useDepartmentCode");
+        List<Seal> seals = sealService.sealListForWeChat(useDepartmentCode);
+        jsonObject.put("seals",seals);
+        return JsonObjectBO.success("查询成功",jsonObject);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
+    }
     }
 
 
