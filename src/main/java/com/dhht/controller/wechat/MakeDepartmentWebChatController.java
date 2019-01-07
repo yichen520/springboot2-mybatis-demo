@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/weChat/make")
-public class MakeDepartmentController {
+public class MakeDepartmentWebChatController {
 
     @Autowired
     private MakeDepartmentService makeDepartmentService;

@@ -337,47 +337,6 @@ public class SealWeChatController extends BaseController {
         }
     }
 
-//    @Log("")
-//    @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
-//    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
-//        try {
-//            return userLoginService.checkAPPPhoneAndIDCard(smsCode);
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            return JsonObjectBO.exception("发送短信发生异常");
-//        }
-//    }
-    /**
-     * 制作单位价格数据
-     * @param map
-     * @return
-     */
-    @RequestMapping(value = "/sealPriceInfo",method = RequestMethod.POST)
-    public JsonObjectBO getSealPrice(@RequestBody Map map){
-        try {
-            String makeDepartmentFlag = (String)map.get("makeDepartmentFlag");
-            String sealType = (String)map.get("sealType");
-            JSONObject jsonObject = new JSONObject();
-            MakeDepartmentSealPrice makeDepartmentSealPrice = makeDepartmentSealPriceService.selectByMakeDepartmentFlagAndType(makeDepartmentFlag,sealType);
-            jsonObject.put("sealPrice",makeDepartmentSealPrice);
-            return JsonObjectBO.success("查询成功",jsonObject);
-        }catch (Exception e){
-            return JsonObjectBO.exception("查询制作单位价格失败");
-        }
-    }
-    @RequestMapping(value = "/selectMakedePartment",method = RequestMethod.POST)
-    public JsonObjectBO selectMakedePartment(@RequestBody MakedepartmentSimplePO makedepartmentSimplePO){
-        try {
-            JSONObject jsonObject = new JSONObject();
-            List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
-            jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
-            return JsonObjectBO.success("查询制作单位成功",jsonObject);
-        }catch (Exception e){
-            e.printStackTrace();
-            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询制作单位失败");
-        }
-    }
 
 
 
