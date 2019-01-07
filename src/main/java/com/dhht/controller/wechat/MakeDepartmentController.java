@@ -65,7 +65,7 @@ public class MakeDepartmentController {
         try {
             String id = (String) map.get("id");
             JSONObject jsonObject = new JSONObject();
-            Makedepartment makedepartment = makeDepartmentService.selectDetailById(id);
+            MakedepartmentSimplePO makedepartment = makeDepartmentService.selectMakedepartmentSimplePODetailById(id);
             jsonObject.put("makeDepartment",makedepartment);
             return JsonObjectBO.success("获取详情成功",jsonObject);
         }catch (Exception e){

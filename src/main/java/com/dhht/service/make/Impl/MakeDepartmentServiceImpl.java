@@ -530,4 +530,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         }
         return makedepartmentSimplePOS;
     }
+
+    @Override
+    public MakedepartmentSimplePO selectMakedepartmentSimplePODetailById(String id) {
+        return makedepartmentMapper.selectMakedepartmentSimplePODetailById(id);
+    }
 }
