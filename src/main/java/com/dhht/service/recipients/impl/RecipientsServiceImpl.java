@@ -53,9 +53,9 @@ public class RecipientsServiceImpl implements RecipientsService {
     }
 
     @Override
-    public List<Recipients> recipientsList(String telPhone){
+    public List<Recipients> recipientsList(String loginTelphone){
 
-        List<Recipients> recipientsList = recipientsMapper.selectAllByTelphone(telPhone);
+        List<Recipients> recipientsList = recipientsMapper.selectAllByTelphone(loginTelphone);
         return recipientsList;
 
     }
