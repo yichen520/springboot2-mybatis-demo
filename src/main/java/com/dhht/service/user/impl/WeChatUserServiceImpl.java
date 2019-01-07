@@ -1,9 +1,13 @@
 package com.dhht.service.user.impl;
 
+import com.dhht.dao.WeChatUserMapper;
+import com.dhht.model.WeChatUser;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.WeChatUserService;
+import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.StringUtil;
+import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -28,6 +32,9 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private WeChatUserMapper weChatUserMapper;
 
     @Value("${sms.template.insertUser}")
     private int userCode ;
@@ -64,6 +71,14 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             map.put("message","登录成功");
             map.put("mobilePhone",mobilePhone);
             request.getSession().setAttribute("mobilePhone",mobilePhone);
+            WeChatUser weChatUser = weChatUserMapper.selectByTelPhone(mobilePhone);
+            if(weChatUser==null) {
+                weChatUser.setId(UUIDUtil.generate());
+                weChatUser.setTelphone(mobilePhone);
+                weChatUser.setCreateTime(DateUtil.getCurrentTime());
+                weChatUserMapper.insertSelective(weChatUser);
+                map.put("weChatUser", weChatUser);
+            }
             return map;
         }else {
             map.put("status", "error");
@@ -72,6 +87,44 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             return map;
         }
     }
+
+    /**
+     * 用户修改
+     * @param weChatUser
+     * @param id
+     * @return
+     */
+    @Override
+    public int updateWeChatUser(WeChatUser weChatUser, String id) {
+       int weChatUserUpdate = weChatUserMapper.updateByPrimaryKeySelective(weChatUser);
+       if(weChatUserUpdate<0){
+           return ResultUtil.isFail;
+       }else{
+           return ResultUtil.isSuccess;
+       }
+    }
+
+    /**
+     * 用户查询
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String,Object>  selectWeChatUser(String id) {
+        Map<String,Object> map = new HashMap<>();
+        WeChatUser weChatUser = weChatUserMapper.selectByPrimaryKey(id);
+        if(weChatUser==null){
+            map.put("status", "error");
+            map.put("currentAuthority", "guest");
+            map.put("message","数据不存在");
+            return map;
+        }
+        map.put("status", "ok");
+        map.put("message","查询成功");
+        map.put("weChatUser",weChatUser);
+        return map;
+    }
+
 
     /**
      * 设置过期时间五分钟
