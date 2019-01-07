@@ -11,6 +11,7 @@ import com.dhht.model.pojo.*;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import dhht.idcard.trusted.identify.GuangRayIdentifier;
@@ -42,6 +43,8 @@ public class SealWeChatController extends BaseController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private UserPasswordService userPasswordService;
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
@@ -239,7 +242,7 @@ public class SealWeChatController extends BaseController {
         try {
             byte[] fileBuff = null;
             InputStream inputStream = file.getInputStream();
-            if(inputStream != null){
+            if (inputStream != null) {
                 int len1 = inputStream.available();
                 fileBuff = new byte[len1];
                 inputStream.read(fileBuff);
@@ -254,17 +257,34 @@ public class SealWeChatController extends BaseController {
             user.setRealName("微信小程序可信身份");
             FileInfo fileInfo = fileService.save(fileBuff, fileName, ext, "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getRealName());
 
-            if(fileInfo != null){
+            if (fileInfo != null) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("file",fileInfo);
-                return JsonObjectBO.success("文件上传成功",jsonObject);
-            }else {
+                jsonObject.put("file", fileInfo);
+                return JsonObjectBO.success("文件上传成功", jsonObject);
+            } else {
                 return JsonObjectBO.error("文件上传失败");
             }
         } catch (Exception e) {
             return JsonObjectBO.exception("上传文件失败");
         }
+    }
 
+    @Log("获取验证码")
+    @RequestMapping(value = "/getCheckCode")
+    public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map){
+        String  telphone = (String)map.get("telphone");
+        try{
+            if (userPasswordService.getCheckCode(telphone)== ResultUtil.isSuccess){
+                return JsonObjectBO.success("获取验证码成功",null);
+            }else{
+                return  JsonObjectBO.error("获取验证码失败");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("获取验证码失败");
+        }
+    }
 
     }
     @RequestMapping(value = "/sealInfo", method = RequestMethod.POST)
