@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -47,6 +49,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
     private FileService fileService;
     @Autowired
     private WeChatUserService weChatUserService;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private final String IDCARD_FRONT_FILE = "使用单位法人身份证正面照片";
     private final String IDCARD_REVERSE_FILE = "使用单位法人身份证反面照片";
@@ -250,8 +254,15 @@ public class UseDepartmentImpl implements UseDepartmentService {
      */
     @Override
     public List<UseDepartment> selectUseDepartment(String useDepartmentName) {
-        List<UseDepartment> useDepartment = useDepartmentDao.selectByName(useDepartmentName);
-        return setDistrictName(useDepartment);
+        List<UseDepartment> useDepartments = useDepartmentDao.selectByName(useDepartmentName);
+        for(UseDepartment useDepartment : useDepartments){
+            try {
+                useDepartment.setFoundDateFormat(simpleDateFormat.format(useDepartment.getFoundDate()));
+            }catch (Exception e){
+                continue;
+            }
+        }
+        return setDistrictName(useDepartments);
     }
 
     /**
@@ -267,6 +278,12 @@ public class UseDepartmentImpl implements UseDepartmentService {
             }
         }
         return list;
+    }
+
+    public UseDepartment setDistrictName(UseDepartment useDepartment){
+        String districtName = districtService.selectByDistrictId(useDepartment.getDistrictId());
+        useDepartment.setDistrictName(districtName);
+        return useDepartment;
     }
 
     /**
@@ -285,7 +302,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public UseDepartment selectByCode(String useDepartmentCode){
         UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);
-        return useDepartment;
+        return setDistrictName(useDepartment);
     }
 
     /**

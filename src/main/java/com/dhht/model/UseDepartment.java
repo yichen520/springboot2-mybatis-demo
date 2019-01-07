@@ -81,10 +81,10 @@ public class UseDepartment {
     private String  managerName;
     @EntityComment(value = "注册经办人手机")
     private String managerPhone;
-
     private Boolean isDelete;
     private Integer version;
     private String flag;
     private Date updateTime;
+    private String foundDateFormat;
 
 }

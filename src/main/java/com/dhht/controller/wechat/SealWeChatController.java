@@ -2,15 +2,17 @@ package com.dhht.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
-import com.dhht.common.CurrentUser;
+
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
 import com.dhht.model.*;
 import com.dhht.model.pojo.*;
+import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
@@ -45,6 +47,11 @@ public class SealWeChatController extends BaseController {
 
     @Autowired
     private UserPasswordService userPasswordService;
+    @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
+    private MakeDepartmentSealPriceService makeDepartmentSealPriceService;
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
@@ -269,6 +276,7 @@ public class SealWeChatController extends BaseController {
         }
     }
 
+
     @Log("获取验证码")
     @RequestMapping(value = "/getCheckCode")
     public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map){
@@ -316,6 +324,20 @@ public class SealWeChatController extends BaseController {
 //            return JsonObjectBO.exception("获取验证码失败");
 //        }
 //    }
+
+    @Log("验证码手机号")
+    @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
+    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
+        try {
+            return userLoginService.checkAPPPhoneAndIDCard(smsCode);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("发送短信发生异常");
+        }
+    }
+
+
 
 
 }

@@ -2,6 +2,7 @@ package com.dhht.service.make;
 
 import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 import com.dhht.model.pojo.SealDTO;
 import com.dhht.model.pojo.SealVO;
 import com.github.pagehelper.PageInfo;
@@ -46,4 +47,8 @@ public interface MakeDepartmentService {
      List<MakeDepartmentSimple> selectSimpleByDepartmentName(String districtId,String departmentName);
 
     List<Makedepartment> makeDepartmentSort(Map map);
+
+    List<MakedepartmentSimplePO> selectMakedePartment(MakedepartmentSimplePO makedepartmentSimplePO);
+
+    MakedepartmentSimplePO selectMakedepartmentSimplePODetailById(String id);
 }

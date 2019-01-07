@@ -1749,7 +1749,7 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public PageInfo<Seal> portalSealInfo(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize, String sealType, String recordDepartmentName, String sealCode) {
+    public List<Seal> portalSealInfo( String useDepartmentName, String useDepartmentCode, String status,  String sealType, String recordDepartmentName, String sealCode) {
 
         try {
             Seal seal = new Seal();
@@ -1759,13 +1759,11 @@ public class SealServiceImpl implements SealService {
             seal.setUseDepartmentCode(useDepartmentCode);
             seal.setUseDepartmentName(useDepartmentName);
             List<Seal> list = new ArrayList<Seal>();
-            PageHelper.startPage(pageNum, pageSize);
             list = chooseSealStatus(seal, status);
-            PageInfo<Seal> result = new PageInfo<>(list);
-            return result;
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
-            return new PageInfo<>();
+            return new ArrayList<>();
         }
     }
 

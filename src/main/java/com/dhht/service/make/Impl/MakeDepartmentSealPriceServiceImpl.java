@@ -103,4 +103,12 @@ public class MakeDepartmentSealPriceServiceImpl implements MakeDepartmentSealPri
     public List<MakeDepartmentSealPrice> selectByMakeDepartmentFlag(String flag) {
         return makeDepartmentSealPriceMapper.selectByMakeDepartmentFlag(flag);
     }
+
+    @Override
+    public MakeDepartmentSealPrice selectByMakeDepartmentFlagAndType(String makeDepartmentFlag, String sealType) {
+        MakeDepartmentSealPrice makeDepartmentSealPrice = new MakeDepartmentSealPrice();
+        makeDepartmentSealPrice.setMakeDepartmentFlag(makeDepartmentFlag);
+        makeDepartmentSealPrice.setSealType(sealType);
+        return makeDepartmentSealPriceMapper.selectBySealTypeAndMakeDepartment(makeDepartmentSealPrice);
+    }
 }

@@ -2,6 +2,8 @@ package com.dhht.service.user.impl;
 
 import com.dhht.dao.WeChatUserMapper;
 import com.dhht.model.WeChatUser;
+import com.dhht.dao.SMSCodeDao;
+import com.dhht.model.SMSCode;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.WeChatUserService;
 import com.dhht.util.DateUtil;
@@ -29,6 +31,8 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
     @Autowired
     private SmsSendService smsSendService;
+    @Autowired
+    private SMSCodeDao smsCodeDao;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -56,6 +60,19 @@ public class WeChatUserServiceImpl implements WeChatUserService {
         expire(mobilePhone);
         boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,150656,params);
         if(result){
+            SMSCode smscode= smsCodeDao.getSms(mobilePhone);
+            if(smscode==null){
+                smscode = new SMSCode();
+                smscode.setId(UUIDUtil.generate());
+                smscode.setLastTime(System.currentTimeMillis());
+                smscode.setPhone(mobilePhone);
+                smscode.setSmscode(code);
+                smsCodeDao.save(smscode);
+            }else{
+                smscode.setLastTime(System.currentTimeMillis());
+                smscode.setSmscode(code);
+                smsCodeDao.update(smscode);
+            }
            return ResultUtil.isSendVerificationCode;
         }else {
             return ResultUtil.isError;

@@ -32,8 +32,94 @@
     <result column="idcard_reverse_id" property="idCardReverseId" jdbcType="VARCHAR"/>
     <result column="score" property="score" jdbcType="FLOAT"/>
     <association property="makeDepartmentPunish"  resultMap="makeDepartmentPunishResultMap" javaType="com.dhht.model.MakeDepartmentPunish"></association>
-
   </resultMap>
+
+  <resultMap id="BaseMakeDepartmentResultMap" type="com.dhht.model.pojo.MakedepartmentSimplePO" >
+    <id column="id" property="id" jdbcType="VARCHAR"/>
+    <result column="department_code" property="departmentCode" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="department_nation_name" property="departmentNationName" jdbcType="VARCHAR" />
+    <result column="department_english_name" property="departmentEnglishName" jdbcType="VARCHAR" />
+    <result column="department_english_ahhr" property="departmentEnglishAhhr" jdbcType="VARCHAR" />
+    <result column="department_type" property="departmentType" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
+    <result column="legal_id_type" property="legalIdType" jdbcType="VARCHAR" />
+    <result column="legal_englishsurname" property="legalEnglishsurname" jdbcType="VARCHAR" />
+    <result column="legal_englishname" property="legalEnglishname" jdbcType="VARCHAR" />
+    <result column="legal_telphone" property="legalTelphone" jdbcType="VARCHAR" />
+    <result column="department_address" property="departmentAddress" jdbcType="VARCHAR" />
+    <result column="department_address_detail" property="departmentAddressDetail" jdbcType="VARCHAR" />
+    <result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
+    <result column="logout_time" property="logoutTime" jdbcType="TIMESTAMP" />
+    <result column="department_status" property="departmentStatus" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="NUMERIC"/>
+    <result column="flag" property="flag" jdbcType="CHAR"/>
+    <result column="version_time" property="versionTime" jdbcType="VARCHAR"/>
+    <result column="register_time" property="registerTime" jdbcType="TIMESTAMP"/>
+    <result column="business_license_url" property="businessLicenseUrl" jdbcType="VARCHAR"/>
+    <result column="special_license_url" property="specialLicenseUrl" jdbcType="VARCHAR"/>
+    <result column="legal_document_url" property="legalDocumentUrl" jdbcType="VARCHAR"/>
+    <result column="idcard_front_id" property="idCardFrontId" jdbcType="VARCHAR"/>
+    <result column="idcard_reverse_id" property="idCardReverseId" jdbcType="VARCHAR"/>
+    <result column="score" property="score" jdbcType="FLOAT"/>
+    <association property="makeDepartmentAttachInfo"  resultMap="makeDepartmentAttachInfoResultMap" javaType="com.dhht.model.MakeDepartmentAttachInfo"></association>
+  </resultMap>
+  <resultMap id="makeDepartmentAttachInfoResultMap" type="com.dhht.model.MakeDepartmentAttachInfo">
+    <id column="mid" jdbcType="VARCHAR" property="id" />
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_address" jdbcType="VARCHAR" property="bankAddress" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="address_detail" jdbcType="VARCHAR" property="addressDetail" />
+    <result column="promise_time" jdbcType="VARCHAR" property="promiseTime" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_delete" jdbcType="BIT" property="isDelete" />
+    <result column="make_department_flag" jdbcType="VARCHAR" property="makeDepartmentFlag" />
+  </resultMap>
+    <select id="selectMakedepartmentSimplePODetailById" resultMap="BaseMakeDepartmentResultMap" parameterType="java.lang.String" >
+        select <include refid="Base_MakeDepartment_Column_List"/>
+        from make_department LEFT JOIN make_department_attach_info
+        on make_department.flag = make_department_attach_info.make_department_flag where
+        make_department.id = #{id}
+    </select>
+
+
+  <select id="selectMakedePartment" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
+    select <include refid="Base_MakeDepartment_Column_List"/>
+from make_department LEFT JOIN make_department_attach_info
+ on make_department.flag = make_department_attach_info.make_department_flag where
+make_department.delete_status = 0 and
+ make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
+and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
+  </select>
+
+  <select id="selectMakedePartmentByEvaluate" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
+    select <include refid="Base_MakeDepartment_Column_List"/>,AVG(make_department_evaluate.score) as score
+    from make_department LEFT JOIN make_department_attach_info
+    on make_department.flag = make_department_attach_info.make_department_flag
+    LEFT join make_department_evaluate on make_department.flag = make_department_evaluate.make_department_id
+    where  make_department.delete_status = 0 and
+    make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
+    and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
+    GROUP BY make_department_evaluate.make_department_id ORDER BY score
+  </select>
+
+  <select id="selectMakedePartmentBySealNum" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
+    select <include refid="Base_MakeDepartment_Column_List"/>,count(1) as score
+    from make_department LEFT JOIN make_department_attach_info
+    on make_department.flag = make_department_attach_info.make_department_flag
+    LEFT join seal on seal.make_department_code = make_department.department_code
+    where  make_department.delete_status = 0 and
+    make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
+    and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
+    GROUP BY seal.make_department_code ORDER BY score
+  </select>
+
+
   <resultMap id="makeDepartmentPunishResultMap" type="com.dhht.model.MakeDepartmentPunish">
     <id property="id" column="mid"/>
     <result property="makedepartmentCode" column="makedepartment_code"/>
@@ -88,6 +174,15 @@
     legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail, 
     telphone, postal_code,  department_status,version,flag,version_time,register_time,business_license_url,special_license_url,idcard_front_id,idcard_reverse_id
   </sql>
+  
+  <sql id="Base_MakeDepartment_Column_List">
+         make_department.id as id,department_code,  department_name, department_nation_name, department_english_name,
+    department_english_ahhr, department_type, legal_name, legal_id, legal_id_type,
+    legal_englishsurname, legal_englishname, legal_telphone, department_address, department_address_detail,
+    telphone, postal_code,  department_status,version,flag,version_time,register_time,business_license_url,special_license_url,idcard_front_id,idcard_reverse_id
+,    make_department_attach_info.id as mid, bank_account, bank_name, bank_address, latitude, longitude, address_detail, promise_time,
+    remarks, update_time, is_delete, make_department_flag
+  </sql>
 
   <select id="selectSimpleByName" resultMap="SimpleResultMap" parameterType="java.lang.String">
     select <include refid="Simple_Column_list"/> from make_department where  department_name like '%${departmentName}%' and department_address like '${districtId}%' limit 0,10
@@ -101,6 +196,13 @@
     )as b on a.flag = b.fa and  a.version=b.ver
     where department_code = #{departmentCode,jdbcType=VARCHAR}
   </select>
+
+
+
+
+
+
+
 
   <select id="selectByLegalTephone" resultMap="SimpleResultMap" parameterType="java.lang.String">
     select
