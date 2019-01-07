@@ -352,7 +352,7 @@ public class UserLoginServiceImpl implements UserLoginService {
 
         SMSCode sms = smsCodeDao.getSms(smsCode.getPhone());
         if (sms ==null){
-            return JsonObjectBO.error("请点击发送验证码");
+            return JsonObjectBO.error("请发送验证码");
         }
         if(!sms.getSmscode().equals(smsCode.getSmscode())){
             return JsonObjectBO.error("验证码错误");

@@ -2,18 +2,18 @@ package com.dhht.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
-import com.dhht.common.CurrentUser;
+
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
 import com.dhht.model.*;
-import com.dhht.model.pojo.FileInfoVO;
-import com.dhht.model.pojo.SealDTO;
-import com.dhht.model.pojo.SealWeChatDTO;
-import com.dhht.model.pojo.TrustedIdentityAuthenticationVO;
+import com.dhht.model.pojo.*;
+import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.user.UserLoginService;
+import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
 import dhht.idcard.trusted.identify.GuangRayIdentifier;
@@ -45,6 +45,13 @@ public class SealWeChatController extends BaseController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private UserPasswordService userPasswordService;
+    @Autowired
+    private UserLoginService userLoginService;
+
+    @Autowired
+    private MakeDepartmentSealPriceService makeDepartmentSealPriceService;
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
@@ -229,6 +236,11 @@ public class SealWeChatController extends BaseController {
     }
     }
 
+    /**
+     * 上传
+     * @param file
+     * @return
+     */
     @RequestMapping(value="/upload",produces="application/json;charset=UTF-8")
     public JsonObjectBO singleFileUpload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -237,7 +249,7 @@ public class SealWeChatController extends BaseController {
         try {
             byte[] fileBuff = null;
             InputStream inputStream = file.getInputStream();
-            if(inputStream != null){
+            if (inputStream != null) {
                 int len1 = inputStream.available();
                 fileBuff = new byte[len1];
                 inputStream.read(fileBuff);
@@ -252,15 +264,118 @@ public class SealWeChatController extends BaseController {
             user.setRealName("微信小程序可信身份");
             FileInfo fileInfo = fileService.save(fileBuff, fileName, ext, "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getRealName());
 
-            if(fileInfo != null){
+            if (fileInfo != null) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("file",fileInfo);
-                return JsonObjectBO.success("文件上传成功",jsonObject);
-            }else {
+                jsonObject.put("file", fileInfo);
+                return JsonObjectBO.success("文件上传成功", jsonObject);
+            } else {
                 return JsonObjectBO.error("文件上传失败");
             }
         } catch (Exception e) {
             return JsonObjectBO.exception("上传文件失败");
+        }
+    }
+
+
+    @Log("获取验证码")
+    @RequestMapping(value = "/getCheckCode")
+    public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map){
+        String  telphone = (String)map.get("telphone");
+        try{
+            if (userPasswordService.getCheckCode(telphone)== ResultUtil.isSuccess){
+                return JsonObjectBO.success("获取验证码成功",null);
+            }else{
+                return  JsonObjectBO.error("获取验证码失败");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("获取验证码失败");
+        }
+    }
+
+    @RequestMapping(value = "/sealInfo", method = RequestMethod.POST)
+    public JsonObjectBO sealInfo(@RequestBody Map map) {
+        try{
+            JSONObject jsonObject = new JSONObject();
+            String id = (String)map.get("sealId");
+            SealVO seal = sealService.selectDetailById(id);
+            jsonObject.put("seal",seal);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
+        }
+    }
+
+//    @Log("获取验证码")
+//    @RequestMapping(value = "/getCheckCode")
+//    public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map){
+//        String  telphone = (String)map.get("telphone");
+//        try{
+//            if (userPasswordService.getCheckCode(telphone)== ResultUtil.isSuccess){
+//                return JsonObjectBO.success("获取验证码成功",null);
+//            }else{
+//                return  JsonObjectBO.error("获取验证码失败");
+//            }
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//            return JsonObjectBO.exception("获取验证码失败");
+//        }
+//    }
+
+    @Log("验证码手机号")
+    @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
+    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
+        try {
+            return userLoginService.checkAPPPhoneAndIDCard(smsCode);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("发送短信发生异常");
+        }
+    }
+
+//    @Log("")
+//    @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
+//    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
+//        try {
+//            return userLoginService.checkAPPPhoneAndIDCard(smsCode);
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//            return JsonObjectBO.exception("发送短信发生异常");
+//        }
+//    }
+    /**
+     * 制作单位价格数据
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/sealPriceInfo",method = RequestMethod.POST)
+    public JsonObjectBO getSealPrice(@RequestBody Map map){
+        try {
+            String makeDepartmentFlag = (String)map.get("makeDepartmentFlag");
+            String sealType = (String)map.get("sealType");
+            JSONObject jsonObject = new JSONObject();
+            MakeDepartmentSealPrice makeDepartmentSealPrice = makeDepartmentSealPriceService.selectByMakeDepartmentFlagAndType(makeDepartmentFlag,sealType);
+            jsonObject.put("sealPrice",makeDepartmentSealPrice);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("查询制作单位价格失败");
+        }
+    }
+    @RequestMapping(value = "/selectMakedePartment",method = RequestMethod.POST)
+    public JsonObjectBO selectMakedePartment(@RequestBody MakedepartmentSimplePO makedepartmentSimplePO){
+        try {
+            JSONObject jsonObject = new JSONObject();
+            List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
+            jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
+            return JsonObjectBO.success("查询制作单位成功",jsonObject);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询制作单位失败");
         }
     }
 

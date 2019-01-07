@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,12 +32,13 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/login")
-    public Map<String,Object> login(@RequestBody Map map, HttpServletRequest httpServletRequest){
+    public Map<String,Object> login(@RequestBody Map map, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         Map<String,Object> resultMap = new HashMap<>();
         try {
             String mobilePhone = (String) map.get("mobilePhone");
             String verificationCode = (String) map.get("verificationCode");
             resultMap = weChatUserService.isLogin(mobilePhone,verificationCode,httpServletRequest);
+            httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
             return resultMap;
         }catch (Exception e){
             resultMap.put("status", "error");
@@ -54,11 +56,11 @@ public class LoginController {
     @RequestMapping("/verificationCode")
     public JsonObjectBO sendVerificationCode(@RequestBody Map map){
         try {
-            System.out.println("进入方法");
             String mobilePhone = (String)map.get("mobilePhone");
             int result = weChatUserService.sendMessage(mobilePhone);
             return ResultUtil.getResult(result);
         }catch (Exception e){
+            e.printStackTrace();
             return JsonObjectBO.exception("发送验证码异常");
         }
     }

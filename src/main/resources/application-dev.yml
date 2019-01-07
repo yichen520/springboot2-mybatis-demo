@@ -116,8 +116,10 @@ trackerProtocol: http://
 file:
  local:
    root: C:/temp/
+   ems: /Library/东华宏泰/
 sealtemplate:
  filePath: C:/temp/seal
+
 
 #设置redis中token过期时间
 expireTime: 3600

@@ -4,6 +4,7 @@ import com.dhht.annotation.Sync;
 import com.dhht.dao.*;
 import com.dhht.model.*;
 import com.dhht.model.pojo.CommonHistoryVO;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 import com.dhht.model.pojo.SealDTO;
 import com.dhht.model.pojo.SealVO;
 import com.dhht.service.employee.EmployeeService;
@@ -56,6 +57,9 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
 
     @Autowired
     private SealAgentMapper sealAgentMapper;
+
+    @Autowired
+    private DistrictMapper districtMapper;
 
     private final String IDCARD_FRONT_FILE = "制作单位法人身份证正面照片";
     private final String IDCARD_REVERSE_FILE = "制作单位法人身份证反面照片";
@@ -468,7 +472,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         }
         return false;
     }
-
+    @Override
     public  String makeDepartmentCode(String name){
         Makedepartment makedepartment = makedepartmentMapper.selectDetailByName(name);
         return makedepartment.getDepartmentCode();
@@ -505,5 +509,25 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             return makedepartmentMapper.makeDepartmentSortBySealNum(districtId);
         }
 
+    }
+
+
+    @Override
+    public List<MakedepartmentSimplePO> selectMakedePartment(MakedepartmentSimplePO makedepartmentSimplePO) {
+        List<MakedepartmentSimplePO> makedepartmentSimplePOS = new ArrayList<>();
+        District district = districtMapper.selectDistrictByCityName(makedepartmentSimplePO.getCityName());
+        makedepartmentSimplePO.setDepartmentAddress(district.getCityId().substring(0,4));
+        //综合排序
+        if (makedepartmentSimplePO.getType().equals("1")){
+            //综合排序
+            makedepartmentSimplePOS= makedepartmentMapper.selectMakedePartment(makedepartmentSimplePO);
+        }else if (makedepartmentSimplePO.getType().equals("2")){
+            ///评价排序
+            makedepartmentSimplePOS= makedepartmentMapper.selectMakedePartmentByEvaluate(makedepartmentSimplePO);
+        }else{
+            //
+            makedepartmentSimplePOS= makedepartmentMapper.selectMakedePartmentBySealNum(makedepartmentSimplePO);
+        }
+        return makedepartmentSimplePOS;
     }
 }

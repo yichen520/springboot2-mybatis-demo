@@ -13,5 +13,5 @@ public interface RecipientsService {
 
     int deleteRecipients(String id);
 
-    List<Recipients> recipientsList(String telPhone);
+    List<Recipients> recipientsList(String loginTelphone);
 }

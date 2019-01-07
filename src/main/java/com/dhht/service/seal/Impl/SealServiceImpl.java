@@ -260,12 +260,14 @@ public class SealServiceImpl implements SealService {
                     if(seal.getSealTypeCode().equals("01")){
                         Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"01");
                         if(seal1!=null) {
+                            seal.setSealStatusCode("06");
                             logoutAbout(seal1,employee);
                             int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"01");
                         }
                     }else if(seal.getSealTypeCode().equals("05")){
                         Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"05");
                         if(seal1!=null) {
+                            seal.setSealStatusCode("06");
                             logoutAbout(seal1,employee);
                             int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"05");
                         }

@@ -2,6 +2,7 @@ package com.dhht.service.make;
 
 import com.dhht.model.MakeDepartmentSealPrice;
 import com.dhht.model.User;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 
 import java.util.List;
 
@@ -20,5 +21,7 @@ public interface MakeDepartmentSealPriceService {
     List<MakeDepartmentSealPrice> selectByUser(User user);
 
     List<MakeDepartmentSealPrice> selectByMakeDepartmentFlag(String flag);
+
+    MakeDepartmentSealPrice selectByMakeDepartmentFlagAndType(String makeDepartmentFlag, String sealType);
 
 }

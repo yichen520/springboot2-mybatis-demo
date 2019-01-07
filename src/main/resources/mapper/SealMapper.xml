@@ -1286,7 +1286,7 @@
     <select id="sealList" resultMap="BaseResultMap">
         SELECT  <include refid="Base_Column_List" /> FROM seal
         <where>
-                use_department_code = #{useDepartmentCode}
+            use_department_code = #{useDepartmentCode}
         </where>
     </select>
 
