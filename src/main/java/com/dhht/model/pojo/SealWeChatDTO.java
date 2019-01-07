@@ -1,8 +1,6 @@
 package com.dhht.model.pojo;
 
-import com.dhht.model.MakeDepartmentSealPrice;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.Seal;
+import com.dhht.model.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -65,4 +63,8 @@ public class SealWeChatDTO {
     private Integer pageSize;
 
     private String captcha;
+
+    private SealPayOrder sealPayOrder;
+
+    private Courier courier;
 }

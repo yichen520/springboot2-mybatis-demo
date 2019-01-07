@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.SealPayOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.SealPayOrder" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="seal_id" property="sealId" jdbcType="CHAR" />
+    <result column="is_pay" property="isPay" jdbcType="BIT" />
+    <result column="pay_way" property="payWay" jdbcType="CHAR" />
+    <result column="pay_accout" property="payAccout" jdbcType="VARCHAR" />
+    <result column="pay_date" property="payDate" jdbcType="TIMESTAMP" />
+    <result column="express_way" property="expressWay" jdbcType="BIT" />
+    <result column="courier_id" property="courierId" jdbcType="CHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, seal_id, is_pay, pay_way, pay_accout, pay_date, express_way, courier_id, memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from seal_pay_order
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from seal_pay_order
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.SealPayOrder" >
+    insert into seal_pay_order (id, seal_id, is_pay, pay_way, 
+      pay_accout, pay_date, express_way, 
+      courier_id, memo)
+    values (#{id,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, #{isPay,jdbcType=BIT}, #{payWay,jdbcType=CHAR}, 
+      #{payAccout,jdbcType=VARCHAR}, #{payDate,jdbcType=TIMESTAMP}, #{expressWay,jdbcType=BIT}, 
+      #{courierId,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.SealPayOrder" >
+    insert into seal_pay_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sealId != null" >
+        seal_id,
+      </if>
+      <if test="isPay != null" >
+        is_pay,
+      </if>
+      <if test="payWay != null" >
+        pay_way,
+      </if>
+      <if test="payAccout != null" >
+        pay_accout,
+      </if>
+      <if test="payDate != null" >
+        pay_date,
+      </if>
+      <if test="expressWay != null" >
+        express_way,
+      </if>
+      <if test="courierId != null" >
+        courier_id,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="sealId != null" >
+        #{sealId,jdbcType=CHAR},
+      </if>
+      <if test="isPay != null" >
+        #{isPay,jdbcType=BIT},
+      </if>
+      <if test="payWay != null" >
+        #{payWay,jdbcType=CHAR},
+      </if>
+      <if test="payAccout != null" >
+        #{payAccout,jdbcType=VARCHAR},
+      </if>
+      <if test="payDate != null" >
+        #{payDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expressWay != null" >
+        #{expressWay,jdbcType=BIT},
+      </if>
+      <if test="courierId != null" >
+        #{courierId,jdbcType=CHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.SealPayOrder" >
+    update seal_pay_order
+    <set >
+      <if test="sealId != null" >
+        seal_id = #{sealId,jdbcType=CHAR},
+      </if>
+      <if test="isPay != null" >
+        is_pay = #{isPay,jdbcType=BIT},
+      </if>
+      <if test="payWay != null" >
+        pay_way = #{payWay,jdbcType=CHAR},
+      </if>
+      <if test="payAccout != null" >
+        pay_accout = #{payAccout,jdbcType=VARCHAR},
+      </if>
+      <if test="payDate != null" >
+        pay_date = #{payDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expressWay != null" >
+        express_way = #{expressWay,jdbcType=BIT},
+      </if>
+      <if test="courierId != null" >
+        courier_id = #{courierId,jdbcType=CHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.SealPayOrder" >
+    update seal_pay_order
+    set seal_id = #{sealId,jdbcType=CHAR},
+      is_pay = #{isPay,jdbcType=BIT},
+      pay_way = #{payWay,jdbcType=CHAR},
+      pay_accout = #{payAccout,jdbcType=VARCHAR},
+      pay_date = #{payDate,jdbcType=TIMESTAMP},
+      express_way = #{expressWay,jdbcType=BIT},
+      courier_id = #{courierId,jdbcType=CHAR},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>
