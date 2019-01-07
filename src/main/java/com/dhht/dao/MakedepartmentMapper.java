@@ -2,6 +2,7 @@ package com.dhht.dao;
 
 import com.dhht.model.MakeDepartmentSimple;
 import com.dhht.model.Makedepartment;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -74,4 +75,10 @@ public interface MakedepartmentMapper {
     List<Makedepartment> makeDepartmentSort(@Param("districtId")String districtId);
 
  List<Makedepartment> makeDepartmentSortBySealNum(@Param("districtId")String districtId);
+
+ List<MakedepartmentSimplePO> selectMakedePartment(MakedepartmentSimplePO makedepartmentSimplePO);
+
+ List<MakedepartmentSimplePO> selectMakedePartmentByEvaluate(MakedepartmentSimplePO makedepartmentSimplePO);
+
+ List<MakedepartmentSimplePO> selectMakedePartmentBySealNum(MakedepartmentSimplePO makedepartmentSimplePO);
 }
