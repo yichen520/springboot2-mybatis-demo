@@ -86,9 +86,10 @@ public interface SealService {
    int underTake(User user, String sealId);
 
 
-
     List<Seal> portalSealInfo( String useDepartmentName, String useDepartmentCode, String status, String sealType, String recordDepartmentName, String sealCode);
 
+
+    int checkSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
    //----------------------------------------以下是小程序端口-------------------------------------//
    //小程序变更
@@ -98,7 +99,6 @@ public interface SealService {
    int sealWeChatRecord(User user, SealWeChatDTO sealDTO);
 
 
-
    MakeDepartmentSealPrice sealPrice(User user, Map map);
 
    List<Seal> sealProgress(User user, Map map);
@@ -106,5 +106,7 @@ public interface SealService {
    List<Seal> portalSealInfoByCode(String cdode);
 
    List<Seal> sealListForWeChat(String useDepartment);
+
+
 }
 

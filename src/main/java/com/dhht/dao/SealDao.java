@@ -68,8 +68,6 @@ public interface SealDao {
 
     List<Seal> selectWaitdeliveredByBADW(Seal seal);
 
-    SealOperationRecord SelectByCodeAndFlag(@Param("sealCode") String sealcode);
-
     SealOperationRecord SelectByCodeAndFlag03(@Param("id") String id, @Param("flag") String flag);
 
 
@@ -118,13 +116,13 @@ public interface SealDao {
 
     int countLogoutSealByDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
-    int countAddSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
-
-    int countLossSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
-
-    int countLogoutSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
-
-    List<SealDistrict> countByDistrictId(List<DistrictMenus> districtIds);
+//    int countAddSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
+//
+//    int countLossSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
+//
+//    int countLogoutSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
+//
+//    List<SealDistrict> countByDistrictId(List<DistrictMenus> districtIds);
 
     int indexCountSum(@Param("districtId") String districtId);
 
