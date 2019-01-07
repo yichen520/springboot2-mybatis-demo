@@ -81,4 +81,6 @@ public interface MakedepartmentMapper {
  List<MakedepartmentSimplePO> selectMakedePartmentByEvaluate(MakedepartmentSimplePO makedepartmentSimplePO);
 
  List<MakedepartmentSimplePO> selectMakedePartmentBySealNum(MakedepartmentSimplePO makedepartmentSimplePO);
+
+    MakedepartmentSimplePO selectMakedepartmentSimplePODetailById(@Param("id") String id);
 }

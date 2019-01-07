@@ -80,6 +80,13 @@
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="make_department_flag" jdbcType="VARCHAR" property="makeDepartmentFlag" />
   </resultMap>
+    <select id="selectMakedepartmentSimplePODetailById" resultMap="BaseMakeDepartmentResultMap" parameterType="java.lang.String" >
+        select <include refid="Base_MakeDepartment_Column_List"/>
+        from make_department LEFT JOIN make_department_attach_info
+        on make_department.flag = make_department_attach_info.make_department_flag where
+        make_department.id = #{id}
+    </select>
+
 
   <select id="selectMakedePartment" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
     select <include refid="Base_MakeDepartment_Column_List"/>
