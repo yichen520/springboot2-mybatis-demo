@@ -7,10 +7,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
 import com.dhht.model.*;
-import com.dhht.model.pojo.FileInfoVO;
-import com.dhht.model.pojo.SealDTO;
-import com.dhht.model.pojo.SealWeChatDTO;
-import com.dhht.model.pojo.TrustedIdentityAuthenticationVO;
+import com.dhht.model.pojo.*;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
@@ -229,6 +226,11 @@ public class SealWeChatController extends BaseController {
     }
     }
 
+    /**
+     * 上传
+     * @param file
+     * @return
+     */
     @RequestMapping(value="/upload",produces="application/json;charset=UTF-8")
     public JsonObjectBO singleFileUpload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -262,8 +264,21 @@ public class SealWeChatController extends BaseController {
         } catch (Exception e) {
             return JsonObjectBO.exception("上传文件失败");
         }
+
+
     }
-
-
+    @RequestMapping(value = "/sealInfo", method = RequestMethod.POST)
+    public JsonObjectBO sealInfo(@RequestBody Map map) {
+        try{
+            JSONObject jsonObject = new JSONObject();
+            String id = (String)map.get("sealId");
+            SealVO seal = sealService.selectDetailById(id);
+            jsonObject.put("seal",seal);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
+        }
+    }
 
 }

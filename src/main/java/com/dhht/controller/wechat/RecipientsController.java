@@ -103,9 +103,9 @@ public class RecipientsController extends WeChatBaseController {
     @RequestMapping("/recipientsInfo")
     public JsonObjectBO recipientsInfo(){
 //        User user = currentUser();
-        String telPhone = currentUserMobilePhone();
+        String loginTelphone = currentUserMobilePhone();
         try {
-            List<Recipients> recipientsLists = recipientsService.recipientsList(telPhone);
+            List<Recipients> recipientsLists = recipientsService.recipientsList(loginTelphone);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("recipientsLists",recipientsLists);
             return JsonObjectBO.success("查询成功",jsonObject);
