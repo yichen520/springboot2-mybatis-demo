@@ -29,10 +29,13 @@ public class EmsController {
             int result = emsService.insertEms(ems);
             if(result==ResultUtil.isError){
                 jsonObjectBO.setMessage("导出失败");
+                jsonObjectBO.setCode(-1);
             }else{
+                jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("导出成功");
             }
         }catch (Exception e){
+            jsonObjectBO.setCode(-1);
             return JsonObjectBO.exception("导出失败");
         }
         return jsonObjectBO;

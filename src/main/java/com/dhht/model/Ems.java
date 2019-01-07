@@ -18,8 +18,7 @@ public class Ems {
     private  String addresseePhone;
     private  String addresseeDistrictId;
     private  String addresseeAddress;
-    private  String Addressee;
-    private  String AddresseeTelPhone;
+
 
     private  String goodsName; //备注信息
     private  String goodsType;
