@@ -31,7 +31,7 @@ public class RecipientsController extends WeChatBaseController {
     @Log("邮寄用户信息添加")
     @RequestMapping("/insertRecipients")
     public JsonObjectBO insertRecipients(@RequestBody Recipients recipients){
-        String telPhone = (String)currentUserMobilePhone().getData().get("mobilePhone");
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
 
         try {
@@ -54,7 +54,7 @@ public class RecipientsController extends WeChatBaseController {
     @Log("邮寄用户信息修改")
     @RequestMapping("/updateRecipients")
     public JsonObjectBO updateRecipients(@RequestBody Recipients recipients){
-        String telPhone = (String)currentUserMobilePhone().getData().get("mobilePhone");
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
 
         try {
@@ -78,7 +78,7 @@ public class RecipientsController extends WeChatBaseController {
     @Log("邮寄用户信息删除")
     @RequestMapping("/deleteRecipients")
     public JsonObjectBO deleteRecipients(@RequestBody Map map){
-        String telPhone = (String)currentUserMobilePhone().getData().get("mobilePhone");
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
 
         try {
@@ -103,7 +103,7 @@ public class RecipientsController extends WeChatBaseController {
     @RequestMapping("/recipientsInfo")
     public JsonObjectBO recipientsInfo(){
 //        User user = currentUser();
-        String telPhone = (String)currentUserMobilePhone().getData().get("mobilePhone");
+        String telPhone = currentUserMobilePhone();
         try {
             List<Recipients> recipientsLists = recipientsService.recipientsList(telPhone);
             JSONObject jsonObject = new JSONObject();
@@ -119,7 +119,7 @@ public class RecipientsController extends WeChatBaseController {
     @Log("邮件信息增加")
     @RequestMapping("/insertCourier")
     public JsonObjectBO insertCourier(@RequestBody Courier courier){
-        String telPhone = (String)currentUserMobilePhone().getData().get("mobilePhone");
+        String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
             int insertCourier = courierService.insertCourier(courier);
