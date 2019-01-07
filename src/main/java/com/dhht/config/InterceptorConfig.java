@@ -47,7 +47,7 @@ public class InterceptorConfig implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         boolean judgeIsMoblie = JudgeIsMoblie(request);
-
+//        response.setHeader("Access-Control-Allow-Origin", "*");
         //app端、微信小程序端和门户网站端不拦截
         if(judgeIsMoblie==true||request.getRequestURI().contains("/portal")||request.getRequestURI().contains("/weChat") ){
             if(request.getRequestURI().contains("/recopients")){
@@ -57,6 +57,7 @@ public class InterceptorConfig implements HandlerInterceptor {
                     String path = request.getServletPath();
                     if (path.equals("/menu") || path.equals("/currentUser")) {
                         response.setStatus(401);
+//                        response.setHeader("Access-Control-Allow-Origin", "*");
                         return false;
                     }
                     response.setStatus(401);
