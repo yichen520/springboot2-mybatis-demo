@@ -519,14 +519,14 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         makedepartmentSimplePO.setDepartmentAddress(district.getCityId().substring(0,4));
         //综合排序
         if (makedepartmentSimplePO.getType().equals("1")){
-            //综合排序
-            makedepartmentSimplePOS= makedepartmentMapper.selectMakedePartment(makedepartmentSimplePO);
-        }else if (makedepartmentSimplePO.getType().equals("2")){
             ///评价排序
             makedepartmentSimplePOS= makedepartmentMapper.selectMakedePartmentByEvaluate(makedepartmentSimplePO);
-        }else{
+        }else if (makedepartmentSimplePO.getType().equals("2")){
             //
             makedepartmentSimplePOS= makedepartmentMapper.selectMakedePartmentBySealNum(makedepartmentSimplePO);
+        }else {
+            //综合排序
+            makedepartmentSimplePOS= makedepartmentMapper.selectMakedePartment(makedepartmentSimplePO);
         }
         return makedepartmentSimplePOS;
     }
