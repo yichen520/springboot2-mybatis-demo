@@ -49,7 +49,7 @@ public class InterceptorConfig implements HandlerInterceptor {
         boolean judgeIsMoblie = JudgeIsMoblie(request);
 //        response.setHeader("Access-Control-Allow-Origin", "*");
         //app端、微信小程序端和门户网站端不拦截
-        if(judgeIsMoblie==true||request.getRequestURI().contains("/portal")||request.getRequestURI().contains("/weChat") ){
+        if(judgeIsMoblie==true||request.getRequestURI().contains("/portal")||request.getRequestURI().contains("/weChat")||request.getRequestURI().contains("/ems") ){
             if(request.getRequestURI().contains("/recopients")){
                 //获取session是否存在
                 Object object = request.getSession().getAttribute("user");

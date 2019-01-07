@@ -33,6 +33,7 @@ public class ResultUtil {
     public static final int isCodeError = 51;
     public static final int isSendVerificationCode=27;
     public static final int isNoSeal=53;
+    public static final int isNoEms=28;
 
 
     public static JsonObjectBO getResult(int type){
@@ -93,6 +94,8 @@ public class ResultUtil {
                 return JsonObjectBO.error("印章流水号设置值小于已有流水号");
             case 27:
                 return JsonObjectBO.ok("验证码已发送");
+            case 28:
+                return JsonObjectBO.error("无ems信息");
             case 50:
                 return JsonObjectBO.error("会话失效,请重新登录");
             case 51:
