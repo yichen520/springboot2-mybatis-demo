@@ -27,6 +27,7 @@ public class Ems {
     private  String size_high;
     private  String number;
     private  Boolean isInsured;
+    private  String insuredMoney;
     private  String  weight;
     private  String remark;
 
