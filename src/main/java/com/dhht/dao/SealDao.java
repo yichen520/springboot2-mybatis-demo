@@ -26,6 +26,8 @@ public interface SealDao {
 
     Seal selectByTypeAndUseDepartmentCode(@Param("useDepartmentCode") String useDepartmentCode,@Param("isUndertake") Boolean isUndertake,@Param("sealTypeCode") String sealTypeCode);
 
+    List<Seal> selectByTypeAndUseDepartmentCode2(@Param("useDepartmentCode") String useDepartmentCode,@Param("sealTypeCode") String sealTypeCode);
+
     List<SealOperationRecord> selectSealOperationRecord(@Param("id") String id,@Param("operateType") String operateType);
 
     int updateByPrimaryKey(Seal record);

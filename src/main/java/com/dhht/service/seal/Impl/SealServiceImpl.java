@@ -1771,15 +1771,16 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int checkSealCode(String sealCode, String useDepartmentCode,String sealTypeCode) {
-        Seal seal = sealDao.selectByTypeAndUseDepartmentCode("useDepartmentCode",null,sealTypeCode);
-        if(seal==null){
+        List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2("useDepartmentCode",sealTypeCode);
+        if(seals==null){
             return ResultUtil.isFail;
         }
+        for(Seal seal:seals){
         if(seal.getSealCode().equals("sealCode")){
             return ResultUtil.isSuccess;
-        }else{
-            return ResultUtil.isFail;
         }
+        }
+        return ResultUtil.isFail;
     }
 
     @Override
