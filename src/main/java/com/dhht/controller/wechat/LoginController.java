@@ -28,8 +28,6 @@ public class LoginController extends WeChatBaseController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-
-
     /**
      * 微信用户登入
      * @param map
