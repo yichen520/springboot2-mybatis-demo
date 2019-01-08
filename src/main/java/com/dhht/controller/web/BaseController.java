@@ -35,7 +35,7 @@ public class BaseController {
 
     @ModelAttribute
     public  void init(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+
         Cookie cookie=new Cookie("JSESSIONID",UUIDUtil.generate());
         //设置Maximum Age
         cookie.setMaxAge(3600);
@@ -43,7 +43,11 @@ public class BaseController {
         cookie.setPath(httpServletRequest.getContextPath());
         //添加cookie
         httpServletResponse.addCookie(cookie);
-        System.out.println("执行");
+//        if(httpServletRequest.getCookies()==null){
+//            httpServletResponse.setStatus(401);
+//        }
+
+
     }
 
 

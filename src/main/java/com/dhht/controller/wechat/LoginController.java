@@ -28,8 +28,7 @@ public class LoginController extends WeChatBaseController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    @Autowired
-    private HttpServletResponse httpServletResponse;
+
 
     /**
      * 微信用户登入
@@ -60,7 +59,7 @@ public class LoginController extends WeChatBaseController {
      * @return
      */
     @RequestMapping("/verificationCode")
-    public JsonObjectBO sendVerificationCode(@RequestBody Map map){
+    public JsonObjectBO sendVerificationCode(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
             String mobilePhone = (String)map.get("mobilePhone");
             int result = weChatUserService.sendMessage(mobilePhone);
@@ -77,7 +76,7 @@ public class LoginController extends WeChatBaseController {
      * @return
      */
     @RequestMapping("/currentUserMobilePhone")
-    public JsonObjectBO currentUserMobilePhone(HttpSession httpSession){
+    public JsonObjectBO currentUserMobilePhone(HttpSession httpSession,HttpServletResponse httpServletResponse){
         try {
             String mobilePhone = (String) httpSession.getAttribute("mobilePhone");
             JSONObject jsonObject = new JSONObject();
@@ -94,7 +93,7 @@ public class LoginController extends WeChatBaseController {
      * @return
      */
     @RequestMapping(value ="/logout")
-    public Map<String,Object> login(HttpServletRequest request){
+    public Map<String,Object> login(HttpServletRequest request,HttpServletResponse httpServletResponse){
         Map<String,Object> map=new HashMap<>();
         try {
             request.getSession().invalidate();

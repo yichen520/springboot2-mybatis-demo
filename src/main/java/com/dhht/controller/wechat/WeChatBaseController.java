@@ -29,13 +29,19 @@ public class WeChatBaseController {
     @ModelAttribute
     public  void init(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        Cookie cookie=new Cookie("JSESSIONID",UUIDUtil.generate());
-         //设置Maximum Age
-        cookie.setMaxAge(3600);
-        //设置cookie路径为当前项目路径
-        cookie.setPath(httpServletRequest.getContextPath());
-        //添加cookie
-        httpServletResponse.addCookie(cookie);
+        if(httpServletRequest.getCookies()!=null){
+            return;
+        }
+        if(httpServletRequest.getCookies()==null&&httpServletRequest.getRequestURI().contains("/weChat/login")){
+            Cookie cookie=new Cookie("JSESSIONID",UUIDUtil.generate());
+            //设置Maximum Age
+            cookie.setMaxAge(3600);
+            //设置cookie路径为当前项目路径
+            cookie.setPath(httpServletRequest.getContextPath());
+            //添加cookie
+            httpServletResponse.addCookie(cookie);
+        }
+
     }
 
     public WeChatUser currentUser(){

@@ -38,8 +38,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    @Autowired
-    private HttpServletResponse httpServletResponse;
+
 
     /**
      * 制作单位价格数据
@@ -47,7 +46,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
      * @return
      */
     @RequestMapping(value = "/sealPriceInfo",method = RequestMethod.POST)
-    public JsonObjectBO getSealPrice(@RequestBody Map map){
+    public JsonObjectBO getSealPrice(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
             init(httpServletRequest,httpServletResponse);
             String makeDepartmentFlag = (String)map.get("makeDepartmentFlag");
@@ -63,7 +62,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
 
     @Log("获取印章价格")
     @RequestMapping("/sealPrice")
-    public JsonObjectBO sealPrice(@RequestBody Map map){
+    public JsonObjectBO sealPrice(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
             init(httpServletRequest,httpServletResponse);
             String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
@@ -81,7 +80,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
 
 
     @RequestMapping(value = "/selectMakedePartment",method = RequestMethod.POST)
-    public JsonObjectBO selectMakedePartment(@RequestBody MakedepartmentSimplePO makedepartmentSimplePO){
+    public JsonObjectBO selectMakedePartment(@RequestBody MakedepartmentSimplePO makedepartmentSimplePO,HttpServletResponse httpServletResponse){
         try {
             init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
@@ -96,7 +95,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
 
 
     @RequestMapping("/detail")
-    public JsonObjectBO makeDetail(@RequestBody Map map){
+    public JsonObjectBO makeDetail(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
             init(httpServletRequest,httpServletResponse);
             String id = (String) map.get("id");
