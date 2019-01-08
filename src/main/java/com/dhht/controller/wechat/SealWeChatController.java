@@ -59,8 +59,6 @@ public class SealWeChatController extends WeChatBaseController {
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO,HttpServletResponse httpServletResponse) {
-        User user = currentUser();
-    public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
         WeChatUser user = currentUser();
 
         init(httpServletRequest,httpServletResponse);
@@ -99,7 +97,6 @@ public class SealWeChatController extends WeChatBaseController {
     @Log("印章进度查询")
     @RequestMapping("/sealProgress")
     public JsonObjectBO sealProgress(@RequestBody Map map,HttpServletResponse httpServletResponse) {
-        User user = currentUser();
         init(httpServletRequest,httpServletResponse);
         try {
             List<Seal> sealOperationRecords = sealService.sealProgress(map);
