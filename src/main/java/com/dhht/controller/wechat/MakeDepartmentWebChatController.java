@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/weChat/make")
-public class MakeDepartmentWebChatController {
+public class MakeDepartmentWebChatController extends WeChatBaseController {
 
     @Autowired
     private MakeDepartmentService makeDepartmentService;
@@ -33,6 +35,11 @@ public class MakeDepartmentWebChatController {
     private MakeDepartmentSealPriceMapper   makeDepartmentSealPriceMapper;
     @Autowired
     private SealService sealService;
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private HttpServletResponse httpServletResponse;
 
     /**
      * 制作单位价格数据
@@ -42,6 +49,7 @@ public class MakeDepartmentWebChatController {
     @RequestMapping(value = "/sealPriceInfo",method = RequestMethod.POST)
     public JsonObjectBO getSealPrice(@RequestBody Map map){
         try {
+            init(httpServletRequest,httpServletResponse);
             String makeDepartmentFlag = (String)map.get("makeDepartmentFlag");
             String sealType = (String)map.get("sealType");
             JSONObject jsonObject = new JSONObject();
@@ -57,6 +65,7 @@ public class MakeDepartmentWebChatController {
     @RequestMapping("/sealPrice")
     public JsonObjectBO sealPrice(@RequestBody Map map){
         try {
+            init(httpServletRequest,httpServletResponse);
             String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
             JSONObject jsonObject =new JSONObject();
             List<MakeDepartmentSealPrice> makeDepartmentSealPrices =makeDepartmentSealPriceMapper.selectByMakeDepartmentFlag(makeDepartmentFlag);
@@ -74,6 +83,7 @@ public class MakeDepartmentWebChatController {
     @RequestMapping(value = "/selectMakedePartment",method = RequestMethod.POST)
     public JsonObjectBO selectMakedePartment(@RequestBody MakedepartmentSimplePO makedepartmentSimplePO){
         try {
+            init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
             List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
             jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
@@ -88,6 +98,7 @@ public class MakeDepartmentWebChatController {
     @RequestMapping("/detail")
     public JsonObjectBO makeDetail(@RequestBody Map map){
         try {
+            init(httpServletRequest,httpServletResponse);
             String id = (String) map.get("id");
             JSONObject jsonObject = new JSONObject();
             MakedepartmentSimplePO makedepartment = makeDepartmentService.selectMakedepartmentSimplePODetailById(id);
