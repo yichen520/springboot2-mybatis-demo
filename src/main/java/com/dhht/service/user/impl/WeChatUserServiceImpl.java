@@ -90,11 +90,12 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             request.getSession().setAttribute("mobilePhone",mobilePhone);
             WeChatUser weChatUser = weChatUserMapper.selectByTelPhone(mobilePhone);
             if(weChatUser==null) {
-                weChatUser.setId(UUIDUtil.generate());
-                weChatUser.setTelphone(mobilePhone);
-                weChatUser.setCreateTime(DateUtil.getCurrentTime());
-                weChatUserMapper.insertSelective(weChatUser);
-                map.put("weChatUser", weChatUser);
+                WeChatUser weChatUser1 = new WeChatUser();
+                weChatUser1.setId(UUIDUtil.generate());
+                weChatUser1.setTelphone(mobilePhone);
+                weChatUser1.setCreateTime(DateUtil.getCurrentTime());
+                weChatUserMapper.insertSelective(weChatUser1);
+                map.put("weChatUser", weChatUser1);
             }
             return map;
         }else {
