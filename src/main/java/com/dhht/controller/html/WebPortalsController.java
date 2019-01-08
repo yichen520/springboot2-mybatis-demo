@@ -14,6 +14,7 @@ import com.dhht.service.seal.SealService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.WeChatUserService;
+import com.dhht.util.ResultUtil;
 import com.dhht.util.StringUtil;
 import com.dhht.util.UUIDUtil;
 import com.github.pagehelper.PageInfo;
@@ -177,6 +178,34 @@ public class WebPortalsController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"印章信息获取失败");
+        }
+    }
+
+    /**
+     * 印章核验
+     * @param map
+     * @return
+     */
+    @Log("印章核验")
+    @RequestMapping("/checkSealCode")
+    public JsonObjectBO checkSealCode(@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            String sealCode = (String)map.get("sealCode");
+            String useDepartmentCode = (String)map.get("useDepartmentCode");
+            String sealTypeCode = (String)map.get("sealTypeCode");
+            int result = sealService.checkSealCode(sealCode,useDepartmentCode,sealTypeCode);
+            if(result==ResultUtil.isSuccess){
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("查询成功");
+            }else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("无该枚印章");
+            }
+            return jsonObjectBO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
         }
     }
 

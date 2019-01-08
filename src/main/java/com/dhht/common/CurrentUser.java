@@ -16,6 +16,7 @@ public class CurrentUser {
 
     @Autowired
     private StringRedisTemplate template;
+
     @Value("${expireTime}")
     private long expireTime;
 

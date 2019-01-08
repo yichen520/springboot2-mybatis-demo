@@ -1767,6 +1767,25 @@ public class SealServiceImpl implements SealService {
         }
     }
 
+    /**
+     * 印章检测
+     * @param sealCode
+     * @param useDepartmentCode
+     * @return
+     */
+    @Override
+    public int checkSealCode(String sealCode, String useDepartmentCode,String sealTypeCode) {
+        Seal seal = sealDao.selectByTypeAndUseDepartmentCode("useDepartmentCode",null,sealTypeCode);
+        if(seal==null){
+            return ResultUtil.isFail;
+        }
+        if(seal.getSealCode().equals("sealCode")){
+            return ResultUtil.isSuccess;
+        }else{
+            return ResultUtil.isFail;
+        }
+    }
+
     @Override
     public MakeDepartmentSealPrice sealPrice(User user, Map map) {
         String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
