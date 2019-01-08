@@ -3,6 +3,7 @@ package com.dhht.controller.wechat;
 
 
 import com.dhht.util.UUIDUtil;
+import com.dhht.model.WeChatUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,5 +36,10 @@ public class WeChatBaseController {
         cookie.setPath(httpServletRequest.getContextPath());
         //添加cookie
         httpServletResponse.addCookie(cookie);
+    }
+
+    public WeChatUser currentUser(){
+        WeChatUser user = (WeChatUser) request.getSession().getAttribute("user");
+        return user;
     }
 }
