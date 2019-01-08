@@ -88,6 +88,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             map.put("message","登录成功");
             map.put("mobilePhone",mobilePhone);
             request.getSession().setAttribute("mobilePhone",mobilePhone);
+
             WeChatUser weChatUser = weChatUserMapper.selectByTelPhone(mobilePhone);
             if(weChatUser==null) {
                 weChatUser.setId(UUIDUtil.generate());
@@ -96,6 +97,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
                 weChatUserMapper.insertSelective(weChatUser);
                 map.put("weChatUser", weChatUser);
             }
+            request.getSession().setAttribute("user",weChatUser);
             return map;
         }else {
             map.put("status", "error");

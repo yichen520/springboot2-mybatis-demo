@@ -1,8 +1,13 @@
 package com.dhht.util;
 
 import com.dhht.common.JsonObjectBO;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class ResultUtil {
+    @Autowired
+    private static HttpServletResponse response;
     public static final int isHave = 2;
     public static final int isSuccess = 1;
     public static final int isFail = 0;
@@ -34,6 +39,7 @@ public class ResultUtil {
     public static final int isSendVerificationCode=27;
     public static final int isNoSeal=53;
     public static final int isNoEms=28;
+    public static final int isNoSession=54;
 
 
     public static JsonObjectBO getResult(int type){
@@ -69,7 +75,7 @@ public class ResultUtil {
             case 14:
                 return JsonObjectBO.error("该区域暂时没有备案单位，请联系管理员");
             case 15:
-                return JsonObjectBO.error("该印章信息重复");
+                return JsonObjectBO.error("该印章信息重复,法定章或公章已经存在");
             case 16:
                 return JsonObjectBO.error("备案单位或制作单位不存在");
             case 17:
@@ -99,7 +105,12 @@ public class ResultUtil {
             case 50:
                 return JsonObjectBO.error("会话失效,请重新登录");
             case 51:
-                return JsonObjectBO.error("验证码错误,");
+                return JsonObjectBO.error("验证码错误,请重新输入");
+            case 53:
+                return JsonObjectBO.error("印章刻制原因选择错误,该企业还没有公章");
+            case 54:
+                response.setStatus(401);
+                return JsonObjectBO.error("session失效,请重新登录");
                 default:
                     return null;
         }

@@ -770,6 +770,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int newsealRecord(User user, String sealId) {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
+        seal.setSealStatusCode("05");
         seal.setIsApply(true);
         seal.setApplyDate(DateUtil.getCurrentTime());
         seal.setIsEarlywarning(true);
@@ -1627,18 +1628,20 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public int sealWeChatRecord(User user, SealWeChatDTO sealDTO) {
+    public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO) {
+        if(user == null){
+            return ResultUtil.isNoSession;
+        }
 
         List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
-
         UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
         if (useDepartment == null) {
             return ResultUtil.isNoDepartment;
         }
         MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
         RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
-        if (recordDepartment == null  || recordDepartment == null) {
-            return ResultUtil.isFail;
+        if (recordDepartment == null ) {
+            return ResultUtil.noRecordDepartment;
         }
         for (Seal seal : list) {
             if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && sealDTO.getSeal().getSealTypeCode().equals("05")) {
@@ -1692,8 +1695,7 @@ public class SealServiceImpl implements SealService {
             sealOperationRecord.setId(UUIDUtil.generate());
             sealOperationRecord.setSealId(sealId);
             sealOperationRecord.setEmployeeId(user.getId());
-            sealOperationRecord.setEmployeeName(user.getUserName());
-            sealOperationRecord.setEmployeeCode(user.getRealName());
+            sealOperationRecord.setEmployeeName(user.getNane());
             sealOperationRecord.setOperateType(type1);
             sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
             int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
@@ -1707,7 +1709,7 @@ public class SealServiceImpl implements SealService {
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
         sealAgent.setId(saId);
-        sealAgent.setName(user.getUserName());
+        sealAgent.setName(user.getNane());
         sealAgent.setTelphone(sealDTO.getTelphone());
         sealAgent.setBusinessType("000");
         int sealAgentInsert = sealAgentMapper.insert(sealAgent);
@@ -1726,7 +1728,7 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int cachetChange(SealWeChatDTO sealDTO,User user) {
+    public int cachetChange(SealWeChatDTO sealDTO,WeChatUser user) {
         UseDepartment useDepartment = useDepartmentService.selectByCode(sealDTO.getUseDepartmentCode());
         if(useDepartment==null){
             return ResultUtil.isNoDepartment;
@@ -1781,7 +1783,7 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public MakeDepartmentSealPrice sealPrice(User user, Map map) {
+    public MakeDepartmentSealPrice sealPrice( Map map) {
         String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
         String sealType=(String)map.get("sealType");
         MakeDepartmentSealPrice makeDepartmentSealPrice = new MakeDepartmentSealPrice(sealType,makeDepartmentFlag);
@@ -1789,7 +1791,7 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public List<Seal> sealProgress(User user, Map map) {
+    public List<Seal> sealProgress(Map map) {
         String telphone =(String)map.get("telphone");
         return sealDao.selectSealByTelphone(telphone);
     }

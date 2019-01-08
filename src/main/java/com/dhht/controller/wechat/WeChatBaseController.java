@@ -2,6 +2,7 @@ package com.dhht.controller.wechat;
 
 
 
+import com.dhht.model.WeChatUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -19,5 +20,10 @@ public class WeChatBaseController {
     public  String currentUserMobilePhone(){
         String mobilePhone = (String) request.getSession().getAttribute("mobilePhone");
         return mobilePhone;
+    }
+
+    public WeChatUser currentUser(){
+        WeChatUser user = (WeChatUser) request.getSession().getAttribute("user");
+        return user;
     }
 }
