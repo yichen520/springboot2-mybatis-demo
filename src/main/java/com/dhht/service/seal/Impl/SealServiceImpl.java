@@ -1628,22 +1628,16 @@ public class SealServiceImpl implements SealService {
 
     @Override
     public int sealWeChatRecord(User user, SealWeChatDTO sealDTO) {
-//        SMSCode smsCode = new SMSCode();
-//        smsCode.setPhone(sealDTO.getTelphone());
-//        smsCode.setSmscode(sealDTO.getCaptcha());
-//        JsonObjectBO jsonObjectBO = userLoginService.checkPhone(smsCode);
-//        //这里返回是code、要返回到JsonObjectBO
-//        if (jsonObjectBO.getCode() != 1) {
-//            return ResultUtil.isCodeError;
-//        }
+
         List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
-        UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
+
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
         if (useDepartment == null) {
             return ResultUtil.isNoDepartment;
         }
-        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode()); //获取制作单位
-        RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());//获取备案单位
-        if (recordDepartment == null) {
+        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
+        RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
+        if (recordDepartment == null  || recordDepartment == null) {
             return ResultUtil.isFail;
         }
         for (Seal seal : list) {
@@ -1802,7 +1796,7 @@ public class SealServiceImpl implements SealService {
 
     @Override
     public List<Seal> portalSealInfoByCode(String code) {
-        List<Seal> seals = sealDao.selectByCode(code);
+        List<Seal> seals = sealDao.selectByCodeAndType(code);
         return seals;
     }
 
