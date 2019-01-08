@@ -112,6 +112,8 @@ public class SealWeChatController extends BaseController {
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"价格获取失败");
         }
     }
+
+
     @Log("印章进度查询")
     @RequestMapping("/sealProgress")
     public JsonObjectBO sealProgress(@RequestBody Map map) {

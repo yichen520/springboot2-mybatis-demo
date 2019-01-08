@@ -68,13 +68,13 @@ public class WebPortalsController extends BaseController {
 
     /**
      * 制作单位信息
-     * @param districtIds
+     * @param districtId
      * @return
      */
-    @RequestMapping(value = "/makeDepartmentInfo",method = RequestMethod.POST)
-    public JsonObjectBO getMakeDepartmentByDistrictId(@RequestBody List<String> districtIds){
+    @RequestMapping(value = "/makeDepartmentInfo",method = RequestMethod.GET)
+    public JsonObjectBO getMakeDepartmentByDistrictId(@RequestParam String districtId){
         try {
-            String districtId = districtIds.get(2);
+            //String districtId = districtIds.get(2);
             JSONObject jsonObject = new JSONObject();
             List<MakeDepartmentSimple> makeDepartmentSimples = makeDepartmentService.selectInfo(districtId,null,"01");
             jsonObject.put("makeDepartment",makeDepartmentSimples);
@@ -146,6 +146,18 @@ public class WebPortalsController extends BaseController {
             return  JsonObjectBO.ok("获取验证码成功");
         }else{
             return JsonObjectBO.error("获取验证码失败");
+        }
+    }
+
+    @RequestMapping(value = "/useInfo",method = RequestMethod.GET)
+    public JsonObjectBO useInfo(@RequestParam String name){
+        try {
+            List<UseDepartment> useDepartments = useDepartmentService.selectUseDepartment(name);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("useInfo",useDepartments);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("获取使用单位失败");
         }
     }
 

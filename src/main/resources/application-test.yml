@@ -123,6 +123,7 @@ trackerProtocol: http://
 file:
  local:
    root: C:/temp/
+   ems: C:/temp/
 
 filePath: C:/temp/
 

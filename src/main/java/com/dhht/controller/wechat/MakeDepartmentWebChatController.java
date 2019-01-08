@@ -1,13 +1,17 @@
 package com.dhht.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
+import com.dhht.dao.MakeDepartmentSealPriceMapper;
 import com.dhht.model.MakeDepartmentSealPrice;
 import com.dhht.model.MakeDepartmentSimple;
 import com.dhht.model.Makedepartment;
+import com.dhht.model.User;
 import com.dhht.model.pojo.MakedepartmentSimplePO;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.seal.SealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +29,10 @@ public class MakeDepartmentWebChatController {
     private MakeDepartmentService makeDepartmentService;
     @Autowired
     private MakeDepartmentSealPriceService makeDepartmentSealPriceService;
+    @Autowired
+    private MakeDepartmentSealPriceMapper   makeDepartmentSealPriceMapper;
+    @Autowired
+    private SealService sealService;
 
     /**
      * 制作单位价格数据
@@ -44,6 +52,23 @@ public class MakeDepartmentWebChatController {
             return JsonObjectBO.exception("查询制作单位价格失败");
         }
     }
+
+    @Log("获取印章价格")
+    @RequestMapping("/sealPrice")
+    public JsonObjectBO sealPrice(@RequestBody Map map){
+        try {
+            String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
+            JSONObject jsonObject =new JSONObject();
+            List<MakeDepartmentSealPrice> makeDepartmentSealPrices =makeDepartmentSealPriceMapper.selectByMakeDepartmentFlag(makeDepartmentFlag);
+            jsonObject.put("makeDepartmentSealPrices",makeDepartmentSealPrices);
+            return JsonObjectBO.success("价格获取成功",jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"价格获取失败");
+        }
+    }
+
+
 
 
     @RequestMapping(value = "/selectMakedePartment",method = RequestMethod.POST)
