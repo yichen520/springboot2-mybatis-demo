@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/ems")
@@ -22,22 +24,16 @@ public class EmsController {
      * @return
      */
     @RequestMapping(value = "/ems")
-    public JsonObjectBO selectDistrict(@RequestBody Ems ems){
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+    public Map<String,Object>  selectDistrict(@RequestBody Ems ems){
+        Map<String,Object> resultMap = new HashMap<>();
         try {
 
-            int result = emsService.insertEms(ems);
-            if(result==ResultUtil.isError){
-                jsonObjectBO.setMessage("导出失败");
-                jsonObjectBO.setCode(-1);
-            }else{
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("导出成功");
-            }
+            resultMap = emsService.insertEms(ems);
+            return resultMap;
         }catch (Exception e){
-            jsonObjectBO.setCode(-1);
-            return JsonObjectBO.exception("导出失败");
+            resultMap.put("status", "error");
+            resultMap.put("message","出现异常");
+            return resultMap;
         }
-        return jsonObjectBO;
     }
 }
