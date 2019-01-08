@@ -50,22 +50,22 @@ public class InterceptorConfig implements HandlerInterceptor {
 //        response.setHeader("Access-Control-Allow-Origin", "*");
         //app端、微信小程序端和门户网站端不拦截
         if(judgeIsMoblie==true||request.getRequestURI().contains("/portal")||request.getRequestURI().contains("/weChat")||request.getRequestURI().contains("/ems") ){
-            if(request.getRequestURI().contains("/recopients")){
-                //获取session是否存在
-                Object object = request.getSession().getAttribute("user");
-                if(object==null ) {
-                    String path = request.getServletPath();
-                    if (path.equals("/menu") || path.equals("/currentUser")) {
-                        response.setStatus(401);
-//                        response.setHeader("Access-Control-Allow-Origin", "*");
-                        return false;
-                    }
-                    response.setStatus(401);
-                    return false;
-                }
-            }else {
+//            if(request.getRequestURI().contains("/recopients")){
+//                //获取session是否存在
+//                Object object = request.getSession().getAttribute("user");
+//                if(object==null ) {
+//                    String path = request.getServletPath();
+//                    if (path.equals("/menu") || path.equals("/currentUser")) {
+//                        response.setStatus(401);
+////                        response.setHeader("Access-Control-Allow-Origin", "*");
+//                        return false;
+//                    }
+//                    response.setStatus(401);
+//                    return false;
+//                }
+//            }else {
                 return true;
-            }
+//            }
         }
 
         if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/Code")

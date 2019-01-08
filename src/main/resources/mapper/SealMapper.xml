@@ -657,7 +657,7 @@
   </insert>
 
   <select id="selectByCodeAndType"  parameterType="java.lang.String" resultMap="BaseResultMap">
-      select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
+      select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_status_code = "05" 
   </select>
 
     <!--<select id="selectByCode"  parameterType="java.lang.String" resultMap="BaseResultMap">-->
