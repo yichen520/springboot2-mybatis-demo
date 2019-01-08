@@ -59,7 +59,9 @@ public class MakedepartmentSimplePO {
     private Date versionTime;
     private Date registerTime;
     private float score;
-    private MakeDepartmentAttachInfo makeDepartmentAttachInfo;
+
+     private  float total;
+   private MakeDepartmentAttachInfo makeDepartmentAttachInfo;
     private String type;
     private String cityName;
     }
