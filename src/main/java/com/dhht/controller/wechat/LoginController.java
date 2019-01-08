@@ -21,9 +21,15 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/weChat")
-public class LoginController {
+public class LoginController extends WeChatBaseController {
     @Autowired
     private WeChatUserService weChatUserService;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private HttpServletResponse httpServletResponse;
 
     /**
      * 微信用户登入

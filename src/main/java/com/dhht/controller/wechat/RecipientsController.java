@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -27,13 +29,19 @@ public class RecipientsController extends WeChatBaseController {
     @Autowired
     private CourierService courierService;
 
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private HttpServletResponse httpServletResponse;
+
 
     @Log("邮寄用户信息添加")
     @RequestMapping("/insertRecipients")
     public JsonObjectBO insertRecipients(@RequestBody Recipients recipients){
         String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-
+        init(httpServletRequest,httpServletResponse);
         try {
 //            Recipients recipients = (Recipients)map.get("recipients");
             int a = recipientsService.insertRecipients(recipients,telPhone);
@@ -56,7 +64,7 @@ public class RecipientsController extends WeChatBaseController {
     public JsonObjectBO updateRecipients(@RequestBody Recipients recipients){
         String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-
+        init(httpServletRequest,httpServletResponse);
         try {
 //            Recipients recipients = (Recipients)map.get("Recipients");
             int a = recipientsService.updateRecipients(recipients,telPhone);
@@ -80,7 +88,7 @@ public class RecipientsController extends WeChatBaseController {
     public JsonObjectBO deleteRecipients(@RequestBody Map map){
         String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
-
+        init(httpServletRequest,httpServletResponse);
         try {
             String id = (String)map.get("id");
             int a = recipientsService.deleteRecipients(id);
@@ -103,6 +111,7 @@ public class RecipientsController extends WeChatBaseController {
     @RequestMapping("/recipientsInfo")
     public JsonObjectBO recipientsInfo(){
 //        User user = currentUser();
+        init(httpServletRequest,httpServletResponse);
         String telPhone = currentUserMobilePhone();
         try {
             List<Recipients> recipientsLists = recipientsService.recipientsList(telPhone);
@@ -121,6 +130,7 @@ public class RecipientsController extends WeChatBaseController {
     public JsonObjectBO insertCourier(@RequestBody Courier courier){
         String telPhone = currentUserMobilePhone();
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        init(httpServletRequest,httpServletResponse);
         try {
             int insertCourier = courierService.insertCourier(courier);
             if (insertCourier == ResultUtil.isSuccess) {
@@ -142,6 +152,7 @@ public class RecipientsController extends WeChatBaseController {
     @RequestMapping("/courierList")
     public JsonObjectBO courierList(String recipientsId){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        init(httpServletRequest,httpServletResponse);
         try {
             List<Courier> couriers = courierService.courierList(recipientsId);
             JSONObject jsonObject = new JSONObject();
