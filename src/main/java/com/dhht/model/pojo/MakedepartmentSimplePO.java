@@ -62,4 +62,7 @@ public class MakedepartmentSimplePO {
     private MakeDepartmentAttachInfo makeDepartmentAttachInfo;
     private String type;
     private String cityName;
+    private String userLongitude;
+    private String userLatitude;
+    private Double distance = 0.0;
     }
