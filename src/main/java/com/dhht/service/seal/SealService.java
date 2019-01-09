@@ -93,15 +93,15 @@ public interface SealService {
 
    //----------------------------------------以下是小程序端口-------------------------------------//
    //小程序变更
-   int cachetChange(SealWeChatDTO sealDTO,User user);
+   int cachetChange(SealWeChatDTO sealDTO,WeChatUser user);
 
    //小程序申请
-   int sealWeChatRecord(User user, SealWeChatDTO sealDTO);
+   int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO);
 
 
-   MakeDepartmentSealPrice sealPrice(User user, Map map);
+   MakeDepartmentSealPrice sealPrice( Map map);
 
-   List<Seal> sealProgress(User user, Map map);
+   List<Seal> sealProgress( Map map);
 
    List<Seal> portalSealInfoByCode(String cdode);
 

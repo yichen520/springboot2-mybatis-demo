@@ -4,26 +4,27 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
-import com.dhht.model.MakeDepartmentSealPrice;
-import com.dhht.model.MakeDepartmentSimple;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.model.pojo.MakedepartmentSimplePO;
+import com.dhht.service.evaluate.EvaluateService;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
+import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/weChat/make")
-public class MakeDepartmentWebChatController {
+public class MakeDepartmentWebChatController extends WeChatBaseController {
 
     @Autowired
     private MakeDepartmentService makeDepartmentService;
@@ -33,6 +34,12 @@ public class MakeDepartmentWebChatController {
     private MakeDepartmentSealPriceMapper   makeDepartmentSealPriceMapper;
     @Autowired
     private SealService sealService;
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+    @Autowired
+    private EvaluateService evaluateService;
+
+
 
     /**
      * 制作单位价格数据
@@ -40,8 +47,9 @@ public class MakeDepartmentWebChatController {
      * @return
      */
     @RequestMapping(value = "/sealPriceInfo",method = RequestMethod.POST)
-    public JsonObjectBO getSealPrice(@RequestBody Map map){
+    public JsonObjectBO getSealPrice(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
+            init(httpServletRequest,httpServletResponse);
             String makeDepartmentFlag = (String)map.get("makeDepartmentFlag");
             String sealType = (String)map.get("sealType");
             JSONObject jsonObject = new JSONObject();
@@ -55,8 +63,9 @@ public class MakeDepartmentWebChatController {
 
     @Log("获取印章价格")
     @RequestMapping("/sealPrice")
-    public JsonObjectBO sealPrice(@RequestBody Map map){
+    public JsonObjectBO sealPrice(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
+            init(httpServletRequest,httpServletResponse);
             String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
             JSONObject jsonObject =new JSONObject();
             List<MakeDepartmentSealPrice> makeDepartmentSealPrices =makeDepartmentSealPriceMapper.selectByMakeDepartmentFlag(makeDepartmentFlag);
@@ -72,8 +81,9 @@ public class MakeDepartmentWebChatController {
 
 
     @RequestMapping(value = "/selectMakedePartment",method = RequestMethod.POST)
-    public JsonObjectBO selectMakedePartment(@RequestBody MakedepartmentSimplePO makedepartmentSimplePO){
+    public JsonObjectBO selectMakedePartment(@RequestBody MakedepartmentSimplePO makedepartmentSimplePO,HttpServletResponse httpServletResponse){
         try {
+            init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
             List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
             jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
@@ -86,8 +96,9 @@ public class MakeDepartmentWebChatController {
 
 
     @RequestMapping("/detail")
-    public JsonObjectBO makeDetail(@RequestBody Map map){
+    public JsonObjectBO makeDetail(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
+            init(httpServletRequest,httpServletResponse);
             String id = (String) map.get("id");
             JSONObject jsonObject = new JSONObject();
             MakedepartmentSimplePO makedepartment = makeDepartmentService.selectMakedepartmentSimplePODetailById(id);
@@ -95,6 +106,33 @@ public class MakeDepartmentWebChatController {
             return JsonObjectBO.success("获取详情成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.exception("获取制作单位详情失败");
+        }
+    }
+
+    @Log("查询评价")
+    @RequestMapping("/evaluate/info")
+    public JsonObjectBO info(  @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("evaluate",evaluateService.selectEvaluateList(evaluate));
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return JsonObjectBO.exceptionWithMessage("查询失败",e.getMessage());
+        }
+    }
+
+    @Log("新增制作单位评价")
+    @RequestMapping("/evaluate/insert")
+    public JsonObjectBO insert( @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
+        try {
+            WeChatUser weChatUser = currentUser();
+            return  ResultUtil.getResult(evaluateService.insert(evaluate,weChatUser));
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return JsonObjectBO.exception("评价失败");
         }
     }
 }

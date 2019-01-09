@@ -64,33 +64,6 @@ public class WebLogAspect {
 //        sysLogDao.saveLog(sysLog);
 //    }
 
-    @AfterThrowing(value = "log()",throwing = "exception")
-    public void doAfterThrowingAdvice(JoinPoint joinPoint,Throwable exception){
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-        SysLog sysLog = new SysLog();
-        Log logAnnotation = method.getAnnotation(Log.class);
-        if (logAnnotation != null) {
-            // 注解上的描述
-            sysLog.setLogType(logAnnotation.value());
-        }
-        // 获取request
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-
-        // 设置IP地址
-        sysLog.setIp(IPUtil.getIpAddr(request));
-        User users = (User)request.getSession(true).getAttribute("user");
-        if(users == null){
-            sysLog.setLogUser("匿名");
-        }else {
-            sysLog.setLogUser(users.getRealName());
-        }
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        sysLog.setLogTime(dateStr);
-        sysLog.setLogResult("发生异常");
-        logDao.saveLog(sysLog);
-    }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void doAfterReturning(JoinPoint joinPoint, Object ret) throws Throwable {

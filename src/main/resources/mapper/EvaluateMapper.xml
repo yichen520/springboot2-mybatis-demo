@@ -7,12 +7,12 @@
     <result column="user_name" property="userName" jdbcType="CHAR" />
     <result column="evaluate_content" property="evaluateContent" jdbcType="VARCHAR" />
     <result column="evaluate_time" property="evaluateTime" jdbcType="TIMESTAMP" />
-    <result column="make_department_id" property="makeDepartmentId" jdbcType="CHAR" />
+    <result column="make_department_id" property="flag" jdbcType="CHAR" />
     <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
     <result column="score" property="score" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, user_name, evaluate_content, evaluate_time, make_department_id, make_department_name, 
+    id, user_id, user_name, evaluate_content, evaluate_time, make_department_id, make_department_name,
     score
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -27,10 +27,10 @@
   </delete>
   <insert id="insert" parameterType="com.dhht.model.Evaluate" >
     insert into make_department_evaluate (id, user_id, user_name, 
-      evaluate_content, evaluate_time, make_department_id, 
+      evaluate_content, evaluate_time, make_department_id,
       make_department_name, score)
     values (#{id,jdbcType=CHAR}, #{userId,jdbcType=CHAR}, #{userName,jdbcType=CHAR}, 
-      #{evaluateContent,jdbcType=VARCHAR}, #{evaluateTime,jdbcType=TIMESTAMP}, #{makeDepartmentId,jdbcType=CHAR}, 
+      #{evaluateContent,jdbcType=VARCHAR}, #{evaluateTime,jdbcType=TIMESTAMP}, #{flag,jdbcType=CHAR},
       #{makeDepartmentName,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Evaluate" >
@@ -51,7 +51,7 @@
       <if test="evaluateTime != null" >
         evaluate_time,
       </if>
-      <if test="makeDepartmentId != null" >
+      <if test="flag != null" >
         make_department_id,
       </if>
       <if test="makeDepartmentName != null" >
@@ -77,8 +77,8 @@
       <if test="evaluateTime != null" >
         #{evaluateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="makeDepartmentId != null" >
-        #{makeDepartmentId,jdbcType=CHAR},
+      <if test="flag != null" >
+        #{flag,jdbcType=CHAR},
       </if>
       <if test="makeDepartmentName != null" >
         #{makeDepartmentName,jdbcType=VARCHAR},
@@ -103,8 +103,8 @@
       <if test="evaluateTime != null" >
         evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="makeDepartmentId != null" >
-        make_department_id = #{makeDepartmentId,jdbcType=CHAR},
+      <if test="flag != null" >
+        make_department_id = #{flag,jdbcType=CHAR},
       </if>
       <if test="makeDepartmentName != null" >
         make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
@@ -121,7 +121,7 @@
       user_name = #{userName,jdbcType=CHAR},
       evaluate_content = #{evaluateContent,jdbcType=VARCHAR},
       evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
-      make_department_id = #{makeDepartmentId,jdbcType=CHAR},
+      make_department_id = #{flag,jdbcType=CHAR},
       make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
       score = #{score,jdbcType=INTEGER}
     where id = #{id,jdbcType=CHAR}
@@ -132,8 +132,8 @@
     <include refid="Base_Column_List" />
     from make_department_evaluate
     where 1 = 1
-    <if test="makeDepartmentId != null" >
-    and  make_department_id = #{makeDepartmentId,jdbcType=CHAR}
+    <if test="flag != null" >
+    and  make_department_id = #{flag,jdbcType=CHAR}
     </if>
   </select>
 

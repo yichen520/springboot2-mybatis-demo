@@ -3,6 +3,7 @@ package com.dhht.service.evaluate.Impl;
 import com.dhht.dao.EvaluateMapper;
 import com.dhht.model.Evaluate;
 import com.dhht.model.User;
+import com.dhht.model.WeChatUser;
 import com.dhht.service.evaluate.EvaluateService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
@@ -26,13 +27,13 @@ public class EvaluateServiceImpl implements EvaluateService {
     private EvaluateMapper evaluateMapper;
 
     @Override
-    public int insert(Evaluate evaluate, User user) {
+    public int insert(Evaluate evaluate, WeChatUser user) {
         evaluate.setId(UUIDUtil.generate());
         if(user == null){
             return ResultUtil.isNoLoginUser;
         }
         evaluate.setUserId(user.getId());
-        evaluate.setUserName(user.getUserName());
+        evaluate.setUserName(user.getTelphone());
         evaluate.setEvaluateTime(DateUtil.getCurrentTime());
         int result = evaluateMapper.insertSelective(evaluate);
         return result;

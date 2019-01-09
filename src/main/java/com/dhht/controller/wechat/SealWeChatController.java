@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/weChat")
-public class SealWeChatController extends BaseController {
+public class SealWeChatController extends WeChatBaseController {
 
     @Autowired
     private SealService sealService;
@@ -46,55 +47,33 @@ public class SealWeChatController extends BaseController {
     private FileService fileService;
 
     @Autowired
+    private HttpServletRequest httpServletRequest;
+    @Autowired
     private UserPasswordService userPasswordService;
     @Autowired
     private UserLoginService userLoginService;
 
     @Autowired
     private MakeDepartmentSealPriceService makeDepartmentSealPriceService;
+
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
-    public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO) {
-        User user = currentUser();
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+    public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO,HttpServletResponse httpServletResponse) {
+        WeChatUser user = currentUser();
+
+        init(httpServletRequest,httpServletResponse);
         try {
             int a = sealService.sealWeChatRecord(user,sealDTO);
-
-            if (a == ResultUtil.isSuccess) {
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("添加成功");
-            } else if (a == ResultUtil.isHaveSeal) {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("法定章已经存在");
-            } else if(a==ResultUtil.isNoDepartment){
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("备案单位或制作单位不存在");
-            }else if(a==ResultUtil.isNoEmployee){
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("从业人员不存在");
-            } else if(a==ResultUtil.isNoProxy){
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("缺少授权委托书");
-            } else if(a==ResultUtil.isCodeError){
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("验证码错误,请重新输入");
-            }else if(a==ResultUtil.isNoSeal){
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("印章刻制原因选择错误,该企业还没有公章");
-            }else {
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("添加失败");
-            }
-            return jsonObjectBO;
+            return ResultUtil.getResult(a);
         } catch (Exception e) {
             e.printStackTrace();
-            return JsonObjectBO.exception("备案失败");
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"备案失败");
         }
     }
     @Log("获取印章价格")
     @RequestMapping("/sealPrice")
     public JsonObjectBO sealPrice(@RequestBody Map map){
-        User user = currentUser();
+
         try {
             String sealType=(String)map.get("sealType");
             String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
@@ -103,7 +82,7 @@ public class SealWeChatController extends BaseController {
                 List<MakeDepartmentSealPrice> makeDepartmentSealPrices =makeDepartmentSealPriceMapper.selectByMakeDepartmentFlag(makeDepartmentFlag);
                 jsonObject.put("makeDepartmentSealPrices",makeDepartmentSealPrices);
             }else {
-                MakeDepartmentSealPrice makeDepartmentSealPrice = sealService.sealPrice(user,map);
+                MakeDepartmentSealPrice makeDepartmentSealPrice = sealService.sealPrice(map);
                 jsonObject.put("makeDepartmentSealPrice",makeDepartmentSealPrice);
             }
             return JsonObjectBO.success("价格获取成功",jsonObject);
@@ -116,10 +95,10 @@ public class SealWeChatController extends BaseController {
 
     @Log("印章进度查询")
     @RequestMapping("/sealProgress")
-    public JsonObjectBO sealProgress(@RequestBody Map map) {
-        User user = currentUser();
+    public JsonObjectBO sealProgress(@RequestBody Map map,HttpServletResponse httpServletResponse) {
+        init(httpServletRequest,httpServletResponse);
         try {
-            List<Seal> sealOperationRecords = sealService.sealProgress(user,map);
+            List<Seal> sealOperationRecords = sealService.sealProgress(map);
             JSONObject jsonObject =new JSONObject();
             jsonObject.put("seals",sealOperationRecords);
             return JsonObjectBO.success("印章进度查询成功",jsonObject);
@@ -130,8 +109,9 @@ public class SealWeChatController extends BaseController {
     }
     @Log("刻制企业排名")
     @RequestMapping("/makeDepartmentSort")
-    public JsonObjectBO makeDepartmentSort(@RequestBody Map map) {
+    public JsonObjectBO makeDepartmentSort(@RequestBody Map map,HttpServletResponse httpServletResponse) {
         try {
+            init(httpServletRequest,httpServletResponse);
             List<Makedepartment> makedepartments = makeDepartmentService.makeDepartmentSort(map);
             JSONObject jsonObject =new JSONObject();
             jsonObject.put("makedepartments",makedepartments);
@@ -145,8 +125,9 @@ public class SealWeChatController extends BaseController {
 
     @Log("小程序印章变更")
     @RequestMapping("/cachetChange")
-    public JsonObjectBO cachetChange(@RequestBody SealWeChatDTO sealDTO) {
-        User user = currentUser();
+    public JsonObjectBO cachetChange(@RequestBody SealWeChatDTO sealDTO,HttpServletResponse httpServletResponse) {
+        init(httpServletRequest,httpServletResponse);
+        WeChatUser user = currentUser();
 
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
@@ -188,7 +169,8 @@ public class SealWeChatController extends BaseController {
      */
     @Log("可信身份认证")
     @RequestMapping(value = "/TrustedIdentityAuthentication", method = RequestMethod.POST)
-    public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map) {
+    public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map,HttpServletResponse httpServletResponse) {
+        init(httpServletRequest,httpServletResponse);
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         TrustedIdentityAuthenticationVO result = new TrustedIdentityAuthenticationVO();
@@ -225,8 +207,9 @@ public class SealWeChatController extends BaseController {
     }
 
     @RequestMapping(value = "/sealList", method = RequestMethod.POST)
-    public JsonObjectBO sealList(@RequestBody Map map) {
+    public JsonObjectBO sealList(@RequestBody Map map,HttpServletResponse httpServletResponse) {
         try{
+            init(httpServletRequest,httpServletResponse);
         JSONObject jsonObject = new JSONObject();
         String useDepartmentCode = (String)map.get("useDepartmentCode");
         List<Seal> seals = sealService.sealListForWeChat(useDepartmentCode);
@@ -244,7 +227,8 @@ public class SealWeChatController extends BaseController {
      * @return
      */
     @RequestMapping(value="/upload",produces="application/json;charset=UTF-8")
-    public JsonObjectBO singleFileUpload(@RequestParam("file") MultipartFile file) {
+    public JsonObjectBO singleFileUpload(@RequestParam("file") MultipartFile file,HttpServletResponse httpServletResponse) {
+        init(httpServletRequest,httpServletResponse);
         if (file.isEmpty()) {
             return JsonObjectBO.error("请选择上传文件");
         }
@@ -281,8 +265,9 @@ public class SealWeChatController extends BaseController {
 
     @Log("获取验证码")
     @RequestMapping(value = "/getCheckCode")
-    public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map){
+    public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map,HttpServletResponse httpServletResponse){
         String  telphone = (String)map.get("telphone");
+        init(httpServletRequest,httpServletResponse);
         try{
             if (userPasswordService.getCheckCode(telphone)== ResultUtil.isSuccess){
                 return JsonObjectBO.success("获取验证码成功",null);
@@ -297,8 +282,9 @@ public class SealWeChatController extends BaseController {
     }
 
     @RequestMapping(value = "/sealInfo", method = RequestMethod.POST)
-    public JsonObjectBO sealInfo(@RequestBody Map map) {
+    public JsonObjectBO sealInfo(@RequestBody Map map,HttpServletResponse httpServletResponse) {
         try{
+            init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
             String id = (String)map.get("sealId");
             SealVO seal = sealService.selectDetailById(id);
@@ -329,8 +315,9 @@ public class SealWeChatController extends BaseController {
 
     @Log("验证码手机号")
     @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
-    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode){
+    public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode,HttpServletResponse httpServletResponse){
         try {
+            init(httpServletRequest,httpServletResponse);
             return userLoginService.checkAPPPhoneAndIDCard(smsCode);
         }
         catch (Exception e) {

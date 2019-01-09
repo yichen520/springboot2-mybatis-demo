@@ -101,6 +101,10 @@ public class SealServiceImpl implements SealService {
     private MakeDepartmentSealPriceMapper makeDepartmentSealPriceMapper;
     @Autowired
     private SealOperationRecordMapper sealOperationRecordMapper;
+    @Autowired
+    private CourierMapper courierMapper;
+    @Autowired
+    private SealPayOrderMapper sealPayOrderMapper;
 
 
     @Autowired
@@ -770,6 +774,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int newsealRecord(User user, String sealId) {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
+        seal.setSealStatusCode("05");
         seal.setIsApply(true);
         seal.setApplyDate(DateUtil.getCurrentTime());
         seal.setIsEarlywarning(true);
@@ -1627,24 +1632,17 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public int sealWeChatRecord(User user, SealWeChatDTO sealDTO) {
-//        SMSCode smsCode = new SMSCode();
-//        smsCode.setPhone(sealDTO.getTelphone());
-//        smsCode.setSmscode(sealDTO.getCaptcha());
-//        JsonObjectBO jsonObjectBO = userLoginService.checkPhone(smsCode);
-//        //这里返回是code、要返回到JsonObjectBO
-//        if (jsonObjectBO.getCode() != 1) {
-//            return ResultUtil.isCodeError;
-//        }
+    public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO) {
+
         List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
-        UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
         if (useDepartment == null) {
             return ResultUtil.isNoDepartment;
         }
-        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode()); //获取制作单位
-        RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());//获取备案单位
-        if (recordDepartment == null) {
-            return ResultUtil.isFail;
+        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
+        RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
+        if (recordDepartment == null ) {
+            return ResultUtil.noRecordDepartment;
         }
         for (Seal seal : list) {
             if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && sealDTO.getSeal().getSealTypeCode().equals("05")) {
@@ -1697,9 +1695,6 @@ public class SealServiceImpl implements SealService {
             SealOperationRecord sealOperationRecord = new SealOperationRecord();
             sealOperationRecord.setId(UUIDUtil.generate());
             sealOperationRecord.setSealId(sealId);
-            sealOperationRecord.setEmployeeId(user.getId());
-            sealOperationRecord.setEmployeeName(user.getUserName());
-            sealOperationRecord.setEmployeeCode(user.getRealName());
             sealOperationRecord.setOperateType(type1);
             sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
             int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
@@ -1713,7 +1708,7 @@ public class SealServiceImpl implements SealService {
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
         sealAgent.setId(saId);
-        sealAgent.setName(user.getUserName());
+        sealAgent.setName(user.getNane());
         sealAgent.setTelphone(sealDTO.getTelphone());
         sealAgent.setBusinessType("000");
         int sealAgentInsert = sealAgentMapper.insert(sealAgent);
@@ -1721,10 +1716,49 @@ public class SealServiceImpl implements SealService {
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
         int sealInsert = sealDao.insertSelective(seal);
+
+
+        //插入快递
+        Courier courier =sealDTO.getCourier();
+        if(courier.getRecipientsId()!=null && !courier.getRecipientsId().isEmpty()){
+        String courierId = UUIDUtil.generate();
+
+        courier.setId(courierId);
+        courier.setSealId(saId);
+        courier.setCourierNo(testNum(13));
+        courier.setCourierType("EMS");
+        courierMapper.insertSelective(courier);
+        }
+        //插入到订单中
+        SealPayOrder sealPayOrder =sealDTO.getSealPayOrder();
+        sealPayOrder.setId(UUIDUtil.generate());
+        sealPayOrder.setSealId(saId);
+        sealPayOrder.setPayDate(DateUtil.getCurrentTime());
+        //sealPayOrder.set
+
+
+
+
+
         return ResultUtil.isSuccess;
 
 
+
+
+
+
+
     }
+
+    public  String testNum(int num){
+        StringBuilder str=new StringBuilder();//定义变长字符串
+        Random random=new Random();
+        for (int i = 0; i < num; i++) {
+            str.append(random.nextInt(10));
+        }
+        return str.toString();
+    }
+
 
     /**
      * 公章变更
@@ -1732,7 +1766,7 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int cachetChange(SealWeChatDTO sealDTO,User user) {
+    public int cachetChange(SealWeChatDTO sealDTO,WeChatUser user) {
         UseDepartment useDepartment = useDepartmentService.selectByCode(sealDTO.getUseDepartmentCode());
         if(useDepartment==null){
             return ResultUtil.isNoDepartment;
@@ -1775,19 +1809,20 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int checkSealCode(String sealCode, String useDepartmentCode,String sealTypeCode) {
-        Seal seal = sealDao.selectByTypeAndUseDepartmentCode("useDepartmentCode",null,sealTypeCode);
-        if(seal==null){
+        List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2(useDepartmentCode,sealTypeCode);
+        if(seals.size()==0){
             return ResultUtil.isFail;
         }
-        if(seal.getSealCode().equals("sealCode")){
+        for(Seal seal:seals){
+        if(seal.getSealCode().equals(sealCode)){
             return ResultUtil.isSuccess;
-        }else{
-            return ResultUtil.isFail;
         }
+        }
+        return ResultUtil.isFail;
     }
 
     @Override
-    public MakeDepartmentSealPrice sealPrice(User user, Map map) {
+    public MakeDepartmentSealPrice sealPrice( Map map) {
         String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
         String sealType=(String)map.get("sealType");
         MakeDepartmentSealPrice makeDepartmentSealPrice = new MakeDepartmentSealPrice(sealType,makeDepartmentFlag);
@@ -1795,14 +1830,14 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public List<Seal> sealProgress(User user, Map map) {
+    public List<Seal> sealProgress(Map map) {
         String telphone =(String)map.get("telphone");
         return sealDao.selectSealByTelphone(telphone);
     }
 
     @Override
     public List<Seal> portalSealInfoByCode(String code) {
-        List<Seal> seals = sealDao.selectByCode(code);
+        List<Seal> seals = sealDao.selectByCodeAndType(code);
         return seals;
     }
 

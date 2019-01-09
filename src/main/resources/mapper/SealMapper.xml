@@ -642,6 +642,11 @@
             AND is_undertake = #{isUndertake,jdbcType=BIT}
         </if>
     </select>
+
+    <select id="selectByTypeAndUseDepartmentCode2"  parameterType="java.lang.String"  resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from  seal where use_department_code = #{useDepartmentCode}
+        and seal_type_code = #{sealTypeCode} and is_logout = 0
+    </select>
     <select id="allUndertakeSeal" parameterType="java.lang.String" resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from seal where make_department_code = #{makeDepartmentCode} and is_undertake = 0
     </select>
@@ -657,8 +662,12 @@
   </insert>
 
   <select id="selectByCodeAndType"  parameterType="java.lang.String" resultMap="BaseResultMap">
-      select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and (is_loss !=TRUE OR is_logout!=TRUE)
+      select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_status_code = "05"
   </select>
+
+    <!--<select id="selectByCode"  parameterType="java.lang.String" resultMap="BaseResultMap">-->
+        <!--select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode}  and (is_loss !=TRUE OR is_logout!=TRUE)-->
+    <!--</select>-->
 
     <select id="selectByCodeAndType05"  parameterType="java.lang.String" resultMap="BaseResultMap">
         select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_type_code = "05" and  is_logout!=TRUE
