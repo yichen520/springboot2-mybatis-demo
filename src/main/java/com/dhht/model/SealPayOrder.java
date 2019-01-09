@@ -1,7 +1,9 @@
 package com.dhht.model;
 
-import java.util.Date;
+import lombok.Data;
 
+import java.util.Date;
+@Data
 public class SealPayOrder {
     private String id;
 
@@ -21,75 +23,11 @@ public class SealPayOrder {
 
     private String memo;
 
-    public String getId() {
-        return id;
-    }
+    private Boolean ispay;
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
-    }
+    private String payway;
 
-    public String getSealId() {
-        return sealId;
-    }
+    private Boolean  getway;
 
-    public void setSealId(String sealId) {
-        this.sealId = sealId == null ? null : sealId.trim();
-    }
-
-    public Boolean getIsPay() {
-        return isPay;
-    }
-
-    public void setIsPay(Boolean isPay) {
-        this.isPay = isPay;
-    }
-
-    public String getPayWay() {
-        return payWay;
-    }
-
-    public void setPayWay(String payWay) {
-        this.payWay = payWay == null ? null : payWay.trim();
-    }
-
-    public String getPayAccout() {
-        return payAccout;
-    }
-
-    public void setPayAccout(String payAccout) {
-        this.payAccout = payAccout == null ? null : payAccout.trim();
-    }
-
-    public Date getPayDate() {
-        return payDate;
-    }
-
-    public void setPayDate(Date payDate) {
-        this.payDate = payDate;
-    }
-
-    public Boolean getExpressWay() {
-        return expressWay;
-    }
-
-    public void setExpressWay(Boolean expressWay) {
-        this.expressWay = expressWay;
-    }
-
-    public String getCourierId() {
-        return courierId;
-    }
-
-    public void setCourierId(String courierId) {
-        this.courierId = courierId == null ? null : courierId.trim();
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo == null ? null : memo.trim();
-    }
+    private String sealPrice;
 }
