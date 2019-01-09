@@ -15,8 +15,5 @@ public class Courier {
 
     private String courierType;
 
-    private String postal;
-
-    private String address;
 
 }

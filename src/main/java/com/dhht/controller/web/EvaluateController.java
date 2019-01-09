@@ -27,17 +27,7 @@ public class EvaluateController extends BaseController {
     @Autowired
     private EvaluateService evaluateService;
 
-    @Log("新增制作单位评价")
-    @RequestMapping("/insert")
-    public JsonObjectBO insert( @RequestBody Evaluate evaluate){
-        try {
-            return  ResultUtil.getResult(evaluateService.insert(evaluate,currentUser()));
-        }catch (Exception e){
-            e.printStackTrace();
-            logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("评价失败");
-        }
-    }
+
 
     @Log("查询评价")
     @RequestMapping("/info")
