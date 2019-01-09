@@ -63,8 +63,10 @@ public class SealWeChatDTO {
     private Integer pageSize;
 
     private String captcha;
-
+//订单信息
     private SealPayOrder sealPayOrder;
-
+//快递信息
     private Courier courier;
+    //经办人信息
+    private SealAgent sealAgent;
 }

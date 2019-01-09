@@ -23,11 +23,5 @@ public class SealPayOrder {
 
     private String memo;
 
-    private Boolean ispay;
 
-    private String payway;
-
-    private Boolean  getway;
-
-    private String sealPrice;
 }

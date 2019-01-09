@@ -1705,13 +1705,13 @@ public class SealServiceImpl implements SealService {
         }
 
         //经办人信息
-        SealAgent sealAgent = new SealAgent();
+        SealAgent sealAgent = sealDTO.getSealAgent();
         String saId = UUIDUtil.generate();
-        sealAgent.setId(saId);
-        sealAgent.setName(user.getNane());
-        sealAgent.setTelphone(sealDTO.getTelphone());
-        sealAgent.setBusinessType("000");
-        int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+            sealAgent.setId(saId);
+            sealAgent.setBusinessType("000");
+            int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+       // if (sealAgent.getTelphone()==null){}
+
         seal.setAgentId(saId);
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
@@ -1725,21 +1725,18 @@ public class SealServiceImpl implements SealService {
         String courierId = UUIDUtil.generate();
 
         courier.setId(courierId);
-        courier.setSealId(saId);
+        courier.setSealId(sealId);
         courier.setCourierNo(testNum(13));
         courier.setCourierType("EMS");
         courierMapper.insertSelective(courier);
             sealPayOrder.setCourierId(courierId);
         }
         //插入到订单中
-
+//
         sealPayOrder.setId(UUIDUtil.generate());
-        sealPayOrder.setSealId(saId);
+        sealPayOrder.setSealId(sealId);
         sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-        sealPayOrder.setIsPay(sealPayOrder.getIspay());
-        sealPayOrder.setPayAccout(sealPayOrder.getSealPrice());
-        sealPayOrder.setExpressWay(sealPayOrder.getGetway());
-        sealPayOrder.setPayWay(sealPayOrder.getPayway());
+
         sealPayOrderMapper.insertSelective(sealPayOrder);
 
         return ResultUtil.isSuccess;
