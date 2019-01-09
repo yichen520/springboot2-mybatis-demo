@@ -41,7 +41,7 @@ public class WeChatBaseController {
             //添加cookie
             httpServletResponse.addCookie(cookie);
         }
-        
+
 
 
     }
