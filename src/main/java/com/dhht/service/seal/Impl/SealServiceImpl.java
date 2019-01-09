@@ -1842,8 +1842,8 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public List<Seal> sealListForWeChat(String useDepartmentCode) {
-        List<Seal> sealList = sealDao.sealList(useDepartmentCode);
+    public List<Seal> sealListForWeChat(String telphone) {
+        List<Seal> sealList = sealDao.sealList(telphone);
         return sealList;
     }
 

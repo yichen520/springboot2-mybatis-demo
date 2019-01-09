@@ -105,7 +105,7 @@ public interface SealService {
 
    List<Seal> portalSealInfoByCode(String cdode);
 
-   List<Seal> sealListForWeChat(String useDepartment);
+   List<Seal> sealListForWeChat(String telphone);
 
 
 }

@@ -211,8 +211,8 @@ public class SealWeChatController extends WeChatBaseController {
         try{
             init(httpServletRequest,httpServletResponse);
         JSONObject jsonObject = new JSONObject();
-        String useDepartmentCode = (String)map.get("useDepartmentCode");
-        List<Seal> seals = sealService.sealListForWeChat(useDepartmentCode);
+        String telphone = (String)map.get("telPhone");
+        List<Seal> seals = sealService.sealListForWeChat(telphone);
         jsonObject.put("seals",seals);
         return JsonObjectBO.success("查询成功",jsonObject);
     } catch (Exception e) {
