@@ -1719,6 +1719,7 @@ public class SealServiceImpl implements SealService {
 
 
         //插入快递
+        SealPayOrder sealPayOrder =sealDTO.getSealPayOrder();
         Courier courier =sealDTO.getCourier();
         if(courier.getRecipientsId()!=null && !courier.getRecipientsId().isEmpty()){
         String courierId = UUIDUtil.generate();
@@ -1728,17 +1729,18 @@ public class SealServiceImpl implements SealService {
         courier.setCourierNo(testNum(13));
         courier.setCourierType("EMS");
         courierMapper.insertSelective(courier);
+            sealPayOrder.setCourierId(courierId);
         }
         //插入到订单中
-        SealPayOrder sealPayOrder =sealDTO.getSealPayOrder();
+
         sealPayOrder.setId(UUIDUtil.generate());
         sealPayOrder.setSealId(saId);
         sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-        //sealPayOrder.set
-
-
-
-
+        sealPayOrder.setIsPay(sealPayOrder.getIspay());
+        sealPayOrder.setPayAccout(sealPayOrder.getSealPrice());
+        sealPayOrder.setExpressWay(sealPayOrder.getGetway());
+        sealPayOrder.setPayWay(sealPayOrder.getPayway());
+        sealPayOrderMapper.insertSelective(sealPayOrder);
 
         return ResultUtil.isSuccess;
 
