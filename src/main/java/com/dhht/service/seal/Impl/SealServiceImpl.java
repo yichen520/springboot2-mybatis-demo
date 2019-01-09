@@ -101,6 +101,10 @@ public class SealServiceImpl implements SealService {
     private MakeDepartmentSealPriceMapper makeDepartmentSealPriceMapper;
     @Autowired
     private SealOperationRecordMapper sealOperationRecordMapper;
+    @Autowired
+    private CourierMapper courierMapper;
+    @Autowired
+    private SealPayOrderMapper sealPayOrderMapper;
 
 
     @Autowired
@@ -1712,16 +1716,42 @@ public class SealServiceImpl implements SealService {
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
         int sealInsert = sealDao.insertSelective(seal);
+
+
+        //插入快递
+        Courier courier =sealDTO.getCourier();
+        if(courier.getRecipientsId()!=null && !courier.getRecipientsId().isEmpty()){
+        String courierId = UUIDUtil.generate();
+
+        courier.setId(courierId);
+        courier.setSealId(saId);
+        courier.setCourierNo(testNum(13));
+        courier.setCourierType("EMS");
+        courierMapper.insertSelective(courier);
+        }
+        //插入到订单中
+
+
+
         return ResultUtil.isSuccess;
 
-        //插入订单
-        
+
 
 
 
 
 
     }
+
+    public  String testNum(int num){
+        StringBuilder str=new StringBuilder();//定义变长字符串
+        Random random=new Random();
+        for (int i = 0; i < num; i++) {
+            str.append(random.nextInt(10));
+        }
+        return str.toString();
+    }
+
 
     /**
      * 公章变更

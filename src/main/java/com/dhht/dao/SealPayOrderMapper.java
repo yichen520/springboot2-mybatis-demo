@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 import com.dhht.model.SealPayOrder;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SealPayOrderMapper {
     int deleteByPrimaryKey(String id);
 

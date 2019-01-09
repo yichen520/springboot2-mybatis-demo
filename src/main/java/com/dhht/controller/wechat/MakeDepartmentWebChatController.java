@@ -4,14 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
-import com.dhht.model.MakeDepartmentSealPrice;
-import com.dhht.model.MakeDepartmentSimple;
-import com.dhht.model.Makedepartment;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.model.pojo.MakedepartmentSimplePO;
+import com.dhht.service.evaluate.EvaluateService;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealService;
+import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +36,8 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
     private SealService sealService;
     @Autowired
     private HttpServletRequest httpServletRequest;
+    @Autowired
+    private EvaluateService evaluateService;
 
 
 
@@ -105,6 +106,33 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
             return JsonObjectBO.success("获取详情成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.exception("获取制作单位详情失败");
+        }
+    }
+
+    @Log("查询评价")
+    @RequestMapping("/evaluate/info")
+    public JsonObjectBO info(  @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("evaluate",evaluateService.selectEvaluateList(evaluate));
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return JsonObjectBO.exceptionWithMessage("查询失败",e.getMessage());
+        }
+    }
+
+    @Log("新增制作单位评价")
+    @RequestMapping("/evaluate/insert")
+    public JsonObjectBO insert( @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
+        try {
+            WeChatUser weChatUser = currentUser();
+            return  ResultUtil.getResult(evaluateService.insert(evaluate,weChatUser));
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return JsonObjectBO.exception("评价失败");
         }
     }
 }

@@ -7,10 +7,10 @@
     <result column="seal_id" property="sealId" jdbcType="CHAR" />
     <result column="courier_no" property="courierNo" jdbcType="VARCHAR" />
     <result column="courier_type" property="courierType" jdbcType="VARCHAR" />
-    <result column="postal" property="postal" jdbcType="CHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
-    id, recipients_id, seal_id, courier_no, courier_type, postal
+    id, recipients_id, seal_id, courier_no, courier_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -24,10 +24,10 @@
   </delete>
   <insert id="insert" parameterType="com.dhht.model.Courier" >
     insert into courier (id, recipients_id, seal_id, 
-      courier_no, courier_type, postal
+      courier_no, courier_type
       )
     values (#{id,jdbcType=CHAR}, #{recipientsId,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, 
-      #{courierNo,jdbcType=VARCHAR}, #{courierType,jdbcType=VARCHAR}, #{postal,jdbcType=CHAR}
+      #{courierNo,jdbcType=VARCHAR}, #{courierType,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Courier" >
@@ -48,9 +48,7 @@
       <if test="courierType != null" >
         courier_type,
       </if>
-      <if test="postal != null" >
-        postal,
-      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -68,9 +66,7 @@
       <if test="courierType != null" >
         #{courierType,jdbcType=VARCHAR},
       </if>
-      <if test="postal != null" >
-        #{postal,jdbcType=CHAR},
-      </if>
+
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Courier" >
@@ -88,9 +84,7 @@
       <if test="courierType != null" >
         courier_type = #{courierType,jdbcType=VARCHAR},
       </if>
-      <if test="postal != null" >
-        postal = #{postal,jdbcType=CHAR},
-      </if>
+
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
@@ -99,8 +93,7 @@
     set recipients_id = #{recipientsId,jdbcType=CHAR},
       seal_id = #{sealId,jdbcType=CHAR},
       courier_no = #{courierNo,jdbcType=VARCHAR},
-      courier_type = #{courierType,jdbcType=VARCHAR},
-      postal = #{postal,jdbcType=CHAR}
+      courier_type = #{courierType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
   
