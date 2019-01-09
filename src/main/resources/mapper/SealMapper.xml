@@ -1292,11 +1292,10 @@
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type= #{flag}
   </select>
 
-    <select id="sealList" resultMap="BaseResultMap">
-        SELECT  <include refid="Base_Column_List" /> FROM seal
-        <where>
-            use_department_code = #{useDepartmentCode}
-        </where>
+    <select id="sealList" parameterType="java.lang.String" resultMap="BaseResultMap">
+      SELECT seal.*
+      FROM seal
+      LEFT JOIN seal_agent ON seal.agent_id = seal_agent.id where seal_agent.telphone = #{telphone}
     </select>
 
   <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">

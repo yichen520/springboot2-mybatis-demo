@@ -95,7 +95,7 @@ public interface SealDao {
 
     String selectSealCode(@Param("code") String code);
 
-    List<Seal> sealList(@Param("useDepartmentCode") String useDepartmentCode);
+    List<Seal> sealList(@Param("telphone") String telphone);
 
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
