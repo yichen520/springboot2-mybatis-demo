@@ -14,4 +14,6 @@ public interface MakeDepartmentAttacthInfoService {
     MakeDepartmentAttachInfo selectById(String id);
 
     MakeDepartmentAttachInfo selectByMakeDepartmentFlag(User user);
+
+    MakeDepartmentAttachInfo selectByMakeDepartmentFlag(String makeDepartmentFlag);
 }

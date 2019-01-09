@@ -69,4 +69,10 @@ public class MakeDepartmentInfoServiceImpl implements MakeDepartmentAttacthInfoS
         MakeDepartmentAttachInfo makeDepartmentAttachInfo = makeDepartmentAttachInfoMapper.selectByMakeDepartmentFlag(makeDepartmentSimple.getFlag());
         return makeDepartmentAttachInfo;
     }
+
+    @Override
+    public MakeDepartmentAttachInfo selectByMakeDepartmentFlag(String makeDepartmentFlag){
+        MakeDepartmentAttachInfo makeDepartmentAttachInfo = makeDepartmentAttachInfoMapper.selectByMakeDepartmentFlag(makeDepartmentFlag);
+        return makeDepartmentAttachInfo;
+    }
 }
