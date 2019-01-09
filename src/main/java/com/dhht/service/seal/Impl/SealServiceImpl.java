@@ -1629,9 +1629,6 @@ public class SealServiceImpl implements SealService {
 
     @Override
     public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO) {
-        if(user == null){
-            return ResultUtil.isNoSession;
-        }
 
         List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
         UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
@@ -1694,8 +1691,6 @@ public class SealServiceImpl implements SealService {
             SealOperationRecord sealOperationRecord = new SealOperationRecord();
             sealOperationRecord.setId(UUIDUtil.generate());
             sealOperationRecord.setSealId(sealId);
-            sealOperationRecord.setEmployeeId(user.getId());
-            sealOperationRecord.setEmployeeName(user.getNane());
             sealOperationRecord.setOperateType(type1);
             sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
             int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
@@ -1718,6 +1713,12 @@ public class SealServiceImpl implements SealService {
         seal.setUndertakeDate(DateUtil.getCurrentTime());
         int sealInsert = sealDao.insertSelective(seal);
         return ResultUtil.isSuccess;
+
+        //插入订单
+        
+
+
+
 
 
     }
