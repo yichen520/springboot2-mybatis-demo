@@ -121,7 +121,7 @@
       user_name = #{userName,jdbcType=CHAR},
       evaluate_content = #{evaluateContent,jdbcType=VARCHAR},
       evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
-      make_department_id = #{makeDepartmentId,jdbcType=CHAR},
+      make_department_id = #{flag,jdbcType=CHAR},
       make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
       score = #{score,jdbcType=INTEGER}
     where id = #{id,jdbcType=CHAR}
@@ -132,7 +132,7 @@
     <include refid="Base_Column_List" />
     from make_department_evaluate
     where 1 = 1
-    <if test="makeDepartmentId != null" >
+    <if test="flag != null" >
     and  make_department_id = #{flag,jdbcType=CHAR}
     </if>
   </select>

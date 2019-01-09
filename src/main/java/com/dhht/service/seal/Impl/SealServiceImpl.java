@@ -1730,6 +1730,13 @@ public class SealServiceImpl implements SealService {
         courierMapper.insertSelective(courier);
         }
         //插入到订单中
+        SealPayOrder sealPayOrder =sealDTO.getSealPayOrder();
+        sealPayOrder.setId(UUIDUtil.generate());
+        sealPayOrder.setSealId(saId);
+        sealPayOrder.setPayDate(DateUtil.getCurrentTime());
+        //sealPayOrder.set
+
+
 
 
 
