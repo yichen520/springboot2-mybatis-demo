@@ -59,8 +59,8 @@
       <if test="image != null" >
         image,
       </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=CHAR},
       </if>
