@@ -207,11 +207,11 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
     @RequestMapping(value = "/sealList", method = RequestMethod.POST)
-    public JsonObjectBO sealList(@RequestBody Map map,HttpServletResponse httpServletResponse) {
+    public JsonObjectBO sealList(@RequestBody Map map,HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) {
         try{
             init(httpServletRequest,httpServletResponse);
+        String telphone = (String) httpServletRequest.getSession().getAttribute("mobilePhone");
         JSONObject jsonObject = new JSONObject();
-        String telphone = (String)map.get("telPhone");
         List<Seal> seals = sealService.sealListForWeChat(telphone);
         jsonObject.put("seals",seals);
         return JsonObjectBO.success("查询成功",jsonObject);

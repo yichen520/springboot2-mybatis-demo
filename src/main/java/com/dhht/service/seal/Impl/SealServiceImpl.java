@@ -1733,14 +1733,14 @@ public class SealServiceImpl implements SealService {
         }
         //插入到订单中
 
-        sealPayOrder.setId(UUIDUtil.generate());
-        sealPayOrder.setSealId(saId);
-        sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-        sealPayOrder.setIsPay(sealPayOrder.getIspay());
-        sealPayOrder.setPayAccout(sealPayOrder.getSealPrice());
-        sealPayOrder.setExpressWay(sealPayOrder.getGetway());
-        sealPayOrder.setPayWay(sealPayOrder.getPayway());
-        sealPayOrderMapper.insertSelective(sealPayOrder);
+//        sealPayOrder.setId(UUIDUtil.generate());
+//        sealPayOrder.setSealId(saId);
+//        sealPayOrder.setPayDate(DateUtil.getCurrentTime());
+//        sealPayOrder.setIsPay(sealPayOrder.getIspay());
+//        sealPayOrder.setPayAccout(sealPayOrder.getSealPrice());
+//        sealPayOrder.setExpressWay(sealPayOrder.getGetway());
+//        sealPayOrder.setPayWay(sealPayOrder.getPayway());
+//        sealPayOrderMapper.insertSelective(sealPayOrder);
 
         return ResultUtil.isSuccess;
 
