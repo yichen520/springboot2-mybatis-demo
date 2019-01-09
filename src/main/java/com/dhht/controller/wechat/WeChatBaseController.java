@@ -42,6 +42,11 @@ public class WeChatBaseController {
             httpServletResponse.addCookie(cookie);
         }
 
+        if(httpServletRequest.getCookies()==null){
+            httpServletResponse.setStatus(401);
+        }
+
+
     }
 
     public WeChatUser currentUser(){

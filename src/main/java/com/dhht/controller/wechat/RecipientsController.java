@@ -105,7 +105,6 @@ public class RecipientsController extends WeChatBaseController {
         }
     }
 
-    @Log("邮寄用户信息查询")
     @RequestMapping("/recipientsInfo")
     public JsonObjectBO recipientsInfo(HttpServletResponse httpServletResponse){
 //        User user = currentUser();

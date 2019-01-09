@@ -62,7 +62,6 @@ public class SealWeChatController extends WeChatBaseController {
         WeChatUser user = currentUser();
 
         init(httpServletRequest,httpServletResponse);
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
             int a = sealService.sealWeChatRecord(user,sealDTO);
             return ResultUtil.getResult(a);
