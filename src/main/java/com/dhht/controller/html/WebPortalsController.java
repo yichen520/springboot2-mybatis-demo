@@ -42,13 +42,14 @@ public class WebPortalsController extends BaseController {
     private WeChatUserService weChatUserService;
     @Autowired
     private UserLoginService userLoginService;
+    @Autowired
+    private SealService sealService;
 
     @Autowired
     private PunishService punishService;
     @Value("${sms.template.makedepartmentpunish}")
     private int makedepartmentpunish ;
-    @Autowired
-    private SealService sealService;
+
 
     /**
      * 省级区域数据

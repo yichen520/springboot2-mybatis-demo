@@ -1810,11 +1810,11 @@ public class SealServiceImpl implements SealService {
     @Override
     public int checkSealCode(String sealCode, String useDepartmentCode,String sealTypeCode) {
         List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2(useDepartmentCode,sealTypeCode);
-        if(seals==null){
+        if(seals.size()==0){
             return ResultUtil.isFail;
         }
         for(Seal seal:seals){
-        if(seal.getSealCode().equals("sealCode")){
+        if(seal.getSealCode().equals(sealCode)){
             return ResultUtil.isSuccess;
         }
         }
