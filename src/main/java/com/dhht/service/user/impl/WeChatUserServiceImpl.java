@@ -98,6 +98,9 @@ public class WeChatUserServiceImpl implements WeChatUserService {
                 weChatUserMapper.insertSelective(weChatUser1);
                 map.put("weChatUser", weChatUser1);
             }
+            else {
+                map.put("weChatUser", weChatUser);
+            }
             request.getSession().setAttribute("user",weChatUser);
             return map;
         }else {
