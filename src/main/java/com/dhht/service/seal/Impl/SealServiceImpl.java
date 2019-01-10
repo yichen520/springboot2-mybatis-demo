@@ -1645,7 +1645,7 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.noRecordDepartment;
         }
         for (Seal seal : list) {
-            if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && sealDTO.getSeal().getSealTypeCode().equals("05")) {
+            if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && (sealDTO.getSeal().getSealTypeCode().equals("05")||sealDTO.getSeal().getSealTypeCode().equals("01"))) {
                 return ResultUtil.isHaveSeal;
             }
         }
@@ -1751,6 +1751,13 @@ public class SealServiceImpl implements SealService {
 
 
     }
+
+
+//    @Override
+//    public int sealLogout(WeChatUser weChatUser,String useDepartmentCode, String sealCode) {
+//        int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"01");
+//
+//    }
 
     public  String testNum(int num){
         StringBuilder str=new StringBuilder();//定义变长字符串

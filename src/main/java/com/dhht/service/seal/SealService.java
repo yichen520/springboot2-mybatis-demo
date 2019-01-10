@@ -98,6 +98,7 @@ public interface SealService {
    //小程序申请
    int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO);
 
+//   int sealLogout(String useDepartment,String sealCode);
 
    MakeDepartmentSealPrice sealPrice( Map map);
 
@@ -106,6 +107,7 @@ public interface SealService {
    List<Seal> portalSealInfoByCode(String cdode);
 
    List<Seal> sealListForWeChat(String telphone);
+
 
 
 }
