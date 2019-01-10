@@ -1,5 +1,6 @@
 package com.dhht.model;
 
+import com.dhht.common.JsonObjectBO;
 import lombok.Data;
 
 import java.util.Date;
@@ -23,11 +24,6 @@ public class SealPayOrder {
 
     private String memo;
 
-    private Boolean ispay;
 
-    private String payway;
 
-    private Boolean  getway;
-
-    private String sealPrice;
 }

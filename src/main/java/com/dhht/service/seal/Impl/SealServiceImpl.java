@@ -1632,7 +1632,7 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO) {
+    public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId) {
 
         List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
         UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
@@ -1641,9 +1641,7 @@ public class SealServiceImpl implements SealService {
         }
         MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
         RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
-        if (recordDepartment == null ) {
-            return ResultUtil.noRecordDepartment;
-        }
+
         for (Seal seal : list) {
             if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && (sealDTO.getSeal().getSealTypeCode().equals("05")||sealDTO.getSeal().getSealTypeCode().equals("01"))) {
                 return ResultUtil.isHaveSeal;
@@ -1671,8 +1669,11 @@ public class SealServiceImpl implements SealService {
         seal.setDistrictId(useDepartment.getDistrictId());
         seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
         seal.setMakeDepartmentName(makedepartment.getDepartmentName());
-        seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
-        seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
+        if(recordDepartment!=null){
+            seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
+            seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
+        }
+
         seal.setIsRecord(true);
         seal.setRecordDate(DateUtil.getCurrentTime());
         seal.setIsUndertake(true);
@@ -1705,13 +1706,13 @@ public class SealServiceImpl implements SealService {
         }
 
         //经办人信息
-        SealAgent sealAgent = new SealAgent();
+        SealAgent sealAgent = sealDTO.getSealAgent();
         String saId = UUIDUtil.generate();
-        sealAgent.setId(saId);
-        sealAgent.setName(user.getNane());
-        sealAgent.setTelphone(sealDTO.getTelphone());
-        sealAgent.setBusinessType("000");
-        int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+            sealAgent.setId(saId);
+            sealAgent.setBusinessType("000");
+            int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+       // if (sealAgent.getTelphone()==null){}
+
         seal.setAgentId(saId);
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
@@ -1725,22 +1726,19 @@ public class SealServiceImpl implements SealService {
         String courierId = UUIDUtil.generate();
 
         courier.setId(courierId);
-        courier.setSealId(saId);
+        courier.setSealId(sealId);
         courier.setCourierNo(testNum(13));
         courier.setCourierType("EMS");
         courierMapper.insertSelective(courier);
             sealPayOrder.setCourierId(courierId);
         }
         //插入到订单中
+//
+        sealPayOrder.setId(payOrderId);
+        sealPayOrder.setSealId(sealId);
+        sealPayOrder.setPayDate(DateUtil.getCurrentTime());
 
-//        sealPayOrder.setId(UUIDUtil.generate());
-//        sealPayOrder.setSealId(saId);
-//        sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-//        sealPayOrder.setIsPay(sealPayOrder.getIspay());
-//        sealPayOrder.setPayAccout(sealPayOrder.getSealPrice());
-//        sealPayOrder.setExpressWay(sealPayOrder.getGetway());
-//        sealPayOrder.setPayWay(sealPayOrder.getPayway());
-//        sealPayOrderMapper.insertSelective(sealPayOrder);
+        sealPayOrderMapper.insertSelective(sealPayOrder);
 
         return ResultUtil.isSuccess;
 
@@ -1787,7 +1785,7 @@ public class SealServiceImpl implements SealService {
         Seal seal = sealDTO.getSeal();
         seal.setSealTypeCode("01");
         sealDTO.setSeal(seal);
-        return sealWeChatRecord(user,sealDTO);
+        return sealWeChatRecord(user,sealDTO,null);
 
     }
 
@@ -1883,6 +1881,11 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isSuccess;
         }
 
+    }
+
+    @Override
+    public int updatePay(SealPayOrder sealPayOrder) {
+        return sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
     }
 }
 

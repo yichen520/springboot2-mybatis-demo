@@ -96,7 +96,7 @@ public interface SealService {
    int cachetChange(SealWeChatDTO sealDTO,WeChatUser user);
 
    //小程序申请
-   int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO);
+   int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId);
 
 //   int sealLogout(String useDepartment,String sealCode);
 
@@ -109,6 +109,7 @@ public interface SealService {
    List<Seal> sealListForWeChat(String telphone);
 
 
+    int updatePay(SealPayOrder sealPayOrder);
 
 }
 

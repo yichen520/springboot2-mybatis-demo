@@ -63,8 +63,14 @@ public class SealWeChatController extends WeChatBaseController {
 
         init(httpServletRequest,httpServletResponse);
         try {
-            int a = sealService.sealWeChatRecord(user,sealDTO);
-            return ResultUtil.getResult(a);
+            JSONObject jsonObject =new JSONObject();
+            String payOrderId = UUIDUtil.generate();
+            int a = sealService.sealWeChatRecord(user,sealDTO,payOrderId);
+            if (a== 1){
+                jsonObject.put("payOrderId",payOrderId);
+                return JsonObjectBO.success("印章备案成功",jsonObject);
+            }else {
+            return ResultUtil.getResult(a);}
         } catch (Exception e) {
             e.printStackTrace();
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"备案失败");
@@ -325,7 +331,18 @@ public class SealWeChatController extends WeChatBaseController {
             return JsonObjectBO.exception("发送短信发生异常");
         }
     }
-
+    //@Log("更新支付")
+    @RequestMapping(value ="updatePay", method = RequestMethod.POST)
+    public JsonObjectBO checkPhone(@RequestBody SealPayOrder sealPayOrder,HttpServletResponse httpServletResponse){
+        try {
+            init(httpServletRequest,httpServletResponse);
+            return ResultUtil.getResult(sealService.updatePay(sealPayOrder));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exception("支付更改不成功");
+        }
+    }
 
     
 
