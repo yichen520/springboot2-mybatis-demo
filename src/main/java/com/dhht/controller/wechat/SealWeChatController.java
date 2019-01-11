@@ -10,6 +10,7 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.*;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.seal.SealAgentWeChatService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.user.UserLoginService;
@@ -52,6 +53,7 @@ public class SealWeChatController extends WeChatBaseController {
     private UserPasswordService userPasswordService;
     @Autowired
     private UserLoginService userLoginService;
+
 
     @Autowired
     private MakeDepartmentSealPriceService makeDepartmentSealPriceService;
@@ -344,7 +346,35 @@ public class SealWeChatController extends WeChatBaseController {
         }
     }
 
-    
+
+    /**
+     * 印章核验
+     * @param map
+     * @return
+     */
+    @Log("印章核验")
+    @RequestMapping("/weChatCheckSealCode")
+    public JsonObjectBO weChatCheckSealCode(@RequestBody Map map) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            String sealCode = (String)map.get("sealCode");
+            String useDepartmentCode = (String)map.get("useDepartmentCode");
+            int result = sealService.checkSealCode(sealCode,useDepartmentCode,"01");
+            if(result==ResultUtil.isSuccess){
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("查询成功");
+            }else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("无该枚印章");
+            }
+            return jsonObjectBO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
+        }
+    }
+
+
 
 
 }
