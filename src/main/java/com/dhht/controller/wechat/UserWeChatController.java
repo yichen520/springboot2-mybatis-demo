@@ -25,7 +25,7 @@ public class UserWeChatController extends  WeChatBaseController{
 
     /**
      * 微信用户查询
-     * @param id
+     * @param
      * @return
      */
     @RequestMapping(value = "/selectWeChatUser" , method = RequestMethod.GET)
