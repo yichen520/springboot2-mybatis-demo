@@ -105,7 +105,7 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
     where  make_department.delete_status = 0 and
     make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
     and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
-    GROUP BY make_department_evaluate.make_department_id ORDER BY score
+    GROUP BY make_department_evaluate.make_department_id ORDER BY score desc
   </select>
 
   <select id="selectMakedePartmentBySealNum" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
