@@ -108,6 +108,8 @@ public interface SealService {
    List<Seal> sealListForWeChat(String telphone);
 
 
+
     int updatePay(SealPayOrder sealPayOrder);
+
 }
 

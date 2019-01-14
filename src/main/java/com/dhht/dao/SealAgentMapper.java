@@ -4,6 +4,8 @@ import com.dhht.model.SealAgent;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface SealAgentMapper {
@@ -20,5 +22,7 @@ public interface SealAgentMapper {
     int updateByPrimaryKeySelective(SealAgent record);
 
     int updateByPrimaryKey(SealAgent record);
+
+    List<SealAgent> selectByTelPhone(@Param("telPhone") String telPhone);
 
 }
