@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,10 +29,11 @@ public class UserWeChatController extends  WeChatBaseController{
      * @return
      */
     @RequestMapping(value = "/selectWeChatUser" , method = RequestMethod.GET)
-    public Map<String,Object> selectWeChatUser(String id){
+    public Map<String,Object> selectWeChatUser(HttpServletRequest httpServletRequest){
         Map<String,Object> resultMap = new HashMap<>();
         try {
-            resultMap = weChatUserService.selectWeChatUser(id);
+            String telphone = (String) httpServletRequest.getSession().getAttribute("mobilePhone");
+            resultMap = weChatUserService.selectWeChatUser(telphone);
             return resultMap;
         }catch (Exception e){
             resultMap.put("status", "error");

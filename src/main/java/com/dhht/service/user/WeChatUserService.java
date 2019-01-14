@@ -34,8 +34,8 @@ public interface WeChatUserService {
 
     /**
      * 用户查询
-     * @param id
+     * @param telphone
      * @return
      */
-    Map<String,Object>  selectWeChatUser(String id);
+    Map<String,Object>  selectWeChatUser(String telphone);
 }
