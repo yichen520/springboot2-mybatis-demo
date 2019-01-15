@@ -46,7 +46,7 @@ public class LoginController extends WeChatBaseController {
 
             return resultMap;
         }catch (Exception e){
-
+            e.printStackTrace();
             resultMap.put("status", "error");
             resultMap.put("currentAuthority", "guest");
             resultMap.put("message","登入异常");
