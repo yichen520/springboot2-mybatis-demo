@@ -240,4 +240,12 @@
       login_telphone = #{loginTelphone,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from suspicious
+    where
+    login_telphone = #{loginTelphone}
+  </select>
 </mapper>

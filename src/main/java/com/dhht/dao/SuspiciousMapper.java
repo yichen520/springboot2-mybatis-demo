@@ -21,4 +21,6 @@ public interface SuspiciousMapper {
     int updateByPrimaryKey(Suspicious record);
 
     List<Suspicious> selectInfo(SuspiciousPO map);
+
+    List<Suspicious> selectAll(String loginTelphone);
 }

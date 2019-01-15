@@ -43,10 +43,10 @@ public class LoginController extends WeChatBaseController {
             String verificationCode = (String) map.get("verificationCode");
             resultMap = weChatUserService.isLogin(mobilePhone,verificationCode,httpServletRequest);
 
-            System.out.println(httpServletResponse.getHeader("Set-Cookie"));
+
             return resultMap;
         }catch (Exception e){
-            System.out.println(httpServletResponse.getHeader("Set-Cookie"));
+
             resultMap.put("status", "error");
             resultMap.put("currentAuthority", "guest");
             resultMap.put("message","登入异常");
