@@ -6,6 +6,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
 import com.dhht.model.*;
 import com.dhht.model.pojo.MakedepartmentSimplePO;
+import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.evaluate.EvaluateService;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
@@ -38,8 +39,34 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
     private HttpServletRequest httpServletRequest;
     @Autowired
     private EvaluateService evaluateService;
+    @Autowired
+    private EmployeeService employeeService;
 
+    @RequestMapping(value = "/selectByName")
+    public JsonObjectBO selectByAllName(@RequestBody Map map){
+        try {
+            String name = (String)map.get("name");
+            Makedepartment makedepartment = makeDepartmentService.selectByAllName(name);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("makeDepartment",makedepartment);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("查询失败");
+        }
+    }
 
+    @RequestMapping(value = "/selectEmpByMakeCode")
+    public JsonObjectBO selectEmpByMakeCode(@RequestBody Map map){
+        try {
+            String makeCode = (String)map.get("code");
+            List<Employee> employees = employeeService.selectByDepartmentCode(makeCode);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("employee",employees);
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("查询失败");
+        }
+    }
 
     /**
      * 制作单位价格数据
@@ -111,14 +138,13 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
 
     @Log("查询评价")
     @RequestMapping("/evaluate/info")
-    public JsonObjectBO info(  @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
+    public JsonObjectBO info( @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("evaluate",evaluateService.selectEvaluateList(evaluate));
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             e.printStackTrace();
-
             return JsonObjectBO.exceptionWithMessage("查询失败",e.getMessage());
         }
     }

@@ -36,6 +36,8 @@ public interface MakedepartmentMapper {
 
     MakeDepartmentSimple selectByDepartmentCode(@Param("departmentCode") String code);
 
+    Makedepartment selectByAllName(@Param("name")String name);
+
     List<Makedepartment> selectByFlag(@Param("flag") String flag);
 
     Makedepartment selectByCode1(@Param("departmentCode") String departmentCode);
@@ -45,6 +47,7 @@ public interface MakedepartmentMapper {
     List<MakeDepartmentSimple> selectByDistrict(@Param("id") String id);
 
     List<MakeDepartmentSimple> selectMeumByDistrict(@Param("id") String id);
+
 
     List<Makedepartment> selectByNameAndTimeAndDistrict(@Param("departmentName")String departmentName,String startTime,String endTime,@Param("districtId") String districtId);
 
