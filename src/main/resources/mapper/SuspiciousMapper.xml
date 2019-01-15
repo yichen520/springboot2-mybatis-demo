@@ -16,11 +16,12 @@
     <result column="district_id" property="districtId" jdbcType="INTEGER" />
     <result column="update_user" property="updateUser" jdbcType="CHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="login_telphone" property="loginTelphone" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, make_department_code, employee_code, employee_name, employee_idcard, suspicious_type, 
     suspicious_time, suspicious_detail, recorder, create_time, district_id, update_user, 
-    update_time,make_department_name
+    update_time,make_department_name,loginTelphone
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -37,12 +38,12 @@
       employee_name, employee_idcard, suspicious_type, 
       suspicious_time, suspicious_detail, recorder, 
       create_time, district_id, update_user, 
-      update_time,make_department_name)
+      update_time,make_department_name,login_telphone)
     values (#{id,jdbcType=CHAR}, #{makeDepartmentCode,jdbcType=VARCHAR}, #{employeeCode,jdbcType=VARCHAR}, 
       #{employeeName,jdbcType=VARCHAR}, #{employeeIdcard,jdbcType=CHAR}, #{suspiciousType,jdbcType=CHAR}, 
       #{suspiciousTime,jdbcType=TIMESTAMP}, #{suspiciousDetail,jdbcType=VARCHAR}, #{recorder,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{districtId,jdbcType=INTEGER}, #{updateUser,jdbcType=CHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP},#{makeDepartmentName,jdbcType=VARCHAR})
+      #{updateTime,jdbcType=TIMESTAMP},#{makeDepartmentName,jdbcType=VARCHAR},#{loginTelphone,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.Suspicious" >
     insert into suspicious
@@ -89,6 +90,9 @@
       <if test="makeDepartmentName != null" >
         make_department_name,
       </if>
+      <if test="loginTelphone != null" >
+        login_telphone,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -132,6 +136,9 @@
       </if>
       <if test="makeDepartmentName != null" >
         #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTelphone != null" >
+        #{loginTelphone,jdbcType=VARCHAR},
       </if>
 
     </trim>
@@ -177,6 +184,9 @@
       </if>
       <if test="makeDepartmentName != null" >
         make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTelphone != null" >
+        login_telphone = #{loginTelphone,jdbcType=VARCHAR}
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}
@@ -226,7 +236,16 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       district_id = #{districtId,jdbcType=INTEGER},
       update_user = #{updateUser,jdbcType=CHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      login_telphone = #{loginTelphone,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from suspicious
+    where
+    login_telphone = #{loginTelphone}
+  </select>
 </mapper>

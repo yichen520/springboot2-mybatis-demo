@@ -13,6 +13,7 @@ import com.dhht.dao.LogDao;
 import com.dhht.model.Resource;
 import com.dhht.model.SysLog;
 import com.dhht.model.User;
+import com.dhht.model.WeChatUser;
 import com.dhht.util.IPUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -67,6 +68,7 @@ public class WebLogAspect {
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     public void doAfterReturning(JoinPoint joinPoint, Object ret) throws Throwable {
+        User users = new User();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         SysLog sysLog = new SysLog();
@@ -80,7 +82,18 @@ public class WebLogAspect {
         HttpServletRequest request = attributes.getRequest();
         // 设置IP地址
         sysLog.setIp(IPUtil.getIpAddr(request));
-        User users = (User)request.getSession(true).getAttribute("user");
+        if(request.getRequestURI().contains("/recopients")){
+            WeChatUser user = (WeChatUser) request.getSession(true).getAttribute("user");
+            users.setId(user.getId());
+            if(user.getName()!=null){
+                users.setRealName(user.getName());
+            }
+            if(user.getTelphone()!=null){
+                users.setTelphone(user.getTelphone());
+            }
+        }else {
+             users = (User) request.getSession(true).getAttribute("user");
+        }
         if(users == null){
             sysLog.setLogUser("匿名");
         }else {

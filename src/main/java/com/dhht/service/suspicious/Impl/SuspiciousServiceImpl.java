@@ -4,10 +4,7 @@ import com.dhht.dao.EmployeeDao;
 import com.dhht.dao.IncidenceMapper;
 import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.dao.SuspiciousMapper;
-import com.dhht.model.Employee;
-import com.dhht.model.Incidence;
-import com.dhht.model.Suspicious;
-import com.dhht.model.User;
+import com.dhht.model.*;
 import com.dhht.model.pojo.IncidencePO;
 import com.dhht.model.pojo.SuspiciousPO;
 import com.dhht.service.make.MakeDepartmentIncidenceService;
@@ -40,11 +37,8 @@ public class SuspiciousServiceImpl implements SuspiciousService {
     @Override
     public int insertsuspicious(Suspicious suspicious, User user) {
         try {
-           // String code =makedepartmentMapper.selectDetailByName(suspicious.getMakeDepartmentName()).getDepartmentCode();
             suspicious.setId(UUIDUtil.generate());
-           // suspicious.setMakeDepartmentCode(code);
             if (suspicious.getEmployeeCode() != null){
-               // suspicious.setEmployeeCode(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeCode());
                 suspicious.setEmployeeIdcard(employeeDao.selectByCode(suspicious.getEmployeeCode()).getEmployeeId());
             }
             suspicious.setDistrictId(user.getDistrictId());
@@ -125,6 +119,46 @@ public class SuspiciousServiceImpl implements SuspiciousService {
             System.out.println(e.toString());
             return null;
         }
+    }
+
+    @Override
+    public int weChatInsertSuspicious(Suspicious suspicious, WeChatUser user, String makeDepartmentCode) {
+        try {
+            suspicious.setId(UUIDUtil.generate());
+            MakeDepartmentSimple makedepartment = makedepartmentMapper.selectByDepartmentCode(makeDepartmentCode);
+            if(makedepartment!=null){
+                suspicious.setDistrictId(makedepartment.getDepartmentAddress());
+            }
+
+            suspicious.setCreateTime(DateUtil.getCurrentTime());
+            suspicious.setUpdateTime(DateUtil.getCurrentTime());
+            suspicious.setRecorder(user.getName());
+            suspicious.setUpdateUser(user.getName());
+            suspicious.setLoginTelphone(user.getTelphone());
+            int result = suspiciousMapper.insertSelective(suspicious);
+            if(result == 1){
+                return ResultUtil.isSuccess;
+            }else {
+                return ResultUtil.isFail;
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+            return ResultUtil.isError;
+        }
+
+    }
+
+    @Override
+    public List<Suspicious> selectAll(String loginTelphone) {
+        List<Suspicious> suspicious = suspiciousMapper.selectAll(loginTelphone);
+        return suspicious;
+    }
+
+    @Override
+    public Suspicious selectById(String id) {
+        Suspicious suspicious = suspiciousMapper.selectByPrimaryKey(id);
+       return suspicious;
     }
 
 

@@ -8,7 +8,7 @@ import java.util.Date;
 public class WeChatUser {
     private String id;
 
-    private String nane;
+    private String name;
 
     private String gender;
 

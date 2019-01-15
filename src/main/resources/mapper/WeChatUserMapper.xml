@@ -3,7 +3,7 @@
 <mapper namespace="com.dhht.dao.WeChatUserMapper" >
   <resultMap id="BaseResultMap" type="com.dhht.model.WeChatUser" >
     <id column="id" property="id" jdbcType="CHAR" />
-    <result column="nane" property="nane" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="gender" property="gender" jdbcType="CHAR" />
     <result column="telphone" property="telphone" jdbcType="VARCHAR" />
     <result column="company" property="company" jdbcType="VARCHAR" />
@@ -12,7 +12,7 @@
     <result column="image" property="image" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, nane, gender, telphone, company, job, create_time, image
+    id, name, gender, telphone, company, job, create_time, image
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -25,10 +25,10 @@
     where id = #{id,jdbcType=CHAR}
   </delete>
   <insert id="insert" parameterType="com.dhht.model.WeChatUser" >
-    insert into wechat_user (id, nane, gender, telphone, 
+    insert into wechat_user (id, name, gender, telphone,
       company, job, create_time, 
       image)
-    values (#{id,jdbcType=CHAR}, #{nane,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{telphone,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{telphone,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{image,jdbcType=VARCHAR})
   </insert>
@@ -38,8 +38,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="nane != null" >
-        nane,
+      <if test="name != null" >
+        name,
       </if>
       <if test="gender != null" >
         gender,
@@ -64,8 +64,8 @@
       <if test="id != null" >
         #{id,jdbcType=CHAR},
       </if>
-      <if test="nane != null" >
-        #{nane,jdbcType=VARCHAR},
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="gender != null" >
         #{gender,jdbcType=CHAR},
@@ -90,8 +90,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.WeChatUser" >
     update wechat_user
     <set >
-      <if test="nane != null" >
-        nane = #{nane,jdbcType=VARCHAR},
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="gender != null" >
         gender = #{gender,jdbcType=CHAR},
@@ -116,7 +116,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.WeChatUser" >
     update wechat_user
-    set nane = #{nane,jdbcType=VARCHAR},
+    set name = #{name,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=CHAR},
       telphone = #{telphone,jdbcType=VARCHAR},
       company = #{company,jdbcType=VARCHAR},

@@ -38,10 +38,12 @@ public class LoginController extends WeChatBaseController {
     public Map<String,Object> login(@RequestBody Map map, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         Map<String,Object> resultMap = new HashMap<>();
         try {
+            init(httpServletRequest,httpServletResponse);
             String mobilePhone = (String) map.get("mobilePhone");
             String verificationCode = (String) map.get("verificationCode");
             resultMap = weChatUserService.isLogin(mobilePhone,verificationCode,httpServletRequest);
-            httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+
+
             return resultMap;
         }catch (Exception e){
             e.printStackTrace();
