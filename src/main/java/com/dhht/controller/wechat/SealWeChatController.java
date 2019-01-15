@@ -20,6 +20,10 @@ import com.dhht.util.UUIDUtil;
 import dhht.idcard.trusted.identify.GuangRayIdentifier;
 import dhht.idcard.trusted.identify.IdentifyResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
@@ -371,6 +375,29 @@ public class SealWeChatController extends WeChatBaseController {
         } catch (Exception e) {
             e.printStackTrace();
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
+        }
+    }
+
+    @Log("下载文件")
+    @RequestMapping(value="/download",produces="application/json;charset=UTF-8")
+    public ResponseEntity<byte[]> download(@RequestParam("id") String id) {
+        FileInfoVO fileInfoVO = fileService.readFile(id);
+
+        try {
+            //请求头
+            HttpHeaders headers = new HttpHeaders();
+
+            //解决文件名乱码
+//            String fileName = new String((fileInfoVO.getFileName()).getBytes("UTF-8"),"iso-8859-1");
+
+            //通知浏览器以attachment（下载方式）打开
+//            headers.setContentDispositionFormData("attachment", fileInfoVO.getFileName());
+
+            //application/octet-stream二进制流数据（最常见的文件下载）。
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            return new ResponseEntity<byte[]>(fileInfoVO.getFileData(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

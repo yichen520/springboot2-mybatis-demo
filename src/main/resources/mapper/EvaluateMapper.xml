@@ -1,139 +1,187 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dhht.dao.EvaluateMapper" >
-  <resultMap id="BaseResultMap" type="com.dhht.model.Evaluate" >
-    <id column="id" property="id" jdbcType="CHAR" />
-    <result column="user_id" property="userId" jdbcType="CHAR" />
-    <result column="user_name" property="userName" jdbcType="CHAR" />
-    <result column="evaluate_content" property="evaluateContent" jdbcType="VARCHAR" />
-    <result column="evaluate_time" property="evaluateTime" jdbcType="TIMESTAMP" />
-    <result column="make_department_id" property="flag" jdbcType="CHAR" />
-    <result column="make_department_name" property="makeDepartmentName" jdbcType="VARCHAR" />
-    <result column="score" property="score" jdbcType="INTEGER" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhht.dao.EvaluateMapper">
+  <resultMap id="BaseResultMap" type="com.dhht.model.Evaluate">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="user_id" jdbcType="CHAR" property="userId" />
+    <result column="user_name" jdbcType="CHAR" property="userName" />
+    <result column="evaluate_content" jdbcType="VARCHAR" property="evaluateContent" />
+    <result column="evaluate_time" jdbcType="TIMESTAMP" property="evaluateTime" />
+    <result column="make_department_id" jdbcType="CHAR" property="makeDepartmentId" />
+    <result column="make_department_name" jdbcType="VARCHAR" property="makeDepartmentName" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="quality_score" jdbcType="INTEGER" property="qualityScore" />
+    <result column="price_score" jdbcType="INTEGER" property="priceScore" />
+    <result column="speed_score" jdbcType="INTEGER" property="speedScore" />
+    <result column="atttitude_score" jdbcType="INTEGER" property="atttitudeScore" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, user_id, user_name, evaluate_content, evaluate_time, make_department_id, make_department_name,
-    score
+  <sql id="Base_Column_List">
+    id, user_id, user_name, evaluate_content, evaluate_time, make_department_id, make_department_name, 
+    score, quality_score, price_score, speed_score, atttitude_score
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from make_department_evaluate
     where id = #{id,jdbcType=CHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from make_department_evaluate
     where id = #{id,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.dhht.model.Evaluate" >
+  <insert id="insert" parameterType="com.dhht.model.Evaluate">
     insert into make_department_evaluate (id, user_id, user_name, 
-      evaluate_content, evaluate_time, make_department_id,
-      make_department_name, score)
+      evaluate_content, evaluate_time, make_department_id, 
+      make_department_name, score, quality_score, 
+      price_score, speed_score, atttitude_score
+      )
     values (#{id,jdbcType=CHAR}, #{userId,jdbcType=CHAR}, #{userName,jdbcType=CHAR}, 
-      #{evaluateContent,jdbcType=VARCHAR}, #{evaluateTime,jdbcType=TIMESTAMP}, #{flag,jdbcType=CHAR},
-      #{makeDepartmentName,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER})
+      #{evaluateContent,jdbcType=VARCHAR}, #{evaluateTime,jdbcType=TIMESTAMP}, #{makeDepartmentId,jdbcType=CHAR}, 
+      #{makeDepartmentName,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, #{qualityScore,jdbcType=INTEGER}, 
+      #{priceScore,jdbcType=INTEGER}, #{speedScore,jdbcType=INTEGER}, #{atttitudeScore,jdbcType=INTEGER}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.dhht.model.Evaluate" >
+  <insert id="insertSelective" parameterType="com.dhht.model.Evaluate">
     insert into make_department_evaluate
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="userId != null" >
+      <if test="userId != null">
         user_id,
       </if>
-      <if test="userName != null" >
+      <if test="userName != null">
         user_name,
       </if>
-      <if test="evaluateContent != null" >
+      <if test="evaluateContent != null">
         evaluate_content,
       </if>
-      <if test="evaluateTime != null" >
+      <if test="evaluateTime != null">
         evaluate_time,
       </if>
-      <if test="flag != null" >
+      <if test="makeDepartmentId != null">
         make_department_id,
       </if>
-      <if test="makeDepartmentName != null" >
+      <if test="makeDepartmentName != null">
         make_department_name,
       </if>
-      <if test="score != null" >
+      <if test="score != null">
         score,
       </if>
+      <if test="qualityScore != null">
+        quality_score,
+      </if>
+      <if test="priceScore != null">
+        price_score,
+      </if>
+      <if test="speedScore != null">
+        speed_score,
+      </if>
+      <if test="atttitudeScore != null">
+        atttitude_score,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=CHAR},
       </if>
-      <if test="userId != null" >
+      <if test="userId != null">
         #{userId,jdbcType=CHAR},
       </if>
-      <if test="userName != null" >
+      <if test="userName != null">
         #{userName,jdbcType=CHAR},
       </if>
-      <if test="evaluateContent != null" >
+      <if test="evaluateContent != null">
         #{evaluateContent,jdbcType=VARCHAR},
       </if>
-      <if test="evaluateTime != null" >
+      <if test="evaluateTime != null">
         #{evaluateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="flag != null" >
-        #{flag,jdbcType=CHAR},
+      <if test="makeDepartmentId != null">
+        #{makeDepartmentId,jdbcType=CHAR},
       </if>
-      <if test="makeDepartmentName != null" >
+      <if test="makeDepartmentName != null">
         #{makeDepartmentName,jdbcType=VARCHAR},
       </if>
-      <if test="score != null" >
+      <if test="score != null">
         #{score,jdbcType=INTEGER},
+      </if>
+      <if test="qualityScore != null">
+        #{qualityScore,jdbcType=INTEGER},
+      </if>
+      <if test="priceScore != null">
+        #{priceScore,jdbcType=INTEGER},
+      </if>
+      <if test="speedScore != null">
+        #{speedScore,jdbcType=INTEGER},
+      </if>
+      <if test="atttitudeScore != null">
+        #{atttitudeScore,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Evaluate" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Evaluate">
     update make_department_evaluate
-    <set >
-      <if test="userId != null" >
+    <set>
+      <if test="userId != null">
         user_id = #{userId,jdbcType=CHAR},
       </if>
-      <if test="userName != null" >
+      <if test="userName != null">
         user_name = #{userName,jdbcType=CHAR},
       </if>
-      <if test="evaluateContent != null" >
+      <if test="evaluateContent != null">
         evaluate_content = #{evaluateContent,jdbcType=VARCHAR},
       </if>
-      <if test="evaluateTime != null" >
+      <if test="evaluateTime != null">
         evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="flag != null" >
-        make_department_id = #{flag,jdbcType=CHAR},
+      <if test="makeDepartmentId != null">
+        make_department_id = #{makeDepartmentId,jdbcType=CHAR},
       </if>
-      <if test="makeDepartmentName != null" >
+      <if test="makeDepartmentName != null">
         make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
       </if>
-      <if test="score != null" >
+      <if test="score != null">
         score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="qualityScore != null">
+        quality_score = #{qualityScore,jdbcType=INTEGER},
+      </if>
+      <if test="priceScore != null">
+        price_score = #{priceScore,jdbcType=INTEGER},
+      </if>
+      <if test="speedScore != null">
+        speed_score = #{speedScore,jdbcType=INTEGER},
+      </if>
+      <if test="atttitudeScore != null">
+        atttitude_score = #{atttitudeScore,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Evaluate" >
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.Evaluate">
     update make_department_evaluate
     set user_id = #{userId,jdbcType=CHAR},
       user_name = #{userName,jdbcType=CHAR},
       evaluate_content = #{evaluateContent,jdbcType=VARCHAR},
       evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
-      make_department_id = #{flag,jdbcType=CHAR},
+      make_department_id = #{makeDepartmentId,jdbcType=CHAR},
       make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
-      score = #{score,jdbcType=INTEGER}
+      score = #{score,jdbcType=INTEGER},
+      quality_score = #{qualityScore,jdbcType=INTEGER},
+      price_score = #{priceScore,jdbcType=INTEGER},
+      speed_score = #{speedScore,jdbcType=INTEGER},
+      atttitude_score = #{atttitudeScore,jdbcType=INTEGER}
     where id = #{id,jdbcType=CHAR}
   </update>
 
-  <select id="selectEvaluateList" resultMap="BaseResultMap" parameterType="com.dhht.model.Evaluate" >
+  <select id="selectEvaluateList" parameterType="com.dhht.model.Evaluate" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from make_department_evaluate
     where 1 = 1
-    <if test="flag != null" >
-    and  make_department_id = #{flag,jdbcType=CHAR}
+    <if test="flag != null">
+      and  make_department_id = #{flag,jdbcType=CHAR}
     </if>
   </select>
 
