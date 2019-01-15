@@ -40,11 +40,8 @@ public class SuspiciousServiceImpl implements SuspiciousService {
     @Override
     public int insertsuspicious(Suspicious suspicious, User user) {
         try {
-           // String code =makedepartmentMapper.selectDetailByName(suspicious.getMakeDepartmentName()).getDepartmentCode();
             suspicious.setId(UUIDUtil.generate());
-           // suspicious.setMakeDepartmentCode(code);
             if (suspicious.getEmployeeCode() != null){
-               // suspicious.setEmployeeCode(employeeDao.selectByName(suspicious.getEmployeeName()).getEmployeeCode());
                 suspicious.setEmployeeIdcard(employeeDao.selectByCode(suspicious.getEmployeeCode()).getEmployeeId());
             }
             suspicious.setDistrictId(user.getDistrictId());

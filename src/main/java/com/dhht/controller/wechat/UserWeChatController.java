@@ -57,7 +57,7 @@ public class UserWeChatController extends  WeChatBaseController{
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("修改失败");
             }else {
-                jsonObjectBO.setCode(2);
+                jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("修改成功");
             }
             return jsonObjectBO;

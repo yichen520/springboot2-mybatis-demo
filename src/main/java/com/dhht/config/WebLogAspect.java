@@ -85,8 +85,8 @@ public class WebLogAspect {
         if(request.getRequestURI().contains("/recopients")){
             WeChatUser user = (WeChatUser) request.getSession(true).getAttribute("user");
             users.setId(user.getId());
-            if(user.getNane()!=null){
-                users.setRealName(user.getNane());
+            if(user.getName()!=null){
+                users.setRealName(user.getName());
             }
             if(user.getTelphone()!=null){
                 users.setTelphone(user.getTelphone());
