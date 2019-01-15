@@ -129,13 +129,13 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
     /**
      * 用户查询
-     * @param id
+     * @param telphone
      * @return
      */
     @Override
-    public Map<String,Object>  selectWeChatUser(String id) {
+    public Map<String,Object>  selectWeChatUser(String telphone) {
         Map<String,Object> map = new HashMap<>();
-        WeChatUser weChatUser = weChatUserMapper.selectByPrimaryKey(id);
+        WeChatUser weChatUser = weChatUserMapper.selectByTelPhone(telphone);
         if(weChatUser==null){
             map.put("status", "error");
             map.put("currentAuthority", "guest");

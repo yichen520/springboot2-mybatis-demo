@@ -29,6 +29,7 @@ public class WeChatBaseController {
     @ModelAttribute
     public  void init(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
         if(httpServletRequest.getCookies()!=null){
             return;
         }
@@ -40,6 +41,7 @@ public class WeChatBaseController {
             cookie.setPath(httpServletRequest.getContextPath());
             //添加cookie
             httpServletResponse.addCookie(cookie);
+            System.out.println(httpServletResponse.getHeader("Set-Cookie"));
         }
 
 

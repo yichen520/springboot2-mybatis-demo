@@ -48,4 +48,6 @@ public class SealAgent {
     @EntityComment(value = "录入方式 00-本地读卡录入   01-可信身份录入")
     private String entryType;
 
+    @EntityComment(value = "登录人的手机号码")
+    private String loginTelPhone;
 }

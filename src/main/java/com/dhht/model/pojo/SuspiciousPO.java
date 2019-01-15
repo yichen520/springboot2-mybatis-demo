@@ -1,5 +1,6 @@
 package com.dhht.model.pojo;
 
+import com.dhht.model.Suspicious;
 import lombok.Data;
 
 import java.util.Date;
@@ -9,6 +10,8 @@ public class SuspiciousPO {
     private String makeDepartmentCode;
 
     private String makeDepartmentName;
+
+    private Suspicious suspicious;
 
 
     private String suspiciousType;
