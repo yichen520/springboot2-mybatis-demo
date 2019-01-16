@@ -507,6 +507,11 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return makedepartment.getDepartmentCode();
     }
 
+    @Override
+    public Makedepartment selectByAllName(String name){
+        Makedepartment makedepartment = makedepartmentMapper.selectByAllName(name);
+        return makedepartment;
+    }
 
     /**
      * 数据同步
@@ -558,7 +563,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             sortByDistance(makedepartmentSimplePOS,false,userLongitude,userLatitude);
         } else {
             //综合排序
-            makedepartmentSimplePOS = makedepartmentMapper.selectMakedePartment(makedepartmentSimplePO);
+            makedepartmentSimplePOS = makedepartmentMapper.selectMakedePartmentByEvaluate(makedepartmentSimplePO);
             sortByDistance(makedepartmentSimplePOS,true,userLongitude,userLatitude);
         }
         return makedepartmentSimplePOS;
@@ -633,7 +638,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             // 获取地址解析结果
             while ((line = in.readLine()) != null) {
                 result += line + "\n";
-                //System.out.println(result);
+                System.out.println(result);
             }
             in.close();
         } catch (Exception e) {
