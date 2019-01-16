@@ -21,6 +21,13 @@
     from seal_pay_order
     where id = #{id,jdbcType=CHAR}
   </select>
+  <select id="selectBySealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from seal_pay_order
+    where seal_id = #{sealId,jdbcType=CHAR} limit 1
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from seal_pay_order
     where id = #{id,jdbcType=CHAR}

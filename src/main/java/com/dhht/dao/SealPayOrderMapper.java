@@ -16,4 +16,6 @@ public interface SealPayOrderMapper {
     int updateByPrimaryKeySelective(SealPayOrder record);
 
     int updateByPrimaryKey(SealPayOrder record);
+
+    SealPayOrder selectBySealId(String sealId);
 }

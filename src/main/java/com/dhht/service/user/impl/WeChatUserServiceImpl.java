@@ -47,7 +47,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
 
     @Override
-    public int sendMessage(String mobilePhone) {
+    public int sendMessage(String mobilePhone,int param) {
         Map<String,Object> map = new HashMap<>();
         String code = StringUtil.createRandomVcode();
         ArrayList<String> params = new ArrayList<String>();
@@ -61,7 +61,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             stringRedisTemplate.opsForValue().append(mobilePhone,code);
         }
         expire(mobilePhone);
-        boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,weChatVerificationCode,params);
+        boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,param,params);
         if(result){
             SMSCode smscode= smsCodeDao.getSms(mobilePhone);
             if(smscode==null){

@@ -7,7 +7,7 @@
     <result column="user_name" jdbcType="CHAR" property="userName" />
     <result column="evaluate_content" jdbcType="VARCHAR" property="evaluateContent" />
     <result column="evaluate_time" jdbcType="TIMESTAMP" property="evaluateTime" />
-    <result column="make_department_id" jdbcType="CHAR" property="makeDepartmentId" />
+    <result column="make_department_id" jdbcType="CHAR" property="flag" />
     <result column="make_department_name" jdbcType="VARCHAR" property="makeDepartmentName" />
     <result column="score" jdbcType="INTEGER" property="score" />
     <result column="quality_score" jdbcType="INTEGER" property="qualityScore" />
@@ -36,7 +36,7 @@
       price_score, speed_score, atttitude_score
       )
     values (#{id,jdbcType=CHAR}, #{userId,jdbcType=CHAR}, #{userName,jdbcType=CHAR}, 
-      #{evaluateContent,jdbcType=VARCHAR}, #{evaluateTime,jdbcType=TIMESTAMP}, #{makeDepartmentId,jdbcType=CHAR}, 
+      #{evaluateContent,jdbcType=VARCHAR}, #{evaluateTime,jdbcType=TIMESTAMP}, #{flag,jdbcType=CHAR},
       #{makeDepartmentName,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, #{qualityScore,jdbcType=INTEGER}, 
       #{priceScore,jdbcType=INTEGER}, #{speedScore,jdbcType=INTEGER}, #{atttitudeScore,jdbcType=INTEGER}
       )
@@ -59,7 +59,7 @@
       <if test="evaluateTime != null">
         evaluate_time,
       </if>
-      <if test="makeDepartmentId != null">
+      <if test="flag != null">
         make_department_id,
       </if>
       <if test="makeDepartmentName != null">
@@ -97,8 +97,8 @@
       <if test="evaluateTime != null">
         #{evaluateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="makeDepartmentId != null">
-        #{makeDepartmentId,jdbcType=CHAR},
+      <if test="flag != null">
+        #{flag,jdbcType=CHAR},
       </if>
       <if test="makeDepartmentName != null">
         #{makeDepartmentName,jdbcType=VARCHAR},
@@ -135,8 +135,8 @@
       <if test="evaluateTime != null">
         evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="makeDepartmentId != null">
-        make_department_id = #{makeDepartmentId,jdbcType=CHAR},
+      <if test="flag != null">
+        make_department_id = #{flag,jdbcType=CHAR},
       </if>
       <if test="makeDepartmentName != null">
         make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
@@ -165,7 +165,7 @@
       user_name = #{userName,jdbcType=CHAR},
       evaluate_content = #{evaluateContent,jdbcType=VARCHAR},
       evaluate_time = #{evaluateTime,jdbcType=TIMESTAMP},
-      make_department_id = #{makeDepartmentId,jdbcType=CHAR},
+      make_department_id = #{flag,jdbcType=CHAR},
       make_department_name = #{makeDepartmentName,jdbcType=VARCHAR},
       score = #{score,jdbcType=INTEGER},
       quality_score = #{qualityScore,jdbcType=INTEGER},

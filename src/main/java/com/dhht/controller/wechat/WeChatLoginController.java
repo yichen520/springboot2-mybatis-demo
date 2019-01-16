@@ -63,7 +63,7 @@ public class WeChatLoginController extends WeChatBaseController {
     public JsonObjectBO sendVerificationCode(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
             String mobilePhone = (String)map.get("mobilePhone");
-            int result = weChatUserService.sendMessage(mobilePhone);
+            int result = weChatUserService.sendMessage(mobilePhone,1);
             return ResultUtil.getResult(result);
         }catch (Exception e){
             e.printStackTrace();
