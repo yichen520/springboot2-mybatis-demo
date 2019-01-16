@@ -44,6 +44,7 @@ public class WebPortalsController extends BaseController {
     private UserLoginService userLoginService;
 
 
+
     @Autowired
     private PunishService punishService;
     @Value("${sms.template.makedepartmentpunish}")

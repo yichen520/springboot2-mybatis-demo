@@ -140,6 +140,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
     @RequestMapping("/evaluate/info")
     public JsonObjectBO info( @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
         try {
+            init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("evaluate",evaluateService.selectEvaluateList(evaluate));
             return JsonObjectBO.success("查询成功",jsonObject);
@@ -153,6 +154,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
     @RequestMapping("/evaluate/insert")
     public JsonObjectBO insert( @RequestBody Evaluate evaluate,HttpServletResponse httpServletResponse){
         try {
+            init(httpServletRequest,httpServletResponse);
             WeChatUser weChatUser = currentUser();
             return  ResultUtil.getResult(evaluateService.insert(evaluate,weChatUser));
         }catch (Exception e){

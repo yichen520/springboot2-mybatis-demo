@@ -6,6 +6,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.service.user.WeChatUserService;
 import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +22,16 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/weChat")
-public class LoginController extends WeChatBaseController {
+public class WeChatLoginController extends WeChatBaseController {
     @Autowired
     private WeChatUserService weChatUserService;
 
     @Autowired
     private HttpServletRequest httpServletRequest;
+
+
+    @Value("${sms.template.weChatVerificationCode}")
+    private int weChatVerificationCode ;
 
     /**
      * 微信用户登入
@@ -61,7 +66,7 @@ public class LoginController extends WeChatBaseController {
     public JsonObjectBO sendVerificationCode(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
             String mobilePhone = (String)map.get("mobilePhone");
-            int result = weChatUserService.sendMessage(mobilePhone);
+            int result = weChatUserService.sendMessage(mobilePhone,weChatVerificationCode);
             return ResultUtil.getResult(result);
         }catch (Exception e){
             e.printStackTrace();

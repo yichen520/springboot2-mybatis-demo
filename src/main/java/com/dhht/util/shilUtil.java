@@ -18,7 +18,7 @@ public class shilUtil {
         //key1 0~65535
 
         //·µ»ØÖµ -2^31 ~ +2^31
-        public int shiled(int rnd, int key1, int key2, int key3, int key4)
+        public static int shiled(int rnd, int key1, int key2, int key3, int key4)
         {
             System.out.println(String.format("%1$08x", rnd));
 
@@ -91,11 +91,16 @@ public class shilUtil {
             return ReTurnData ;
         }
 
-        public static void main(String[] args){
+//        public static void main(String[] args){
+//            Integer rand= (int)( 0x7FFFFFFF *(Math.random() * 2 - 1));
+//            //long sss=new shil().shiled(rand, 50864, 48764, 55064, 36164);
+//            long sss=new shilUtil().shiled(rand, 12345, 12345, 12345, 12345);
+//            System.out.print(sss);
+//        }
+
+        public static int rand(){
             Integer rand= (int)( 0x7FFFFFFF *(Math.random() * 2 - 1));
-            //long sss=new shil().shiled(rand, 50864, 48764, 55064, 36164);
-            long sss=new shilUtil().shiled(rand, 12345, 12345, 12345, 12345);
-            System.out.print(sss);
+            return rand;
         }
     }
 

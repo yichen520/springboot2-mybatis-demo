@@ -11,7 +11,7 @@ public interface WeChatUserService {
      * @param mobilePhone
      * @return
      */
-    int sendMessage(String mobilePhone);
+    int sendMessage(String mobilePhone,int param);
 
     /**
      * 微信用户登入

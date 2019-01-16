@@ -126,8 +126,11 @@ public class SealServiceImpl implements SealService {
     @Autowired
     private FileService fileService;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
+    @Value("${sms.template.express}")
+    private int express;
+
+    @Value("${sms.template.getseal}")
+    private int getseal;
 
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
@@ -542,6 +545,7 @@ public class SealServiceImpl implements SealService {
         UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
         String useDepartmentTel = useDepartment.getLegalTelphone();
         String useDepartmentName = useDepartment.getLegalName();
+        String name = useDepartment.getName();
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
@@ -569,10 +573,7 @@ public class SealServiceImpl implements SealService {
         sealMaterialLists.add(sealMaterial1);
         int insertSealMaterial = sealDao.insertSealMateriallist(sealMaterialLists);
 
-//        ArrayList<String> params = new ArrayList<String>();
-//        params.add(useDepartmentName);
-//        params.add( createRandomVcode());
-//        Boolean b = smsSendService.sendSingleMsgByTemplate(telphone,userCode,params);
+
 
 
         seal1.setIsMake(true);
@@ -583,10 +584,21 @@ public class SealServiceImpl implements SealService {
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;
         } else {
-//            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-//            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-//            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
-//            SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.UPLOAD);
+            if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == true) {
+                //查找经办人
+                SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
+                ArrayList<String> params = new ArrayList<String>();
+                params.add(name);
+                params.add(ResultUtil.sealType(seal1.getSealTypeCode()));
+                Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), express, params);
+
+            } else {
+                SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
+                ArrayList<String> params = new ArrayList<String>();
+                params.add(name);
+                params.add(ResultUtil.sealType(seal1.getSealTypeCode()));
+                Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), getseal, params);
+            }
             return ResultUtil.isSuccess;
         }
 
@@ -1856,6 +1868,35 @@ public class SealServiceImpl implements SealService {
     public List<Seal> sealListForWeChat(String telphone) {
         List<Seal> sealList = sealDao.sealList(telphone);
         return sealList;
+    }
+
+    /**
+     * 小程序端的公章核验
+     * @param sealCode
+     * @param useDepartmentCode
+     * @param sealTypeCode
+     * @return
+     */
+    @Override
+    public Map<String,Object> weChatcheckSealCode(String sealCode, String useDepartmentCode, String sealTypeCode) {
+        Map<String,Object> map = new HashMap<>();
+        List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2(useDepartmentCode,sealTypeCode);
+        if(seals.size()==0){
+            map.put("status", "error");
+            map.put("message","数据不存在");
+            return map;
+        }
+        for(Seal seal:seals){
+            if(seal.getSealCode().equals(sealCode)){
+                map.put("status", "ok");
+                map.put("message","查询成功");
+                map.put("seal",seal);
+                return map;
+            }
+        }
+        map.put("status", "error");
+        map.put("message","数据不存在");
+        return map;
     }
 
     /**

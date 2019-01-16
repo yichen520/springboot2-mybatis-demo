@@ -53,7 +53,8 @@ public class SmsController extends BaseController{
         String  telphone = (String)map.get("telphone");
 
         try{
-            if (userPasswordService.getCheckCode(telphone)== ResultUtil.isSuccess){
+
+            if (userPasswordService.getCheckAgentCode(telphone)== ResultUtil.isSuccess){
                 return JsonObjectBO.success("获取验证码成功",null);
             }else{
                 return  JsonObjectBO.error("获取验证码失败");

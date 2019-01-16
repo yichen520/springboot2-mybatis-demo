@@ -8,6 +8,7 @@ import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.shilUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 import static com.dhht.util.MenuUtil.genMenu;
 
 @RestController
-public class WeChatLoginController {
+public class LoginController {
 
     @Autowired
     private UserLoginService userLoginService;
@@ -81,6 +82,23 @@ public class WeChatLoginController {
             map.put("message","登录失败！");
             return map;
         }
+    }
+
+    @Log("生成随机数")
+    @RequestMapping(value ="rand")
+    public  Map<String,Object> rand(){
+        Map<String,Object> map=new HashMap<>();
+        try {
+            int rand = shilUtil.rand();
+            map.put("status", "ok");
+            map.put("message","输出成功");
+            map.put("data",rand);
+
+        } catch (Exception e) {
+            map.put("status", "error");
+            map.put("message","输出失败！");
+        }
+        return map;
     }
 
 }

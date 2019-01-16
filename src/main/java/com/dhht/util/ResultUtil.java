@@ -41,6 +41,24 @@ public class ResultUtil {
     public static final int isNoEms=28;
     public static final int isNoSession=54;
 
+    public static String sealType(String sealType){
+        switch (sealType){
+            case "01":
+                return "单位专用印章";
+            case "02":
+                return "财务专用章";
+            case "03":
+                return "税务专用章";
+            case "04":
+                return "合同专用章";
+            case "05":
+                return "法定代表人名章";
+            case "99":
+                return "其他类型印章";
+            default:
+                return "其他类型印章";
+        }
+    }
 
     public static JsonObjectBO getResult(int type){
         switch (type){
