@@ -22,6 +22,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -49,6 +50,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
     private FileService fileService;
     @Autowired
     private WeChatUserService weChatUserService;
+    @Value("${sms.template.business}")
+    private int business ;
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -83,7 +86,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
-            weChatUserService.sendMessage(useDepartment.getManagerPhone());
+            weChatUserService.sendMessage(useDepartment.getManagerPhone(),business);
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.SAVE);
             return JsonObjectBO.success("添加成功",null);
         }

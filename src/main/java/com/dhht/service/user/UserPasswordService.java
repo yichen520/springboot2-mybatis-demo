@@ -21,4 +21,5 @@ public interface UserPasswordService {
 
     int changePwd(String username,String oldPassword,String newPassword);
 
+    int getCheckAgentCode(String telphone);
 }

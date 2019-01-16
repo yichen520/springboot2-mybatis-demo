@@ -53,6 +53,9 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     @Value("${sms.template.resetPasswordCode}")
     private int checkCode1 ;
 
+    @Value("${sms.template.agentCheck}")
+    private int agentCheck ;
+
     /**
      * 6位简单密码
      *
@@ -134,10 +137,8 @@ public class UserPasswordServiceImpl implements UserPasswordService{
     }
 
 
-    /**
-     * 密码重置中
-     * 获取验证码
-     * @param username
+    /*
+     * 经办人获取验证码
      * @return
      */
     @Override
@@ -235,5 +236,19 @@ public class UserPasswordServiceImpl implements UserPasswordService{
 
     }
 
-
+    @Override
+    public int getCheckAgentCode(String telphone) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        String code = createRandomVcode();
+        int a = sendMessage(telphone, code, agentCheck);
+        if (a < 0) {
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("验证码获取失败");
+            return ResultUtil.isFail;
+        } else {
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("验证码获取成功");
+            return ResultUtil.isSuccess;
+        }
+    }
 }
