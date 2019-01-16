@@ -87,7 +87,7 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     @Override
     public User validate(User user){
-        String userAccount = StringUtil.stringNullHandle(user.getUserName());
+            String userAccount = StringUtil.stringNullHandle(user.getUserName());
         String password = StringUtil.stringNullHandle(user.getPassword());
         User loginUser = userDao.findByUserName(userAccount);
         boolean result = SM3Util.verify(password,loginUser.getPassword());
