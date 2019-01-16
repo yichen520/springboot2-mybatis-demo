@@ -31,6 +31,7 @@ import sun.misc.BASE64Encoder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -358,23 +359,17 @@ public class SealWeChatController extends WeChatBaseController {
      */
     @Log("印章核验")
     @RequestMapping("/weChatCheckSealCode")
-    public JsonObjectBO weChatCheckSealCode(@RequestBody Map map) {
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+    public Map<String,Object> weChatCheckSealCode(@RequestBody Map map) {
+        Map<String,Object> resultMap = new HashMap<>();
         try {
             String sealCode = (String)map.get("sealCode");
             String useDepartmentCode = (String)map.get("useDepartmentCode");
-            int result = sealService.checkSealCode(sealCode,useDepartmentCode,"01");
-            if(result==ResultUtil.isSuccess){
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage("查询成功");
-            }else{
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("无该枚印章");
-            }
-            return jsonObjectBO;
+            resultMap  = sealService.weChatcheckSealCode(sealCode,useDepartmentCode,"01");
+            return resultMap;
         } catch (Exception e) {
-            e.printStackTrace();
-            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
+            resultMap.put("status", "error");
+            resultMap.put("message","登入异常");
+            return resultMap;
         }
     }
 

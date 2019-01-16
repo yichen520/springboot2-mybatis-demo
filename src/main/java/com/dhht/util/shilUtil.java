@@ -91,11 +91,16 @@ public class shilUtil {
             return ReTurnData ;
         }
 
-        public static void main(String[] args){
+//        public static void main(String[] args){
+//            Integer rand= (int)( 0x7FFFFFFF *(Math.random() * 2 - 1));
+//            //long sss=new shil().shiled(rand, 50864, 48764, 55064, 36164);
+//            long sss=new shilUtil().shiled(rand, 12345, 12345, 12345, 12345);
+//            System.out.print(sss);
+//        }
+
+        public int rand(){
             Integer rand= (int)( 0x7FFFFFFF *(Math.random() * 2 - 1));
-            //long sss=new shil().shiled(rand, 50864, 48764, 55064, 36164);
-            long sss=new shilUtil().shiled(rand, 12345, 12345, 12345, 12345);
-            System.out.print(sss);
+            return rand;
         }
     }
 

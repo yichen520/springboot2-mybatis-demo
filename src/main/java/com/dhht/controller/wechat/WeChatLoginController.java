@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/weChat")
-public class LoginController extends WeChatBaseController {
+public class WeChatLoginController extends WeChatBaseController {
     @Autowired
     private WeChatUserService weChatUserService;
 

@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.dhht.util.MenuUtil.genMenu;
 
 @RestController
-public class WeChatLoginController {
+public class LoginController {
 
     @Autowired
     private UserLoginService userLoginService;
@@ -82,5 +82,20 @@ public class WeChatLoginController {
             return map;
         }
     }
+
+//    @Log("生成随机数")
+//    @RequestMapping(value ="rand")
+//    public Map<String,Object> rand(){
+//        try {
+//            request.getSession().invalidate();
+//            map.put("status", "ok");
+//            map.put("message","退出登录成功");
+//            return map;
+//        } catch (Exception e) {
+//            map.put("status", "error");
+//            map.put("message","登录失败！");
+//            return map;
+//        }
+//    }
 
 }

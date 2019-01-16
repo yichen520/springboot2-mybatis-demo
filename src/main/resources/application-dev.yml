@@ -144,6 +144,7 @@ sms:
         newUserName: 150917
         makedepartmentpunish: 160963
         employeepunish: 160972
+        weChatVerificationCode: 261419
 
 
 #省级区域设定
