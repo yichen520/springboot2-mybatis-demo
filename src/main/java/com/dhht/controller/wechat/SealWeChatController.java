@@ -309,22 +309,6 @@ public class SealWeChatController extends WeChatBaseController {
         }
     }
 
-//    @Log("获取验证码")
-//    @RequestMapping(value = "/getCheckCode")
-//    public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map){
-//        String  telphone = (String)map.get("telphone");
-//        try{
-//            if (userPasswordService.getCheckCode(telphone)== ResultUtil.isSuccess){
-//                return JsonObjectBO.success("获取验证码成功",null);
-//            }else{
-//                return  JsonObjectBO.error("获取验证码失败");
-//            }
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            return JsonObjectBO.exception("获取验证码失败");
-//        }
-//    }
 
     @Log("验证码手机号")
     @RequestMapping(value ="checkPhone", method = RequestMethod.POST)

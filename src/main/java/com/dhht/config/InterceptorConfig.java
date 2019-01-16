@@ -77,6 +77,7 @@ public class InterceptorConfig implements HandlerInterceptor {
                 ||request.getRequestURI().equals("/seal/record/newRecord")
                 ||request.getRequestURI().equals("/seal/record/underTake")
                 ||request.getRequestURI().equals("/seal/record/sealInfo")
+                ||request.getRequestURI().equals("/rand")
 //                ||request.getRequestURI().equals("/weChat/sealRecord")
 // request.getRequestURI().contains("/weChat")
 

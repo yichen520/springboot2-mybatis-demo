@@ -8,6 +8,7 @@ import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.ResultUtil;
 import com.dhht.util.shilUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -85,20 +86,27 @@ public class LoginController {
     }
 
     @Log("生成随机数")
-    @RequestMapping(value ="rand")
-    public  Map<String,Object> rand(){
-        Map<String,Object> map=new HashMap<>();
+    @RequestMapping(value ="/rand", method = RequestMethod.GET)
+    public  JsonObjectBO rand(@RequestParam String username){
+            JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-            int rand = shilUtil.rand();
-            map.put("status", "ok");
-            map.put("message","输出成功");
-            map.put("data",rand);
+            int result = userLoginService.caRand(username);
+            if(result==ResultUtil.isFail){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("获取失败");
+            }else{
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ca",result);
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("获取成功");
+                jsonObjectBO.setData(jsonObject);
+            }
 
         } catch (Exception e) {
-            map.put("status", "error");
-            map.put("message","输出失败！");
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("获取失败");
         }
-        return map;
+        return jsonObjectBO;
     }
 
 }

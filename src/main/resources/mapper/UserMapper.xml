@@ -92,7 +92,8 @@
         `login_error_times`,
         `is_changed_pwd`,
         `is_deleted`,
-        `district_id`
+        `district_id`,
+        `caarand`
         )
         values (
         #{id},
@@ -106,7 +107,8 @@
         0,
         0,
         0,
-        #{districtId}
+        #{districtId},
+        #{carand}
         )
     </insert>
 
@@ -119,6 +121,7 @@
             <if test="password != null and password!=''">`password` = #{password},</if>
             <if test="roleId != null and roleId!=''"> `role_id` = #{roleId}, </if>
             <if test="districtId != null and districtId!='' "> `district_id` = #{districtId}, </if>
+            <if test="carand != null and carand!='' "> `carand` = #{carand}, </if>
         </set>
         WHERE id = #{id}
     </update>
