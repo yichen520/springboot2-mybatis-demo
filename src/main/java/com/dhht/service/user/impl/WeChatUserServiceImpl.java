@@ -42,8 +42,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
     @Value("${sms.template.insertUser}")
     private int userCode ;
-    @Value("${sms.template.weChatVerificationCode}")
-    private int weChatVerificationCode ;
+
 
 
     @Override

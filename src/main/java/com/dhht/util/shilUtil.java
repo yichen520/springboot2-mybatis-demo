@@ -18,7 +18,7 @@ public class shilUtil {
         //key1 0~65535
 
         //·µ»ØÖµ -2^31 ~ +2^31
-        public int shiled(int rnd, int key1, int key2, int key3, int key4)
+        public static int shiled(int rnd, int key1, int key2, int key3, int key4)
         {
             System.out.println(String.format("%1$08x", rnd));
 
@@ -98,7 +98,7 @@ public class shilUtil {
 //            System.out.print(sss);
 //        }
 
-        public int rand(){
+        public static int rand(){
             Integer rand= (int)( 0x7FFFFFFF *(Math.random() * 2 - 1));
             return rand;
         }

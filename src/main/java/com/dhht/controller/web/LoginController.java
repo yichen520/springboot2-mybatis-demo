@@ -8,6 +8,7 @@ import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.shilUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,19 +84,21 @@ public class LoginController {
         }
     }
 
-//    @Log("生成随机数")
-//    @RequestMapping(value ="rand")
-//    public Map<String,Object> rand(){
-//        try {
-//            request.getSession().invalidate();
-//            map.put("status", "ok");
-//            map.put("message","退出登录成功");
-//            return map;
-//        } catch (Exception e) {
-//            map.put("status", "error");
-//            map.put("message","登录失败！");
-//            return map;
-//        }
-//    }
+    @Log("生成随机数")
+    @RequestMapping(value ="rand")
+    public  Map<String,Object> rand(){
+        Map<String,Object> map=new HashMap<>();
+        try {
+            int rand = shilUtil.rand();
+            map.put("status", "ok");
+            map.put("message","输出成功");
+            map.put("data",rand);
+
+        } catch (Exception e) {
+            map.put("status", "error");
+            map.put("message","输出失败！");
+        }
+        return map;
+    }
 
 }
