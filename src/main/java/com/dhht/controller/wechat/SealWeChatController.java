@@ -341,7 +341,6 @@ public class SealWeChatController extends WeChatBaseController {
      * @param map
      * @return
      */
-    @Log("印章核验")
     @RequestMapping("/weChatCheckSealCode")
     public Map<String,Object> weChatCheckSealCode(@RequestBody Map map) {
         Map<String,Object> resultMap = new HashMap<>();

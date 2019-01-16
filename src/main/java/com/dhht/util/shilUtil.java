@@ -90,12 +90,14 @@ public class shilUtil {
             ReTurnData = ReTurnData ^ y;
             return ReTurnData ;
         }
-
+//
 //        public static void main(String[] args){
 //            Integer rand= (int)( 0x7FFFFFFF *(Math.random() * 2 - 1));
 //            //long sss=new shil().shiled(rand, 50864, 48764, 55064, 36164);
-//            long sss=new shilUtil().shiled(rand, 12345, 12345, 12345, 12345);
+//            long sss=new shilUtil().shiled(-654151200, 12345, 12345, 12345, 12345);
+//            System.out.println("--------------");
 //            System.out.print(sss);
+//            System.out.println("--------------");
 //        }
 
         public static int rand(){
