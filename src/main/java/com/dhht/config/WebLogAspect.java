@@ -82,7 +82,7 @@ public class WebLogAspect {
         HttpServletRequest request = attributes.getRequest();
         // 设置IP地址
         sysLog.setIp(IPUtil.getIpAddr(request));
-        if(request.getRequestURI().contains("/weChat")){
+        if(request.getRequestURI().contains("/recopients")||request.getRequestURI().contains("/suspicious")){
             WeChatUser user = (WeChatUser) request.getSession(true).getAttribute("user");
             users.setId(user.getId());
             if(user.getName()!=null){

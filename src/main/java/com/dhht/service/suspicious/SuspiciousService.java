@@ -20,7 +20,7 @@ public interface SuspiciousService {
 
     List<Suspicious> selectInfo(SuspiciousPO map);
 
-    int weChatInsertSuspicious(Suspicious suspicious, WeChatUser user,String makeDepartmentCode);
+    int weChatInsertSuspicious(Suspicious suspicious, WeChatUser user);
 
     List<Suspicious> selectAll(String loginTelphone);
 

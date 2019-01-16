@@ -38,18 +38,15 @@ public class SuspiciousWeChatController {
      */
     @Log("可疑情况添加")
     @RequestMapping(value = "/add")
-    public JsonObjectBO add(@RequestBody SuspiciousPO suspiciousPO, HttpServletRequest httpServletRequest) {
+    public JsonObjectBO add(@RequestBody Suspicious suspicious, HttpServletRequest httpServletRequest) {
         WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("user");
-        Suspicious suspicious = suspiciousPO.getSuspicious();
-        String makeDepartmentCode = suspiciousPO.getMakeDepartmentCode();
         try {
-            return ResultUtil.getResult(suspiciousService.weChatInsertSuspicious(suspicious, user, makeDepartmentCode));
+            return ResultUtil.getResult(suspiciousService.weChatInsertSuspicious(suspicious, user));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("添加失败！");
         }
     }
-
 
     /**
      * 可疑情况列表
