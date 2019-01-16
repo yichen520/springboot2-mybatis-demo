@@ -21,7 +21,7 @@
   <sql id="Base_Column_List" >
     id, make_department_code, employee_code, employee_name, employee_idcard, suspicious_type, 
     suspicious_time, suspicious_detail, recorder, create_time, district_id, update_user, 
-    update_time,make_department_name,loginTelphone
+    update_time,make_department_name,login_telphone
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

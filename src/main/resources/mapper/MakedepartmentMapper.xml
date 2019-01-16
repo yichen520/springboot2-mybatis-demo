@@ -80,6 +80,8 @@
     <result column="is_delete" jdbcType="BIT" property="isDelete" />
     <result column="make_department_flag" jdbcType="VARCHAR" property="makeDepartmentFlag" />
   </resultMap>
+
+
     <select id="selectMakedepartmentSimplePODetailById" resultMap="BaseMakeDepartmentResultMap" parameterType="java.lang.String" >
         select <include refid="Base_MakeDepartment_Column_List"/>
         from make_department LEFT JOIN make_department_attach_info
@@ -90,7 +92,7 @@
 
   <select id="selectMakedePartment" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
     select <include refid="Base_MakeDepartment_Column_List"/>
-from make_department LEFT JOIN make_department_attach_info
+     from make_department LEFT JOIN make_department_attach_info
  on make_department.flag = make_department_attach_info.make_department_flag where
 make_department.delete_status = 0 and
  make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
@@ -99,7 +101,7 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
 
   <select id="selectMakedePartmentByEvaluate" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
     select <include refid="Base_MakeDepartment_Column_List"/>,AVG(make_department_evaluate.score) as score
-    from make_department LEFT JOIN make_department_attach_info
+    from make_department  JOIN make_department_attach_info
     on make_department.flag = make_department_attach_info.make_department_flag
     LEFT join make_department_evaluate on make_department.flag = make_department_evaluate.make_department_id
     where  make_department.delete_status = 0 and
@@ -110,13 +112,13 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
 
   <select id="selectMakedePartmentBySealNum" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
     select <include refid="Base_MakeDepartment_Column_List"/>,count(1) as total
-    from make_department LEFT JOIN make_department_attach_info
+    from make_department  JOIN make_department_attach_info
     on make_department.flag = make_department_attach_info.make_department_flag
     LEFT join seal on seal.make_department_code = make_department.department_code
     where  make_department.delete_status = 0 and
     make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
     and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
-    GROUP BY seal.make_department_code ORDER BY total
+    GROUP BY seal.make_department_code ORDER BY total desc
   </select>
 
 
@@ -188,6 +190,10 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
     select <include refid="Simple_Column_list"/> from make_department where  department_name like '%${departmentName}%' and department_address like '${districtId}%' limit 0,10
   </select>
 
+  <select id="selectByAllName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List"/> from make_department  where  department_name = #{name,jdbcType=VARCHAR} and delete_status = 0
+  </select>
+
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >
     select
     <include refid="Simple_Column_list" />
@@ -196,11 +202,6 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
     )as b on a.flag = b.fa and  a.version=b.ver
     where department_code = #{departmentCode,jdbcType=VARCHAR}
   </select>
-
-
-
-
-
 
 
 

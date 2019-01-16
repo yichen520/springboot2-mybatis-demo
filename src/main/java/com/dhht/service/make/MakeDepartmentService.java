@@ -51,4 +51,6 @@ public interface MakeDepartmentService {
     List<MakedepartmentSimplePO> selectMakedePartment(MakedepartmentSimplePO makedepartmentSimplePO);
 
     MakedepartmentSimplePO selectMakedepartmentSimplePODetailById(String id);
+
+    Makedepartment selectByAllName(String name);
 }
