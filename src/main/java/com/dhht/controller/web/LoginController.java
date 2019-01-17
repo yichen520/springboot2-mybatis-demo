@@ -11,6 +11,7 @@ import com.dhht.service.user.UserService;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.shilUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +29,13 @@ public class LoginController {
     @Autowired
     private UserLoginService userLoginService;
 
+    @Value("${suciz}")
+    private String suciz;
+
     @Log("登录")
    @RequestMapping(value ="login", method = RequestMethod.POST)
    public Map<String,Object> login(HttpServletRequest request,@RequestBody UserDomain userDomain){
-        return userLoginService.validateUser(request, userDomain);
+        return userLoginService.validateUser(request, userDomain,suciz);
    }
     /**
      * 获取目录

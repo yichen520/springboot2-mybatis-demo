@@ -80,13 +80,27 @@ public class UserLoginServiceImpl implements UserLoginService {
         return vcode;
     }
 
+    @Override
+    public User validate(User user) {
+        String userAccount = StringUtil.stringNullHandle(user.getUserName());
+        String password = StringUtil.stringNullHandle(user.getPassword());
+        User loginUser = userDao.findByUserName(userAccount);
+        if(loginUser == null){
+            return null;
+        }
+        boolean result = SM3Util.verify(password,loginUser.getPassword());
+        if(result){
+            return loginUser;
+        }
+        return user;
+    }
+
     /**
      * 验证账号和密码
      * @param user
      * @return
      */
-    @Override
-    public User validate(User user){
+    public User validate(User user,String suciz){
             String userAccount = StringUtil.stringNullHandle(user.getUserName());
         String password = StringUtil.stringNullHandle(user.getPassword());
         User loginUser = userDao.findByUserName(userAccount);
@@ -94,8 +108,9 @@ public class UserLoginServiceImpl implements UserLoginService {
             return null;
         }
         boolean result = SM3Util.verify(password,loginUser.getPassword());
-        int serverGenerateCarand = shilUtil.shiled(loginUser.getCarand(),5088,32519,3164,30899);
-        int ClientCarand = user.getCarand();
+        if(suciz.equals("true")){
+            int serverGenerateCarand = shilUtil.shiled(loginUser.getCarand(),5088,32519,3164,30899);
+            int ClientCarand = user.getCarand();
             if(result){
                 if(serverGenerateCarand==ClientCarand) {
                     return loginUser;
@@ -104,7 +119,14 @@ public class UserLoginServiceImpl implements UserLoginService {
                     user.setId("CarandFail");
                 }
             }
-        return user;
+            return user;
+        }else {
+            if(result){
+               return loginUser;
+            }
+            return user;
+        }
+
     }
 
 
@@ -181,180 +203,182 @@ public class UserLoginServiceImpl implements UserLoginService {
      * @return
      */
     @Override
-    public Map<String, Object> validateUser(HttpServletRequest request, UserDomain userDomain) {
-        Map<String,Object> map=new HashMap<>();
-        try {
-            User user1= new User();
-            user1.setPassword(userDomain.getPassword());
-            user1.setUserName(userDomain.getUsername());
-            user1.setCarand(userDomain.getCaNum());
-            User user = validate(user1);
-            User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
-            if (user == null){
-                map.put("status", "error");
-                map.put("currentAuthority","guest");
-                map.put("message","账号不存在");
-                return map;
-            }
+    public Map<String, Object> validateUser(HttpServletRequest request, UserDomain userDomain,String suciz) {
 
-
-            if( user.getId()==null  ){
-                if(currentUser!=null){
-                    //更新登录错误次数
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    long  a = sdf.parse(sdf.format(new Date())).getTime();
-                    long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
-                    long m = a - b;
-                    //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
-                    long errorTimes ;
-                    if (( m / (1000 * 60 *60 )>loginErrorDate)){
-                        userDao.updateErrorTimesZero(userDomain.getUsername());
-                        errorTimes = 4;
+            Map<String,Object> map=new HashMap<>();
+            try {
+                User user1= new User();
+                user1.setPassword(userDomain.getPassword());
+                user1.setUserName(userDomain.getUsername());
+                user1.setCarand(userDomain.getCaNum());
+                User user = validate(user1,suciz);
+                User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
+                if (user == null){
+                    map.put("status", "error");
+                    map.put("currentAuthority","guest");
+                    map.put("message","账号不存在");
+                    return map;
+                }
+                if( user.getId()==null  ){
+                    if(currentUser!=null){
+                        //更新登录错误次数
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        long  a = sdf.parse(sdf.format(new Date())).getTime();
+                        long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
+                        long m = a - b;
+                        //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
+                        long errorTimes ;
+                        if (( m / (1000 * 60 *60 )>loginErrorDate)){
+                            userDao.updateErrorTimesZero(userDomain.getUsername());
+                            errorTimes = 4;
+                        }else {
+                            userDao.updateErrorTimes(userDomain.getUsername());
+                            errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
+                        }
+                        if (errorTimes<1){
+                            map.put("status", "error");
+                            map.put("currentAuthority", "guest");
+                            map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                            return map;
+                        }
+                        map.put("status", "error");
+                        map.put("currentAuthority","guest");
+                        map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
+                        return map;
                     }else {
-                        userDao.updateErrorTimes(userDomain.getUsername());
-                        errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
+                        map.put("status", "error");
+                        map.put("currentAuthority", "guest");
+                        map.put("message","登录失败！请核对用户名和账号！");
+                        return map;
                     }
-                    if (errorTimes<1){
+
+                }else{
+                    if (user.getId().equals("CarandFail")){
+                        map.put("status", "error");
+                        map.put("currentAuthority","guest");
+                        map.put("message","加密狗数据有误，请联系管理员");
+                        return map;
+                    }
+                    if (user.getIsLocked()){
+                        map.put("status", "error");
+                        map.put("currentAuthority", "guest");
+                        map.put("message","该用户已被锁定，请联系管理员！");
+                        return map;
+                    }
+                    if (user.getLoginErrorTimes()>=loginErrorTime){
                         map.put("status", "error");
                         map.put("currentAuthority", "guest");
                         map.put("message","该用户登录错误超过5次，请1小时后重试！");
                         return map;
                     }
-                    map.put("status", "error");
-                    map.put("currentAuthority","guest");
-                    map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
-                    return map;
-                }else {
-                    map.put("status", "error");
-                    map.put("currentAuthority", "guest");
-                    map.put("message","登录失败！请核对用户名和账号！");
-                    return map;
-                }
-
-            }else{
-                if (user.getId().equals("CarandFail")){
-                    map.put("status", "error");
-                    map.put("currentAuthority","guest");
-                    map.put("message","加密狗数据有误，请联系管理员");
-                    return map;
-                }
-                if (user.getIsLocked()){
-                    map.put("status", "error");
-                    map.put("currentAuthority", "guest");
-                    map.put("message","该用户已被锁定，请联系管理员！");
-                    return map;
-                }
-                if (user.getLoginErrorTimes()>=loginErrorTime){
+                    if (user.getIsDeleted()){
                         map.put("status", "error");
                         map.put("currentAuthority", "guest");
-                        map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                        map.put("message","该用户已经删除！");
                         return map;
-               }
-                if (user.getIsDeleted()){
-                    map.put("status", "error");
-                    map.put("currentAuthority", "guest");
-                    map.put("message","该用户已经删除！");
-                    return map;
 
+                    }
                 }
-            }
-            User user2 =new User();
-            user2.setLoginTime(new Date());
-            user2.setUserName(userDomain.getUsername());
-            user2.setLoginErrorTimes(0);
-            userDao.updateUser(user2);
-            map.put("status", "ok");
-            map.put("currentAuthority", user.getRoleId());
-            map.put("message","登录成功");
-
-            List<String> ids = roleResourceDao.selectMenuResourceByID(user.getRoleId());
-            List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
-            List<Menus> menus = resourceService.findMenusByRole(ids);
-            List<Resource> resources = resourceService.findResourceByRole(resourceId);
-            request.getSession().setAttribute("user", user);
-            request.getSession().setAttribute("menus", menus);
-            request.getSession().setAttribute("resources", resources);
-            return map;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage(), e);
-            map.put("status", "error");
-            map.put("currentAuthority", "guest");
-            map.put("message","登录失败！请核对用户名和账号！");
-            return map;
-        }
-    }
-
-    @Override
-    public JsonObjectBO validateAppUser(HttpServletRequest request, UserDomain userDomain) {
-        try {
-            User user1= new User();
-            user1.setPassword(userDomain.getPassword());
-            user1.setUserName(userDomain.getUsername());
-            User user = validate(user1);
-
-            User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
-
-            if(user==null && currentUser!=null ){
-                //更新登录错误次数
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                long  a = sdf.parse(sdf.format(new Date())).getTime();
-                long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
-                long m = a - b;
-                long errorTimes ;
-                //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
-                if (( m / (1000 * 60  )>loginErrorDate)){
-                    userDao.updateErrorTimesZero(userDomain.getUsername());
-                    errorTimes = 4;
-                }else {
-                    userDao.updateErrorTimes(userDomain.getUsername());
-                    errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
-                }
-                if (errorTimes > 0){
-                    return JsonObjectBO.error("账号密码错误,你还可以输入"+errorTimes+"次");
-                }else {
-                    return JsonObjectBO.error("该用户登录错误超过5次，请1小时后重试！！");
-                }
-
-            }
-            if (currentUser==null){
-                return JsonObjectBO.error("账号账号或密码错误,请重新输入");
-            }
-            if (user.getIsLocked()){
-                return JsonObjectBO.error("该用户已被锁定，请联系管理员！");
-            }else {
-                if (currentUser.getLoginErrorTimes()>=loginErrorTime){
-                     return JsonObjectBO.error("该用户登录错误超过5次，请1小时后重试！");
-                }
-            }
-            if(currentUser.getRoleId().equals("BADW")||currentUser.getRoleId().equals("ZZDW")||currentUser.getRoleId().equals("CYRY")){
                 User user2 =new User();
                 user2.setLoginTime(new Date());
                 user2.setUserName(userDomain.getUsername());
                 user2.setLoginErrorTimes(0);
                 userDao.updateUser(user2);
-                User currentUser1 = usersMapper.validateCurrentuser(userDomain.getUsername());
-                currentUser1.setPassword(null);
-                JSONObject jsonObject = new JSONObject();
-                String token= UUIDUtil.generate();
-                jsonObject.put("currentUser",currentUser1);
-                jsonObject.put("token",token);
+                map.put("status", "ok");
+                map.put("currentAuthority", user.getRoleId());
+                map.put("message","登录成功");
+
+                List<String> ids = roleResourceDao.selectMenuResourceByID(user.getRoleId());
+                List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
+                List<Menus> menus = resourceService.findMenusByRole(ids);
+                List<Resource> resources = resourceService.findResourceByRole(resourceId);
+                request.getSession().setAttribute("user", user);
+                request.getSession().setAttribute("menus", menus);
+                request.getSession().setAttribute("resources", resources);
+                return map;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error(e.getMessage(), e);
+                map.put("status", "error");
+                map.put("currentAuthority", "guest");
+                map.put("message","登录失败！请核对用户名和账号！");
+                return map;
+            }
+
+
+    }
+
+    @Override
+    public JsonObjectBO validateAppUser(HttpServletRequest request, UserDomain userDomain){
+            try {
+                User user1 = new User();
+                user1.setPassword(userDomain.getPassword());
+                user1.setUserName(userDomain.getUsername());
+                User user = validate(user1);
+
+                User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
+
+                if (user == null && currentUser != null) {
+                    //更新登录错误次数
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    long a = sdf.parse(sdf.format(new Date())).getTime();
+                    long b = sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
+                    long m = a - b;
+                    long errorTimes;
+                    //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
+                    if ((m / (1000 * 60) > loginErrorDate)) {
+                        userDao.updateErrorTimesZero(userDomain.getUsername());
+                        errorTimes = 4;
+                    } else {
+                        userDao.updateErrorTimes(userDomain.getUsername());
+                        errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes() + 1);
+                    }
+                    if (errorTimes > 0) {
+                        return JsonObjectBO.error("账号密码错误,你还可以输入" + errorTimes + "次");
+                    } else {
+                        return JsonObjectBO.error("该用户登录错误超过5次，请1小时后重试！！");
+                    }
+
+                }
+                if (currentUser == null) {
+                    return JsonObjectBO.error("账号账号或密码错误,请重新输入");
+                }
+                if (user.getIsLocked()) {
+                    return JsonObjectBO.error("该用户已被锁定，请联系管理员！");
+                } else {
+                    if (currentUser.getLoginErrorTimes() >= loginErrorTime) {
+                        return JsonObjectBO.error("该用户登录错误超过5次，请1小时后重试！");
+                    }
+                }
+                if (currentUser.getRoleId().equals("BADW") || currentUser.getRoleId().equals("ZZDW") || currentUser.getRoleId().equals("CYRY")) {
+                    User user2 = new User();
+                    user2.setLoginTime(new Date());
+                    user2.setUserName(userDomain.getUsername());
+                    user2.setLoginErrorTimes(0);
+                    userDao.updateUser(user2);
+                    User currentUser1 = usersMapper.validateCurrentuser(userDomain.getUsername());
+                    currentUser1.setPassword(null);
+                    JSONObject jsonObject = new JSONObject();
+                    String token = UUIDUtil.generate();
+                    jsonObject.put("currentUser", currentUser1);
+                    jsonObject.put("token", token);
 //                List<String> resourceId = roleResourceDao.selectResourceByID(user.getRoleId());
 //                List<Resource> resources = resourceService.findResourceByRole(resourceId);
 //                request.getSession().setAttribute("user", currentUser1);
 //                request.getSession().setAttribute("resources", resources);
 //                request.getSession().setAttribute("token", token);
 
-                template.opsForValue().set(token, JSON.toJSONString(currentUser1),expireTime,TimeUnit.SECONDS);
-                return JsonObjectBO.success("登录成功",jsonObject);
-            }else {
-                return JsonObjectBO.error("此用户不是app端用户");
+                    template.opsForValue().set(token, JSON.toJSONString(currentUser1), expireTime, TimeUnit.SECONDS);
+                    return JsonObjectBO.success("登录成功", jsonObject);
+                } else {
+                    return JsonObjectBO.error("此用户不是app端用户");
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                return JsonObjectBO.error("账号账号或密码错误,请重新输入");
             }
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return JsonObjectBO.error("账号账号或密码错误,请重新输入");
-        }
+
     }
 
     @Override

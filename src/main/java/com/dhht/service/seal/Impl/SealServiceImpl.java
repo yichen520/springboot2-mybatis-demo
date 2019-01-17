@@ -347,6 +347,14 @@ public class SealServiceImpl implements SealService {
                 seal.setIsUndertake(true);
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
                 int sealInsert = sealDao.insertSelective(seal);
+                SealPayOrder sealPayOrder = new SealPayOrder();
+
+                sealPayOrder.setId(UUIDUtil.generate());
+                sealPayOrder.setSealId(sealId);
+                sealPayOrder.setPayDate(DateUtil.getCurrentTime());
+                sealPayOrder.setPayWay("到店支付");
+                sealPayOrder.setExpressWay(false);
+                sealPayOrderMapper.insertSelective(sealPayOrder);
 
                 //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
                 if (sealInsert > 0 && sealAgentInsert > 0) {
@@ -436,6 +444,7 @@ public class SealServiceImpl implements SealService {
                     if (sealMaterialInsert < 0 && sealMaterialInsert1 < 0) {
                         return ResultUtil.isError;
                     }
+
 
 //                    fileService.register(moulageId, "印模图像注册");
 //                    fileService.register(moulageImageId, "印模图像注册");
