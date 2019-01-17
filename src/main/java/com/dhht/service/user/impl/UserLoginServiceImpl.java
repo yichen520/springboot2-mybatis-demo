@@ -90,13 +90,21 @@ public class UserLoginServiceImpl implements UserLoginService {
             String userAccount = StringUtil.stringNullHandle(user.getUserName());
         String password = StringUtil.stringNullHandle(user.getPassword());
         User loginUser = userDao.findByUserName(userAccount);
+        if(loginUser == null){
+            return null;
+        }
         boolean result = SM3Util.verify(password,loginUser.getPassword());
+        int serverGenerateCarand = shilUtil.shiled(loginUser.getCarand(),5088,32519,3164,30899);
+        int ClientCarand = user.getCarand();
             if(result){
-                if(shilUtil.shiled(loginUser.getCarand(),12345,12345,12345,12345)==user.getCarand()) {
+                if(serverGenerateCarand==ClientCarand) {
                     return loginUser;
                 }
+                else{
+                    user.setId("CarandFail");
+                }
             }
-        return new User();
+        return user;
     }
 
 
@@ -182,44 +190,72 @@ public class UserLoginServiceImpl implements UserLoginService {
             user1.setCarand(userDomain.getCaNum());
             User user = validate(user1);
             User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
-
-            if(user==null && currentUser!=null ){
-                //更新登录错误次数
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                long  a = sdf.parse(sdf.format(new Date())).getTime();
-                long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
-                long m = a - b;
-                //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
-                long errorTimes ;
-                if (( m / (1000 * 60  )>loginErrorDate)){
-                    userDao.updateErrorTimesZero(userDomain.getUsername());
-                   errorTimes = 4;
-                }else {
-                    userDao.updateErrorTimes(userDomain.getUsername());
-                    errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
-                }
-                if (errorTimes<1){
-                    map.put("status", "error");
-                    map.put("currentAuthority", "guest");
-                    map.put("message","该用户登录错误超过5次，请1小时后重试！");
-                    return map;
-                }
+            if (user == null){
                 map.put("status", "error");
                 map.put("currentAuthority","guest");
-                map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
+                map.put("message","账号不存在");
                 return map;
             }
-            if (user.getIsLocked()){
-                map.put("status", "error");
-                map.put("currentAuthority", "guest");
-                map.put("message","该用户已被锁定，请联系管理员！");
-                return map;
-            }else {
-                if (currentUser.getLoginErrorTimes()>=loginErrorTime){
+
+
+            if( user.getId()==null  ){
+                if(currentUser!=null){
+                    //更新登录错误次数
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    long  a = sdf.parse(sdf.format(new Date())).getTime();
+                    long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
+                    long m = a - b;
+                    //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
+                    long errorTimes ;
+                    if (( m / (1000 * 60 *60 )>loginErrorDate)){
+                        userDao.updateErrorTimesZero(userDomain.getUsername());
+                        errorTimes = 4;
+                    }else {
+                        userDao.updateErrorTimes(userDomain.getUsername());
+                        errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
+                    }
+                    if (errorTimes<1){
+                        map.put("status", "error");
+                        map.put("currentAuthority", "guest");
+                        map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                        return map;
+                    }
+                    map.put("status", "error");
+                    map.put("currentAuthority","guest");
+                    map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
+                    return map;
+                }else {
                     map.put("status", "error");
                     map.put("currentAuthority", "guest");
-                    map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                    map.put("message","登录失败！请核对用户名和账号！");
                     return map;
+                }
+
+            }else{
+                if (user.getId().equals("CarandFail")){
+                    map.put("status", "error");
+                    map.put("currentAuthority","guest");
+                    map.put("message","加密狗数据有误，请联系管理员");
+                    return map;
+                }
+                if (user.getIsLocked()){
+                    map.put("status", "error");
+                    map.put("currentAuthority", "guest");
+                    map.put("message","该用户已被锁定，请联系管理员！");
+                    return map;
+                }
+                if (user.getLoginErrorTimes()>=loginErrorTime){
+                        map.put("status", "error");
+                        map.put("currentAuthority", "guest");
+                        map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                        return map;
+               }
+                if (user.getIsDeleted()){
+                    map.put("status", "error");
+                    map.put("currentAuthority", "guest");
+                    map.put("message","该用户已经删除！");
+                    return map;
+
                 }
             }
             User user2 =new User();
@@ -241,6 +277,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             return map;
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage(), e);
             map.put("status", "error");
             map.put("currentAuthority", "guest");
@@ -256,6 +293,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             user1.setPassword(userDomain.getPassword());
             user1.setUserName(userDomain.getUsername());
             User user = validate(user1);
+
             User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
 
             if(user==null && currentUser!=null ){
