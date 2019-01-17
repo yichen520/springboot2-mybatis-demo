@@ -1874,6 +1874,35 @@ public class SealServiceImpl implements SealService {
     }
 
     /**
+     * 小程序端的公章核验
+     * @param sealCode
+     * @param useDepartmentCode
+     * @param sealTypeCode
+     * @return
+     */
+    @Override
+    public Map<String,Object> weChatcheckSealCode(String sealCode, String useDepartmentCode, String sealTypeCode) {
+        Map<String,Object> map = new HashMap<>();
+        List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2(useDepartmentCode,sealTypeCode);
+        if(seals.size()==0){
+            map.put("status", "error");
+            map.put("message","数据不存在");
+            return map;
+        }
+        for(Seal seal:seals){
+            if(seal.getSealCode().equals(sealCode)){
+                map.put("status", "ok");
+                map.put("message","查询成功");
+                map.put("seal",seal);
+                return map;
+            }
+        }
+        map.put("status", "error");
+        map.put("message","数据不存在");
+        return map;
+    }
+
+    /**
      * 挂失相关操作
      * @param seal
      * @param employee

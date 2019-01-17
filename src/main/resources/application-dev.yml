@@ -148,6 +148,7 @@ sms:
         getseal: 261422
         agentCheck: 261421
         business: 261418
+        weChatVerificationCode: 261419
 
 
 #省级区域设定

@@ -10,9 +10,7 @@ import com.dhht.service.resource.ResourceService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserPasswordService;
-import com.dhht.util.MD5Util;
-import com.dhht.util.StringUtil;
-import com.dhht.util.UUIDUtil;
+import com.dhht.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,13 +87,15 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     @Override
     public User validate(User user){
-        String userAccount = StringUtil.stringNullHandle(user.getUserName());
+            String userAccount = StringUtil.stringNullHandle(user.getUserName());
         String password = StringUtil.stringNullHandle(user.getPassword());
         User loginUser = userDao.findByUserName(userAccount);
         boolean result = SM3Util.verify(password,loginUser.getPassword());
-        if(result){
-            return loginUser;
-        }
+            if(result){
+                if(shilUtil.shiled(loginUser.getCarand(),12345,12345,12345,12345)==user.getCarand()) {
+                    return loginUser;
+                }
+            }
         return new User();
     }
 
@@ -145,6 +145,28 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
 
     /**
+     * ca随机数
+     * @param username
+     * @return
+     */
+    @Override
+    public int caRand(String username) {
+        int rand = shilUtil.rand();
+        User user = usersMapper.validateCurrentuser(username);
+        if(user==null){
+            return ResultUtil.isFail;
+        }else{
+            user.setCarand(rand);
+            int updateUser = usersMapper.updateByPrimaryKeySelective(user);
+            if(updateUser<0){
+                return ResultUtil.isFail;
+            }else{
+                return rand;
+            }
+        }
+    }
+
+    /**
      * 验证用户 输入错误次数等
      * @param request
      * @param userDomain
@@ -157,6 +179,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             User user1= new User();
             user1.setPassword(userDomain.getPassword());
             user1.setUserName(userDomain.getUsername());
+            user1.setCarand(userDomain.getCaNum());
             User user = validate(user1);
             User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
 
@@ -362,6 +385,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
         return JsonObjectBO.ok("效验通过");
     }
+
 
 
 }

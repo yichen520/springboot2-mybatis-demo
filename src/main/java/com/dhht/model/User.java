@@ -35,6 +35,16 @@ public class User {
 
     private Role role;
 
+    private Integer carand;
+
+    public Integer getCarand() {
+        return carand;
+    }
+
+    public void setCarand(Integer carand) {
+        this.carand = carand;
+    }
+
     public String getId() {
         return id;
     }

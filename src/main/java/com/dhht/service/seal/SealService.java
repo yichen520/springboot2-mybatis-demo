@@ -108,6 +108,7 @@ public interface SealService {
    List<Seal> sealListForWeChat(String telphone);
 
 
+   Map<String,Object> weChatcheckSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
     int updatePay(SealPayOrder sealPayOrder);
 

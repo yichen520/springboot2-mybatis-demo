@@ -43,12 +43,14 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     @Value("${sms.template.insertUser}")
     private int userCode ;
 
+
+
     @Override
     public int sendMessage(String mobilePhone,int param) {
         Map<String,Object> map = new HashMap<>();
         String code = StringUtil.createRandomVcode();
         ArrayList<String> params = new ArrayList<String>();
-        params.add(mobilePhone);
+//        params.add(mobilePhone);
         params.add(code);
         if(!stringRedisTemplate.hasKey(mobilePhone)){
             stringRedisTemplate.opsForValue().append(mobilePhone,code);

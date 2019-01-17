@@ -8,6 +8,8 @@ import com.dhht.model.*;
 import com.dhht.service.resource.ResourceService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserService;
+import com.dhht.util.ResultUtil;
+import com.dhht.util.shilUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ import java.util.Map;
 import static com.dhht.util.MenuUtil.genMenu;
 
 @RestController
-public class WeChatLoginController {
+public class LoginController {
 
     @Autowired
     private UserLoginService userLoginService;
@@ -81,6 +83,30 @@ public class WeChatLoginController {
             map.put("message","登录失败！");
             return map;
         }
+    }
+
+    @Log("生成随机数")
+    @RequestMapping(value ="/rand", method = RequestMethod.GET)
+    public  JsonObjectBO rand(@RequestParam String username){
+            JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            int result = userLoginService.caRand(username);
+            if(result==ResultUtil.isFail){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("获取失败");
+            }else{
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ca",result);
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("获取成功");
+                jsonObjectBO.setData(jsonObject);
+            }
+
+        } catch (Exception e) {
+            jsonObjectBO.setCode(-1);
+            jsonObjectBO.setMessage("获取失败");
+        }
+        return jsonObjectBO;
     }
 
 }

@@ -14,6 +14,7 @@
     <result column="is_deleted" property="isDeleted" jdbcType="BIT" />
     <result column="district_id" property="districtId" jdbcType="CHAR" />
     <result column="login_time" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="carand" property="carand" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -75,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_name, real_name, password, role_id, object_id, is_locked, login_error_times,
-    is_changed_pwd, is_deleted, region_id
+    is_changed_pwd, is_deleted, region_id,carand
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dhht.model.UsersExample" >
     select
@@ -111,11 +112,11 @@
     insert into sys_user (id, user_name, real_name,
       password, role_id, object_id,
       is_locked, login_error_times, is_changed_pwd,
-      is_deleted, region_id)
+      is_deleted, region_id,carand)
     values (#{id,jdbcType=CHAR}, #{userName,jdbcType=CHAR}, #{realName,jdbcType=VARCHAR},
       #{password,jdbcType=CHAR}, #{roleId,jdbcType=CHAR}, #{objectId,jdbcType=CHAR},
       #{isLocked,jdbcType=BIT}, #{loginErrorTimes,jdbcType=INTEGER}, #{isChangedPwd,jdbcType=BIT},
-      #{isDeleted,jdbcType=BIT}, #{regionId,jdbcType=CHAR})
+      #{isDeleted,jdbcType=BIT}, #{regionId,jdbcType=CHAR},#{carand,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.User" >
     insert into sys_user
@@ -153,6 +154,9 @@
       <if test="regionId != null" >
         region_id,
       </if>
+      <if test="carand != null" >
+        carand,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -187,6 +191,9 @@
       </if>
       <if test="regionId != null" >
         #{regionId,jdbcType=CHAR},
+      </if>
+      <if test="carand != null" >
+        #{carand,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -232,6 +239,9 @@
       <if test="record.regionId != null" >
         region_id = #{record.regionId,jdbcType=CHAR},
       </if>
+      <if test="record.carand != null" >
+        region_id = #{record.carand,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -249,7 +259,8 @@
       login_error_times = #{record.loginErrorTimes,jdbcType=INTEGER},
       is_changed_pwd = #{record.isChangedPwd,jdbcType=BIT},
       is_deleted = #{record.isDeleted,jdbcType=BIT},
-      region_id = #{record.regionId,jdbcType=CHAR}
+      region_id = #{record.regionId,jdbcType=CHAR},
+      carand = #{record.rand,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -284,8 +295,8 @@
       <if test="isDeleted != null" >
         is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
-      <if test="regionId != null" >
-        region_id = #{regionId,jdbcType=CHAR},
+      <if test="carand != null" >
+        carand = #{carand,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}
@@ -301,7 +312,8 @@
       login_error_times = #{loginErrorTimes,jdbcType=INTEGER},
       is_changed_pwd = #{isChangedPwd,jdbcType=BIT},
       is_deleted = #{isDeleted,jdbcType=BIT},
-      region_id = #{regionId,jdbcType=CHAR}
+      region_id = #{regionId,jdbcType=CHAR},
+      carand = #{carand,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
   <select id="validate"  resultMap="BaseResultMap" parameterType="com.dhht.model.UserDomain" >
