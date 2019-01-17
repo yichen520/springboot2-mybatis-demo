@@ -3,9 +3,9 @@ package com.dhht.model;
 public class UserDomain {
     private String username;
     private String  password;
-    private String caNum;
+    private Integer caNum;
 
-    public UserDomain(String username, String password,String caNum) {
+    public UserDomain(String username, String password,Integer caNum) {
         this.username = username;
         this.password = password;
         this.caNum = caNum;
@@ -30,11 +30,11 @@ public class UserDomain {
         this.password = password;
     }
 
-    public String getCaNum() {
+    public Integer getCaNum() {
         return caNum;
     }
 
-    public void setCaNum(String caNum) {
+    public void setCaNum(Integer caNum) {
         this.caNum = caNum;
     }
 }

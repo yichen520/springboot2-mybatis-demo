@@ -10,9 +10,7 @@ import com.dhht.service.resource.ResourceService;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserPasswordService;
-import com.dhht.util.MD5Util;
-import com.dhht.util.StringUtil;
-import com.dhht.util.UUIDUtil;
+import com.dhht.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,14 +87,24 @@ public class UserLoginServiceImpl implements UserLoginService {
      */
     @Override
     public User validate(User user){
-        String userAccount = StringUtil.stringNullHandle(user.getUserName());
+            String userAccount = StringUtil.stringNullHandle(user.getUserName());
         String password = StringUtil.stringNullHandle(user.getPassword());
         User loginUser = userDao.findByUserName(userAccount);
-        boolean result = SM3Util.verify(password,loginUser.getPassword());
-        if(result){
-            return loginUser;
+        if(loginUser == null){
+            return null;
         }
-        return new User();
+        boolean result = SM3Util.verify(password,loginUser.getPassword());
+        int serverGenerateCarand = shilUtil.shiled(loginUser.getCarand(),5088,32519,3164,30899);
+        int ClientCarand = user.getCarand();
+            if(result){
+                if(serverGenerateCarand==ClientCarand) {
+                    return loginUser;
+                }
+                else{
+                    user.setId("CarandFail");
+                }
+            }
+        return user;
     }
 
 
@@ -145,6 +153,28 @@ public class UserLoginServiceImpl implements UserLoginService {
     }
 
     /**
+     * ca随机数
+     * @param username
+     * @return
+     */
+    @Override
+    public int caRand(String username) {
+        int rand = shilUtil.rand();
+        User user = usersMapper.validateCurrentuser(username);
+        if(user==null){
+            return ResultUtil.isFail;
+        }else{
+            user.setCarand(rand);
+            int updateUser = usersMapper.updateByPrimaryKeySelective(user);
+            if(updateUser<0){
+                return ResultUtil.isFail;
+            }else{
+                return rand;
+            }
+        }
+    }
+
+    /**
      * 验证用户 输入错误次数等
      * @param request
      * @param userDomain
@@ -157,46 +187,75 @@ public class UserLoginServiceImpl implements UserLoginService {
             User user1= new User();
             user1.setPassword(userDomain.getPassword());
             user1.setUserName(userDomain.getUsername());
+            user1.setCarand(userDomain.getCaNum());
             User user = validate(user1);
             User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
-
-            if(user==null && currentUser!=null ){
-                //更新登录错误次数
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                long  a = sdf.parse(sdf.format(new Date())).getTime();
-                long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
-                long m = a - b;
-                //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
-                long errorTimes ;
-                if (( m / (1000 * 60  )>loginErrorDate)){
-                    userDao.updateErrorTimesZero(userDomain.getUsername());
-                   errorTimes = 4;
-                }else {
-                    userDao.updateErrorTimes(userDomain.getUsername());
-                    errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
-                }
-                if (errorTimes<1){
-                    map.put("status", "error");
-                    map.put("currentAuthority", "guest");
-                    map.put("message","该用户登录错误超过5次，请1小时后重试！");
-                    return map;
-                }
+            if (user == null){
                 map.put("status", "error");
                 map.put("currentAuthority","guest");
-                map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
+                map.put("message","账号不存在");
                 return map;
             }
-            if (user.getIsLocked()){
-                map.put("status", "error");
-                map.put("currentAuthority", "guest");
-                map.put("message","该用户已被锁定，请联系管理员！");
-                return map;
-            }else {
-                if (currentUser.getLoginErrorTimes()>=loginErrorTime){
+
+
+            if( user.getId()==null  ){
+                if(currentUser!=null){
+                    //更新登录错误次数
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    long  a = sdf.parse(sdf.format(new Date())).getTime();
+                    long b =sdf.parse(sdf.format(currentUser.getLoginTime())).getTime();
+                    long m = a - b;
+                    //如果现在的登录时间大于数据库最后登录时间60分钟   则错误登录次数是1
+                    long errorTimes ;
+                    if (( m / (1000 * 60 *60 )>loginErrorDate)){
+                        userDao.updateErrorTimesZero(userDomain.getUsername());
+                        errorTimes = 4;
+                    }else {
+                        userDao.updateErrorTimes(userDomain.getUsername());
+                        errorTimes = loginErrorTime - (currentUser.getLoginErrorTimes()+1);
+                    }
+                    if (errorTimes<1){
+                        map.put("status", "error");
+                        map.put("currentAuthority", "guest");
+                        map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                        return map;
+                    }
+                    map.put("status", "error");
+                    map.put("currentAuthority","guest");
+                    map.put("message","账号密码错误,你还可以输入"+errorTimes+"次");
+                    return map;
+                }else {
                     map.put("status", "error");
                     map.put("currentAuthority", "guest");
-                    map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                    map.put("message","登录失败！请核对用户名和账号！");
                     return map;
+                }
+
+            }else{
+                if (user.getId().equals("CarandFail")){
+                    map.put("status", "error");
+                    map.put("currentAuthority","guest");
+                    map.put("message","加密狗数据有误，请联系管理员");
+                    return map;
+                }
+                if (user.getIsLocked()){
+                    map.put("status", "error");
+                    map.put("currentAuthority", "guest");
+                    map.put("message","该用户已被锁定，请联系管理员！");
+                    return map;
+                }
+                if (user.getLoginErrorTimes()>=loginErrorTime){
+                        map.put("status", "error");
+                        map.put("currentAuthority", "guest");
+                        map.put("message","该用户登录错误超过5次，请1小时后重试！");
+                        return map;
+               }
+                if (user.getIsDeleted()){
+                    map.put("status", "error");
+                    map.put("currentAuthority", "guest");
+                    map.put("message","该用户已经删除！");
+                    return map;
+
                 }
             }
             User user2 =new User();
@@ -218,6 +277,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             return map;
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage(), e);
             map.put("status", "error");
             map.put("currentAuthority", "guest");
@@ -233,6 +293,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             user1.setPassword(userDomain.getPassword());
             user1.setUserName(userDomain.getUsername());
             User user = validate(user1);
+
             User currentUser = usersMapper.validateCurrentuser(userDomain.getUsername());
 
             if(user==null && currentUser!=null ){
@@ -362,6 +423,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
         return JsonObjectBO.ok("效验通过");
     }
+
 
 
 }

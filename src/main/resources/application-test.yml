@@ -110,6 +110,10 @@ sms:
         newUserName: 150917
         makedepartmentpunish: 160963
         employeepunish: 160972
+        express: 261423
+        getseal: 261422
+        agentCheck: 261421
+        business: 261418
         weChatVerificationCode: 261419
 
 #公告条数

@@ -84,13 +84,11 @@ public class WebLogAspect {
         sysLog.setIp(IPUtil.getIpAddr(request));
         if(request.getRequestURI().contains("/recopients")||request.getRequestURI().contains("/suspicious")){
             WeChatUser user = (WeChatUser) request.getSession(true).getAttribute("user");
-            users.setId(user.getId());
-            if(user.getName()!=null){
+
+            if(user!=null){
                 users.setRealName(user.getName());
             }
-            if(user.getTelphone()!=null){
-                users.setTelphone(user.getTelphone());
-            }
+
         }else {
              users = (User) request.getSession(true).getAttribute("user");
         }

@@ -37,6 +37,8 @@ public interface UserLoginService {
 
     JsonObjectBO checkPhone(SMSCode smsCode);
 
+    int caRand(String username);
+
 }
 
 

@@ -566,6 +566,11 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             makedepartmentSimplePOS = makedepartmentMapper.selectMakedePartmentByEvaluate(makedepartmentSimplePO);
             sortByDistance(makedepartmentSimplePOS,true,userLongitude,userLatitude);
         }
+        for(int i = 0;i < makedepartmentSimplePOS.size();i++){
+            MakedepartmentSimplePO makedepartmentSimplePO1 = makedepartmentSimplePOS.get(i);
+           int total = sealDao.countSealByMonthAndMakeDepartment(makedepartmentSimplePO1.getDepartmentCode());
+            makedepartmentSimplePO1.setTotal(total);
+        }
         return makedepartmentSimplePOS;
     }
 
@@ -638,7 +643,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
             // 获取地址解析结果
             while ((line = in.readLine()) != null) {
                 result += line + "\n";
-                System.out.println(result);
+               // System.out.println(result);
             }
             in.close();
         } catch (Exception e) {
