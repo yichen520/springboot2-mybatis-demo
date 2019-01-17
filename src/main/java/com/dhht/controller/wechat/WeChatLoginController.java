@@ -47,8 +47,6 @@ public class WeChatLoginController extends WeChatBaseController {
             String mobilePhone = (String) map.get("mobilePhone");
             String verificationCode = (String) map.get("verificationCode");
             resultMap = weChatUserService.isLogin(mobilePhone,verificationCode,httpServletRequest);
-
-
             return resultMap;
         }catch (Exception e){
             e.printStackTrace();

@@ -1968,6 +1968,7 @@ public class SealServiceImpl implements SealService {
     public Map<String,Object> weChatcheckSealCode(String sealCode, String useDepartmentCode, String sealTypeCode) {
         Map<String,Object> map = new HashMap<>();
         List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2(useDepartmentCode,sealTypeCode);
+        UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
         if(seals.size()==0){
             map.put("status", "error");
             map.put("message","数据不存在");
@@ -1978,6 +1979,7 @@ public class SealServiceImpl implements SealService {
                 map.put("status", "ok");
                 map.put("message","查询成功");
                 map.put("seal",seal);
+                map.put("useDepartment",useDepartment);
                 return map;
             }
         }

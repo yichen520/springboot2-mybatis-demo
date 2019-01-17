@@ -122,9 +122,11 @@ public class SuspiciousServiceImpl implements SuspiciousService {
     }
 
     @Override
-    public int weChatInsertSuspicious(Suspicious suspicious, WeChatUser user, String makeDepartmentCode) {
+    public int weChatInsertSuspicious(Suspicious suspicious, WeChatUser user) {
         try {
             suspicious.setId(UUIDUtil.generate());
+            suspicious.setUpdateTime(DateUtil.getCurrentTime());
+            String makeDepartmentCode = suspicious.getMakeDepartmentCode();
             MakeDepartmentSimple makedepartment = makedepartmentMapper.selectByDepartmentCode(makeDepartmentCode);
             if(makedepartment!=null){
                 suspicious.setDistrictId(makedepartment.getDepartmentAddress());
