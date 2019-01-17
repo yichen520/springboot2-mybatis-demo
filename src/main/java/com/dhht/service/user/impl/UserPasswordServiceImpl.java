@@ -82,7 +82,7 @@ public class UserPasswordServiceImpl implements UserPasswordService{
         try {
                 ArrayList<String> params = new ArrayList<String>();
                 params.add(code);
-                params.add("5");
+
                 SMSCode smscode= smsCodeDao.getSms(phone);
                 if(smscode==null){
                     smscode = new SMSCode();

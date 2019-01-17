@@ -19,7 +19,7 @@ public interface UserLoginService {
 
     JsonObjectBO checkPhoneAndIDCard(SMSCode smsCode);
 
-    Map<String,Object> validateUser(HttpServletRequest request,UserDomain userDomain);
+    Map<String,Object> validateUser(HttpServletRequest request,UserDomain userDomain,String suciz);
 
     User validate(User user);
 
