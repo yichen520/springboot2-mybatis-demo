@@ -1434,4 +1434,8 @@ SELECT
   <select id="indexCountSealTypeByMakeDepartment" resultMap="indexSealTypeResultMap" parameterType="java.lang.String">
     SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') GROUP BY seal_type_code
   </select>
+    <select id="countSealByMonthAndMakeDepartment" parameterType="java.lang.String" resultType="java.lang.Integer">
+SELECT COUNT(1)   FROM seal where make_department_code = #{makeDepartmentCode} and   DATE_FORMAT( make_date, '%Y-%m' ) = DATE_FORMAT( CURDATE() , '%Y-%m' )
+    </select>
+
 </mapper>

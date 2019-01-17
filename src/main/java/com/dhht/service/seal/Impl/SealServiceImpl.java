@@ -1672,7 +1672,7 @@ public class SealServiceImpl implements SealService {
         String sealId = UUIDUtil.generate();
         seal.setId(sealId);
         seal.setSealName(useDepartment.getName());
-        seal.setUseDepartmentCode(sealDTO.getMakedepartmentCode());
+        seal.setUseDepartmentCode(sealDTO.getUseDepartmentCode());
         seal.setUseDepartmentName(useDepartment.getName());
         seal.setSealStatusCode("03");
         seal.setIsRecord(true);
@@ -1726,8 +1726,11 @@ public class SealServiceImpl implements SealService {
         String saId = UUIDUtil.generate();
             sealAgent.setId(saId);
             sealAgent.setBusinessType("000");
+            sealAgent.setCertificateType("111");
+        sealAgent.setLoginTelPhone(sealDTO.getTelphone());
+        if (sealAgent.getTelphone()==null){}
             int sealAgentInsert = sealAgentMapper.insert(sealAgent);
-       // if (sealAgent.getTelphone()==null){}
+
 
         seal.setAgentId(saId);
         seal.setIsUndertake(true);
