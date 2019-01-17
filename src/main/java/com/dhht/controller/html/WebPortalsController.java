@@ -163,12 +163,11 @@ public class WebPortalsController extends BaseController {
         }
     }
 
-    @Log("印章信息")
+
     @RequestMapping("/sealInfo")
     public JsonObjectBO sealInfo(String code) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-
         User user =null;
         try {
             List<Seal> seal = sealService.portalSealInfoByCode(code);

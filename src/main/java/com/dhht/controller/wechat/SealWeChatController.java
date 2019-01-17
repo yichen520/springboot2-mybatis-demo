@@ -220,7 +220,7 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
     @RequestMapping(value = "/sealList", method = RequestMethod.POST)
-    public JsonObjectBO sealList(@RequestBody Map map,HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) {
+    public JsonObjectBO sealList(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) {
         try{
             init(httpServletRequest,httpServletResponse);
         String telphone = (String) httpServletRequest.getSession().getAttribute("mobilePhone");
@@ -326,7 +326,7 @@ public class SealWeChatController extends WeChatBaseController {
 //        }
 //    }
 
-    @Log("验证码手机号")
+
     @RequestMapping(value ="checkPhone", method = RequestMethod.POST)
     public JsonObjectBO checkPhone(@RequestBody SMSCode smsCode,HttpServletResponse httpServletResponse){
         try {
@@ -338,7 +338,7 @@ public class SealWeChatController extends WeChatBaseController {
             return JsonObjectBO.exception("发送短信发生异常");
         }
     }
-    //@Log("更新支付")
+
     @RequestMapping(value ="updatePay", method = RequestMethod.POST)
     public JsonObjectBO checkPhone(@RequestBody SealPayOrder sealPayOrder,HttpServletResponse httpServletResponse){
         try {
@@ -357,7 +357,6 @@ public class SealWeChatController extends WeChatBaseController {
      * @param map
      * @return
      */
-    @Log("印章核验")
     @RequestMapping("/weChatCheckSealCode")
     public Map<String,Object> weChatCheckSealCode(@RequestBody Map map) {
         Map<String,Object> resultMap = new HashMap<>();
@@ -368,7 +367,7 @@ public class SealWeChatController extends WeChatBaseController {
             return resultMap;
         } catch (Exception e) {
             resultMap.put("status", "error");
-            resultMap.put("message","登入异常");
+            resultMap.put("message","查询失败");
             return resultMap;
         }
     }
