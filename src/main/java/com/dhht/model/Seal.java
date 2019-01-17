@@ -104,6 +104,16 @@ public class Seal extends SealKey {
 
     private Date undertakeDate;  //承接日期
 
+    private int applySource;
+
+    public int getApplySource() {
+        return applySource;
+    }
+
+    public void setApplySource(int applySource) {
+        this.applySource = applySource;
+    }
+
     public Boolean getIsRecord() {
         return isRecord;
     }

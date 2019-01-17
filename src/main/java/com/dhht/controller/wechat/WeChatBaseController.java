@@ -2,6 +2,7 @@ package com.dhht.controller.wechat;
 
 
 
+import com.dhht.service.user.WeChatUserService;
 import com.dhht.util.UUIDUtil;
 import com.dhht.model.WeChatUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Controller
 public class WeChatBaseController {
 
     @Autowired
     public HttpServletRequest request;
+    @Autowired
+    public WeChatUserService weChatUserService;
 
     /**
      * @return 获取用户手机号
@@ -52,4 +56,10 @@ public class WeChatBaseController {
         WeChatUser user = (WeChatUser) request.getSession().getAttribute("user");
         return user;
     }
+
+    public WeChatUser getcurrentUserByTelphone(String telphone){
+        Map<String,Object> map = weChatUserService.selectWeChatUser(telphone);
+        return (WeChatUser) map.get("weChatUser");
+    }
+
 }

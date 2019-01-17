@@ -86,7 +86,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
-            weChatUserService.sendMessage(useDepartment.getManagerPhone(),business);
+           // weChatUserService.sendMessage(useDepartment.getManagerPhone(),business);
             SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.SAVE);
             return JsonObjectBO.success("添加成功",null);
         }

@@ -584,6 +584,7 @@ public class SealServiceImpl implements SealService {
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;
         } else {
+
             if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == true) {
                 //查找经办人
                 SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
@@ -769,9 +770,9 @@ public class SealServiceImpl implements SealService {
         seal1.setGetterId(saId);
         int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal1);
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
-            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.PERSONAL);
-            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
-            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.PERSONAL);
+//            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.PERSONAL);
+//            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
+//            SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.PERSONAL);
             return ResultUtil.isSuccess;
         } else {
             return ResultUtil.isFail;
@@ -788,7 +789,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int newsealRecord(User user, String sealId) {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
-        seal.setSealStatusCode("05");
+        seal.setSealStatusCode("09");
         seal.setIsApply(true);
         seal.setApplyDate(DateUtil.getCurrentTime());
         seal.setIsEarlywarning(true);
@@ -1649,7 +1650,7 @@ public class SealServiceImpl implements SealService {
 
     @Override
     public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId) {
-
+        try {
         List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
         UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
         if (useDepartment == null) {
@@ -1671,7 +1672,8 @@ public class SealServiceImpl implements SealService {
         //印章信息
         String sealId = UUIDUtil.generate();
         seal.setId(sealId);
-        seal.setSealName(useDepartment.getName());
+        String sealType = chooseType(seal.getSealTypeCode());
+        seal.setSealName(useDepartment.getName()+sealType);
         seal.setUseDepartmentCode(sealDTO.getUseDepartmentCode());
         seal.setUseDepartmentName(useDepartment.getName());
         seal.setSealStatusCode("03");
@@ -1685,6 +1687,7 @@ public class SealServiceImpl implements SealService {
         seal.setDistrictId(useDepartment.getDistrictId());
         seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
         seal.setMakeDepartmentName(makedepartment.getDepartmentName());
+        seal.setApplySource(1);
         if(recordDepartment!=null){
             seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
             seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
@@ -1756,25 +1759,106 @@ public class SealServiceImpl implements SealService {
         sealPayOrder.setId(payOrderId);
         sealPayOrder.setSealId(sealId);
         sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-
         sealPayOrderMapper.insertSelective(sealPayOrder);
 
-        return ResultUtil.isSuccess;
+            //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
+            if (sealInsert > 0 && sealAgentInsert > 0) {
+
+                Map<String, String> map = new HashMap<>();
+                map.put("useDepartment", useDepartment.getName());
+                map.put("sealType", sealType);
+                map.put("sealCode", sealcode);
+                String centerImageNum = seal.getSealCenterImage();
+                String centerImage = "";
+                switch (centerImageNum) {
+                    case "01":
+                        centerImage = "★";
+                        break;
+                    case "02":
+                        centerImage = "▲";
+                        break;
+                    case "03":
+                        centerImage = "★";
+                        break;
+                }
+                map.put("centerImage", centerImage);
+                //印模图像
+                String localPath = new ImageGenerate().seal(map);
+                File file = new File(localPath);
+                BufferedImage image = ImageUtil.getBufferedImage(localPath);
+                ImageGenerate imageGenerate = new ImageGenerate();
+
+                imageGenerate.saveGridImage(new File(localPath),image); //设置dpi
+
+                BufferedImage image1 = ImageUtil.getBufferedImage(localPath);
+                ImageIO.write(image1,"bmp",new File(localPath));
+                File file2 =  new File(localPath);
+                InputStream inputStream = new FileInputStream(file2);
+                byte[] imageData = FileUtil.readInputStream(inputStream);
+                FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + useDepartment.getName() + sealType, "bmp", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getTelphone());
+                String moulageImageId = fileInfo.getId();
+                //增加微缩图
+                String fileName = file.getAbsolutePath();
+                String caselsh = fileName.substring(0, fileName.lastIndexOf("."));//前缀
+                String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);//后缀
+
+                String path = caselsh + "_micro." + suffix;
+//                    ImageUtil.convert(localPath);  透明化
+                Thumbnails.of(localPath).scale(0.3f).toFile(path);
+
+                File microfile = new File(path);
+                InputStream inputStream1 = new FileInputStream(microfile);
+
+                byte[] microimageData = FileUtil.readInputStream(inputStream1);
+                FileInfo microfileInfo = fileService.save(microimageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "png", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getTelphone());
+                String micromoulageImageId = microfileInfo.getId();
+//                    Thumbnails.of(filePathName).scale(1f).outputQuality(scale).outputFormat("jpg")
 
 
+                //把印模信息材料存入数据库
+                SealMaterial sealMaterial = new SealMaterial();
+                sealMaterial.setId(UUIDUtil.generate());
+                sealMaterial.setSealCode(sealcode);
+                sealMaterial.setType("04");
+                sealMaterial.setFilePath(moulageImageId);
+                int sealMaterialInsert = sealDao.insertSealMaterial(sealMaterial);
+
+                SealMaterial microsealMaterial = new SealMaterial();
+                microsealMaterial.setId(UUIDUtil.generate());
+                microsealMaterial.setSealCode(sealcode);
+                microsealMaterial.setType("06");
+                microsealMaterial.setFilePath(micromoulageImageId);
+                sealDao.insertSealMaterial(microsealMaterial);
 
 
+                //二维数据
+                int[][] imgArr = imageGenerate.moulageData(map);
+                String imagArrLocalPath = FileUtil.saveArrayFile(imgArr);
+                File file1 = new File(imagArrLocalPath);
+                // InputStream inputStream1 = new FileInputStream(file1);
+                byte[] moulageDates = FileUtil.readInputStream(inputStream1);
+                FileInfo fileInfo1 = fileService.save(moulageDates, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType + "二维数据", "txt", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getTelphone());
+                String moulageId = fileInfo1.getId();
+                SealMaterial sealMaterial1 = new SealMaterial();
+                sealMaterial1.setId(UUIDUtil.generate());
+                sealMaterial1.setSealCode(sealcode);
+                sealMaterial1.setType("05");
+                sealMaterial1.setFilePath(moulageId);
+                int sealMaterialInsert1 = sealDao.insertSealMaterial(sealMaterial1);
 
-
-
+                if (sealMaterialInsert < 0 && sealMaterialInsert1 < 0) {
+                    return ResultUtil.isError;
+                }
+            }
+            return ResultUtil.isSuccess;
+        } catch (IOException e) {
+                e.printStackTrace();
+            return ResultUtil.isException;
+            }
     }
 
 
-//    @Override
-//    public int sealLogout(WeChatUser weChatUser,String useDepartmentCode, String sealCode) {
-//        int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"01");
-//
-//    }
+
 
     public  String testNum(int num){
         StringBuilder str=new StringBuilder();//定义变长字符串

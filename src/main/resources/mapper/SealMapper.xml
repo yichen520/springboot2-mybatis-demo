@@ -52,6 +52,7 @@
       <result column="missingpost_remark" property="missingpostRemark" jdbcType="VARCHAR" />
       <result column="is_undertake" property="isUndertake" jdbcType="BIT" />
       <result column="undertake_date" property="undertakeDate" jdbcType="TIMESTAMP" />
+      <result column="apply_source" property="applySource" jdbcType="INTEGER" />
   </resultMap>
   
   <resultMap id="SealOperationRecordMap" type="com.dhht.model.SealOperationRecord">
@@ -87,7 +88,7 @@
         is_deliver, is_logout, loss_date, is_loss, remark, logout_date, seal_reason, district_id,
         agent_id, getter_id, loss_person_id, logout_person_id, is_chipseal, is_pass, reject_reason,
         reject_remark, verify_type_name, is_earlywarning, is_apply, apply_date, earlywarning_date,
-        missingpost_remark, is_undertake, undertake_date
+        missingpost_remark, is_undertake, undertake_date,apply_source
     </sql>
     <sql id="Base_Column_List_seal">
        a.id as id, seal_code, seal_name, seal_status_code, use_department_code, use_department_name,
@@ -98,7 +99,7 @@
         is_deliver, is_logout, loss_date, is_loss, remark, logout_date, seal_reason, district_id,
         agent_id, getter_id, loss_person_id, logout_person_id, is_chipseal, is_pass, reject_reason,
         reject_remark, verify_type_name, is_earlywarning, is_apply, apply_date, earlywarning_date,
-        missingpost_remark, is_undertake, undertake_date
+        missingpost_remark, is_undertake, undertake_date,apply_source
     </sql>
   <select id="selectRecordDepartmentCode" resultMap="recordDepartmentCodeResult">
     SELECT record_department_code from seal GROUP BY record_department_code
@@ -313,6 +314,10 @@
             <if test="undertakeDate != null" >
                 undertake_date,
             </if>
+            <if test="applySource != null" >
+                apply_source,
+            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="id != null" >
@@ -465,6 +470,10 @@
             <if test="undertakeDate != null" >
                 #{undertakeDate,jdbcType=TIMESTAMP},
             </if>
+            <if test="applySource != null" >
+                #{applySource,jdbcType=INTEGER},
+            </if>
+
         </trim>
     </insert>
 

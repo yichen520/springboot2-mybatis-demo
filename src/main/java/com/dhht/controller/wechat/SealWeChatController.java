@@ -66,7 +66,7 @@ public class SealWeChatController extends WeChatBaseController {
     @Log("小程序印章申请")
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO,HttpServletResponse httpServletResponse) {
-        WeChatUser user = currentUser();
+        WeChatUser user = getcurrentUserByTelphone(sealDTO.getTelphone());
 
         init(httpServletRequest,httpServletResponse);
         try {
