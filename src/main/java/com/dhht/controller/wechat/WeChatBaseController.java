@@ -53,7 +53,7 @@ public class WeChatBaseController {
     }
 
     public WeChatUser currentUser(){
-        WeChatUser user = (WeChatUser) request.getSession().getAttribute("user");
+        WeChatUser user = (WeChatUser) request.getSession().getAttribute("weChatUser");
         return user;
     }
 

@@ -103,7 +103,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             else {
                 map.put("weChatUser", weChatUser);
             }
-            request.getSession().setAttribute("user",weChatUser);
+            request.getSession().setAttribute("weChatUser",weChatUser);
             return map;
         }else {
             map.put("status", "error");

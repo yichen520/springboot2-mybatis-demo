@@ -39,7 +39,7 @@ public class SuspiciousWeChatController {
     @Log("可疑情况添加")
     @RequestMapping(value = "/add")
     public JsonObjectBO add(@RequestBody Suspicious suspicious, HttpServletRequest httpServletRequest) {
-        WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("user");
+        WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("weChatUser");
         try {
             return ResultUtil.getResult(suspiciousService.weChatInsertSuspicious(suspicious, user));
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class SuspiciousWeChatController {
     public JsonObjectBO suspiciouslist(HttpServletRequest httpServletRequest) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
-        WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("user");
+        WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("weChatUser");
         String loginTelphone = user.getTelphone();
         try {
             List<Suspicious> suspicious = suspiciousService.selectAll(loginTelphone);
