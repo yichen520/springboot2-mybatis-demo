@@ -151,7 +151,7 @@ public class SealController implements InitializingBean {
                 jsonObjectBO.setMessage("添加成功");
             } else if (a == ResultUtil.isHaveSeal) {
                 jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("法定章已经存在");
+                jsonObjectBO.setMessage("该公司的法务印章或者单位章已经存在");
             } else if(a==ResultUtil.isNoDepartment){
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("备案单位或制作单位不存在");
