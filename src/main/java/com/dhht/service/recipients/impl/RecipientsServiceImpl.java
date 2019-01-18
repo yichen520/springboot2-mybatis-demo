@@ -47,10 +47,10 @@ public class RecipientsServiceImpl implements RecipientsService {
         }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
             districtId = districtIds[0]+districtIds[1]+"01";
             District district = districtMapper.selectByDistrictId(districtId);
-            districtName =district.getProvinceName()+district.getCityName();
+            districtName =district.getProvinceName()+"/"+district.getCityName();
         }else {
             District district = districtMapper.selectByDistrictId(districtId);
-            districtName = district.getProvinceName()+district.getCityName()+district.getDistrictName();
+            districtName = district.getProvinceName()+"/"+district.getCityName()+"/"+district.getDistrictName();
         }
         return districtName;
     }
