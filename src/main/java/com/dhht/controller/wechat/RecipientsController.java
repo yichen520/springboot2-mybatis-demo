@@ -41,9 +41,7 @@ public class RecipientsController extends WeChatBaseController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         init(httpServletRequest,httpServletResponse);
         try {
-//            Recipients recipients = (Recipients)map.get("recipients");
             int a = recipientsService.insertRecipients(recipients,telPhone);
-
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("添加成功");

@@ -106,13 +106,8 @@ public class Seal extends SealKey {
 
     private int applySource;
 
-    public int getApplySource() {
-        return applySource;
-    }
+     private DeliveryExpressInfo deliveryExpressInfo;
 
-    public void setApplySource(int applySource) {
-        this.applySource = applySource;
-    }
 
     public Boolean getIsRecord() {
         return isRecord;

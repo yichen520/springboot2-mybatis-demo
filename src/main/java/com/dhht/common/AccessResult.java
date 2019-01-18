@@ -1,6 +1,12 @@
 package com.dhht.common;
 
+import com.dhht.dao.DistrictMapper;
+import com.dhht.model.District;
+import com.dhht.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class AccessResult {
+
     /** 操作是否成功 */
     private int isSuccess = 0;
 
@@ -31,4 +37,6 @@ public class AccessResult {
     public void setResultMsg(String resultMsg) {
         this.resultMsg = resultMsg;
     }
+
+
 }

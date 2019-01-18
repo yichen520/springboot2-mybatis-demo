@@ -1,6 +1,7 @@
 package com.dhht.service.seal.Impl;
 
 import com.dhht.annotation.Sync;
+import com.dhht.common.AccessResult;
 import com.dhht.common.ImageGenerate;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
@@ -105,6 +106,10 @@ public class SealServiceImpl implements SealService {
     private CourierMapper courierMapper;
     @Autowired
     private SealPayOrderMapper sealPayOrderMapper;
+    @Autowired
+    private RecipientsMapper recipientsMapper;
+    @Autowired
+    private  DistrictMapper districtMapper;
 
 
     @Autowired
@@ -137,7 +142,22 @@ public class SealServiceImpl implements SealService {
         return useDepartmentDao.selectByCode(useDepartmentCode);
     }
 
-
+    public    String getDistrictName(String districtId){
+        String districtIds[] = StringUtil.DistrictUtil(districtId);
+        String   districtName = null;
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0]+"0101";
+            districtName =districtMapper.selectByDistrictId(districtId).getProvinceName();
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0]+districtIds[1]+"01";
+            District district = districtMapper.selectByDistrictId(districtId);
+            districtName =district.getProvinceName()+district.getCityName();
+        }else {
+            District district = districtMapper.selectByDistrictId(districtId);
+            districtName = district.getProvinceName()+district.getCityName()+district.getDistrictName();
+        }
+        return districtName;
+    }
     /**
      * 6位简单密码
      *
@@ -594,7 +614,7 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isFail;
         } else {
 
-            if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == true) {
+            if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == false) {
                 //查找经办人
                 SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
                 ArrayList<String> params = new ArrayList<String>();
@@ -603,11 +623,7 @@ public class SealServiceImpl implements SealService {
                 Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), express, params);
 
             } else {
-                SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
-                ArrayList<String> params = new ArrayList<String>();
-                params.add(name);
-                params.add(ResultUtil.sealType(seal1.getSealTypeCode()));
-                Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), getseal, params);
+
             }
             return ResultUtil.isSuccess;
         }
@@ -666,7 +682,97 @@ public class SealServiceImpl implements SealService {
     }
 
     /**
-     * 交付
+     * 线上快递交付
+     * @param user
+     * @param seal
+     * @return
+     */
+    @Override
+    public int expressdeliver(User user, Seal seal) {
+        if (seal.getIsLogout()) {
+            return ResultUtil.isLogout;
+        }
+        if (seal.getIsLoss()) {
+            return ResultUtil.isLoss;
+        }
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
+        if (useDepartment == null) {
+            return ResultUtil.isNoDepartment;
+        }
+        //印章操作
+        String telphone = user.getTelphone();
+        Employee employee = employeeService.selectByPhone(telphone);
+        SealOperationRecord sealOperationRecord = new SealOperationRecord();
+        sealOperationRecord.setId(UUIDUtil.generate());
+        sealOperationRecord.setSealId(seal.getId());
+        sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+        sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+        sealOperationRecord.setOperateType("04");
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+
+        seal.setIsDeliver(true);
+        seal.setDeliverDate(DateUtil.getCurrentTime());
+        seal.setIsEarlywarning(true);
+        seal.setEarlywarningDate(DateUtil.getCurrentTime());
+
+        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal.getMakeDepartmentCode());
+        User user1 = new User();
+        user1.setId(UUIDUtil.generate());
+        user1.setTelphone(makeDepartmentSimple.getTelphone());
+        user1.setUserName(makeDepartmentSimple.getDepartmentName());
+        user1.setRealName(makeDepartmentSimple.getLegalName());
+        user1.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+        Notify notify = new Notify();
+        notify.setId(UUIDUtil.generate());
+        notify.setNotifyTitle("备案预警");
+        List<Employee> employees = employeeService.selectAllByDepartmentCode(makeDepartmentSimple.getDepartmentCode());
+        List<String> userId = new ArrayList<>();
+        for(Employee employeeId:employees){
+            User user2 = userService.findByUserName("CYRY"+employeeId.getTelphone());
+            if(user2!=null) {
+                userId.add(user2.getId());
+            }
+        }
+        notify.setNotifyUser(userId);
+        notify.setNotifyContent("您的"+seal.getSealName()+"编号"+seal.getSealCode()+"的印章请尽快备案");
+        int notifyResult = notifyService.insertNotify(notify,user1);
+        if(notifyResult==ResultUtil.isFail){
+            return ResultUtil.isFail;
+        }
+
+        SealAgent sealAgent = new SealAgent();
+        String saId = UUIDUtil.generate();
+        sealAgent.setId(saId);
+        sealAgent.setTelphone(seal.getDeliveryExpressInfo().getAgentphone());
+        sealAgent.setAgentPhotoId(seal.getDeliveryExpressInfo().getAgentPhotoImage());
+        sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
+        sealAgent.setCertificateType("111");
+        sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
+        sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
+        sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
+        sealAgent.setLoginTelPhone(seal.getDeliveryExpressInfo().getLoginTelphone());
+        sealAgent.setBusinessType("01");
+        sealAgent.setName(seal.getDeliveryExpressInfo().getAgentName());
+
+        int sealAgentResult = sealAgentMapper.insert(sealAgent);
+        seal.setSealStatusCode("04");
+        seal.setGetterId(saId);
+        int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal);
+        if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
+            ArrayList<String> params = new ArrayList<String>();
+            params.add(seal.getUseDepartmentName());
+            params.add(ResultUtil.sealType(seal.getSealTypeCode()));
+            Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), getseal, params);
+            return ResultUtil.isSuccess;
+        } else {
+            return ResultUtil.isFail;
+        }
+    }
+
+    /**
+     * 线下交付
      *
      * @param user
      * @param
@@ -1555,6 +1661,46 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectIsRecord(seal);
         } else if (status.equals("01")) {  //已制作
             list = sealDao.selectIsMake(seal);
+            for (Seal seal1 :list){
+                SealPayOrder sealPayOrder =sealPayOrderMapper.selectBySealId(seal1.getId());
+                if( sealPayOrder.getCourierId()!=null &&  !sealPayOrder.getCourierId().isEmpty()){
+                  //  Recipients recipients =recipientsMapper.selectByPrimaryKey(courierMapper.selectByPrimaryKey(sealPayOrder.getCourierId()).getRecipientsId());
+                    Recipients recipients =recipientsMapper.selectByPrimaryKey(courierMapper.selectByPrimaryKey(sealPayOrder.getCourierId()).getRecipientsId());
+                    DeliveryExpressInfo deliveryExpressInfo = new DeliveryExpressInfo();
+                    deliveryExpressInfo.setReceiveName(recipients.getRecipientsName());
+                    deliveryExpressInfo.setReceivephone(recipients.getRecipientsTelphone());
+                    deliveryExpressInfo.setReceivedistrictId(recipients.getDistrictId());
+                    deliveryExpressInfo.setReceiveAddressDetail(recipients.getRecipientsAddress());
+                    deliveryExpressInfo.setReceivedistrictName(recipients.getDistrictName());
+                    MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(seal1.getMakeDepartmentCode());
+                    if(makedepartment == null){
+                        deliveryExpressInfo.setSendName("未找到刻制单位信息");
+                    }else {
+                        deliveryExpressInfo.setSendName(makedepartment.getDepartmentName());
+                        deliveryExpressInfo.setSenddistrictId(makedepartment.getDepartmentAddress());
+                        deliveryExpressInfo.setSenddistrictName(getDistrictName(makedepartment.getDepartmentAddress()));
+                        deliveryExpressInfo.setSendTelphone(makedepartment.getTelphone());
+                        deliveryExpressInfo.setSendAddressDetail(makedepartment.getDepartmentAddressDetail());
+                    }
+                    //增加经办人信息
+                    SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
+                    if (sealAgent == null){
+                        deliveryExpressInfo.setAgentName("未找到经办人信息");
+                    }else {
+
+                        deliveryExpressInfo.setAgentName(sealAgent.getName());
+                        deliveryExpressInfo.setAgentidcard(sealAgent.getCertificateNo());
+                        deliveryExpressInfo.setAgentphone(sealAgent.getTelphone());
+                        deliveryExpressInfo.setAgentidcardFrontImage(sealAgent.getIdCardFrontId());
+                        deliveryExpressInfo.setAgentidcardFrontReverseImage(sealAgent.getIdCardReverseId());
+                        deliveryExpressInfo.setAgentPhotoImage(sealAgent.getAgentPhotoId());
+                        deliveryExpressInfo.setAgentproxyImage(sealAgent.getProxyId());
+                        deliveryExpressInfo.setLoginTelphone(sealAgent.getLoginTelPhone());
+                    }
+
+                    seal1.setDeliveryExpressInfo(deliveryExpressInfo);
+                }
+            }
         } else if (status.equals("02")) {  //已个人化
             list = sealDao.selectPersonal(seal);
         } else if (status.equals("00")) {    //未交付
