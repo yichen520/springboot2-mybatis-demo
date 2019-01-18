@@ -55,8 +55,14 @@
     <include refid="Base_Column_List" />
     from use_department
     where  code= #{useDepartmentCode,jdbcType=CHAR} AND is_delete = 0
-
   </select>
+
+    <select id="selectActiveUseDepartmentByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from use_department
+        where  code= #{useDepartmentCode,jdbcType=CHAR} AND is_delete = 0 and department_status = "01"
+    </select>
 
   <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -139,7 +145,7 @@
     <include refid="Base_Column_List" />
     from use_department where is_delete = 0
   </select>
-    <select id="find"    resultType="com.dhht.model.UseDepartment">
+    <select id="find"    resultMap="BaseResultMap">
     SELECT  <include refid="Base_Column_List" />  from use_department
     <where>
     <if test="districtId !=null and districtId !=''">

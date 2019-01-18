@@ -67,4 +67,6 @@ public interface UseDepartmentDao {
     int countDelByTime(@Param("districtId") String districtId,@Param("startTime") String startTime,@Param("endTime") String endTime);
 
     int findcount(@Param("code") String code,@Param("districtId")String districtId,@Param("name")String name,@Param("departmentStatus")String departmentStatus);
+
+    UseDepartment selectActiveUseDepartmentByCode(String useDepartmentCode);
 }

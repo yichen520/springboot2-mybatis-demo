@@ -308,6 +308,12 @@ public class UseDepartmentImpl implements UseDepartmentService {
         return setDistrictName(useDepartment);
     }
 
+    @Override
+    public UseDepartment selectActiveUseDepartmentByCode(String useDepartmentCode){
+        UseDepartment useDepartment = useDepartmentDao.selectActiveUseDepartmentByCode(useDepartmentCode);
+        return setDistrictName(useDepartment);
+    }
+
     /**
      * 数据同步
      * @param object
