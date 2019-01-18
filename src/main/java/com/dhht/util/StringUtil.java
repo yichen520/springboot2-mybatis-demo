@@ -3,6 +3,7 @@ package com.dhht.util;
 
 
 import com.dhht.common.JsonObjectBO;
+import com.dhht.dao.DistrictMapper;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.beans.PropertyDescriptor;
@@ -361,4 +362,10 @@ public class StringUtil {
         }
         return o;
     }
+
+    /**
+     * 通过区域代码获取区域
+     */
+
+
 }

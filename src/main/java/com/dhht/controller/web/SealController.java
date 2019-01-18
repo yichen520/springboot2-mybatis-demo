@@ -151,7 +151,7 @@ public class SealController implements InitializingBean {
                 jsonObjectBO.setMessage("添加成功");
             } else if (a == ResultUtil.isHaveSeal) {
                 jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("法定章已经存在");
+                jsonObjectBO.setMessage("该公司的法务印章或者单位章已经存在");
             } else if(a==ResultUtil.isNoDepartment){
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("备案单位或制作单位不存在");
@@ -333,6 +333,28 @@ public class SealController implements InitializingBean {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("个人化失败");
+        }
+    }
+
+
+    /**
+     * 线上快递交付
+     * @param httpServletRequest
+     * @param
+     * @return
+     */
+    @Log("交付")
+    @RequestMapping("/expressdeliver")
+    public JsonObjectBO expressdeliver(HttpServletRequest httpServletRequest, @RequestBody Seal seal) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+
+        try {
+            int a = sealService.expressdeliver( user,  seal);
+            return ResultUtil.getResult(a);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("出现未知错误");
         }
     }
 

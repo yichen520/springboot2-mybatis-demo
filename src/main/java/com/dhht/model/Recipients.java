@@ -16,4 +16,6 @@ public class Recipients {
     private String loginTelphone;
 
     private String districtId;
+
+    private String districtName;
 }
