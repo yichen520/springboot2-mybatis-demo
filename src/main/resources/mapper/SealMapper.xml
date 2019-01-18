@@ -671,7 +671,7 @@
   </insert>
 
   <select id="selectByCodeAndType"  parameterType="java.lang.String" resultMap="BaseResultMap">
-      select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_status_code = "09"
+      select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND seal_status_code = "03"
   </select>
 
     <!--<select id="selectByCode"  parameterType="java.lang.String" resultMap="BaseResultMap">-->
@@ -1304,8 +1304,7 @@
     <select id="sealList" parameterType="java.lang.String" resultMap="BaseResultMap">
       SELECT seal.*
       FROM seal
-      LEFT JOIN seal_agent ON seal.agent_id = seal_agent.id where seal_agent.telphone = #{telphone}
-      order by record_date desc
+      LEFT JOIN seal_agent ON seal.agent_id = seal_agent.id where seal_agent.login_telphone = #{telphone}
     </select>
 
   <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">

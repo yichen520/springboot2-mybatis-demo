@@ -380,6 +380,30 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 
+    /**
+     * 法人章和公章
+     * @param
+     * @return
+     */
+    @RequestMapping("/isHaveSeal")
+    public JsonObjectBO isHaveSeal(@RequestBody Seal seal) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+            String useDepartmentCode = seal.getUseDepartmentCode();
+            int result  = sealService.isHaveSeal(useDepartmentCode,seal);
+            if(result==ResultUtil.isSuccess){
+                jsonObjectBO.setMessage("可以添加");
+                jsonObjectBO.setCode(1);
+            }else{
+                jsonObjectBO.setMessage("不可以添加");
+                jsonObjectBO.setCode(-1);
+            }
+        } catch (Exception e) {
+            jsonObjectBO.setMessage("不可以添加");
+            jsonObjectBO.setCode(-1);
+        }
+        return jsonObjectBO;
+    }
 
 
 }

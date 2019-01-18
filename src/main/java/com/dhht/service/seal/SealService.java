@@ -112,5 +112,7 @@ public interface SealService {
 
     int updatePay(SealPayOrder sealPayOrder);
 
+    int isHaveSeal(String useDepartmentCode,Seal seal);
+
 }
 
