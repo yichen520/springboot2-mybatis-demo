@@ -1348,7 +1348,7 @@ public class SealServiceImpl implements SealService {
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
-        sealOperationRecord.setOperateType("06");  //核验的操作人
+        sealOperationRecord.setOperateType("08");  //核验的操作人
         sealOperationRecord.setEmployeeCode(recordDepartment.getDepartmentCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeName(recordDepartment.getDepartmentName());
@@ -1852,6 +1852,18 @@ public class SealServiceImpl implements SealService {
         seal.setRecordDate(DateUtil.getCurrentTime());
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
+        if(seal.getSealTypeCode().equals("01")){
+            Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"01");
+            if(seal2!=null){
+                return ResultUtil.isHaveSeal;
+            }
+        }
+        if(seal.getSealTypeCode().equals("05")){
+            Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"05");
+            if(seal2!=null){
+                return ResultUtil.isHaveSeal;
+            }
+        }
         if (seal.getSealReason().equals("03")) {
             if (seal.getSealTypeCode().equals("01")) {
                 Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null,"01");
@@ -1881,7 +1893,7 @@ public class SealServiceImpl implements SealService {
 
         //经办人信息
         SealAgent sealAgent = sealDTO.getSealAgent();
-        String saId = UUIDUtil.generate();
+        String saId  = UUIDUtil.generate();
             sealAgent.setId(saId);
             sealAgent.setBusinessType("000");
             sealAgent.setCertificateType("111");
@@ -2144,7 +2156,7 @@ public class SealServiceImpl implements SealService {
     }
 
     /**
-     * 挂失相关操作
+     * 注销相关操作
      * @param seal
      * @param employee
      * @return
