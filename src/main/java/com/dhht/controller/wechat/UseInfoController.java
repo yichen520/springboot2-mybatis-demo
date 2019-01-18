@@ -33,7 +33,7 @@ public class UseInfoController {
     public JsonObjectBO selectByCode(@RequestBody Map map){
         try {
             String socialCode = (String) map.get("code");
-            UseDepartment useDepartment = useDepartmentService.selectByCode(socialCode);
+            UseDepartment useDepartment = useDepartmentService.selectActiveUseDepartmentByCode(socialCode);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("useDepartment",useDepartment);
             return JsonObjectBO.success("查询企业信息成功",jsonObject);
