@@ -8,9 +8,10 @@
     <result column="recipients_telphone" property="recipientsTelphone" jdbcType="VARCHAR" />
     <result column="login_telphone" property="loginTelphone" jdbcType="VARCHAR" />
     <result column="district_id" property="districtId" jdbcType="VARCHAR" />
+    <result column="district_name" property="districtName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, recipients_name, recipients_address, recipients_telphone, login_telphone,district_id
+    id, recipients_name, recipients_address, recipients_telphone, login_telphone,district_id,district_name
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -49,6 +50,10 @@
       <if test="districtId != null" >
         district_id,
       </if>
+      <if test="districtName != null" >
+        district_name,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -69,6 +74,10 @@
       <if test="districtId != null" >
         #{districtId,jdbcType=VARCHAR},
       </if>
+      <if test="districtName != null" >
+        #{districtName,jdbcType=VARCHAR},
+      </if>
+
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.Recipients" >
@@ -88,6 +97,9 @@
       </if>
       <if test="districtId != null" >
         district_id = #{districtId,jdbcType=VARCHAR},
+      </if>
+      <if test="districtName != null" >
+        district_name =  #{districtName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}

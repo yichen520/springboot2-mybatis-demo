@@ -336,6 +336,28 @@ public class SealController implements InitializingBean {
         }
     }
 
+
+    /**
+     * 线上快递交付
+     * @param httpServletRequest
+     * @param
+     * @return
+     */
+    @Log("交付")
+    @RequestMapping("/expressdeliver")
+    public JsonObjectBO expressdeliver(HttpServletRequest httpServletRequest, @RequestBody Seal seal) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+
+        try {
+            int a = sealService.expressdeliver( user,  seal);
+            return ResultUtil.getResult(a);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("出现未知错误");
+        }
+    }
+
     /**
      * 交付
      * @param httpServletRequest

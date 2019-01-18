@@ -105,6 +105,10 @@ public class SealServiceImpl implements SealService {
     private CourierMapper courierMapper;
     @Autowired
     private SealPayOrderMapper sealPayOrderMapper;
+    @Autowired
+    private RecipientsMapper recipientsMapper;
+    @Autowired
+    private  DistrictMapper districtMapper;
 
 
     @Autowired
@@ -137,7 +141,22 @@ public class SealServiceImpl implements SealService {
         return useDepartmentDao.selectByCode(useDepartmentCode);
     }
 
-
+    public    String getDistrictName(String districtId){
+        String districtIds[] = StringUtil.DistrictUtil(districtId);
+        String   districtName = null;
+        if(districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0]+"0101";
+            districtName =districtMapper.selectByDistrictId(districtId).getProvinceName();
+        }else if(!districtIds[1].equals("00")&&districtIds[2].equals("00")){
+            districtId = districtIds[0]+districtIds[1]+"01";
+            District district = districtMapper.selectByDistrictId(districtId);
+            districtName =district.getProvinceName()+district.getCityName();
+        }else {
+            District district = districtMapper.selectByDistrictId(districtId);
+            districtName = district.getProvinceName()+district.getCityName()+district.getDistrictName();
+        }
+        return districtName;
+    }
     /**
      * 6位简单密码
      *
@@ -214,12 +233,12 @@ public class SealServiceImpl implements SealService {
             }
 
             for (Seal seal : seals) {
-                if (seal.getSealTypeCode().equals("05")&&!seal.getSealReason().equals("03")) {
+                if (seal.getSealTypeCode().equals("05") && !seal.getSealReason().equals("03")) {
                     if (list.size() != 0) {
                         return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
                     }
 
-                }else if(seal.getSealTypeCode().equals("01")&&!seal.getSealReason().equals("03")){
+                } else if (seal.getSealTypeCode().equals("01") && !seal.getSealReason().equals("03")) {
                     if (list1.size() != 0) {
                         return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
                     }
@@ -232,7 +251,7 @@ public class SealServiceImpl implements SealService {
             for (Seal seal : seals) {
 //                Seal seal1 = new Seal();
 //                String sealcode = SealSerialNum(districtId);
-                  String sealcode1 = sealCodeService.getMaxSealCode(districtId);
+                String sealcode1 = sealCodeService.getMaxSealCode(districtId);
                 String serial = "00000000";
                 String sealcode = districtId + serial.substring(0, serial.length() - sealcode1.length()) + sealcode1;
 
@@ -263,20 +282,20 @@ public class SealServiceImpl implements SealService {
                 seal.setRecordDate(DateUtil.getCurrentTime());
                 seal.setIsUndertake(true);
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
-                if(seal.getSealReason().equals("03")){
-                    if(seal.getSealTypeCode().equals("01")){
-                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"01");
-                        if(seal1!=null) {
+                if (seal.getSealReason().equals("03")) {
+                    if (seal.getSealTypeCode().equals("01")) {
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, "01");
+                        if (seal1 != null) {
                             seal.setSealStatusCode("06");
-                            logoutAbout(seal1,employee);
-                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"01");
+                            logoutAbout(seal1, employee);
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode, "01");
                         }
-                    }else if(seal.getSealTypeCode().equals("05")){
-                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"05");
-                        if(seal1!=null) {
+                    } else if (seal.getSealTypeCode().equals("05")) {
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, "05");
+                        if (seal1 != null) {
                             seal.setSealStatusCode("06");
-                            logoutAbout(seal1,employee);
-                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode,"05");
+                            logoutAbout(seal1, employee);
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode, "05");
                         }
                     }
                 }
@@ -294,8 +313,8 @@ public class SealServiceImpl implements SealService {
                     sealOperationRecord.setOperateType(type1);
                     sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
                     int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
-                    type1 = type1.substring(0,1)+"1";
-                    if(sealOperationRecordInsert < 0){
+                    type1 = type1.substring(0, 1) + "1";
+                    if (sealOperationRecordInsert < 0) {
                         return ResultUtil.isFail;
                     }
                 }
@@ -380,12 +399,12 @@ public class SealServiceImpl implements SealService {
                     //印模图像
                     String localPath = new ImageGenerate().seal(map);
                     File file = new File(localPath);
-                  BufferedImage image = ImageUtil.getBufferedImage(localPath);
+                    BufferedImage image = ImageUtil.getBufferedImage(localPath);
                     ImageGenerate imageGenerate = new ImageGenerate();
-                    imageGenerate.saveGridImage(new File(localPath),image); //设置dpi
+                    imageGenerate.saveGridImage(new File(localPath), image); //设置dpi
                     BufferedImage image1 = ImageUtil.getBufferedImage(localPath);
-                    ImageIO.write(image1,"bmp",new File(localPath));
-                    File file2 =  new File(localPath);
+                    ImageIO.write(image1, "bmp", new File(localPath));
+                    File file2 = new File(localPath);
                     InputStream inputStream = new FileInputStream(file2);
                     byte[] imageData = FileUtil.readInputStream(inputStream);
                     FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + seal.getUseDepartmentName() + sealType, "bmp", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getUserName());
@@ -497,13 +516,13 @@ public class SealServiceImpl implements SealService {
             seal.setSealCode(sealCode);
             seal.setUseDepartmentCode(useDepartmentCode);
             seal.setUseDepartmentName(useDepartmentName);
-            if(user.getRoleId().equals("BADW")){
+            if (user.getRoleId().equals("BADW")) {
                 String userName = user.getUserName();
-                String telphone = userName.substring(4,15);
+                String telphone = userName.substring(4, 15);
                 RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
                 seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
 
-            }else {
+            } else {
                 String telphone = user.getTelphone();
                 if (telphone == null) {
                     return new PageInfo<>();
@@ -522,7 +541,7 @@ public class SealServiceImpl implements SealService {
 
             PageInfo<Seal> result = new PageInfo<>(list);
             return result;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new PageInfo<>();
         }
@@ -603,11 +622,7 @@ public class SealServiceImpl implements SealService {
                 Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), express, params);
 
             } else {
-                SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
-                ArrayList<String> params = new ArrayList<String>();
-                params.add(name);
-                params.add(ResultUtil.sealType(seal1.getSealTypeCode()));
-                Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), getseal, params);
+
             }
             return ResultUtil.isSuccess;
         }
@@ -666,7 +681,97 @@ public class SealServiceImpl implements SealService {
     }
 
     /**
-     * 交付
+     * 线上快递交付
+     * @param user
+     * @param seal
+     * @return
+     */
+    @Override
+    public int expressdeliver(User user, Seal seal) {
+        if (seal.getIsLogout()) {
+            return ResultUtil.isLogout;
+        }
+        if (seal.getIsLoss()) {
+            return ResultUtil.isLoss;
+        }
+        UseDepartment useDepartment = useDepartmentDao.selectByCode(seal.getUseDepartmentCode());  //根据usedepartment查询对应的使用公司
+        if (useDepartment == null) {
+            return ResultUtil.isNoDepartment;
+        }
+        //印章操作
+        String telphone = user.getTelphone();
+        Employee employee = employeeService.selectByPhone(telphone);
+        SealOperationRecord sealOperationRecord = new SealOperationRecord();
+        sealOperationRecord.setId(UUIDUtil.generate());
+        sealOperationRecord.setSealId(seal.getId());
+        sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+        sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
+        sealOperationRecord.setEmployeeName(employee.getEmployeeName());
+        sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
+        sealOperationRecord.setOperateType("04");
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+
+        seal.setIsDeliver(true);
+        seal.setDeliverDate(DateUtil.getCurrentTime());
+        seal.setIsEarlywarning(true);
+        seal.setEarlywarningDate(DateUtil.getCurrentTime());
+
+        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal.getMakeDepartmentCode());
+        User user1 = new User();
+        user1.setId(UUIDUtil.generate());
+        user1.setTelphone(makeDepartmentSimple.getTelphone());
+        user1.setUserName(makeDepartmentSimple.getDepartmentName());
+        user1.setRealName(makeDepartmentSimple.getLegalName());
+        user1.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+        Notify notify = new Notify();
+        notify.setId(UUIDUtil.generate());
+        notify.setNotifyTitle("备案预警");
+        List<Employee> employees = employeeService.selectAllByDepartmentCode(makeDepartmentSimple.getDepartmentCode());
+        List<String> userId = new ArrayList<>();
+        for(Employee employeeId:employees){
+            User user2 = userService.findByUserName("CYRY"+employeeId.getTelphone());
+            if(user2!=null) {
+                userId.add(user2.getId());
+            }
+        }
+        notify.setNotifyUser(userId);
+        notify.setNotifyContent("您的"+seal.getSealName()+"编号"+seal.getSealCode()+"的印章请尽快备案");
+        int notifyResult = notifyService.insertNotify(notify,user1);
+        if(notifyResult==ResultUtil.isFail){
+            return ResultUtil.isFail;
+        }
+
+        SealAgent sealAgent = new SealAgent();
+        String saId = UUIDUtil.generate();
+        sealAgent.setId(saId);
+        sealAgent.setTelphone(seal.getDeliveryExpressInfo().getAgentphone());
+        sealAgent.setAgentPhotoId(seal.getDeliveryExpressInfo().getAgentPhotoImage());
+        sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
+        sealAgent.setCertificateType("111");
+        sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
+        sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
+        sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
+        sealAgent.setLoginTelPhone(seal.getDeliveryExpressInfo().getLoginTelphone());
+        sealAgent.setBusinessType("01");
+        sealAgent.setName(seal.getDeliveryExpressInfo().getAgentName());
+
+        int sealAgentResult = sealAgentMapper.insert(sealAgent);
+        seal.setSealStatusCode("04");
+        seal.setGetterId(saId);
+        int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal);
+        if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
+            ArrayList<String> params = new ArrayList<String>();
+            params.add(seal.getUseDepartmentName());
+            params.add(ResultUtil.sealType(seal.getSealTypeCode()));
+            Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), getseal, params);
+            return ResultUtil.isSuccess;
+        } else {
+            return ResultUtil.isFail;
+        }
+    }
+
+    /**
+     * 线下交付
      *
      * @param user
      * @param
@@ -724,16 +829,16 @@ public class SealServiceImpl implements SealService {
         notify.setNotifyTitle("备案预警");
         List<Employee> employees = employeeService.selectAllByDepartmentCode(makeDepartmentSimple.getDepartmentCode());
         List<String> userId = new ArrayList<>();
-        for(Employee employeeId:employees){
-            User user2 = userService.findByUserName("CYRY"+employeeId.getTelphone());
-            if(user2!=null) {
+        for (Employee employeeId : employees) {
+            User user2 = userService.findByUserName("CYRY" + employeeId.getTelphone());
+            if (user2 != null) {
                 userId.add(user2.getId());
             }
         }
         notify.setNotifyUser(userId);
-        notify.setNotifyContent("您的"+seal1.getSealName()+"编号"+seal1.getSealCode()+"的印章请尽快备案");
-        int notifyResult = notifyService.insertNotify(notify,user1);
-        if(notifyResult==ResultUtil.isFail){
+        notify.setNotifyContent("您的" + seal1.getSealName() + "编号" + seal1.getSealCode() + "的印章请尽快备案");
+        int notifyResult = notifyService.insertNotify(notify, user1);
+        if (notifyResult == ResultUtil.isFail) {
             return ResultUtil.isFail;
         }
 
@@ -815,10 +920,10 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("05");
-        int insertSealOperationRecord =    sealOperationRecordMapper.insertSelective(sealOperationRecord);
-        if(result==1 && insertSealOperationRecord==1){
+        int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+        if (result == 1 && insertSealOperationRecord == 1) {
             return ResultUtil.isSuccess;
-        }else {
+        } else {
             return ResultUtil.isFail;
         }
     }
@@ -846,9 +951,9 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("001");
         int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
-        if(result==1 && insertSealOperationRecord==1){
+        if (result == 1 && insertSealOperationRecord == 1) {
             return ResultUtil.isSuccess;
-        }else {
+        } else {
             return ResultUtil.isFail;
         }
     }
@@ -1242,7 +1347,7 @@ public class SealServiceImpl implements SealService {
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
-        sealOperationRecord.setOperateType("08");  //核验的操作人
+        sealOperationRecord.setOperateType("06");  //核验的操作人
         sealOperationRecord.setEmployeeCode(recordDepartment.getDepartmentCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeName(recordDepartment.getDepartmentName());
@@ -1658,49 +1763,46 @@ public class SealServiceImpl implements SealService {
     }
 
     @Override
-    public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId) {
+    public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO, String payOrderId) {
         try {
-        List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
-        UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
-        if (useDepartment == null) {
-            return ResultUtil.isNoDepartment;
-        }
-        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
-        RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
+            List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
+            UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
+            MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
+            RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
 
-        for (Seal seal : list) {
-            if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && (sealDTO.getSeal().getSealTypeCode().equals("05")||sealDTO.getSeal().getSealTypeCode().equals("01"))) {
-                return ResultUtil.isHaveSeal;
+            for (Seal seal : list) {
+                if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && (sealDTO.getSeal().getSealTypeCode().equals("05") || sealDTO.getSeal().getSealTypeCode().equals("01"))) {
+                    return ResultUtil.isHaveSeal;
+                }
             }
-        }
-        Seal seal = sealDTO.getSeal();
-        String sealcode1 = sealCodeService.getMaxSealCode(makedepartment.getDepartmentAddress());
-        String serial = "00000000";
-        String sealcode = makedepartment.getDepartmentAddress() + serial.substring(0, serial.length() - sealcode1.length()) + sealcode1;
-        seal.setSealCode(sealcode);
-        //印章信息
-        String sealId = UUIDUtil.generate();
-        seal.setId(sealId);
-        String sealType = chooseType(seal.getSealTypeCode());
-        seal.setSealName(useDepartment.getName()+sealType);
-        seal.setUseDepartmentCode(sealDTO.getUseDepartmentCode());
-        seal.setUseDepartmentName(useDepartment.getName());
-        seal.setSealStatusCode("03");
-        seal.setIsRecord(true);
-        seal.setRecordDate(DateUtil.getCurrentTime());
-        seal.setIsMake(false);
-        seal.setIsDeliver(false);
-        seal.setIsLoss(false);
-        seal.setIsPersonal(false);
-        seal.setIsLogout(false);
-        seal.setDistrictId(useDepartment.getDistrictId());
-        seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
-        seal.setMakeDepartmentName(makedepartment.getDepartmentName());
-        seal.setApplySource(1);
-        if(recordDepartment!=null){
-            seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
-            seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
-        }
+            Seal seal = sealDTO.getSeal();
+            String sealcode1 = sealCodeService.getMaxSealCode(makedepartment.getDepartmentAddress());
+            String serial = "00000000";
+            String sealcode = makedepartment.getDepartmentAddress() + serial.substring(0, serial.length() - sealcode1.length()) + sealcode1;
+            seal.setSealCode(sealcode);
+            //印章信息
+            String sealId = UUIDUtil.generate();
+            seal.setId(sealId);
+            String sealType = chooseType(seal.getSealTypeCode());
+            seal.setSealName(useDepartment.getName() + sealType);
+            seal.setUseDepartmentCode(sealDTO.getUseDepartmentCode());
+            seal.setUseDepartmentName(useDepartment.getName());
+            seal.setSealStatusCode("03");
+            seal.setIsRecord(true);
+            seal.setRecordDate(DateUtil.getCurrentTime());
+            seal.setIsMake(false);
+            seal.setIsDeliver(false);
+            seal.setIsLoss(false);
+            seal.setIsPersonal(false);
+            seal.setIsLogout(false);
+            seal.setDistrictId(useDepartment.getDistrictId());
+            seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
+            seal.setMakeDepartmentName(makedepartment.getDepartmentName());
+            seal.setApplySource(1);
+            if (recordDepartment != null) {
+                seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
+                seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
+            }
 
         seal.setIsRecord(true);
         seal.setRecordDate(DateUtil.getCurrentTime());
@@ -1730,9 +1832,8 @@ public class SealServiceImpl implements SealService {
             }
         }
 
-        //操作记录
-        String type1 = "00";
-        for (int i = 0; i < 2; i++) {
+            //申请操作记录
+            String type1 = "00";
             SealOperationRecord sealOperationRecord = new SealOperationRecord();
             sealOperationRecord.setId(UUIDUtil.generate());
             sealOperationRecord.setSealId(sealId);
@@ -1743,44 +1844,55 @@ public class SealServiceImpl implements SealService {
             if (sealOperationRecordInsert < 0) {
                 return ResultUtil.isFail;
             }
-        }
 
-        //经办人信息
-        SealAgent sealAgent = sealDTO.getSealAgent();
-        String saId  = UUIDUtil.generate();
+            //自动承接操作记录
+            String type2 = "01";
+            SealOperationRecord sealOperationRecord2 = new SealOperationRecord();
+            sealOperationRecord.setId(UUIDUtil.generate());
+            sealOperationRecord.setSealId(sealId);
+            sealOperationRecord.setOperateType(type2);
+            sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+            sealOperationRecord.setEmployeeName(makedepartment.getDepartmentName());
+            int sealOperationRecordInsert2 = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
+            if (sealOperationRecordInsert < 0) {
+                return ResultUtil.isFail;
+            }
+
+            //经办人信息
+            SealAgent sealAgent = sealDTO.getSealAgent();
+            String saId = UUIDUtil.generate();
             sealAgent.setId(saId);
-            sealAgent.setBusinessType("000");
+            sealAgent.setBusinessType("00");
             sealAgent.setCertificateType("111");
-        sealAgent.setLoginTelPhone(sealDTO.getTelphone());
-        if (sealAgent.getTelphone()==null){}
+            sealAgent.setLoginTelPhone(user.getTelphone());
+            if (sealAgent.getTelphone() == null) {
+            }
+
             int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+            seal.setAgentId(saId);
+            seal.setIsUndertake(true);
+            seal.setUndertakeDate(DateUtil.getCurrentTime());
+            int sealInsert = sealDao.insertSelective(seal);
 
 
-        seal.setAgentId(saId);
-        seal.setIsUndertake(true);
-        seal.setUndertakeDate(DateUtil.getCurrentTime());
-        int sealInsert = sealDao.insertSelective(seal);
-
-
-        //插入快递
-        SealPayOrder sealPayOrder =sealDTO.getSealPayOrder();
-        Courier courier =sealDTO.getCourier();
-        if(courier.getRecipientsId()!=null && !courier.getRecipientsId().isEmpty()){
-        String courierId = UUIDUtil.generate();
-
-        courier.setId(courierId);
-        courier.setSealId(sealId);
-        courier.setCourierNo(testNum(13));
-        courier.setCourierType("EMS");
-        courierMapper.insertSelective(courier);
-            sealPayOrder.setCourierId(courierId);
-        }
-        //插入到订单中
+            //插入快递
+            SealPayOrder sealPayOrder = sealDTO.getSealPayOrder();
+            Courier courier = sealDTO.getCourier();
+            if (courier.getRecipientsId() != null && !courier.getRecipientsId().isEmpty()) {
+                String courierId = UUIDUtil.generate();
+                courier.setId(courierId);
+                courier.setSealId(sealId);
+                courier.setCourierNo(testNum(13));
+                courier.setCourierType("EMS");
+                courierMapper.insertSelective(courier);
+                sealPayOrder.setCourierId(courierId);
+            }
+            //插入到订单中
 //
-        sealPayOrder.setId(payOrderId);
-        sealPayOrder.setSealId(sealId);
-        sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-        sealPayOrderMapper.insertSelective(sealPayOrder);
+            sealPayOrder.setId(payOrderId);
+            sealPayOrder.setSealId(sealId);
+            sealPayOrder.setPayDate(DateUtil.getCurrentTime());
+            sealPayOrderMapper.insertSelective(sealPayOrder);
 
             //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
             if (sealInsert > 0 && sealAgentInsert > 0) {
@@ -1809,11 +1921,11 @@ public class SealServiceImpl implements SealService {
                 BufferedImage image = ImageUtil.getBufferedImage(localPath);
                 ImageGenerate imageGenerate = new ImageGenerate();
 
-                imageGenerate.saveGridImage(new File(localPath),image); //设置dpi
+                imageGenerate.saveGridImage(new File(localPath), image); //设置dpi
 
                 BufferedImage image1 = ImageUtil.getBufferedImage(localPath);
-                ImageIO.write(image1,"bmp",new File(localPath));
-                File file2 =  new File(localPath);
+                ImageIO.write(image1, "bmp", new File(localPath));
+                File file2 = new File(localPath);
                 InputStream inputStream = new FileInputStream(file2);
                 byte[] imageData = FileUtil.readInputStream(inputStream);
                 FileInfo fileInfo = fileService.save(imageData, DateUtil.getCurrentTime() + useDepartment.getName() + sealType, "bmp", "", FileService.CREATE_TYPE_UPLOAD, user.getId(), user.getTelphone());
@@ -1873,17 +1985,15 @@ public class SealServiceImpl implements SealService {
             }
             return ResultUtil.isSuccess;
         } catch (IOException e) {
-                e.printStackTrace();
+            e.printStackTrace();
             return ResultUtil.isException;
-            }
+        }
     }
 
 
-
-
-    public  String testNum(int num){
-        StringBuilder str=new StringBuilder();//定义变长字符串
-        Random random=new Random();
+    public String testNum(int num) {
+        StringBuilder str = new StringBuilder();//定义变长字符串
+        Random random = new Random();
         for (int i = 0; i < num; i++) {
             str.append(random.nextInt(10));
         }
@@ -1893,28 +2003,29 @@ public class SealServiceImpl implements SealService {
 
     /**
      * 公章变更
+     *
      * @param
      * @return
      */
     @Override
-    public int cachetChange(SealWeChatDTO sealDTO,WeChatUser user) {
+    public int cachetChange(SealWeChatDTO sealDTO, WeChatUser user) {
         UseDepartment useDepartment = useDepartmentService.selectByCode(sealDTO.getUseDepartmentCode());
-        if(useDepartment==null){
+        if (useDepartment == null) {
             return ResultUtil.isNoDepartment;
         }
-        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),true,"01");
-        if(seal1!=null) {
-            int logoutSeal = sealDao.logoutSeal(sealDTO.getUseDepartmentCode(),"01");
+        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(), true, "01");
+        if (seal1 != null) {
+            int logoutSeal = sealDao.logoutSeal(sealDTO.getUseDepartmentCode(), "01");
         }
         Seal seal = sealDTO.getSeal();
         seal.setSealTypeCode("01");
         sealDTO.setSeal(seal);
-        return sealWeChatRecord(user,sealDTO,null);
+        return sealWeChatRecord(user, sealDTO, null);
 
     }
 
     @Override
-    public List<Seal> portalSealInfo( String useDepartmentName, String useDepartmentCode, String status,  String sealType, String recordDepartmentName, String sealCode) {
+    public List<Seal> portalSealInfo(String useDepartmentName, String useDepartmentCode, String status, String sealType, String recordDepartmentName, String sealCode) {
 
         try {
             Seal seal = new Seal();
@@ -1934,29 +2045,30 @@ public class SealServiceImpl implements SealService {
 
     /**
      * 印章检测
+     *
      * @param sealCode
      * @param useDepartmentCode
      * @return
      */
     @Override
-    public int checkSealCode(String sealCode, String useDepartmentCode,String sealTypeCode) {
-        List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2(useDepartmentCode,sealTypeCode);
-        if(seals.size()==0){
+    public int checkSealCode(String sealCode, String useDepartmentCode, String sealTypeCode) {
+        List<Seal> seals = sealDao.selectByTypeAndUseDepartmentCode2(useDepartmentCode, sealTypeCode);
+        if (seals.size() == 0) {
             return ResultUtil.isFail;
         }
-        for(Seal seal:seals){
-        if(seal.getSealCode().equals(sealCode)){
-            return ResultUtil.isSuccess;
-        }
+        for (Seal seal : seals) {
+            if (seal.getSealCode().equals(sealCode)) {
+                return ResultUtil.isSuccess;
+            }
         }
         return ResultUtil.isFail;
     }
 
     @Override
-    public MakeDepartmentSealPrice sealPrice( Map map) {
-        String makeDepartmentFlag=(String)map.get("makeDepartmentFlag");
-        String sealType=(String)map.get("sealType");
-        MakeDepartmentSealPrice makeDepartmentSealPrice = new MakeDepartmentSealPrice(sealType,makeDepartmentFlag);
+    public MakeDepartmentSealPrice sealPrice(Map map) {
+        String makeDepartmentFlag = (String) map.get("makeDepartmentFlag");
+        String sealType = (String) map.get("sealType");
+        MakeDepartmentSealPrice makeDepartmentSealPrice = new MakeDepartmentSealPrice(sealType, makeDepartmentFlag);
         return makeDepartmentSealPriceMapper.selectBySealTypeAndMakeDepartment(makeDepartmentSealPrice);
     }
 
@@ -2010,7 +2122,8 @@ public class SealServiceImpl implements SealService {
     }
 
     /**
-     * 注销相关操作
+     * 挂失相关操作
+     *
      * @param seal
      * @param employee
      * @return

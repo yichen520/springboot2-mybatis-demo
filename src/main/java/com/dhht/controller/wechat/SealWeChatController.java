@@ -63,7 +63,7 @@ public class SealWeChatController extends WeChatBaseController {
     @Autowired
     private MakeDepartmentSealPriceService makeDepartmentSealPriceService;
 
-    @Log("小程序印章申请")
+
     @RequestMapping("/sealRecord")
     public JsonObjectBO sealRecord(@RequestBody SealWeChatDTO sealDTO,HttpServletResponse httpServletResponse) {
         WeChatUser user = getcurrentUserByTelphone(sealDTO.getTelphone());
@@ -75,12 +75,12 @@ public class SealWeChatController extends WeChatBaseController {
             int a = sealService.sealWeChatRecord(user,sealDTO,payOrderId);
             if (a== 1){
                 jsonObject.put("payOrderId",payOrderId);
-                return JsonObjectBO.success("印章备案成功",jsonObject);
+                return JsonObjectBO.success("印章申请成功",jsonObject);
             }else {
             return ResultUtil.getResult(a);}
         } catch (Exception e) {
             e.printStackTrace();
-            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"备案失败");
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"申请失败");
         }
     }
     @Log("获取印章价格")
