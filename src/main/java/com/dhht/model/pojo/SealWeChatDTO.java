@@ -55,7 +55,6 @@ public class SealWeChatDTO {
 
     private String entryType;//录入方式  00-读卡  01-可信身份证录入
 
-
     private Boolean isSame;
 
     private Integer pageNum;
@@ -63,9 +62,10 @@ public class SealWeChatDTO {
     private Integer pageSize;
 
     private String captcha;
-//订单信息
+
+    //订单信息
     private SealPayOrder sealPayOrder;
-//快递信息
+    //快递信息
     private Courier courier;
     //经办人信息
     private SealAgent sealAgent;

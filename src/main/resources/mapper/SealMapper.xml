@@ -683,6 +683,7 @@
     </select>
 
 
+
 <select id="selectOperationRecordByCode" resultType="com.dhht.model.SealOperationRecord">
         select emplyee_name AS employeeName ,employee_id as employeeId ,employee_code as employeeCode
      FROM  seal_operate_record WHERE seal_id = #{id} AND operate_type = "00";
