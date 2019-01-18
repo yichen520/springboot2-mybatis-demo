@@ -113,5 +113,7 @@ public interface SealService {
     int updatePay(SealPayOrder sealPayOrder);
 
     int expressdeliver(User user, Seal seal);
+    int isHaveSeal(String useDepartmentCode,Seal seal);
+
 }
 

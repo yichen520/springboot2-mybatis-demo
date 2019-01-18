@@ -2155,6 +2155,29 @@ public class SealServiceImpl implements SealService {
     public int updatePay(SealPayOrder sealPayOrder) {
         return sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
     }
+
+    /**
+     * 判断是否重复
+     * @param useDepartmentCode
+     * @param seal
+     * @return
+     */
+    public int isHaveSeal(String useDepartmentCode,Seal seal){
+        if(seal.getSealTypeCode().equals("01")) {
+            Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"01");
+            if(seal1!=null){
+                return ResultUtil.isHaveSeal;
+            }
+        }
+        if(seal.getSealTypeCode().equals("05")){
+            Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"05");
+            if(seal1!=null){
+                return ResultUtil.isHaveSeal;
+            }
+        }
+
+        return ResultUtil.isSuccess;
+    }
 }
 
 
