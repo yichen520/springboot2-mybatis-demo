@@ -18,7 +18,8 @@
     from courier
     where id = #{id,jdbcType=CHAR}
   </select>
-  <select id="selectSealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+
+  <select id="selectBySealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from courier
