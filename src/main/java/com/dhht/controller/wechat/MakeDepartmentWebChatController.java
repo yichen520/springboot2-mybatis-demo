@@ -89,7 +89,6 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
         }
     }
 
-    @Log("获取印章价格")
     @RequestMapping("/sealPrice")
     public JsonObjectBO sealPrice(@RequestBody Map map,HttpServletResponse httpServletResponse){
         try {
