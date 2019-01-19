@@ -304,7 +304,7 @@ public class SealServiceImpl implements SealService {
                             sealAgent.setIdCardFrontId(idcardFrontId);
                             sealAgent.setEntryType(entryType);
                             sealAgent.setIdCardReverseId(idcardReverseId);
-                            sealAgent.setLoginTelPhone(agentTelphone);
+//                            sealAgent.setLoginTelPhone(agentTelphone);
                             if (entryType.equals("00")) {
                                 sealAgent.setFaceCompareRecordId(checkFace);
                             }
@@ -331,7 +331,7 @@ public class SealServiceImpl implements SealService {
                             sealAgent.setIdCardFrontId(idcardFrontId);
                             sealAgent.setEntryType(entryType);
                             sealAgent.setIdCardReverseId(idcardReverseId);
-                            sealAgent.setLoginTelPhone(agentTelphone);
+//                            sealAgent.setLoginTelPhone(agentTelphone);
                             if (entryType.equals("00")) {
                                 sealAgent.setFaceCompareRecordId(checkFace);
                             }
@@ -396,7 +396,7 @@ public class SealServiceImpl implements SealService {
                 sealAgent.setIdCardFrontId(idcardFrontId);
                 sealAgent.setEntryType(entryType);
                 sealAgent.setIdCardReverseId(idcardReverseId);
-                sealAgent.setLoginTelPhone(agentTelphone);
+//                sealAgent.setLoginTelPhone(agentTelphone);
                 if (entryType.equals("00")) {
                     sealAgent.setFaceCompareRecordId(checkFace);
                 }
@@ -927,7 +927,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardFrontId(idcardFrontId);
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
-        sealAgent.setLoginTelPhone(agentTelphone);
+//        sealAgent.setLoginTelPhone(agentTelphone);
         sealAgent.setBusinessType("01");
         sealAgent.setName(name);
         if (entryType.equals("00")) {
@@ -1070,7 +1070,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setId(saId);
         sealAgent.setTelphone(agentTelphone);
         sealAgent.setAgentPhotoId(agentPhotoId);
-        sealAgent.setLoginTelPhone(agentTelphone);
+//        sealAgent.setLoginTelPhone(agentTelphone);
         sealAgent.setCertificateNo(certificateNo);
         sealAgent.setCertificateType(certificateType);
         sealAgent.setIdCardFrontId(idcardFrontId);
@@ -1175,7 +1175,7 @@ public class SealServiceImpl implements SealService {
         sealAgent = new SealAgent();
         sealAgent.setId(saId);
         sealAgent.setTelphone(agentTelphone);
-        sealAgent.setLoginTelPhone(agentTelphone);
+//        sealAgent.setLoginTelPhone(agentTelphone);
         sealAgent.setAgentPhotoId(agentPhotoId);
         sealAgent.setCertificateNo(certificateNo);
         sealAgent.setCertificateType(certificateType);
@@ -1722,7 +1722,7 @@ public class SealServiceImpl implements SealService {
                         deliveryExpressInfo.setAgentidcardFrontReverseImage(sealAgent.getIdCardReverseId());
                         deliveryExpressInfo.setAgentPhotoImage(sealAgent.getAgentPhotoId());
                         deliveryExpressInfo.setAgentproxyImage(sealAgent.getProxyId());
-                        deliveryExpressInfo.setLoginTelphone(sealAgent.getLoginTelPhone());
+//                        deliveryExpressInfo.setLoginTelphone(sealAgent.getLoginTelPhone());
                     }
 
                     seal1.setDeliveryExpressInfo(deliveryExpressInfo);

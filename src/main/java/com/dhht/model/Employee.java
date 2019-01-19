@@ -51,7 +51,7 @@ public class Employee {
 
     private String nowDistrictName;
 
-    @EntityComment("从业人员头像")
+    @EntityComment(value ="从业人员头像",type = 2)
     private String employeeImage;
 
     @EntityComment("从业人员联系电话")
