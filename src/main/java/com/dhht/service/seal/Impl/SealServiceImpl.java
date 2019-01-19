@@ -1677,6 +1677,47 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectIsRecord(seal);
         } else if (status.equals("01")) {  //已制作
             list = sealDao.selectIsMake(seal);
+            for (Seal seal1 :list){
+                SealPayOrder sealPayOrder =sealPayOrderMapper.selectBySealId(seal1.getId());
+                if( sealPayOrder.getCourierId()!=null &&  !sealPayOrder.getCourierId().isEmpty()){
+                    //  Recipients recipients =recipientsMapper.selectByPrimaryKey(courierMapper.selectByPrimaryKey(sealPayOrder.getCourierId()).getRecipientsId());
+
+                    Recipients recipients =   recipientsMapper.selectByPrimaryKey(courierMapper.selectBySealId(seal.getId()).getRecipientsId());
+                    DeliveryExpressInfo deliveryExpressInfo = new DeliveryExpressInfo();
+                    deliveryExpressInfo.setReceiveName(recipients.getRecipientsName());
+                    deliveryExpressInfo.setReceivephone(recipients.getRecipientsTelphone());
+                    deliveryExpressInfo.setReceivedistrictId(recipients.getDistrictId());
+                    deliveryExpressInfo.setReceiveAddressDetail(recipients.getRecipientsAddress());
+                    deliveryExpressInfo.setReceivedistrictName(recipients.getDistrictName());
+                    MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(seal1.getMakeDepartmentCode());
+                    if(makedepartment == null){
+                        deliveryExpressInfo.setSendName("未找到刻制单位信息");
+                    }else {
+                        deliveryExpressInfo.setSendName(makedepartment.getDepartmentName());
+                        deliveryExpressInfo.setSenddistrictId(makedepartment.getDepartmentAddress());
+                        deliveryExpressInfo.setSenddistrictName(getDistrictName(makedepartment.getDepartmentAddress()));
+                        deliveryExpressInfo.setSendTelphone(makedepartment.getTelphone());
+                        deliveryExpressInfo.setSendAddressDetail(makedepartment.getDepartmentAddressDetail());
+                    }
+                    //增加经办人信息
+                    SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
+                    if (sealAgent == null){
+                        deliveryExpressInfo.setAgentName("未找到经办人信息");
+                    }else {
+
+                        deliveryExpressInfo.setAgentName(sealAgent.getName());
+                        deliveryExpressInfo.setAgentidcard(sealAgent.getCertificateNo());
+                        deliveryExpressInfo.setAgentphone(sealAgent.getTelphone());
+                        deliveryExpressInfo.setAgentidcardFrontImage(sealAgent.getIdCardFrontId());
+                        deliveryExpressInfo.setAgentidcardFrontReverseImage(sealAgent.getIdCardReverseId());
+                        deliveryExpressInfo.setAgentPhotoImage(sealAgent.getAgentPhotoId());
+                        deliveryExpressInfo.setAgentproxyImage(sealAgent.getProxyId());
+                        deliveryExpressInfo.setLoginTelphone(sealAgent.getLoginTelPhone());
+                    }
+
+                    seal1.setDeliveryExpressInfo(deliveryExpressInfo);
+                }
+            }
         } else if (status.equals("02")) {  //已个人化
             list = sealDao.selectPersonal(seal);
         } else if (status.equals("00")) {    //未交付
@@ -1816,6 +1857,7 @@ public class SealServiceImpl implements SealService {
             seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
             seal.setMakeDepartmentName(makedepartment.getDepartmentName());
             seal.setApplySource(1);
+            seal.setAgentId(sealDTO.getSealAgent().getId());
             if (recordDepartment != null) {
                 seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
                 seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
