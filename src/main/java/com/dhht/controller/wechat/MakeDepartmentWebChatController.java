@@ -42,6 +42,7 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
     @Autowired
     private EmployeeService employeeService;
 
+
     @RequestMapping(value = "/selectByName")
     public JsonObjectBO selectByAllName(@RequestBody Map map){
         try {

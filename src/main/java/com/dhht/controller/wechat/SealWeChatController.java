@@ -416,7 +416,7 @@ public class SealWeChatController extends WeChatBaseController {
             String type =(String) map.get("type");
             init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
-                WeChatUser weChatUser = currentUser();
+            WeChatUser weChatUser = currentUser();
             List<SealOrder> sealorders = sealService.selectOrder(type,weChatUser.getTelphone());
             jsonObject.put("sealorders",sealorders);
             return JsonObjectBO.success("查询订单成功",jsonObject);

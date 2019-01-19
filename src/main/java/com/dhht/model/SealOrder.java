@@ -13,5 +13,6 @@ public class SealOrder {
     private  SealAgent sealAgent;
     private Recipients recipients;
     private SealMaterial sealMaterial;
+    private Boolean isEvaluate = false;
 
 }
