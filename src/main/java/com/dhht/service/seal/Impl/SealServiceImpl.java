@@ -730,7 +730,8 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int expressdeliver(User user, Seal seal) {
+    public int expressdeliver(User user, Seal seal1) {
+       Seal seal= sealDao.selectByPrimaryKey(seal1.getId());
         if (seal.getIsLogout()) {
             return ResultUtil.isLogout;
         }
@@ -787,14 +788,19 @@ public class SealServiceImpl implements SealService {
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
         sealAgent.setId(saId);
-        sealAgent.setTelphone(seal.getDeliveryExpressInfo().getAgentphone());
-        sealAgent.setAgentPhotoId(seal.getDeliveryExpressInfo().getAgentPhotoImage());
-        sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
-        sealAgent.setCertificateType("111");
-        sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
-        sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
-        sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
-        sealAgent.setLoginTelPhone(seal.getDeliveryExpressInfo().getLoginTelphone());
+        seal.setDeliveryExpressInfo(seal1.getDeliveryExpressInfo());
+        if (seal.getDeliveryExpressInfo().getAgentphone()==null){
+
+        }else{
+            sealAgent.setTelphone(seal.getDeliveryExpressInfo().getAgentphone());
+            sealAgent.setAgentPhotoId(seal.getDeliveryExpressInfo().getAgentPhotoImage());
+            sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
+            sealAgent.setCertificateType("111");
+            sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
+            sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
+            sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
+        }
+
         sealAgent.setBusinessType("01");
         sealAgent.setName(seal.getDeliveryExpressInfo().getAgentName());
 

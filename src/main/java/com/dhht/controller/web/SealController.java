@@ -247,7 +247,7 @@ public class SealController implements InitializingBean {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
-        String telphone = user.getTelphone();
+
         String useDepartmentName = sealDTO.getSeal().getUseDepartmentName();
         String useDepartmentCode = sealDTO.getSeal().getUseDepartmentCode();
         String status = sealDTO.getSeal().getSealStatusCode();
@@ -353,6 +353,7 @@ public class SealController implements InitializingBean {
             int a = sealService.expressdeliver( user,  seal);
             return ResultUtil.getResult(a);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("出现未知错误");
         }
