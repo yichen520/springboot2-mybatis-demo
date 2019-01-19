@@ -14,7 +14,7 @@ public class Evaluate {
     private String evaluateContent;
 
     private Date evaluateTime;
-
+    private String makeDepartmentId;
     private String flag;
 
     private String makeDepartmentName;

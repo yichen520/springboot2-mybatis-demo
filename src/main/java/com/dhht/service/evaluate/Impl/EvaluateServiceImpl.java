@@ -1,10 +1,10 @@
 package com.dhht.service.evaluate.Impl;
 
 import com.dhht.dao.EvaluateMapper;
-import com.dhht.model.Evaluate;
-import com.dhht.model.User;
-import com.dhht.model.WeChatUser;
+import com.dhht.dao.MakedepartmentMapper;
+import com.dhht.model.*;
 import com.dhht.service.evaluate.EvaluateService;
+import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
@@ -25,6 +25,8 @@ import java.util.UUID;
 public class EvaluateServiceImpl implements EvaluateService {
     @Autowired
     private EvaluateMapper evaluateMapper;
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
 
     @Override
     public int insert(Evaluate evaluate, WeChatUser user) {
@@ -32,6 +34,8 @@ public class EvaluateServiceImpl implements EvaluateService {
         if(user == null){
             return ResultUtil.isNoLoginUser;
         }
+        MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(evaluate.getMakeDepartmentId());
+        evaluate.setFlag(makedepartment.getFlag());
         evaluate.setUserId(user.getId());
         evaluate.setUserName(user.getTelphone());
         evaluate.setEvaluateTime(DateUtil.getCurrentTime());
