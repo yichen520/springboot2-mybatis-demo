@@ -691,7 +691,7 @@
 
     <select id="selectSealByTelphone" resultMap="BaseResultMap"  parameterType="java.lang.String">
         select <include refid="Base_Column_List_seal" />
-     FROM  seal a join seal_agent sa on a.agent_id = sa.id  AND sa.telphone = #{telphone} and sa.business_type in ("000","00")
+     FROM  seal a join seal_agent sa on a.agent_id = sa.id  AND sa.login_telphone = #{telphone}
 </select>
 
 

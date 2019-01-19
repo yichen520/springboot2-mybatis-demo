@@ -20,4 +20,6 @@ public interface CourierMapper {
     int updateByPrimaryKey(Courier record);
 
     List<Courier> selectByRecipients(String recipientsId);
+
+    Courier selectBySealId(String SealId);
 }

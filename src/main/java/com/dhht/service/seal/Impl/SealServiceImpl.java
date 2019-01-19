@@ -883,6 +883,15 @@ public class SealServiceImpl implements SealService {
         seal1.setSealStatusCode("04");
         seal1.setGetterId(saId);
         int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal1);
+
+        //更新支付状态
+        SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal1.getId());
+        if (sealPayOrder == null){
+         return  ResultUtil.isFail;
+        }
+        sealPayOrder.setIsPay(true);
+        sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
+
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
 //            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.PERSONAL);
 //            SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal1, SyncDataType.SEAL, SyncOperateType.PERSONAL);
@@ -2177,6 +2186,65 @@ public class SealServiceImpl implements SealService {
         }
 
         return ResultUtil.isSuccess;
+    }
+
+    @Override
+    public List<SealOrder> selectOrder(String type,String telphone) {
+        List<SealOrder> orders = new ArrayList<>();
+        if (type.equals("1")) {
+            List<Seal> seals = sealDao.selectSealByTelphone(telphone);
+            for (int i = 0; i < seals.size(); i++) {
+                SealOrder sealOrder = new SealOrder();
+                Seal seal = seals.get(i);
+                SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                sealOrder.setSeal(seal);
+                sealOrder.setSealPayOrder(sealPayOrder);
+                orders.add(sealOrder);
+            }
+        }
+        if (type.equals("2")) {
+            List<Seal> seals = sealDao.selectSealByTelphone(telphone);
+            for (int i = 0; i < seals.size(); i++) {
+                SealOrder sealOrder = new SealOrder();
+                Seal seal = seals.get(i);
+                SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if (!sealPayOrder.getIsPay()){
+
+                }else {
+                    sealOrder.setSeal(seal);
+                    sealOrder.setSealPayOrder(sealPayOrder);
+                    orders.add(sealOrder);
+                }
+            }
+        }
+        if (type.equals("3")) {
+            List<Seal> seals = sealDao.selectSealByTelphone(telphone);
+            for (int i = 0; i < seals.size(); i++) {
+                SealOrder sealOrder = new SealOrder();
+                Seal seal = seals.get(i);
+                SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if (seal.getSealStatusCode().equals("04")||seal.getSealStatusCode().equals("09")){
+                    sealOrder.setSeal(seal);
+                    sealOrder.setSealPayOrder(sealPayOrder);
+                    orders.add(sealOrder);
+                }else {
+
+                }
+            }
+        }
+        return orders;
+    }
+
+    @Override
+    public SealOrder selectOrderDetail(String sealId) {
+        SealOrder sealOrder = new SealOrder();
+        Seal seal = sealDao.selectByPrimaryKey(sealId);
+        SealMaterial sealMaterial = sealDao.selectSealMaterial(seal.getSealCode(),seal.getSealTypeCode());
+        Recipients recipients = recipientsMapper.selectByPrimaryKey(courierMapper.selectBySealId(seal.getId()).getRecipientsId());
+        sealOrder.setSeal(seal);
+        sealOrder.setSealMaterial(sealMaterial);
+        sealOrder.setRecipients(recipients);
+        return sealOrder;
     }
 }
 
