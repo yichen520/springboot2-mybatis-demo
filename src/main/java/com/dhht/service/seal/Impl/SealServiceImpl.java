@@ -759,6 +759,14 @@ public class SealServiceImpl implements SealService {
         seal.setSealStatusCode("04");
         seal.setGetterId(saId);
         int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal);
+
+        //更新支付状态
+        SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+        if (sealPayOrder == null){
+            return  ResultUtil.isFail;
+        }
+        sealPayOrder.setIsPay(true);
+        sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
             ArrayList<String> params = new ArrayList<String>();
             params.add(seal.getUseDepartmentName());
@@ -1868,16 +1876,9 @@ public class SealServiceImpl implements SealService {
             }
 
             //经办人信息
-            SealAgent sealAgent = sealDTO.getSealAgent();
-            String saId = UUIDUtil.generate();
-            sealAgent.setId(saId);
-            sealAgent.setBusinessType("00");
-            sealAgent.setCertificateType("111");
-            sealAgent.setLoginTelPhone(user.getTelphone());
-            if (sealAgent.getTelphone() == null) {
-            }
 
-            int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+            String saId = sealDTO.getSealAgent().getId();
+
             seal.setAgentId(saId);
             seal.setIsUndertake(true);
             seal.setUndertakeDate(DateUtil.getCurrentTime());
@@ -1904,7 +1905,7 @@ public class SealServiceImpl implements SealService {
             sealPayOrderMapper.insertSelective(sealPayOrder);
 
             //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
-            if (sealInsert > 0 && sealAgentInsert > 0) {
+            if (sealInsert > 0 ) {
 
                 Map<String, String> map = new HashMap<>();
                 map.put("useDepartment", useDepartment.getName());
