@@ -205,6 +205,7 @@ public class SealServiceImpl implements SealService {
                           String agentPhotoId, String idcardFrontId, String idcardReverseId, String proxyId, String idCardPhotoId, int confidence,
                           String fieldPhotoId, String entryType, String captcha) {
         try {
+            String checkFace = UUIDUtil.generate();
             SMSCode smsCode = new SMSCode();
             smsCode.setPhone(agentTelphone);
             smsCode.setSmscode(captcha);
@@ -283,21 +284,63 @@ public class SealServiceImpl implements SealService {
                 seal.setIsUndertake(true);
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
                 if (seal.getSealReason().equals("03")) {
+                    String logoutId = UUIDUtil.generate();
                     if (seal.getSealTypeCode().equals("01")) {
                         Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, "01");
                         if (seal1 != null) {
-                            seal.setSealStatusCode("06");
+                            seal1.setLogoutPersonId(logoutId);
+                            seal.setSealStatusCode("03");
                             logoutAbout(seal1, employee);
                             int logoutSeal = sealDao.logoutSeal(useDepartmentCode, "01");
+                            //经办人信息
+                            SealAgent sealAgent = new SealAgent();
+                            sealAgent.setId(logoutId);
+                            sealAgent.setName(agentName);
+                            sealAgent.setTelphone(agentTelphone);
+                            sealAgent.setAgentPhotoId(agentPhotoId);
+                            sealAgent.setBusinessType("03");
+                            sealAgent.setCertificateNo(certificateNo);
+                            sealAgent.setCertificateType(certificateType);
+                            sealAgent.setIdCardFrontId(idcardFrontId);
+                            sealAgent.setEntryType(entryType);
+                            sealAgent.setIdCardReverseId(idcardReverseId);
+                            sealAgent.setLoginTelPhone(agentTelphone);
+                            if (entryType.equals("00")) {
+                                sealAgent.setFaceCompareRecordId(checkFace);
+                            }
+                            sealAgent.setProxyId(proxyId);
+                            sealAgent.setEntryType(entryType);
+                            int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+
                         }
                     } else if (seal.getSealTypeCode().equals("05")) {
                         Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, "05");
                         if (seal1 != null) {
-                            seal.setSealStatusCode("06");
+                            seal.setSealStatusCode("03");
                             logoutAbout(seal1, employee);
                             int logoutSeal = sealDao.logoutSeal(useDepartmentCode, "05");
+                            //经办人信息
+                            SealAgent sealAgent = new SealAgent();
+                            sealAgent.setId(logoutId);
+                            sealAgent.setName(agentName);
+                            sealAgent.setTelphone(agentTelphone);
+                            sealAgent.setAgentPhotoId(agentPhotoId);
+                            sealAgent.setBusinessType("03");
+                            sealAgent.setCertificateNo(certificateNo);
+                            sealAgent.setCertificateType(certificateType);
+                            sealAgent.setIdCardFrontId(idcardFrontId);
+                            sealAgent.setEntryType(entryType);
+                            sealAgent.setIdCardReverseId(idcardReverseId);
+                            sealAgent.setLoginTelPhone(agentTelphone);
+                            if (entryType.equals("00")) {
+                                sealAgent.setFaceCompareRecordId(checkFace);
+                            }
+                            sealAgent.setProxyId(proxyId);
+                            sealAgent.setEntryType(entryType);
+                            int sealAgentInsert = sealAgentMapper.insert(sealAgent);
                         }
                     }
+
                 }
 
 
@@ -319,7 +362,7 @@ public class SealServiceImpl implements SealService {
                     }
                 }
 
-                String checkFace = UUIDUtil.generate();
+
 
 
                 if (!isLegalPerson(certificateNo, agentName, useDepartment.getCode())) { //判断不是法人
@@ -1206,12 +1249,23 @@ public class SealServiceImpl implements SealService {
             }else if(seal.getIsLogout()){
                 SealAgent sealAgent2 = sealAgentMapper.selectSealAgentByGetterId(seal.getLossPersonId());//挂失经办人
                 SealAgent sealAgent3 = sealAgentMapper.selectByPrimaryKey(seal.getLogoutPersonId());//注销经办人
+                System.out.println(sealAgent3.getId());
                 if(sealAgent2!=null) {
                     sealAgents.add(sealAgent2);
                 }
                 if(sealAgent3!=null) {
                     sealAgents.add(sealAgent3);
                 }
+            }
+        }else if(!seal.getIsDeliver() && seal.getIsLogout()&& !seal.getIsLoss()){  //遗失补课
+            SealAgent sealAgent2 = sealAgentMapper.selectSealAgentByGetterId(seal.getLossPersonId());//挂失经办人
+            SealAgent sealAgent3 = sealAgentMapper.selectByPrimaryKey(seal.getLogoutPersonId());//注销经办人
+            System.out.println(sealAgent3.getId());
+            if(sealAgent2!=null) {
+                sealAgents.add(sealAgent2);
+            }
+            if(sealAgent3!=null) {
+                sealAgents.add(sealAgent3);
             }
         }
 
@@ -1466,56 +1520,6 @@ public class SealServiceImpl implements SealService {
         Seal seal = sealDao.selectLastSeal();
         return seal;
     }
-
-
-//    /**
-//     * 挂失和注销的详细信息
-//     *
-//     * @param id
-//     * @return
-//     */
-//    @Override
-//    public SealVO lossAndLogoutDetail(String id) {
-//        Seal seal = sealDao.selectByPrimaryKey(id);
-//        SealVO sealVO = new SealVO();
-//        List<SealAgent> sealAgents = new ArrayList<>();
-//        String AgentId = seal.getAgentId();
-//        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(AgentId);  //备案经办人
-//        if (!seal.getIsLogout() && seal.getIsLoss()) {  //只有挂失但是没有注销
-//            String lossId = seal.getLossPersonId();
-//            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(lossId);  //挂失经办
-//            sealAgents.add(sealAgent);
-//            if(sealAgent1!=null) {
-//                sealAgents.add(sealAgent1);
-//            }
-//            sealVO.setSealAgents(sealAgents);
-//            sealVO.setSeal(seal);
-//            sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
-//            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "04");
-//            sealVO.setSealOperationRecord(sealOperationRecord);
-////            String employeeId = sealOperationRecord.getEmployeeId();
-////            Employee employee = employeeService.selectEmployeeByEmployeeID(employeeId);
-//
-//        } else if (seal.getIsLogout()) {
-//            String logoutPersonId = seal.getLogoutPersonId();
-//            SealAgent sealAgent1 = sealAgentMapper.selectByPrimaryKey(logoutPersonId);
-//            sealAgents.add(sealAgent);
-//            if(sealAgent1!=null) {
-//                sealAgents.add(sealAgent1);
-//            }
-//            sealVO.setSealAgents(sealAgents);
-//            if(sealDao.selectSealMaterial(seal.getSealCode(),"01")!=null){
-//                sealVO.setLossBusinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"01").getFilePath());
-//            }
-//            sealVO.setLogoutBussinessLicense(sealDao.selectSealMaterial(seal.getSealCode(),"07").getFilePath());
-//            sealVO.setSeal(seal);
-//            SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCodeAndType(seal.getId(), "05");
-//            sealVO.setSealOperationRecord(sealOperationRecord);
-//        }
-//        return sealVO;
-//
-//
-//    }
 
     /**
      * 人证合一
@@ -2181,6 +2185,9 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     public int logoutAbout(Seal seal,Employee employee){
+
+
+
         String agentId = seal.getAgentId();
         SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
         sealAgent.setId(UUIDUtil.generate());
@@ -2195,7 +2202,8 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperateType("07");
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord);
-        if(sealAgentInsert<0&&sealOperationRecordInsert<0 ){
+        int sealUpdate = sealDao.updateByPrimaryKeySelective(seal);
+        if(sealAgentInsert<0&&sealOperationRecordInsert<0 &&sealUpdate<0){
             return ResultUtil.isFail;
         }else{
             return ResultUtil.isSuccess;

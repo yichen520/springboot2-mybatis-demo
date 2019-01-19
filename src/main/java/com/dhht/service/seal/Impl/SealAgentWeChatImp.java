@@ -34,7 +34,7 @@ public class SealAgentWeChatImp implements SealAgentWeChatService {
 
     @Override
     public int updateSealAgent(SealAgent sealAgent) {
-        int updateResult = sealAgentMapper.updateByPrimaryKey(sealAgent);
+        int updateResult = sealAgentMapper.updateByPrimaryKeySelective(sealAgent);
         if(updateResult<0){
             return ResultUtil.isFail;
         }else{
