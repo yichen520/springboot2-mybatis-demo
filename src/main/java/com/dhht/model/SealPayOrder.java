@@ -20,6 +20,8 @@ public class SealPayOrder {
 
     private Boolean expressWay;
 
+    private String expressWayName;
+
     private String courierId;
 
     private String memo;

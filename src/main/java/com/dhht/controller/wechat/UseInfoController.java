@@ -75,6 +75,7 @@ public class UseInfoController {
             String sealCode = (String)map.get("sealCode");
             String useDepartmentCode = (String)map.get("useDepartmentCode");
             String sealTypeCode = (String)map.get("sealTypeCode");
+            System.out.println(sealCode+"------"+useDepartmentCode+"---------"+sealTypeCode);
             int result = sealService.checkSealCode(sealCode,useDepartmentCode,sealTypeCode);
             if(result== ResultUtil.isSuccess){
                 return JsonObjectBO.ok("核验成功");

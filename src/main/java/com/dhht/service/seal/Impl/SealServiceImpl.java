@@ -58,7 +58,7 @@ import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 @Transactional
 public class SealServiceImpl implements SealService {
 
-
+    private static String ACCOUNT_TIP="该刻制单位还未配置此类型印章价格，只能通过到店支付方式付款元";
     @Autowired
     private SealDao sealDao;
 
@@ -730,7 +730,8 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int expressdeliver(User user, Seal seal) {
+    public int expressdeliver(User user, Seal seal1) {
+       Seal seal= sealDao.selectByPrimaryKey(seal1.getId());
         if (seal.getIsLogout()) {
             return ResultUtil.isLogout;
         }
@@ -787,14 +788,19 @@ public class SealServiceImpl implements SealService {
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
         sealAgent.setId(saId);
-        sealAgent.setTelphone(seal.getDeliveryExpressInfo().getAgentphone());
-        sealAgent.setAgentPhotoId(seal.getDeliveryExpressInfo().getAgentPhotoImage());
-        sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
-        sealAgent.setCertificateType("111");
-        sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
-        sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
-        sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
-//        sealAgent.setLoginTelPhone(seal.getDeliveryExpressInfo().getLoginTelphone());
+        seal.setDeliveryExpressInfo(seal1.getDeliveryExpressInfo());
+        if (seal.getDeliveryExpressInfo().getAgentphone()==null){
+
+        }else{
+            sealAgent.setTelphone(seal.getDeliveryExpressInfo().getAgentphone());
+            sealAgent.setAgentPhotoId(seal.getDeliveryExpressInfo().getAgentPhotoImage());
+            sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
+            sealAgent.setCertificateType("111");
+            sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
+            sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
+            sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
+        }
+
         sealAgent.setBusinessType("01");
         sealAgent.setName(seal.getDeliveryExpressInfo().getAgentName());
 
@@ -2248,6 +2254,14 @@ public class SealServiceImpl implements SealService {
                 SealOrder sealOrder = new SealOrder();
                 Seal seal = seals.get(i);
                 SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if(sealPayOrder.getExpressWay()){
+                    sealPayOrder.setExpressWayName("EMS");
+                }else {
+                    sealPayOrder.setExpressWayName("自取");
+                }
+                if(ACCOUNT_TIP.contains(sealPayOrder.getPayAccout())){
+                    sealPayOrder.setPayAccout("价格到店商议");
+                }
                 sealOrder.setSeal(seal);
                 sealOrder.setSealPayOrder(sealPayOrder);
                 orders.add(sealOrder);
@@ -2259,6 +2273,14 @@ public class SealServiceImpl implements SealService {
                 SealOrder sealOrder = new SealOrder();
                 Seal seal = seals.get(i);
                 SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if(sealPayOrder.getExpressWay()){
+                    sealPayOrder.setExpressWayName("EMS");
+                }else {
+                    sealPayOrder.setExpressWayName("自取");
+                }
+                if(ACCOUNT_TIP.contains(sealPayOrder.getPayAccout())){
+                    sealPayOrder.setPayAccout("价格到店商议");
+                }
                 if (!sealPayOrder.getIsPay()){
                     sealOrder.setSeal(seal);
                     sealOrder.setSealPayOrder(sealPayOrder);
@@ -2272,6 +2294,14 @@ public class SealServiceImpl implements SealService {
                 SealOrder sealOrder = new SealOrder();
                 Seal seal = seals.get(i);
                 SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if(sealPayOrder.getExpressWay()){
+                    sealPayOrder.setExpressWayName("EMS");
+                }else {
+                    sealPayOrder.setExpressWayName("自取");
+                }
+                if(ACCOUNT_TIP.contains(sealPayOrder.getPayAccout())){
+                    sealPayOrder.setPayAccout("价格到店商议");
+                }
                 if (seal.getSealStatusCode().equals("04")||seal.getSealStatusCode().equals("09")){
                     sealOrder.setSeal(seal);
                     sealOrder.setSealPayOrder(sealPayOrder);
