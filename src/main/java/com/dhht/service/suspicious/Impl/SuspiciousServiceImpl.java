@@ -131,6 +131,7 @@ public class SuspiciousServiceImpl implements SuspiciousService {
             if(makedepartment!=null){
                 suspicious.setDistrictId(makedepartment.getDepartmentAddress());
             }
+            suspicious.setSuspiciousTime(DateUtil.getCurrentTime());
             suspicious.setMakeDepartmentCode(makeDepartmentCode);
             suspicious.setCreateTime(DateUtil.getCurrentTime());
             suspicious.setUpdateTime(DateUtil.getCurrentTime());
