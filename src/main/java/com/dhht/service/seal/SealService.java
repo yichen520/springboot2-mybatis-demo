@@ -115,5 +115,8 @@ public interface SealService {
     int expressdeliver(User user, Seal seal);
     int isHaveSeal(String useDepartmentCode,Seal seal);
 
+    List<SealOrder> selectOrder(String type,String telphone);
+
+   SealOrder selectOrderDetail(String sealId);
 }
 

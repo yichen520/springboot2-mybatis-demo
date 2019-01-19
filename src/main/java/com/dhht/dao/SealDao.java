@@ -147,4 +147,6 @@ public interface SealDao {
     List<Seal> selectByCode(String useDepartmentCode);
 
     int countSealByMonthAndMakeDepartment(@Param("makeDepartmentCode") String departmentCode);
+
+    List<SealOrder> selectOrder(String telphone);
 }

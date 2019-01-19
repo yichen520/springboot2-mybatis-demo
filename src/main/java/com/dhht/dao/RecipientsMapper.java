@@ -22,4 +22,5 @@ public interface RecipientsMapper {
     int updateByPrimaryKey(Recipients record);
 
     List<Recipients> selectAllByTelphone(@Param("loginTelphone")  String loginTelphone);
+
 }

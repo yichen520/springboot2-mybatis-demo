@@ -18,6 +18,12 @@
     from courier
     where id = #{id,jdbcType=CHAR}
   </select>
+  <select id="selectSealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from courier
+    where seal_id = #{sealId,jdbcType=CHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from courier
     where id = #{id,jdbcType=CHAR}

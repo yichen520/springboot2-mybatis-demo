@@ -6,6 +6,7 @@ import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
+import com.dhht.dao.SealDao;
 import com.dhht.model.*;
 import com.dhht.model.pojo.*;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
@@ -58,6 +59,8 @@ public class SealWeChatController extends WeChatBaseController {
     private UserPasswordService userPasswordService;
     @Autowired
     private UserLoginService userLoginService;
+    @Autowired
+    private SealDao sealDao;
 
 
     @Autowired
@@ -404,6 +407,45 @@ public class SealWeChatController extends WeChatBaseController {
         }
         return jsonObjectBO;
     }
+    /**
+     * 根据session中的用户查询订单
+     */
+    @RequestMapping(value = "/order", method = RequestMethod.POST)
+    public JsonObjectBO order(@RequestBody Map map,HttpServletResponse httpServletResponse) {
+        try{
+            String type =(String) map.get("type");
+            init(httpServletRequest,httpServletResponse);
+            JSONObject jsonObject = new JSONObject();
+                WeChatUser weChatUser = currentUser();
+            List<SealOrder> sealorders = sealService.selectOrder(type,weChatUser.getTelphone());
+            jsonObject.put("sealorders",sealorders);
+            return JsonObjectBO.success("查询订单成功",jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询订单失败");
+        }
+    }
+
+    /**
+     * 订单详细
+     */
+    @RequestMapping(value = "/orderDetail", method = RequestMethod.POST)
+    public JsonObjectBO orderDetail(@RequestBody Map map,HttpServletResponse httpServletResponse) {
+        try{
+            init(httpServletRequest,httpServletResponse);
+            String SealId =(String) map.get("id");
+            JSONObject jsonObject = new JSONObject();
+            SealOrder sealOrder = sealService.selectOrderDetail(SealId);
+            jsonObject.put("sealOrder",sealOrder);
+            return JsonObjectBO.success("查询订单详细成功",jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询订单详细失败");
+        }
+    }
+
+
+
 
 
 }
