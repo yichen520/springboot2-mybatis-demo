@@ -640,7 +640,7 @@
   </select>
 
    <update id="logoutSeal" parameterType="java.lang.String">
-       update seal set  is_logout = true , logout_date = NOW(),seal_status_code = "06"  where use_department_code = #{useDepartmentCode} and seal_type_code = #{sealTypeCode}
+       update seal set  is_logout = true , logout_date = NOW(),seal_status_code = "06" where use_department_code = #{useDepartmentCode} and seal_type_code = #{sealTypeCode}
    </update>
 
     <select id="selectByTypeAndUseDepartmentCode"  resultMap="BaseResultMap">
