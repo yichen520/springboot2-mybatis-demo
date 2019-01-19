@@ -1867,7 +1867,7 @@ public class SealServiceImpl implements SealService {
             seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
             seal.setMakeDepartmentName(makedepartment.getDepartmentName());
             seal.setApplySource(1);
-            seal.setAgentId(sealDTO.getSealAgent().getId());
+
             if (recordDepartment != null) {
                 seal.setRecordDepartmentCode(recordDepartment.getDepartmentCode());
                 seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
@@ -1931,7 +1931,7 @@ public class SealServiceImpl implements SealService {
 
             String saId = sealDTO.getSealAgent().getId();
 
-            seal.setAgentId(saId);
+            seal.setAgentId(sealDTO.getSealAgent().getId());
             seal.setIsUndertake(true);
             seal.setUndertakeDate(DateUtil.getCurrentTime());
             int sealInsert = sealDao.insertSelective(seal);

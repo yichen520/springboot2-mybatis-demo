@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/weChat/sealAgent")
-public class SealAgentWeChatController {
+public class SealAgentWeChatController extends WeChatBaseController {
     @Autowired
     private SealAgentWeChatService sealAgentWeChatService;
 
@@ -31,7 +31,7 @@ public class SealAgentWeChatController {
     public JsonObjectBO insertSealAgent(@RequestBody SealAgent sealAgent, HttpServletRequest httpServletRequest){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try{
-            String telphone = (String) httpServletRequest.getSession().getAttribute("mobilePhone");
+            String telphone =  currentUserMobilePhone();
             int result = sealAgentWeChatService.insertSealAgent(sealAgent,telphone);
             if(result==ResultUtil.isSuccess){
                 jsonObjectBO.setCode(1);
