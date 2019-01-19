@@ -2192,7 +2192,7 @@ public class SealServiceImpl implements SealService {
         SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
         sealAgent.setId(UUIDUtil.generate());
         sealAgent.setBusinessType("03");
-        int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+        int sealAgentInsert = sealAgentMapper.insertSelective(sealAgent);
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealId(seal.getId());
