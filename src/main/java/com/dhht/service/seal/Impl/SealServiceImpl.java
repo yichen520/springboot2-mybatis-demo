@@ -1686,7 +1686,7 @@ public class SealServiceImpl implements SealService {
                 if( sealPayOrder.getCourierId()!=null &&  !sealPayOrder.getCourierId().isEmpty()){
                     //  Recipients recipients =recipientsMapper.selectByPrimaryKey(courierMapper.selectByPrimaryKey(sealPayOrder.getCourierId()).getRecipientsId());
 
-                    Recipients recipients =   recipientsMapper.selectByPrimaryKey(courierMapper.selectBySealId(seal.getId()).getRecipientsId());
+                    Recipients recipients =   recipientsMapper.selectByPrimaryKey(courierMapper.selectBySealId(seal1.getId()).getRecipientsId());
                     DeliveryExpressInfo deliveryExpressInfo = new DeliveryExpressInfo();
                     deliveryExpressInfo.setReceiveName(recipients.getRecipientsName());
                     deliveryExpressInfo.setReceivephone(recipients.getRecipientsTelphone());
