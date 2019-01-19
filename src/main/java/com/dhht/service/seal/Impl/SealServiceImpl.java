@@ -2260,8 +2260,6 @@ public class SealServiceImpl implements SealService {
                 Seal seal = seals.get(i);
                 SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
                 if (!sealPayOrder.getIsPay()){
-
-                }else {
                     sealOrder.setSeal(seal);
                     sealOrder.setSealPayOrder(sealPayOrder);
                     orders.add(sealOrder);
