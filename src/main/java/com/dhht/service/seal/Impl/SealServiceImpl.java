@@ -1675,6 +1675,13 @@ public class SealServiceImpl implements SealService {
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
+        }else if (status.equals("09")) {   //已备案
+            seal.setIsRecord(true);
+            seal.setIsMake(true);
+            seal.setIsDeliver(true);
+            seal.setIsUndertake(true);
+            seal.setIsApply(true);
+            list = sealDao.selectIsApply(seal);
         }
         list = sealDao.selectSealByBADW(seal);
         return list;
