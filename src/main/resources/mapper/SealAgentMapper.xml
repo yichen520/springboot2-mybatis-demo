@@ -15,10 +15,12 @@
         <result column="face_compare_record_id" jdbcType="CHAR" property="faceCompareRecordId" />
         <result column="entry_type" jdbcType="CHAR" property="entryType" />
         <result column="login_telphone" jdbcType="VARCHAR" property="loginTelPhone" />
+        <result column="flag" jdbcType="VARCHAR" property="flag" />
+
     </resultMap>
     <sql id="Base_Column_List">
         id, `name`, certificate_type, certificate_no, telphone, agent_photo_id, idcard_front_id,
-        idcard_reverse_id, proxy_id, business_type, face_compare_record_id,entry_type,login_telphone
+        idcard_reverse_id, proxy_id, business_type, face_compare_record_id,entry_type,login_telphone,flag
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select 
@@ -34,16 +36,16 @@
         insert into seal_agent (id, `name`, certificate_type,
             certificate_no, telphone, agent_photo_id, 
             idcard_front_id, idcard_reverse_id, proxy_id, 
-            business_type, face_compare_record_id,entry_type,login_telphone)
+            business_type, face_compare_record_id,entry_type,login_telphone,flag)
         values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{certificateType,jdbcType=CHAR}, 
             #{certificateNo,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{agentPhotoId,jdbcType=CHAR}, 
             #{idCardFrontId,jdbcType=CHAR}, #{idCardReverseId,jdbcType=CHAR}, #{proxyId,jdbcType=CHAR},
-            #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR},#{entryType},#{loginTelPhone})
+            #{businessType,jdbcType=CHAR}, #{faceCompareRecordId,jdbcType=CHAR},#{entryType},#{loginTelPhone},#{flag})
     </insert>
 
     <select id="selectSealAgentByGetterId" resultType="com.dhht.model.SealAgent">
     select id as id,`name` as `name`,certificate_type as certificateType,certificate_no as certificateNo,telphone as telphone,agent_photo_id as agentPhotoId,
-    idcard_front_id as idcardFrontId,idcard_reverse_id as idCardReverseId,proxy_id as proxyId,business_type as businessType ,face_compare_record_id as faceCompareRecordId,login_telphone as loginTelPhone
+    idcard_front_id as idcardFrontId,idcard_reverse_id as idCardReverseId,proxy_id as proxyId,business_type as businessType ,face_compare_record_id as faceCompareRecordId,login_telphone as loginTelPhone,flag as flag
     from
     seal_agent where id=#{getterId}
   </select>
@@ -90,6 +92,9 @@
             <if test="loginTelPhone != null">
                 login_telphone,
             </if>
+            <if test="flag != null">
+                flag,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -131,6 +136,9 @@
             <if test="loginTelPhone != null">
                 #{loginTelPhone,jdbcType=CHAR},
             </if>
+            <if test="flag != null">
+                #{flag,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.SealAgent">
@@ -169,6 +177,9 @@
             <if test="loginTelPhone !=null">
                 login_telphone = #{loginTelPhone},
             </if>
+            <if test="flag !=null">
+                flag = #{flag}
+            </if>
         </set>
         where id = #{id,jdbcType=CHAR}
     </update>
@@ -185,7 +196,8 @@
             business_type = #{businessType,jdbcType=CHAR},
             face_compare_record_id = #{faceCompareRecordId,jdbcType=CHAR},
             entry_type = #{entryType},
-            login_telphone = #{loginTelPhone}
+            login_telphone = #{loginTelPhone},
+            flag = #{flag}
         where id = #{id,jdbcType=CHAR}
     </update>
 
@@ -193,6 +205,6 @@
         select
         <include refid="Base_Column_List" />
         from seal_agent
-        where login_telphone = #{telPhone}
+        where login_telphone = #{telPhone} and flag = "01"
     </select>
 </mapper>

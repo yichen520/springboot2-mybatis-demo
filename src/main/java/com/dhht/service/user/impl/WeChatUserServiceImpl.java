@@ -21,6 +21,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author fyc 2018/12/29
@@ -81,6 +82,15 @@ public class WeChatUserServiceImpl implements WeChatUserService {
         }
     }
 
+    public String testNum(int num) {
+        StringBuilder str = new StringBuilder();//定义变长字符串
+        Random random = new Random();
+        for (int i = 0; i < num; i++) {
+            str.append(random.nextInt(10));
+        }
+        return str.toString();
+    }
+
     @Override
     public Map<String,Object> isLogin(String mobilePhone, String inputVerificationCode,HttpServletRequest request) {
         Map<String,Object> map = new HashMap<>();
@@ -95,6 +105,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             if(weChatUser==null) {
                 WeChatUser weChatUser1 = new WeChatUser();
                 weChatUser1.setId(UUIDUtil.generate());
+                weChatUser1.setName(testNum(6));
                 weChatUser1.setTelphone(mobilePhone);
                 weChatUser1.setCreateTime(DateUtil.getCurrentTime());
                 weChatUserMapper.insertSelective(weChatUser1);
