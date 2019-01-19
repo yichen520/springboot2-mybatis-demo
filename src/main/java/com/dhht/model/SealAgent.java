@@ -50,4 +50,6 @@ public class SealAgent {
 
     @EntityComment(value = "登录人的手机号码")
     private String loginTelPhone;
+
+    private String flag;
 }

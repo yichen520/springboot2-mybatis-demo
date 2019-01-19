@@ -24,6 +24,7 @@ public class SealAgentWeChatImp implements SealAgentWeChatService {
         sealAgent.setId(UUIDUtil.generate());
         sealAgent.setBusinessType("111");
         sealAgent.setLoginTelPhone(telPhone);
+        sealAgent.setFlag("01");
         int insertResult = sealAgentMapper.insertSelective(sealAgent);
         if(insertResult<0){
             return ResultUtil.isFail;
@@ -34,6 +35,7 @@ public class SealAgentWeChatImp implements SealAgentWeChatService {
 
     @Override
     public int updateSealAgent(SealAgent sealAgent) {
+        sealAgent.setFlag("01");
         int updateResult = sealAgentMapper.updateByPrimaryKeySelective(sealAgent);
         if(updateResult<0){
             return ResultUtil.isFail;
