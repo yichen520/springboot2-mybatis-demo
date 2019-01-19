@@ -36,7 +36,6 @@ public class SuspiciousWeChatController {
      * @param
      * @return
      */
-    @Log("可疑情况添加")
     @RequestMapping(value = "/add")
     public JsonObjectBO add(@RequestBody Suspicious suspicious, HttpServletRequest httpServletRequest) {
         WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("weChatUser");
@@ -54,7 +53,6 @@ public class SuspiciousWeChatController {
      * @param
      * @return
      */
-    @Log("可疑情况添加")
     @RequestMapping(value = "/suspiciouslist")
     public JsonObjectBO suspiciouslist(HttpServletRequest httpServletRequest) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -79,7 +77,6 @@ public class SuspiciousWeChatController {
      * @param
      * @return
      */
-    @Log("可疑情况详情")
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public JsonObjectBO info(String id ) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
@@ -104,6 +101,5 @@ public class SuspiciousWeChatController {
             return JsonObjectBO.exception("查询失败！");
         }
     }
-
 
 }

@@ -33,8 +33,6 @@ public class RecipientsController extends WeChatBaseController {
     private HttpServletRequest httpServletRequest;
 
 
-
-    @Log("邮寄用户信息添加")
     @RequestMapping("/insertRecipients")
     public JsonObjectBO insertRecipients(@RequestBody Recipients recipients,HttpServletResponse httpServletResponse){
         String telPhone = currentUserMobilePhone();
@@ -55,7 +53,7 @@ public class RecipientsController extends WeChatBaseController {
             return JsonObjectBO.exception("添加失败");
         }
     }
-    @Log("邮寄用户信息修改")
+
     @RequestMapping("/updateRecipients")
     public JsonObjectBO updateRecipients(@RequestBody Recipients recipients,HttpServletResponse httpServletResponse){
         String telPhone = currentUserMobilePhone();
@@ -79,7 +77,7 @@ public class RecipientsController extends WeChatBaseController {
         }
     }
 
-    @Log("邮寄用户信息删除")
+
     @RequestMapping("/deleteRecipients")
     public JsonObjectBO deleteRecipients(@RequestBody Map map,HttpServletResponse httpServletResponse){
         String telPhone = currentUserMobilePhone();
@@ -120,7 +118,6 @@ public class RecipientsController extends WeChatBaseController {
     }
 
 
-    @Log("邮件信息增加")
     @RequestMapping("/insertCourier")
     public JsonObjectBO insertCourier(@RequestBody Courier courier,HttpServletResponse httpServletResponse){
         String telPhone = currentUserMobilePhone();
@@ -143,7 +140,6 @@ public class RecipientsController extends WeChatBaseController {
     }
 
 
-    @Log("邮件信息查询")
     @RequestMapping("/courierList")
     public JsonObjectBO courierList(String recipientsId,HttpServletResponse httpServletResponse){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();

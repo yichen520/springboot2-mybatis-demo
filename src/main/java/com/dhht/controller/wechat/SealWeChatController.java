@@ -86,7 +86,7 @@ public class SealWeChatController extends WeChatBaseController {
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"申请失败");
         }
     }
-    @Log("获取印章价格")
+
     @RequestMapping("/sealPrice")
     public JsonObjectBO sealPrice(@RequestBody Map map){
 
@@ -109,7 +109,7 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 
-    @Log("印章进度查询")
+
     @RequestMapping("/sealProgress")
     public JsonObjectBO sealProgress(@RequestBody Map map,HttpServletResponse httpServletResponse) {
         init(httpServletRequest,httpServletResponse);
@@ -123,7 +123,7 @@ public class SealWeChatController extends WeChatBaseController {
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"印章进度查询失败");
         }
     }
-    @Log("刻制企业排名")
+
     @RequestMapping("/makeDepartmentSort")
     public JsonObjectBO makeDepartmentSort(@RequestBody Map map,HttpServletResponse httpServletResponse) {
         try {
@@ -139,7 +139,7 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 
-    @Log("小程序印章变更")
+
     @RequestMapping("/cachetChange")
     public JsonObjectBO cachetChange(@RequestBody SealWeChatDTO sealDTO,HttpServletResponse httpServletResponse) {
         init(httpServletRequest,httpServletResponse);
@@ -183,7 +183,7 @@ public class SealWeChatController extends WeChatBaseController {
      * @param map
      * @return
      */
-    @Log("可信身份认证")
+
     @RequestMapping(value = "/TrustedIdentityAuthentication", method = RequestMethod.POST)
     public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map,HttpServletResponse httpServletResponse) {
         init(httpServletRequest,httpServletResponse);
@@ -279,7 +279,7 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 
-    @Log("获取验证码")
+
     @RequestMapping(value = "/getCheckCode")
     public JsonObjectBO getCheckCode(HttpServletRequest request, @RequestBody Map map,HttpServletResponse httpServletResponse){
         String  telphone = (String)map.get("telphone");
@@ -359,7 +359,6 @@ public class SealWeChatController extends WeChatBaseController {
         }
     }
 
-    @Log("下载文件")
     @RequestMapping(value="/download",produces="application/json;charset=UTF-8")
     public ResponseEntity<byte[]> download(@RequestParam("id") String id) {
         FileInfoVO fileInfoVO = fileService.readFile(id);
