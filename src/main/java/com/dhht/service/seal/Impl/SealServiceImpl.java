@@ -655,14 +655,14 @@ public class SealServiceImpl implements SealService {
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;
         } else {
-
-            if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == true) {
+            //sealPayOrderMapper
+            if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == false ) {
                 //查找经办人
                 SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
                 ArrayList<String> params = new ArrayList<String>();
                 params.add(name);
                 params.add(ResultUtil.sealType(seal1.getSealTypeCode()));
-                Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), express, params);
+                Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), getseal, params);
 
             } else {
 
@@ -821,7 +821,7 @@ public class SealServiceImpl implements SealService {
             ArrayList<String> params = new ArrayList<String>();
             params.add(seal.getUseDepartmentName());
             params.add(ResultUtil.sealType(seal.getSealTypeCode()));
-            Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), getseal, params);
+            Boolean b = smsSendService.sendSingleMsgByTemplate(sealAgent.getTelphone(), express, params);
             return ResultUtil.isSuccess;
         } else {
             return ResultUtil.isFail;

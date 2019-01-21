@@ -22,7 +22,7 @@ public class SealAgentWeChatImp implements SealAgentWeChatService {
     @Override
     public int insertSealAgent(SealAgent sealAgent,String telPhone) {
         sealAgent.setId(UUIDUtil.generate());
-        sealAgent.setBusinessType("111");
+        sealAgent.setBusinessType("00");
         sealAgent.setLoginTelPhone(telPhone);
         sealAgent.setFlag("01");
         int insertResult = sealAgentMapper.insertSelective(sealAgent);
