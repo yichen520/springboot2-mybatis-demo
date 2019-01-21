@@ -148,8 +148,8 @@ seal:
         filepath: C:/temp
 
 #省级区域设定
-province: 330000
+province: 430000
 #是否要加密狗 true是要  false是不要
-suciz: true
+suciz: false
 
 
