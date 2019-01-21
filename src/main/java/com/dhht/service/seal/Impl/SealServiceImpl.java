@@ -655,8 +655,8 @@ public class SealServiceImpl implements SealService {
         if (insertSealOperationRecord1 < 0 || insertSealMaterial < 0 || updateByPrimaryKey1 < 0) {
             return ResultUtil.isFail;
         } else {
-
-            if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == true) {
+            //sealPayOrderMapper
+            if (sealPayOrderMapper.selectBySealId(id).getExpressWay() == false ) {
                 //查找经办人
                 SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(seal1.getAgentId());
                 ArrayList<String> params = new ArrayList<String>();
