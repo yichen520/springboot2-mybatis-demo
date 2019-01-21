@@ -35,9 +35,9 @@ spring:
 #          username: root
 #          password: 123456
 
-          url: jdbc:mysql://10.0.0.21:8739/dev_seal_V1_0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: dev_seal
-          password: Tpf9Lt
+          url: jdbc:mysql://10.0.0.21:8739/hunan_seal_v1.0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: hunan_seal
+          password: N76Ojop
 
           #配置初始化大小/最小/最大
           initial-size: 1
@@ -154,4 +154,4 @@ sms:
 #省级区域设定
 province: 430000
 #是否要加密狗 true是要  false是不要
-suciz: false
+suciz: true
