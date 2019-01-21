@@ -726,7 +726,7 @@ public class SealServiceImpl implements SealService {
     /**
      * 线上快递交付
      * @param user
-     * @param seal
+     * @param
      * @return
      */
     @Override
@@ -760,13 +760,14 @@ public class SealServiceImpl implements SealService {
         seal.setIsEarlywarning(true);
         seal.setEarlywarningDate(DateUtil.getCurrentTime());
 
+        RecordDepartment recordDepartment = recordDepartmentService.selectByCode(seal.getRecordDepartmentCode());
         MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal.getMakeDepartmentCode());
         User user1 = new User();
         user1.setId(UUIDUtil.generate());
-        user1.setTelphone(makeDepartmentSimple.getTelphone());
-        user1.setUserName(makeDepartmentSimple.getDepartmentName());
-        user1.setRealName(makeDepartmentSimple.getLegalName());
-        user1.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+        user1.setTelphone(recordDepartment.getTelphone());
+        user1.setUserName(recordDepartment.getDepartmentName());
+        user1.setRealName(recordDepartment.getDepartmentName());
+        user1.setDistrictId(recordDepartment.getDepartmentAddress());
         Notify notify = new Notify();
         notify.setId(UUIDUtil.generate());
         notify.setNotifyTitle("备案预警");
@@ -874,13 +875,14 @@ public class SealServiceImpl implements SealService {
         seal1.setIsEarlywarning(true);
         seal1.setEarlywarningDate(DateUtil.getCurrentTime());
 
+        RecordDepartment recordDepartment = recordDepartmentService.selectByCode(seal1.getRecordDepartmentCode());
         MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal1.getMakeDepartmentCode());
         User user1 = new User();
         user1.setId(UUIDUtil.generate());
-        user1.setTelphone(makeDepartmentSimple.getTelphone());
-        user1.setUserName(makeDepartmentSimple.getDepartmentName());
-        user1.setRealName(makeDepartmentSimple.getLegalName());
-        user1.setDistrictId(makeDepartmentSimple.getDepartmentAddress());
+        user1.setTelphone(recordDepartment.getTelphone());
+        user1.setUserName(recordDepartment.getDepartmentName());
+        user1.setRealName(recordDepartment.getDepartmentName());
+        user1.setDistrictId(recordDepartment.getDepartmentAddress());
         Notify notify = new Notify();
         notify.setId(UUIDUtil.generate());
         notify.setNotifyTitle("备案预警");
