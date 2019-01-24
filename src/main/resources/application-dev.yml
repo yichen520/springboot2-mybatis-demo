@@ -35,9 +35,9 @@ spring:
 #          username: root
 #          password: 123456
 
-          url: jdbc:mysql://10.0.0.21:8739/hunan_seal_v1.0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: hunan_seal
-          password: N76Ojop
+          url: jdbc:mysql://127.0.0.1:3306/hunan?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: root
+          password: 123456
 
           #配置初始化大小/最小/最大
           initial-size: 1
@@ -59,7 +59,7 @@ spring:
 
     redis:
        database: 0
-       host: 127.0.0.1
+       host: 10.0.0.44
        port: 6379
        password:
        jedis:

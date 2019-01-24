@@ -111,14 +111,13 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
   </select>
 
   <select id="selectMakedePartmentBySealNum" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
-    select <include refid="Base_MakeDepartment_Column_List"/>,count(1) as total
-    from make_department  JOIN make_department_attach_info
+    select <include refid="Base_MakeDepartment_Column_List"/>
+    from make_department left JOIN make_department_attach_info
     on make_department.flag = make_department_attach_info.make_department_flag
-    LEFT join seal on seal.make_department_code = make_department.department_code
     where  make_department.delete_status = 0 and
     make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
     and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
-    GROUP BY seal.make_department_code ORDER BY total desc
+    GROUP BY department_code
   </select>
 
 

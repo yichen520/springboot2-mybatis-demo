@@ -548,10 +548,12 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     @Override
     public List<MakedepartmentSimplePO> selectMakedePartment(MakedepartmentSimplePO makedepartmentSimplePO) {
         List<MakedepartmentSimplePO> makedepartmentSimplePOS = new ArrayList<>();
-        District district = districtMapper.selectDistrictByCityName(makedepartmentSimplePO.getCityName());
+        if (makedepartmentSimplePO.getCityName()!=null && makedepartmentSimplePO.getCityName()!="") {
+            District district = districtMapper.selectDistrictByCityName(makedepartmentSimplePO.getCityName());
+            makedepartmentSimplePO.setDepartmentAddress(district.getCityId().substring(0, 4));
+        }
         String userLongitude = makedepartmentSimplePO.getUserLongitude();
         String userLatitude = makedepartmentSimplePO.getUserLatitude();
-        makedepartmentSimplePO.setDepartmentAddress(district.getCityId().substring(0, 4));
         //综合排序
         if (makedepartmentSimplePO.getType().equals("1")) {
             ///评价排序
@@ -569,9 +571,15 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         for(int i = 0;i < makedepartmentSimplePOS.size();i++){
             MakedepartmentSimplePO makedepartmentSimplePO1 = makedepartmentSimplePOS.get(i);
            int total = sealDao.countSealByMonthAndMakeDepartment(makedepartmentSimplePO1.getDepartmentCode());
+
             makedepartmentSimplePO1.setTotal(total);
         }
         return makedepartmentSimplePOS;
+    }
+
+    @Override
+    public List<MakedepartmentSimplePO> selectMakedePartmentByRegionId(MakedepartmentSimplePO makedepartmentSimplePO) {
+        return null;
     }
 
     @Override

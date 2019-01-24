@@ -442,6 +442,11 @@ public class SealWeChatController extends WeChatBaseController {
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询订单详细失败");
         }
     }
+    @RequestMapping(value = "/getcookie")
+    public WeChatUser getcookie(){
+        WeChatUser weChatUser =currentUser();
+        return weChatUser;
+    }
 
 
 
