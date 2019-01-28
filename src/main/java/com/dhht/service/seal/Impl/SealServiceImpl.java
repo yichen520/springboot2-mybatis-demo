@@ -868,10 +868,10 @@ public class SealServiceImpl implements SealService {
         if (useDepartment == null) {
             return ResultUtil.isNoDepartment;
         }
-        SealVerification sealVerification = sealVerificationMapper.selectBySealId(id);
-        if(!sealVerification.getVerifyTypeName().equals("1")){
-            return ResultUtil.isNoSealVerification;
-        }
+//        SealVerification sealVerification = sealVerificationMapper.selectBySealId(id);
+//        if(!sealVerification.getVerifyTypeName().equals("1")){
+//            return ResultUtil.isNoSealVerification;
+//        }
         //印章操作
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);

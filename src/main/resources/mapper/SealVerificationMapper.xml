@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dhht.dao.SealVerificationMapper" >
+  <resultMap id="BaseResultMap" type="com.dhht.model.SealVerification" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="seal_id" property="sealId" jdbcType="CHAR" />
+    <result column="is_verification" property="isVerification" jdbcType="BIT" />
+    <result column="verify_type_name" property="verifyTypeName" jdbcType="CHAR" />
+    <result column="reject_reason" property="rejectReason" jdbcType="CHAR" />
+    <result column="reject_remark" property="rejectRemark" jdbcType="VARCHAR" />
+    <result column="verification_date" property="verificationDate" jdbcType="TIMESTAMP" />
+    <result column="is_reupload_data" property="isReuploadData" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, seal_id, is_verification, verify_type_name, reject_reason, reject_remark, verification_date, 
+    is_reupload_data
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from seal_verification
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from seal_verification
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dhht.model.SealVerification" >
+    insert into seal_verification (id, seal_id, is_verification, 
+      verify_type_name, reject_reason, reject_remark, 
+      verification_date, is_reupload_data)
+    values (#{id,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, #{isVerification,jdbcType=BIT}, 
+      #{verifyTypeName,jdbcType=CHAR}, #{rejectReason,jdbcType=CHAR}, #{rejectRemark,jdbcType=VARCHAR}, 
+      #{verificationDate,jdbcType=TIMESTAMP}, #{isReuploadData,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dhht.model.SealVerification" >
+    insert into seal_verification
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sealId != null" >
+        seal_id,
+      </if>
+      <if test="isVerification != null" >
+        is_verification,
+      </if>
+      <if test="verifyTypeName != null" >
+        verify_type_name,
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason,
+      </if>
+      <if test="rejectRemark != null" >
+        reject_remark,
+      </if>
+      <if test="verificationDate != null" >
+        verification_date,
+      </if>
+      <if test="isReuploadData != null" >
+        is_reupload_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="sealId != null" >
+        #{sealId,jdbcType=CHAR},
+      </if>
+      <if test="isVerification != null" >
+        #{isVerification,jdbcType=BIT},
+      </if>
+      <if test="verifyTypeName != null" >
+        #{verifyTypeName,jdbcType=CHAR},
+      </if>
+      <if test="rejectReason != null" >
+        #{rejectReason,jdbcType=CHAR},
+      </if>
+      <if test="rejectRemark != null" >
+        #{rejectRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationDate != null" >
+        #{verificationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isReuploadData != null" >
+        #{isReuploadData,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.SealVerification" >
+    update seal_verification
+    <set >
+      <if test="sealId != null" >
+        seal_id = #{sealId,jdbcType=CHAR},
+      </if>
+      <if test="isVerification != null" >
+        is_verification = #{isVerification,jdbcType=BIT},
+      </if>
+      <if test="verifyTypeName != null" >
+        verify_type_name = #{verifyTypeName,jdbcType=CHAR},
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason = #{rejectReason,jdbcType=CHAR},
+      </if>
+      <if test="rejectRemark != null" >
+        reject_remark = #{rejectRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationDate != null" >
+        verification_date = #{verificationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isReuploadData != null" >
+        is_reupload_data = #{isReuploadData,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dhht.model.SealVerification" >
+    update seal_verification
+    set seal_id = #{sealId,jdbcType=CHAR},
+      is_verification = #{isVerification,jdbcType=BIT},
+      verify_type_name = #{verifyTypeName,jdbcType=CHAR},
+      reject_reason = #{rejectReason,jdbcType=CHAR},
+      reject_remark = #{rejectRemark,jdbcType=VARCHAR},
+      verification_date = #{verificationDate,jdbcType=TIMESTAMP},
+      is_reupload_data = #{isReuploadData,jdbcType=BIT}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  
+  <select id="selectBySealId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from seal_verification where seal_id = #{sealId,jdbcType=CHAR}
+  </select>
+</mapper>
