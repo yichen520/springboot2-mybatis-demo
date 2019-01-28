@@ -4,6 +4,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealVO;
+import com.dhht.model.pojo.SealVerificationPO;
 import com.dhht.model.pojo.SealWeChatDTO;
 import com.github.pagehelper.PageInfo;
 
@@ -98,7 +99,6 @@ public interface SealService {
    //小程序申请
    int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId);
 
-
    MakeDepartmentSealPrice sealPrice( Map map);
 
    List<Seal> sealProgress( Map map);
@@ -107,16 +107,24 @@ public interface SealService {
 
    List<Seal> sealListForWeChat(String telphone);
 
-
    Map<String,Object> weChatcheckSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
     int updatePay(SealPayOrder sealPayOrder);
 
     int expressdeliver(User user, Seal seal);
+
     int isHaveSeal(String useDepartmentCode,Seal seal);
 
     List<SealOrder> selectOrder(String type,String telphone);
 
    SealOrder selectOrderDetail(String sealId);
+
+   //判断是否资料更新
+   SealVerificationPO isSealVerification(String sealId);
+
+   //资料更新
+   int dateUpdate(WeChatUser weChatUser,Seal seal,SealAgent sealAgent);
+
+
 }
 
