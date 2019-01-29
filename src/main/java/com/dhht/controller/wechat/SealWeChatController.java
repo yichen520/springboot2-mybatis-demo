@@ -551,7 +551,7 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 //        WeChatUser weChatUser = (WeChatUser)httpServletRequest.getSession().getAttribute("weChatUser");
-        String telphone = currentUserMobilePhone();
+
 
     
 //    @RequestMapping(value = "/unbindCompany", method = RequestMethod.POST)
