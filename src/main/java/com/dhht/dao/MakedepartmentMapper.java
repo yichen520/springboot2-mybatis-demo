@@ -86,4 +86,6 @@ public interface MakedepartmentMapper {
  List<MakedepartmentSimplePO> selectMakedePartmentBySealNum(MakedepartmentSimplePO makedepartmentSimplePO);
 
     MakedepartmentSimplePO selectMakedepartmentSimplePODetailById(@Param("id") String id);
+
+    int selectCompany(MakedepartmentSimplePO makedepartmentSimplePO);
 }

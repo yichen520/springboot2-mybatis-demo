@@ -3,6 +3,8 @@ package com.dhht.dao;
 
 import com.dhht.model.RecordDepartment;
 import com.dhht.model.UseDepartment;
+import com.dhht.model.UseDepartmentRegister;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -69,4 +71,8 @@ public interface UseDepartmentDao {
     int findcount(@Param("code") String code,@Param("districtId")String districtId,@Param("name")String name,@Param("departmentStatus")String departmentStatus);
 
     UseDepartment selectActiveUseDepartmentByCode(String useDepartmentCode);
+
+    UseDepartment selectCompany(UseDepartment useDepartment);
+
+    UseDepartment selectCompanyInfo(UseDepartmentRegister useDepartmentRegister);
 }

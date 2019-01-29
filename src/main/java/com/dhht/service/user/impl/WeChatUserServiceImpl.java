@@ -1,9 +1,15 @@
 package com.dhht.service.user.impl;
 
+import com.dhht.common.JsonObjectBO;
+import com.dhht.dao.MakedepartmentMapper;
+import com.dhht.dao.UseDepartmentDao;
 import com.dhht.dao.WeChatUserMapper;
+import com.dhht.model.UseDepartment;
+import com.dhht.model.UseDepartmentRegister;
 import com.dhht.model.WeChatUser;
 import com.dhht.dao.SMSCodeDao;
 import com.dhht.model.SMSCode;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 import com.dhht.service.tools.SmsSendService;
 import com.dhht.service.user.WeChatUserService;
 import com.dhht.util.DateUtil;
@@ -40,6 +46,8 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
     @Autowired
     private WeChatUserMapper weChatUserMapper;
+    @Autowired
+    private UseDepartmentDao useDepartmentDao;
 
     @Value("${sms.template.insertUser}")
     private int userCode ;
@@ -51,11 +59,9 @@ public class WeChatUserServiceImpl implements WeChatUserService {
         Map<String,Object> map = new HashMap<>();
         String code = StringUtil.createRandomVcode();
         ArrayList<String> params = new ArrayList<String>();
-//        params.add(mobilePhone);
         params.add(code);
         if(!stringRedisTemplate.hasKey(mobilePhone)){
             stringRedisTemplate.opsForValue().append(mobilePhone,code);
-
         }else {
             stringRedisTemplate.delete(mobilePhone);
             stringRedisTemplate.opsForValue().append(mobilePhone,code);
@@ -63,19 +69,19 @@ public class WeChatUserServiceImpl implements WeChatUserService {
         expire(mobilePhone);
         boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,param,params);
         if(result){
-            SMSCode smscode= smsCodeDao.getSms(mobilePhone);
-            if(smscode==null){
-                smscode = new SMSCode();
-                smscode.setId(UUIDUtil.generate());
-                smscode.setLastTime(System.currentTimeMillis());
-                smscode.setPhone(mobilePhone);
-                smscode.setSmscode(code);
-                smsCodeDao.save(smscode);
-            }else{
-                smscode.setLastTime(System.currentTimeMillis());
-                smscode.setSmscode(code);
-                smsCodeDao.update(smscode);
-            }
+//            SMSCode smscode= smsCodeDao.getSms(mobilePhone);
+//            if(smscode==null){
+//                smscode = new SMSCode();
+//                smscode.setId(UUIDUtil.generate());
+//                smscode.setLastTime(System.currentTimeMillis());
+//                smscode.setPhone(mobilePhone);
+//                smscode.setSmscode(code);
+//                smsCodeDao.save(smscode);
+//            }else{
+//                smscode.setLastTime(System.currentTimeMillis());
+//                smscode.setSmscode(code);
+//                smsCodeDao.update(smscode);
+//            }
            return ResultUtil.isSendVerificationCode;
         }else {
             return ResultUtil.isError;
@@ -169,5 +175,45 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     private void expire(String key){
         Jedis jedis = new Jedis();
         jedis.expire(key,300);
+    }
+
+    @Override
+    public UseDepartment bindCompany(UseDepartment useDepartment) {
+        return useDepartmentDao.selectCompany(useDepartment);
+    }
+
+    @Override
+    public int updateWeChatUserInfo(WeChatUser weChatUser) {
+        return weChatUserMapper.updateByPrimaryKeySelective(weChatUser);
+    }
+
+    @Override
+    public WeChatUser isExistTelphone(String telphone) {
+        return weChatUserMapper.selectByTelPhone(telphone);
+    }
+
+    @Override
+    public int companyRegister(UseDepartmentRegister useDepartmentRegister) {
+
+        UseDepartment useDepartment = useDepartmentDao.selectCompanyInfo(useDepartmentRegister);
+        if(useDepartment.getName()!=null){
+            //新增到用户表
+            WeChatUser weChatUser =new WeChatUser();
+            weChatUser.setCreateTime(DateUtil.getCurrentTime());
+            weChatUser.setId(UUIDUtil.generate());
+            weChatUser.setTelphone(useDepartmentRegister.getMobliePhone());
+            weChatUser.setCompany(useDepartment.getId());
+            weChatUser.setCompanyName(useDepartment.getName());
+          int result =  weChatUserMapper.insertSelective(weChatUser);
+          //插入到一张新表（如果做企业单位添加员工时，可用）
+           if(result>0){
+               return ResultUtil.isSuccess;
+           }else {
+               return ResultUtil.isFail;
+           }
+        }
+        else {
+            return ResultUtil.isNoMatchUseDepartment;
+        }
     }
 }
