@@ -106,6 +106,7 @@ public class Seal extends SealKey {
 
     private int applySource;
 
+
      private DeliveryExpressInfo deliveryExpressInfo;
 
 
