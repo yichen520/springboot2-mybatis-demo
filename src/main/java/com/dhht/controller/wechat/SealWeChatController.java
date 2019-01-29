@@ -13,6 +13,7 @@ import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealAgentWeChatService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.seal.WeChatSealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserPasswordService;
@@ -52,7 +53,8 @@ public class SealWeChatController extends WeChatBaseController {
     private MakeDepartmentSealPriceMapper makeDepartmentSealPriceMapper;
     @Autowired
     private FileService fileService;
-
+    @Autowired
+    private WeChatSealService weChatSealService;
     @Autowired
     private HttpServletRequest httpServletRequest;
     @Autowired
@@ -444,7 +446,63 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 
+    /**
+     * 印章退回
+     * @param httpServletRequest
+     * @param sealVerificationPO
+     * @return
+     */
+    @RequestMapping(value = "/verifySeal",method = RequestMethod.POST)
+    public JsonObjectBO verifySeal(HttpServletRequest httpServletRequest,@RequestBody SealVerificationPO sealVerificationPO){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        WeChatUser weChatUser = currentUser();
+        String id = sealVerificationPO.getSeal().getId();
+        String verify_type_name = sealVerificationPO.getSealVerification().getVerifyTypeName();
+        String rejectReason = sealVerificationPO.getSealVerification().getRejectReason();
+        String rejectRemark = sealVerificationPO.getSealVerification().getRejectRemark();
+        try{
+            User user = new User();
+            user.setRealName(weChatUser.getName());
+            user.setTelphone(weChatUser.getTelphone());
+            int a  = sealService.verifySeal(user,id,rejectReason,rejectRemark,verify_type_name);
+            if(a==ResultUtil.isSuccess){
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("核验成功");
+            }else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("核验失败");
+            }
+            return jsonObjectBO;
+        }catch (Exception e){
+            return JsonObjectBO.exception("核验失败");
+        }
 
+    }
+
+    /**
+     * 资料更新列表
+     */
+    @RequestMapping(value = "/verificationList" , method = RequestMethod.GET)
+    public JsonObjectBO verificationList(HttpServletRequest httpServletRequest){
+
+//        WeChatUser weChatUser = (WeChatUser)httpServletRequest.getSession().getAttribute("weChatUser");
+        String telphone = currentUserMobilePhone();
+
+        JSONObject jsonObject = new JSONObject();
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try{
+            List<SealVerificationPO> list = weChatSealService.sealAndVerification(telphone);
+            jsonObject.put("sealVerification",list);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("获取成功");
+            jsonObjectBO.setData(jsonObject);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonObjectBO.exception("获取列表失败");
+        }
+        return jsonObjectBO;
+
+   }
 
 
 }

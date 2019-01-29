@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
+import com.dhht.model.pojo.SealVerificationPO;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
+import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.HistoryService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.util.ResultUtil;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +39,8 @@ public class RecordDepartmentController {
     private DistrictService districtService;
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private SealService sealService;
 
     private static Logger logger = LoggerFactory.getLogger(RecordDepartmentController.class);
 
@@ -221,4 +226,26 @@ public class RecordDepartmentController {
         }
 
     }
+
+    /**
+     * 备案单位审核
+     */
+    @RequestMapping(value = "/verification")
+    public JsonObjectBO verification(HttpServletRequest httpServletRequest, @RequestBody SealVerificationPO sealVerificationPO ){
+        User user = (User)httpServletRequest.getSession().getAttribute("user");
+        String id = sealVerificationPO.getSeal().getId();
+        String rejectReason = sealVerificationPO.getSealVerification().getRejectReason();
+        String rejectRemark = sealVerificationPO.getSealVerification().getRejectRemark();
+        String verify_type_name = sealVerificationPO.getSealVerification().getVerifyTypeName();
+        int result = 0;
+        try{
+            result = sealService.verifySeal(user, id,  rejectReason,  rejectRemark,  verify_type_name);
+            return ResultUtil.getResult(result);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+            return JsonObjectBO.exception(e.getMessage());
+        }
+
+    }
+
 }

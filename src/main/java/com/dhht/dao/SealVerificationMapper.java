@@ -1,7 +1,9 @@
 package com.dhht.dao;
 
 import com.dhht.model.SealVerification;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SealVerificationMapper {
     int deleteByPrimaryKey(String id);
 

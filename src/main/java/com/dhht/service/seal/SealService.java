@@ -83,7 +83,7 @@ public interface SealService {
    //印章备案信息查询
    List<Seal> selectSealByDistrictId(String districtId);
 
-
+   //承接
    int underTake(User user, String sealId);
 
 
@@ -124,6 +124,8 @@ public interface SealService {
 
    //资料更新
    int dateUpdate(WeChatUser weChatUser,Seal seal,SealAgent sealAgent);
+
+
 
 
 }
