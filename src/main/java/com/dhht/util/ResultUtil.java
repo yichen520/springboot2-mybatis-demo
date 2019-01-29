@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletResponse;
 
 public class ResultUtil {
+
     @Autowired
     private static HttpServletResponse response;
     public static final int isHave = 2;
@@ -40,6 +41,7 @@ public class ResultUtil {
     public static final int isNoSeal=53;
     public static final int isNoEms=28;
     public static final int isNoSession=54;
+    public static final int isNoMatchUseDepartment=55;
 
     public static String sealType(String sealType){
         switch (sealType){

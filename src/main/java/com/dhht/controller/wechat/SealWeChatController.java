@@ -7,6 +7,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.controller.web.BaseController;
 import com.dhht.dao.MakeDepartmentSealPriceMapper;
 import com.dhht.dao.SealDao;
+import com.dhht.dao.UseDepartmentDao;
 import com.dhht.model.*;
 import com.dhht.model.pojo.*;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
@@ -14,6 +15,7 @@ import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealAgentWeChatService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.tools.FileService;
+import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.UserPasswordService;
 import com.dhht.util.ResultUtil;
@@ -60,11 +62,7 @@ public class SealWeChatController extends WeChatBaseController {
     @Autowired
     private UserLoginService userLoginService;
     @Autowired
-    private SealDao sealDao;
-
-
-    @Autowired
-    private MakeDepartmentSealPriceService makeDepartmentSealPriceService;
+    private UseDepartmentService useDepartmentService;
 
 
     @RequestMapping("/sealRecord")
@@ -442,14 +440,90 @@ public class SealWeChatController extends WeChatBaseController {
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询订单详细失败");
         }
     }
+
+    /**
+     * 获取cookie
+     * @return
+     */
     @RequestMapping(value = "/getcookie")
     public WeChatUser getcookie(){
         WeChatUser weChatUser =currentUser();
         return weChatUser;
     }
 
+    @RequestMapping(value = "/bindCompany", method = RequestMethod.POST)
+    public JsonObjectBO bindCompany(@RequestBody UseDepartment useDepartment,HttpServletResponse httpServletResponse) {
+        try{
+            init(httpServletRequest,httpServletResponse);
+           UseDepartment useDepartment1 =  weChatUserService.bindCompany(useDepartment);
+            JSONObject jsonObject = new JSONObject();
+            if(useDepartment1.getName()!=null){
+                WeChatUser weChatUser =currentUser();
+                weChatUser.setCompany(useDepartment1.getId());
+                if(weChatUserService.updateWeChatUserInfo(weChatUser)<1){
+                    return JsonObjectBO.error("绑定用章单位失败");
+                }
+            }
+            jsonObject.put("useDepartment",useDepartment1);
+            return JsonObjectBO.success("绑定成功",jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"绑定用章单位失败，请补全正确的信息");
+        }
+    }
 
+    @RequestMapping("/getCompany")
+    public JsonObjectBO getCompany( HttpServletResponse httpServletResponse){
+        try {
+            init(httpServletRequest,httpServletResponse);
+            WeChatUser weChatUser = currentUser();
 
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("company",  useDepartmentService.selectDetailById(weChatUser.getCompany()));
+            return JsonObjectBO.success("查询成功",jsonObject);
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return JsonObjectBO.exception("评价失败");
+        }
+    }
+//    @RequestMapping(value = "/unbindCompany", method = RequestMethod.POST)
+//    public JsonObjectBO unbindCompany(HttpServletResponse httpServletResponse) {
+//        try{
+//            init(httpServletRequest,httpServletResponse);
+//            UseDepartment useDepartment1 =  weChatUserService.unbindCompany();
+//            JSONObject jsonObject = new JSONObject();
+//            if(useDepartment1.getName()!=null){
+//                WeChatUser weChatUser =currentUser();
+//                weChatUser.setCompany(useDepartment1.getId());
+//                if(weChatUserService.updateWeChatUserInfo(weChatUser)<1){
+//                    return JsonObjectBO.error("绑定用章单位失败");
+//                }
+//            }
+//            jsonObject.put("useDepartment",useDepartment1);
+//            return JsonObjectBO.success("解绑成功",jsonObject);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"绑定用章单位失败，请补全正确的信息");
+//        }
+//    }
+
+    /**
+     * 企业账号注册
+     * @param httpServletResponse
+     * @return
+     */
+    @RequestMapping(value = "/companyAccoutRegister", method = RequestMethod.POST)
+public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepartmentRegister,HttpServletResponse httpServletResponse) {
+    try{
+        init(httpServletRequest,httpServletResponse);
+        int result =  weChatUserService.companyRegister(useDepartmentRegister);
+        return ResultUtil.getResult(result);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return JsonObjectBO.exceptionWithMessage(e.getMessage(),"企业账户注册失败，请填写正确的信息");
+    }
+}
 
 
 }

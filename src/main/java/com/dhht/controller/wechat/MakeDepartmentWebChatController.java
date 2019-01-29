@@ -113,11 +113,12 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
         try {
             init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
-            if (makedepartmentSimplePO.getCityName()!=null && makedepartmentSimplePO.getCityName()!="") {
-
-                List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
-                jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
-            }
+            //这是因为当时传的是cityname
+//            if (makedepartmentSimplePO.getCityName()!=null && makedepartmentSimplePO.getCityName()!="") {
+//
+//                List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
+//                jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
+//            }
             if(makedepartmentSimplePO.getRegion()!=null && makedepartmentSimplePO.getRegion().length!=0){
 
                 String[] districtArray = makedepartmentSimplePO.getRegion();
@@ -129,13 +130,15 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
                 }else {
                     districtId = districtArray[2].substring(0,6);
                 }
-
                 makedepartmentSimplePO.setDepartmentAddress(districtId);
                 List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
                 jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
+                return JsonObjectBO.success("查询制作单位成功",jsonObject);
+            }else {
+                return JsonObjectBO.error("未传入区域获取制作单位");
             }
 
-            return JsonObjectBO.success("查询制作单位成功",jsonObject);
+
         }catch (Exception e){
             e.printStackTrace();
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询制作单位失败");
@@ -184,4 +187,6 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
             return JsonObjectBO.exception("评价失败");
         }
     }
+
+
 }

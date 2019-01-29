@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/weChat/weChatUser")
+    @RequestMapping("/weChat/weChatUser")
 public class UserWeChatController extends  WeChatBaseController{
 
     @Autowired
@@ -67,5 +67,24 @@ public class UserWeChatController extends  WeChatBaseController{
             return jsonObjectBO;
         }
     }
-
+    /**
+     *  判断用户表是否存在此号码
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/isExistTelphone" , method = RequestMethod.POST)
+    public JsonObjectBO isExistTelphone(HttpServletRequest httpServletRequest,@RequestBody Map map){
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            String telphone = (String) map.get("mobilePhone");
+            WeChatUser result = weChatUserService.isExistTelphone(telphone);
+            if (result ==null){
+                return  JsonObjectBO.success("无号码存在",null);
+            }else {
+                return JsonObjectBO.error("此号码存在,请重新输入");
+            }
+        }catch (Exception e){
+            return JsonObjectBO.exceptionWithMessage("验证异常",e.getMessage());
+        }
+    }
 }

@@ -43,7 +43,7 @@
 
 
   <sql id="Base_Column_List" >
-    id,code,`name`,nation_name,english_name,english_ahhr,department_type,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
+    id,`code`,`name`,nation_name,english_name,english_ahhr,department_type,query_password,legal_name,legal_id,legal_id_type,legal_telphone,
     legal_country,district_id,address,telphone,postal_code,department_status,department_certificate,department_certificate_type,is_delete,flag,version,updateTime,
     found_date,start_date,end_date,registration_department,management_range,registered_capital,business_license_url,special_business_licence_scanning,legal_englishsurname,legal_englishname,
     idcard_front_id,idcard_reverse_id
@@ -307,4 +307,15 @@
      SELECT count(id) from use_department  where district_id like '${districtId}%' and department_status = "02"
     and end_date BETWEEN #{startTime} and #{endTime}  AND is_delete = 0
   </select>
+
+    <select id="selectCompany" resultMap="BaseResultMap" parameterType="com.dhht.model.UseDepartment" >
+        select <include refid="Base_Column_List"/>
+        from use_department where `code` =#{code} and `name` =#{name}
+        and legal_id=#{legalId} and legal_name = #{legalName} and is_delete = 0 limit 1
+    </select>
+    <select id="selectCompanyInfo" resultMap="BaseResultMap" parameterType="com.dhht.model.UseDepartmentRegister" >
+        select <include refid="Base_Column_List"/>
+        from use_department where `code` =#{code} and `name` =#{name}
+        and legal_id=#{legalId} and legal_name = #{legalName} and is_delete = 0 limit 1
+    </select>
 </mapper>

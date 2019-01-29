@@ -551,6 +551,7 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         if (makedepartmentSimplePO.getCityName()!=null && makedepartmentSimplePO.getCityName()!="") {
             District district = districtMapper.selectDistrictByCityName(makedepartmentSimplePO.getCityName());
             makedepartmentSimplePO.setDepartmentAddress(district.getCityId().substring(0, 4));
+
         }
         String userLongitude = makedepartmentSimplePO.getUserLongitude();
         String userLatitude = makedepartmentSimplePO.getUserLatitude();
@@ -558,22 +559,43 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         if (makedepartmentSimplePO.getType().equals("1")) {
             ///评价排序
             makedepartmentSimplePOS = makedepartmentMapper.selectMakedePartmentByEvaluate(makedepartmentSimplePO);
+         for(int i = 0;i < makedepartmentSimplePOS.size();i++){
+                MakedepartmentSimplePO makedepartmentSimplePO1 = makedepartmentSimplePOS.get(i);
+                int total = sealDao.countSealByMonthAndMakeDepartment(makedepartmentSimplePO1.getDepartmentCode());
+                makedepartmentSimplePO1.setTotal(total);
+            }
             sortByDistance(makedepartmentSimplePOS,false,userLongitude,userLatitude);
         } else if (makedepartmentSimplePO.getType().equals("2")) {
             //
-            makedepartmentSimplePOS = makedepartmentMapper.selectMakedePartmentBySealNum(makedepartmentSimplePO);
+            makedepartmentSimplePOS = makedepartmentMapper.selectMakedePartmentByEvaluate(makedepartmentSimplePO);
+            for(int i = 0;i < makedepartmentSimplePOS.size();i++){
+                MakedepartmentSimplePO makedepartmentSimplePO1 = makedepartmentSimplePOS.get(i);
+                int total = sealDao.countSealByMonthAndMakeDepartment(makedepartmentSimplePO1.getDepartmentCode());
+                makedepartmentSimplePO1.setTotal(total);
+            }
+
+            Collections.sort(makedepartmentSimplePOS, new Comparator<MakedepartmentSimplePO>() {
+                @Override
+                public int compare(MakedepartmentSimplePO makedepartmentSimplePO1, MakedepartmentSimplePO makedepartmentSimplePO2) {
+                    int i = (int) (makedepartmentSimplePO2.getTotal() - makedepartmentSimplePO1.getTotal());
+                    if (i == 0) {
+                        return (int) (makedepartmentSimplePO1.getTotal() - makedepartmentSimplePO2.getTotal());
+                    }
+                    return i;
+                }
+            });
             sortByDistance(makedepartmentSimplePOS,false,userLongitude,userLatitude);
         } else {
             //综合排序
             makedepartmentSimplePOS = makedepartmentMapper.selectMakedePartmentByEvaluate(makedepartmentSimplePO);
+            for(int i = 0;i < makedepartmentSimplePOS.size();i++){
+                MakedepartmentSimplePO makedepartmentSimplePO1 = makedepartmentSimplePOS.get(i);
+                int total = sealDao.countSealByMonthAndMakeDepartment(makedepartmentSimplePO1.getDepartmentCode());
+                makedepartmentSimplePO1.setTotal(total);
+            }
             sortByDistance(makedepartmentSimplePOS,true,userLongitude,userLatitude);
         }
-        for(int i = 0;i < makedepartmentSimplePOS.size();i++){
-            MakedepartmentSimplePO makedepartmentSimplePO1 = makedepartmentSimplePOS.get(i);
-           int total = sealDao.countSealByMonthAndMakeDepartment(makedepartmentSimplePO1.getDepartmentCode());
 
-            makedepartmentSimplePO1.setTotal(total);
-        }
         return makedepartmentSimplePOS;
     }
 
@@ -675,4 +697,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
         return distances;
     }
 
+    @Override
+    public Makedepartment getCompany(String company) {
+        return makedepartmentMapper.selectDetailById(company);
+    }
 }
