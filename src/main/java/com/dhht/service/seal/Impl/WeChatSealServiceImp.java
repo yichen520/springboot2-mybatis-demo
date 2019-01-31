@@ -1,8 +1,10 @@
 package com.dhht.service.seal.Impl;
 
+import com.dhht.dao.SealAgentMapper;
 import com.dhht.dao.SealDao;
 import com.dhht.dao.SealVerificationMapper;
 import com.dhht.model.Seal;
+import com.dhht.model.SealAgent;
 import com.dhht.model.SealVerification;
 import com.dhht.model.pojo.SealVerificationPO;
 import com.dhht.service.seal.WeChatSealService;
@@ -20,6 +22,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
     @Autowired
     private SealVerificationMapper sealVerificationMapper;
+
+    @Autowired
+    private SealAgentMapper sealAgentMapper;
 
     @Autowired
     private SealDao sealDao;
@@ -43,5 +48,25 @@ public class WeChatSealServiceImp implements WeChatSealService {
             sealVerificationPOS.add(sealVerificationPO);
         }
         return sealVerificationPOS;
+    }
+
+    /**
+     * 资料更新 根据id查找
+     * @param id
+     * @return
+     */
+    @Override
+    public SealVerificationPO selectVerificationById(String id) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        String agentId = seal.getAgentId();
+        SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
+        List<SealAgent> list = new ArrayList<>();
+        list.add(sealAgent);
+        SealVerification sealVerification = sealVerificationMapper.selectBySealId(id);
+        SealVerificationPO sealVerificationPO = new SealVerificationPO();
+        sealVerificationPO.setSeal(seal);
+        sealVerificationPO.setSealVerification(sealVerification);
+        sealVerificationPO.setSealAgent(list);
+        return sealVerificationPO;
     }
 }

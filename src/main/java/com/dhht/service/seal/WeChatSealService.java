@@ -8,4 +8,8 @@ public interface WeChatSealService {
 
     //资料更新列表
     List<SealVerificationPO> sealAndVerification(String telphone);
+
+    //根据印章id获取资料信息
+    SealVerificationPO selectVerificationById(String id);
+
 }

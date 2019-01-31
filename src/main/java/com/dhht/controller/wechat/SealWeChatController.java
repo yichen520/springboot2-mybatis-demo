@@ -551,9 +551,8 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 //        WeChatUser weChatUser = (WeChatUser)httpServletRequest.getSession().getAttribute("weChatUser");
-        String telphone = currentUserMobilePhone();
 
-    
+
 //    @RequestMapping(value = "/unbindCompany", method = RequestMethod.POST)
 //    public JsonObjectBO unbindCompany(HttpServletResponse httpServletResponse) {
 //        try{
@@ -592,6 +591,25 @@ public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepart
     }
 }
 
+    /**
+     * 根据id找资料信息
+     */
+    @RequestMapping(value = "/selectVerificationById" ,method = RequestMethod.GET)
+    public JsonObjectBO selectVerificationById(@RequestParam String id){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        try{
+            SealVerificationPO sealVerificationPO =  weChatSealService.selectVerificationById(id);
+            jsonObject.put("sealVerification",sealVerificationPO);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setMessage("查询成功");
+            jsonObjectBO.setCode(1);
 
+        }catch(Exception e){
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"获取失败");
+        }
+        return jsonObjectBO;
+    }
 
 }
