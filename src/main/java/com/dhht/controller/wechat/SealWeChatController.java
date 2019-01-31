@@ -553,6 +553,7 @@ public class SealWeChatController extends WeChatBaseController {
 //        WeChatUser weChatUser = (WeChatUser)httpServletRequest.getSession().getAttribute("weChatUser");
 
 
+
 //    @RequestMapping(value = "/unbindCompany", method = RequestMethod.POST)
 //    public JsonObjectBO unbindCompany(HttpServletResponse httpServletResponse) {
 //        try{
