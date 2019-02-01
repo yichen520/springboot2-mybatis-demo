@@ -37,7 +37,7 @@
     insert into seal_verification
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        id,
+        id,selectByPrimaryKey
       </if>
       <if test="sealId != null" >
         seal_id,

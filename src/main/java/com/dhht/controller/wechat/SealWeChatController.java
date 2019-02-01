@@ -613,4 +613,34 @@ public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepart
         return jsonObjectBO;
     }
 
+
+    /**
+     * 资料更新
+     */
+    @RequestMapping(value = "/dateUpdate" ,method = RequestMethod.POST)
+    public JsonObjectBO dateUpdate(@RequestBody weChatSealVerificationPO weChatSealVerificationPO){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        try{
+            WeChatUser weChatUser = currentUser();
+            String id = weChatSealVerificationPO.getId();
+            SealAgent sealAgent = weChatSealVerificationPO.getSealAgent();
+            int result =  sealService.dateUpdate(weChatUser,id,sealAgent);
+            if(result==ResultUtil.isFail){
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setMessage("修改失败");
+                jsonObjectBO.setCode(-1);
+            }else{
+                jsonObjectBO.setData(jsonObject);
+                jsonObjectBO.setMessage("修改成功");
+                jsonObjectBO.setCode(1);
+            }
+
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"修改失败");
+        }
+        return jsonObjectBO;
+    }
 }

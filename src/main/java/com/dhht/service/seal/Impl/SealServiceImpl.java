@@ -2391,12 +2391,13 @@ public class SealServiceImpl implements SealService {
     /**
      * 资料更新
      * @param weChatUser
-     * @param seal
+     * @param id
      * @param sealAgent
      * @return
      */
-    public int dateUpdate(WeChatUser weChatUser,Seal seal,SealAgent sealAgent){
-        String agentId = sealDao.selectByPrimaryKey(seal.getId()).getAgentId();
+    public int dateUpdate(WeChatUser weChatUser,String id,SealAgent sealAgent){
+         Seal seal = sealDao.selectByPrimaryKey(id);
+        String agentId = seal.getAgentId();
         sealAgent.setId(agentId);
         int updateAgent = sealAgentMapper.updateByPrimaryKeySelective(sealAgent);
         int updateASeal = sealDao.updateByPrimaryKeySelective(seal);
@@ -2407,7 +2408,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setOperateType("09");
         sealOperationRecord.setSealId(seal.getId());
         int insertOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
-        SealVerification sealVerification = sealVerificationMapper.selectBySealId(seal.getAgentId());
+        SealVerification sealVerification = sealVerificationMapper.selectBySealId(id);
         sealVerification.setIsReuploadData(true);
         int updateVerification = sealVerificationMapper.updateByPrimaryKeySelective(sealVerification);
         if(updateAgent>0&&updateASeal>0&&insertOperationRecord>0){
@@ -2416,6 +2417,8 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isFail;
         }
     }
+
+
 
 }
 

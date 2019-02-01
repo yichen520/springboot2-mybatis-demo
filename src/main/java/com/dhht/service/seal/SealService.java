@@ -123,7 +123,8 @@ public interface SealService {
    SealVerificationPO isSealVerification(String sealId);
 
    //资料更新
-   int dateUpdate(WeChatUser weChatUser,Seal seal,SealAgent sealAgent);
+   int dateUpdate(WeChatUser weChatUser,String id,SealAgent sealAgent);
+
 
 
 
