@@ -81,7 +81,7 @@ public class UserWeChatController extends  WeChatBaseController{
             if (result ==null){
                 return  JsonObjectBO.success("无号码存在",null);
             }else {
-                return JsonObjectBO.error("此号码存在,请重新输入");
+                return JsonObjectBO.error("此号码已存在,请重新输入");
             }
         }catch (Exception e){
             return JsonObjectBO.exceptionWithMessage("验证异常",e.getMessage());

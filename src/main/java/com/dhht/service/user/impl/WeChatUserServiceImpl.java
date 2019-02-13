@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,12 +29,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author fyc 2018/12/29
  */
 
 @Service("WeChatUserService")
+@Transactional
 public class WeChatUserServiceImpl implements WeChatUserService {
 
     @Autowired
@@ -66,7 +69,8 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             stringRedisTemplate.delete(mobilePhone);
             stringRedisTemplate.opsForValue().append(mobilePhone,code);
         }
-        expire(mobilePhone);
+        stringRedisTemplate.expire(mobilePhone,300, TimeUnit.SECONDS);
+       // expire(mobilePhone);
         boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,param,params);
         if(result){
 //            SMSCode smscode= smsCodeDao.getSms(mobilePhone);
@@ -204,6 +208,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             weChatUser.setTelphone(useDepartmentRegister.getMobliePhone());
             weChatUser.setCompany(useDepartment.getId());
             weChatUser.setCompanyName(useDepartment.getName());
+            weChatUser.setCompanyAccout(true);
           int result =  weChatUserMapper.insertSelective(weChatUser);
           //插入到一张新表（如果做企业单位添加员工时，可用）
            if(result>0){

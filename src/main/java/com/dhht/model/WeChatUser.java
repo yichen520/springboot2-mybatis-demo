@@ -24,4 +24,6 @@ public class WeChatUser {
 
     private String image;
 
+     private boolean isCompanyAccout;
+
 }

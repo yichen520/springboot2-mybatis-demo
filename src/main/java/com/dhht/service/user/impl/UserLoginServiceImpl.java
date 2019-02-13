@@ -433,19 +433,12 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Override
     public JsonObjectBO checkAPPPhoneAndIDCard(SMSCode smsCode) {
-        Long nowtime =System.currentTimeMillis();
-
-        SMSCode sms = smsCodeDao.getSms(smsCode.getPhone());
-        if (sms ==null){
-            return JsonObjectBO.error("请发送验证码");
-        }
-        if(!sms.getSmscode().equals(smsCode.getSmscode())){
-            return JsonObjectBO.error("验证码错误");
-        }
-        if(nowtime-sms.getLastTime()>300000){
-            return JsonObjectBO.error("验证码超时，请重新发送");
-        }
+        String verificationCode = template.opsForValue().get(smsCode.getPhone());
+        if (verificationCode.equals(smsCode.getSmscode())){
         return JsonObjectBO.ok("效验通过");
+        }else {
+            return JsonObjectBO.error("验证码错误,请重新输入");
+        }
     }
 
 
