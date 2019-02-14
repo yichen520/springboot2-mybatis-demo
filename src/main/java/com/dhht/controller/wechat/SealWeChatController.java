@@ -139,15 +139,15 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 
-    @RequestMapping("/cachetChange")
+    @RequestMapping(value = "/cachetChange", method = RequestMethod.POST)
     public JsonObjectBO cachetChange(@RequestBody Map map, HttpServletResponse httpServletResponse) {
         init(httpServletRequest, httpServletResponse);
-        WeChatUser user = currentUser();
+        WeChatUser weChatUser = currentUser();
         String sealId = (String) map.get("sealId");
         String sealAgentId = (String) map.get("sealAgentId");
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-            int a = sealService.cachetChange(sealId,sealAgentId,user);
+            int a = sealService.cachetChange(sealId,sealAgentId,weChatUser);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);

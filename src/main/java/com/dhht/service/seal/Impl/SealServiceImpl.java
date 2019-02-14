@@ -2099,7 +2099,7 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int cachetChange(String sealId,String sealAgentId, WeChatUser user) {
+    public int cachetChange(String sealId,String sealAgentId, WeChatUser weChatUser) {
         try {
             Seal seal1 = sealDao.selectByPrimaryKey(sealId);
             if (seal1 != null) {
@@ -2110,8 +2110,8 @@ public class SealServiceImpl implements SealService {
                 SealOperationRecord sealOperationRecord = new SealOperationRecord();
                 sealOperationRecord.setId(UUIDUtil.generate());
                 sealOperationRecord.setSealId(seal1.getId());
-                sealOperationRecord.setEmployeeId(user.getId());  //小程序端的变更操作人就是小程序的登录用户
-                sealOperationRecord.setEmployeeName(user.getName());
+                sealOperationRecord.setEmployeeId(weChatUser.getId());  //小程序端的变更操作人就是小程序的登录用户
+                sealOperationRecord.setEmployeeName(weChatUser.getName());
 //                sealOperationRecord.setEmployeeCode();
                 sealOperationRecord.setOperateType("07");
                 sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());

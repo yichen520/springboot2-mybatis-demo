@@ -124,7 +124,7 @@ public class SealController implements InitializingBean {
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
         String districtId = user.getDistrictId();
         String agentTelphone = sealDTO.getTelphone();
-        String  captcha =sealDTO.getCaptcha();
+        String captcha =sealDTO.getCaptcha();
         String agentName = sealDTO.getName();
         String certificateNo = sealDTO.getCertificateNo();
         String certificateType = sealDTO.getCertificateType();
