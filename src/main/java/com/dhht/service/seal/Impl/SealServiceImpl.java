@@ -796,6 +796,7 @@ public class SealServiceImpl implements SealService {
             sealAgent.setAgentPhotoId(seal.getDeliveryExpressInfo().getAgentPhotoImage());
             sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
             sealAgent.setCertificateType("111");
+
             sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
             sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
             sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
@@ -1930,7 +1931,6 @@ public class SealServiceImpl implements SealService {
             //经办人信息
 
             String saId = sealDTO.getSealAgent().getId();
-
             seal.setAgentId(sealDTO.getSealAgent().getId());
             seal.setIsUndertake(true);
             seal.setUndertakeDate(DateUtil.getCurrentTime());
@@ -2191,9 +2191,6 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     public int logoutAbout(Seal seal,Employee employee){
-
-
-
         String agentId = seal.getAgentId();
         SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(agentId);
         sealAgent.setId(UUIDUtil.generate());

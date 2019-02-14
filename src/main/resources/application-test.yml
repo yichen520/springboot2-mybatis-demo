@@ -132,9 +132,7 @@ file:
 
 filePath: C:/temp/
 
-seal:
-  template:
-  filePath: C:/temp/seal
+
 
 #设置redis中token过期时间
 expireTime: 3600

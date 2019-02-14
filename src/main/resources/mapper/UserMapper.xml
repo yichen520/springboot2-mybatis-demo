@@ -93,7 +93,7 @@
         `is_changed_pwd`,
         `is_deleted`,
         `district_id`,
-        `caarand`
+        `carand`
         )
         values (
         #{id},

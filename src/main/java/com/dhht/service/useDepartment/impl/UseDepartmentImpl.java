@@ -89,7 +89,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
             if(useDepartment.getManagerPhone()!=null) {
                 weChatUserService.sendMessage(useDepartment.getManagerPhone(), business);
             }
-
             return JsonObjectBO.success("添加成功",null);
         }
     }
