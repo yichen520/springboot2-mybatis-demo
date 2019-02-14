@@ -356,7 +356,7 @@ public class SealWeChatController extends WeChatBaseController {
         }
     }
 
-    @RequestMapping(value = "/download", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/download")
     public ResponseEntity<byte[]> download(@RequestParam("id") String id) {
         FileInfoVO fileInfoVO = fileService.readFile(id);
 

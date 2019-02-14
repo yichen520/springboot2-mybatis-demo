@@ -2100,19 +2100,36 @@ public class SealServiceImpl implements SealService {
      */
     @Override
     public int cachetChange(SealWeChatDTO sealDTO, WeChatUser user) {
-        UseDepartment useDepartment = useDepartmentService.selectByCode(sealDTO.getUseDepartmentCode());
-        if (useDepartment == null) {
-            return ResultUtil.isNoDepartment;
-        }
-        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(), true, "01");
-        if (seal1 != null) {
-            int logoutSeal = sealDao.logoutSeal(sealDTO.getUseDepartmentCode(), "01");
-        }
-        Seal seal = sealDTO.getSeal();
-        seal.setSealTypeCode("01");
-        sealDTO.setSeal(seal);
-        return sealWeChatRecord(user, sealDTO, null);
+        try {
+            Seal seal1 = sealDTO.getSeal();
+            if (seal1 != null) {
+                seal1.setLogoutPersonId(sealDTO.getSealAgent().getId());
+                seal1.setIsLogout(true);
+                seal1.setLogoutDate(DateUtil.getCurrentTime());
 
+                SealOperationRecord sealOperationRecord = new SealOperationRecord();
+                sealOperationRecord.setId(UUIDUtil.generate());
+                sealOperationRecord.setSealId(seal1.getId());
+                sealOperationRecord.setEmployeeId(user.getId());  //小程序端的变更操作人就是小程序的登录用户
+                sealOperationRecord.setEmployeeName(user.getName());
+//                sealOperationRecord.setEmployeeCode();
+                sealOperationRecord.setOperateType("07");
+                sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+                int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+                int sealUpdate = sealDao.updateByPrimaryKeySelective(seal1);
+                if(sealOperationRecordInsert<0 && sealUpdate<0){
+                    return ResultUtil.isError;
+                }else{
+                    return ResultUtil.isSuccess;
+                }
+            }else{
+                return ResultUtil.isNoSeal;
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.isException;
+        }
     }
 
     @Override
@@ -2213,7 +2230,7 @@ public class SealServiceImpl implements SealService {
     }
 
     /**
-     * 挂失相关操作
+     * 注销相关操作
      *
      * @param seal
      * @param employee
