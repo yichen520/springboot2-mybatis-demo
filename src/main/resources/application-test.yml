@@ -31,9 +31,12 @@ spring:
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
 
-          url: jdbc:mysql://10.0.0.21:8739/test_seal_hunan?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: test_seal
-          password: Tpf9Lt
+#          url: jdbc:mysql://10.0.0.21:8739/test_seal_hunan?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+#          username: test_seal
+#          password: Tpf9Lt
+          url: jdbc:mysql://10.0.0.21:8739/hunan_seal_v1.0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: hunan_seal
+          password: N76Ojop
 
           #配置初始化大小/最小/最大
           initial-size: 1
@@ -146,8 +149,8 @@ seal:
         filepath: C:/temp
 
 #省级区域设定
-province: 330000
+province: 430000
 #是否要加密狗 true是要  false是不要
-suciz: true
+suciz: false
 
 

@@ -1,6 +1,9 @@
 package com.dhht.service.user;
 
+import com.dhht.model.UseDepartment;
+import com.dhht.model.UseDepartmentRegister;
 import com.dhht.model.WeChatUser;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -38,4 +41,12 @@ public interface WeChatUserService {
      * @return
      */
     Map<String,Object>  selectWeChatUser(String telphone);
+
+    UseDepartment bindCompany(UseDepartment useDepartment);
+
+    int updateWeChatUserInfo(WeChatUser weChatUser);
+
+    WeChatUser isExistTelphone(String telphone);
+
+    int companyRegister(UseDepartmentRegister useDepartmentRegister);
 }

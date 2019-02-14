@@ -86,7 +86,8 @@ public class UseDepartmentImpl implements UseDepartmentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return JsonObjectBO.error("添加失败");
         }else{
-            if(useDepartment.getManagerPhone()!=null) {
+            if(useDepartment.getManagerPhone()!=null && useDepartment.getManagerPhone()!="") {
+                System.out.println(useDepartment.getManagerPhone());
                 weChatUserService.sendMessage(useDepartment.getManagerPhone(), business);
             }
             return JsonObjectBO.success("添加成功",null);

@@ -46,10 +46,19 @@ public class InterceptorConfig implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if(request.getRequestURI().contains("/weChat/getcookie"))
+        {
+            String mobilePhone = (String) request.getSession().getAttribute("mobilePhone");
+            if (mobilePhone == null || mobilePhone.isEmpty()){
+                response.setHeader("Access-Control-Allow-Origin", "*");
+                response.setStatus(401);
+                return false;
+            }
+        }
         boolean judgeIsMoblie = JudgeIsMoblie(request);
 //        response.setHeader("Access-Control-Allow-Origin", "*");
         //app端、微信小程序端和门户网站端不拦截
-        if(judgeIsMoblie==true||request.getRequestURI().contains("/portal")||request.getRequestURI().contains("/weChat")||request.getRequestURI().contains("/ems") ){
+        if(judgeIsMoblie==true||request.getRequestURI().contains("/portal")||request.getRequestURI().contains("/ems")||request.getRequestURI().contains("/weChat") ){
 //            if(request.getRequestURI().contains("/recopients")){
 //                //获取session是否存在
 //                Object object = request.getSession().getAttribute("user");
@@ -64,9 +73,12 @@ public class InterceptorConfig implements HandlerInterceptor {
 //                    return false;
 //                }
 //            }else {
+            //
+
                 return true;
-//            }
+
         }
+
 
         if(request.getRequestURI().equals("/login")||request.getRequestURI().equals("/logout")||request.getRequestURI().equals("/error")||request.getRequestURI().equals("/sys/user/resetPwd")||request.getRequestURI().equals("/sys/user/Code")
                 ||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")||request.getRequestURI().equals("/make/employee/insertEmployeeImport")||request.getRequestURI().equals("/app/login")||request.getRequestURI().equals("/make/makeDepartment/makeDepartmentCode")|| request.getRequestURI().equals("/evaluate/insert")

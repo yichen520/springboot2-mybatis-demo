@@ -403,6 +403,9 @@ public class SealController implements InitializingBean {
             }else if(a==ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("交付成功");
+            }else if(a==ResultUtil.isNoSealVerification){
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("未核验通过，请重新核验");
             }else{
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("交付失败");

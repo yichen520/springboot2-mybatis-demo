@@ -66,4 +66,5 @@ public class MakedepartmentSimplePO {
     private String userLongitude;
     private String userLatitude;
     private Double distance = 0.0;
+    private  String[] region;
     }

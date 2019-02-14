@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * 2018/7/2 create by fyc
  */
-@Service(value = "EmployeeService")
+@Service(value = "employeeService")
 @Transactional
 public class EmployeeServiceImp implements EmployeeService {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:hh:ss");

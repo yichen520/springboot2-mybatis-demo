@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletResponse;
 
 public class ResultUtil {
+
     @Autowired
     private static HttpServletResponse response;
     public static final int isHave = 2;
@@ -37,9 +38,11 @@ public class ResultUtil {
     public static final int isNoLoginUser = 50;
     public static final int isCodeError = 51;
     public static final int isSendVerificationCode=27;
+    public static final int isNoSealVerification=29;
     public static final int isNoSeal=53;
     public static final int isNoEms=28;
     public static final int isNoSession=54;
+    public static final int isNoMatchUseDepartment=55;
 
     public static String sealType(String sealType){
         switch (sealType){
@@ -120,6 +123,8 @@ public class ResultUtil {
                 return JsonObjectBO.ok("验证码已发送");
             case 28:
                 return JsonObjectBO.error("无ems信息");
+            case 29:
+                return JsonObjectBO.error("未核验通过，请重新核验");
             case 50:
                 return JsonObjectBO.error("会话失效,请重新登录");
             case 51:

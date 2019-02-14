@@ -16,10 +16,14 @@ public class WeChatUser {
 
     private String company;
 
+    private String companyName;
+
     private String job;
 
     private Date createTime;
 
     private String image;
+
+     private boolean isCompanyAccout;
 
 }

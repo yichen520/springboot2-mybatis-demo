@@ -100,25 +100,32 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
   </select>
 
   <select id="selectMakedePartmentByEvaluate" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
-    select <include refid="Base_MakeDepartment_Column_List"/>,AVG(make_department_evaluate.score) as score
-    from make_department  JOIN make_department_attach_info
-    on make_department.flag = make_department_attach_info.make_department_flag
-    LEFT join make_department_evaluate on make_department.flag = make_department_evaluate.make_department_id
-    where  make_department.delete_status = 0 and
-    make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
+    SELECT
+    t.*, cast(AVG(
+    make_department_evaluate.score) as decimal(18,1)) AS score
+    FROM
+    (
+    SELECT <include refid="Base_MakeDepartment_Column_List"/> FROM make_department
+    LEFT JOIN make_department_attach_info ON make_department.flag = make_department_attach_info.make_department_flag
+    WHERE
+    make_department.delete_status = 0
+    AND make_department.department_address LIKE "%"#{departmentName,jdbcType=VARCHAR}"%"
     and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
-    GROUP BY make_department_evaluate.make_department_id ORDER BY score desc
+    ) AS t
+    LEFT JOIN make_department_evaluate ON t.flag = make_department_evaluate.make_department_id
+    GROUP BY t.id
+    ORDER BY score DESC
+
   </select>
 
   <select id="selectMakedePartmentBySealNum" resultMap="BaseMakeDepartmentResultMap" parameterType="com.dhht.model.pojo.MakedepartmentSimplePO" >
-    select <include refid="Base_MakeDepartment_Column_List"/>,count(1) as total
-    from make_department  JOIN make_department_attach_info
+    select <include refid="Base_MakeDepartment_Column_List"/>
+    from make_department left JOIN make_department_attach_info
     on make_department.flag = make_department_attach_info.make_department_flag
-    LEFT join seal on seal.make_department_code = make_department.department_code
     where  make_department.delete_status = 0 and
     make_department.department_name like "%"#{departmentName,jdbcType=VARCHAR}"%"
     and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
-    GROUP BY seal.make_department_code ORDER BY total desc
+    GROUP BY department_code
   </select>
 
 
@@ -439,6 +446,8 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
         select flag,MAX(version) as ver from make_department GROUP BY flag
         )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and version_time BETWEEN #{startTime} and #{endTime}
     </select>
+
+
 
 
 </mapper>

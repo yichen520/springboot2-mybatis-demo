@@ -4,6 +4,7 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 import com.dhht.model.pojo.FileInfoVO;
 import com.dhht.model.pojo.SealVO;
+import com.dhht.model.pojo.SealVerificationPO;
 import com.dhht.model.pojo.SealWeChatDTO;
 import com.github.pagehelper.PageInfo;
 
@@ -25,7 +26,7 @@ public interface SealService {
    //印章主界面
    PageInfo<Seal> sealInfo( User user,String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize,String sealType,String recordDepartmentName,String sealCode);
 
-   //印模上传
+   //上传
    int sealUpload(User user ,String id,  String sealedCardId, String imageDataId);
 
    //印章个人化
@@ -82,7 +83,7 @@ public interface SealService {
    //印章备案信息查询
    List<Seal> selectSealByDistrictId(String districtId);
 
-
+   //承接
    int underTake(User user, String sealId);
 
 
@@ -98,7 +99,6 @@ public interface SealService {
    //小程序申请
    int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId);
 
-
    MakeDepartmentSealPrice sealPrice( Map map);
 
    List<Seal> sealProgress( Map map);
@@ -106,7 +106,6 @@ public interface SealService {
    List<Seal> portalSealInfoByCode(String cdode);
 
    List<Seal> sealListForWeChat(String telphone);
-
 
    Map<String,Object> weChatcheckSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
@@ -119,5 +118,16 @@ public interface SealService {
     List<SealOrder> selectOrder(String type,String telphone);
 
    SealOrder selectOrderDetail(String sealId);
+
+   //判断是否资料更新
+   SealVerificationPO isSealVerification(String sealId);
+
+   //资料更新
+   int dateUpdate(WeChatUser weChatUser,String id,SealAgent sealAgent);
+
+
+
+
+
 }
 
