@@ -585,6 +585,7 @@ public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepart
     try{
         init(httpServletRequest,httpServletResponse);
         int result =  weChatUserService.companyRegister(useDepartmentRegister);
+
         return ResultUtil.getResult(result);
     } catch (Exception e) {
         e.printStackTrace();
