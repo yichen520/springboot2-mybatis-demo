@@ -94,7 +94,7 @@ public interface SealService {
 
    //----------------------------------------以下是小程序端口-------------------------------------//
    //小程序变更
-   int cachetChange(SealWeChatDTO sealDTO,WeChatUser user);
+   int cachetChange(String sealId,String sealAgentId,WeChatUser user);
 
    //小程序申请
    int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId);
