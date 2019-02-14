@@ -3,11 +3,13 @@ package com.dhht.service.seal.Impl;
 import com.dhht.dao.SealAgentMapper;
 import com.dhht.dao.SealDao;
 import com.dhht.dao.SealVerificationMapper;
-import com.dhht.model.Seal;
-import com.dhht.model.SealAgent;
-import com.dhht.model.SealVerification;
+import com.dhht.model.*;
+import com.dhht.model.pojo.MakedepartmentSimplePO;
 import com.dhht.model.pojo.SealVerificationPO;
+import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.WeChatSealService;
+import com.dhht.service.useDepartment.UseDepartmentService;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,15 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
     @Autowired
     private SealAgentMapper sealAgentMapper;
+
+    @Autowired
+    private UseDepartmentService useDepartmentService;
+
+    @Autowired
+    private RecordDepartmentService recordDepartmentService;
+
+    @Autowired
+    private MakeDepartmentService makeDepartmentService;
 
     @Autowired
     private SealDao sealDao;
@@ -63,10 +74,16 @@ public class WeChatSealServiceImp implements WeChatSealService {
         List<SealAgent> list = new ArrayList<>();
         list.add(sealAgent);
         SealVerification sealVerification = sealVerificationMapper.selectBySealId(id);
+        UseDepartment useDepartment = useDepartmentService.selectByCode(seal.getUseDepartmentCode());
+        MakeDepartmentSimple makedepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal.getMakeDepartmentCode());
+        RecordDepartment recordDepartment = recordDepartmentService.selectByCode(seal.getMakeDepartmentCode());
         SealVerificationPO sealVerificationPO = new SealVerificationPO();
         sealVerificationPO.setSeal(seal);
         sealVerificationPO.setSealVerification(sealVerification);
         sealVerificationPO.setSealAgent(list);
+        sealVerificationPO.setMakeDepartmentSimple(makedepartmentSimple);
+        sealVerificationPO.setRecordDepartment(recordDepartment);
+        sealVerificationPO.setUseDepartment(useDepartment);
         return sealVerificationPO;
     }
 }
