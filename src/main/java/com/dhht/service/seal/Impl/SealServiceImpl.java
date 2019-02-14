@@ -2099,11 +2099,11 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int cachetChange(SealWeChatDTO sealDTO, WeChatUser user) {
+    public int cachetChange(String sealId,String sealAgentId, WeChatUser user) {
         try {
-            Seal seal1 = sealDTO.getSeal();
+            Seal seal1 = sealDao.selectByPrimaryKey(sealId);
             if (seal1 != null) {
-                seal1.setLogoutPersonId(sealDTO.getSealAgent().getId());
+                seal1.setLogoutPersonId(sealAgentId);
                 seal1.setIsLogout(true);
                 seal1.setLogoutDate(DateUtil.getCurrentTime());
 

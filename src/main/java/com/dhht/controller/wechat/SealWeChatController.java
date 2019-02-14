@@ -140,13 +140,14 @@ public class SealWeChatController extends WeChatBaseController {
 
 
     @RequestMapping("/cachetChange")
-    public JsonObjectBO cachetChange(@RequestBody SealWeChatDTO sealDTO, HttpServletResponse httpServletResponse) {
+    public JsonObjectBO cachetChange(@RequestBody Map map, HttpServletResponse httpServletResponse) {
         init(httpServletRequest, httpServletResponse);
         WeChatUser user = currentUser();
-
+        String sealId = (String) map.get("sealId");
+        String sealAgentId = (String) map.get("sealAgentId");
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-            int a = sealService.cachetChange(sealDTO, user);
+            int a = sealService.cachetChange(sealId,sealAgentId,user);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
@@ -356,6 +357,11 @@ public class SealWeChatController extends WeChatBaseController {
         }
     }
 
+    /**
+     * 文件下载
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/download")
     public ResponseEntity<byte[]> download(@RequestParam("id") String id) {
         FileInfoVO fileInfoVO = fileService.readFile(id);
