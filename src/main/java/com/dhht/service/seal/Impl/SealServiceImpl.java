@@ -418,7 +418,7 @@ public class SealServiceImpl implements SealService {
                 sealPayOrder.setPayDate(DateUtil.getCurrentTime());
                 sealPayOrder.setPayWay("到店支付");
                 sealPayOrder.setExpressWay(false);
-                sealPayOrderMapper.insertSelective(sealPayOrder);
+//                sealPayOrderMapper.insertSelective(sealPayOrder);
 
                 //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
                 if (sealInsert > 0 && sealAgentInsert > 0) {
