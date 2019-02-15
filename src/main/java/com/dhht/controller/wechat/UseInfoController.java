@@ -6,6 +6,7 @@ import com.dhht.model.Seal;
 import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.seal.WeChatSealService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class UseInfoController {
     private UseDepartmentService useDepartmentService;
     @Autowired
     private SealService sealService;
+    @Autowired
+    private WeChatSealService weChatSealService;
 
 //    private String mobilePhone = currentUserMobilePhone();
 
@@ -60,7 +63,7 @@ public class UseInfoController {
         String code = (String) map.get("code");
         JSONObject jsonObject = new JSONObject();
         try {
-            List<Seal> seal = sealService.portalSealInfoByCode(code);
+            List<Seal> seal = weChatSealService.portalSealInfoByCode(code);
             jsonObject.put("seals",seal);
             return JsonObjectBO.success("查询成功",jsonObject);
         } catch (Exception e) {

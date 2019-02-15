@@ -86,6 +86,9 @@ public interface SealService {
    //承接
    int underTake(User user, String sealId);
 
+   //承接中的退回
+   int makeDepartmentUntread();
+
 
     List<Seal> portalSealInfo( String useDepartmentName, String useDepartmentCode, String status, String sealType, String recordDepartmentName, String sealCode);
 
@@ -93,37 +96,7 @@ public interface SealService {
     int checkSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
    //----------------------------------------以下是小程序端口-------------------------------------//
-   //小程序变更
-   int cachetChange(String sealId,String sealAgentId,WeChatUser weChatUser);
 
-   //小程序申请
-   int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO,String payOrderId);
-
-   MakeDepartmentSealPrice sealPrice( Map map);
-
-   List<Seal> sealProgress( Map map);
-
-   List<Seal> portalSealInfoByCode(String cdode);
-
-   List<Seal> sealListForWeChat(String telphone);
-
-   Map<String,Object> weChatcheckSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
-
-    int updatePay(SealPayOrder sealPayOrder);
-
-    int expressdeliver(User user, Seal seal);
-
-    int isHaveSeal(String useDepartmentCode,Seal seal);
-
-    List<SealOrder> selectOrder(String type,String telphone);
-
-   SealOrder selectOrderDetail(String sealId);
-
-   //判断是否资料更新
-   SealVerificationPO isSealVerification(String sealId);
-
-   //资料更新
-   int dateUpdate(WeChatUser weChatUser,String id,SealAgent sealAgent);
 
 
 

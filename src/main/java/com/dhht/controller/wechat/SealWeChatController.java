@@ -12,6 +12,7 @@ import com.dhht.model.*;
 import com.dhht.model.pojo.*;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.order.OrderService;
 import com.dhht.service.seal.SealAgentWeChatService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.seal.WeChatSealService;
@@ -40,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author 徐正平
  * @Date 2018/12/31 14:06
  */
 @RestController
@@ -65,6 +65,8 @@ public class SealWeChatController extends WeChatBaseController {
     private UserLoginService userLoginService;
     @Autowired
     private UseDepartmentService useDepartmentService;
+    @Autowired
+    private OrderService orderService;
 
 
     @RequestMapping("/sealRecord")
@@ -75,7 +77,7 @@ public class SealWeChatController extends WeChatBaseController {
         try {
             JSONObject jsonObject = new JSONObject();
             String payOrderId = UUIDUtil.generate();
-            int a = sealService.sealWeChatRecord(user, sealDTO, payOrderId);
+            int a = weChatSealService.sealWeChatRecord(user, sealDTO, payOrderId);
             if (a == 1) {
                 jsonObject.put("payOrderId", payOrderId);
                 return JsonObjectBO.success("印章申请成功", jsonObject);
@@ -99,7 +101,7 @@ public class SealWeChatController extends WeChatBaseController {
                 List<MakeDepartmentSealPrice> makeDepartmentSealPrices = makeDepartmentSealPriceMapper.selectByMakeDepartmentFlag(makeDepartmentFlag);
                 jsonObject.put("makeDepartmentSealPrices", makeDepartmentSealPrices);
             } else {
-                MakeDepartmentSealPrice makeDepartmentSealPrice = sealService.sealPrice(map);
+                MakeDepartmentSealPrice makeDepartmentSealPrice = weChatSealService.sealPrice(map);
                 jsonObject.put("makeDepartmentSealPrice", makeDepartmentSealPrice);
             }
             return JsonObjectBO.success("价格获取成功", jsonObject);
@@ -114,7 +116,7 @@ public class SealWeChatController extends WeChatBaseController {
     public JsonObjectBO sealProgress(@RequestBody Map map, HttpServletResponse httpServletResponse) {
         init(httpServletRequest, httpServletResponse);
         try {
-            List<Seal> sealOperationRecords = sealService.sealProgress(map);
+            List<Seal> sealOperationRecords = weChatSealService.sealProgress(map);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("seals", sealOperationRecords);
             return JsonObjectBO.success("印章进度查询成功", jsonObject);
@@ -147,7 +149,7 @@ public class SealWeChatController extends WeChatBaseController {
         String sealAgentId = (String) map.get("sealAgentId");
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-            int a = sealService.cachetChange(sealId,sealAgentId,weChatUser);
+            int a = weChatSealService.cachetChange(sealId,sealAgentId,weChatUser);
 
             if (a == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
@@ -229,7 +231,7 @@ public class SealWeChatController extends WeChatBaseController {
             init(httpServletRequest, httpServletResponse);
             String telphone = (String) httpServletRequest.getSession().getAttribute("mobilePhone");
             JSONObject jsonObject = new JSONObject();
-            List<Seal> seals = sealService.sealListForWeChat(telphone);
+            List<Seal> seals = weChatSealService.sealListForWeChat(telphone);
             jsonObject.put("seals", seals);
             return JsonObjectBO.success("查询成功", jsonObject);
         } catch (Exception e) {
@@ -328,7 +330,7 @@ public class SealWeChatController extends WeChatBaseController {
     public JsonObjectBO checkPhone(@RequestBody SealPayOrder sealPayOrder, HttpServletResponse httpServletResponse) {
         try {
             init(httpServletRequest, httpServletResponse);
-            return ResultUtil.getResult(sealService.updatePay(sealPayOrder));
+            return ResultUtil.getResult(weChatSealService.updatePay(sealPayOrder));
         } catch (Exception e) {
             e.printStackTrace();
             return JsonObjectBO.exception("支付更改不成功");
@@ -348,7 +350,7 @@ public class SealWeChatController extends WeChatBaseController {
         try {
             String sealCode = (String) map.get("sealCode");
             String useDepartmentCode = (String) map.get("useDepartmentCode");
-            resultMap = sealService.weChatcheckSealCode(sealCode, useDepartmentCode, "01");
+            resultMap = weChatSealService.weChatcheckSealCode(sealCode, useDepartmentCode, "01");
             return resultMap;
         } catch (Exception e) {
             resultMap.put("status", "error");
@@ -396,7 +398,7 @@ public class SealWeChatController extends WeChatBaseController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
             String useDepartmentCode = seal.getUseDepartmentCode();
-            int result = sealService.isHaveSeal(useDepartmentCode, seal);
+            int result = weChatSealService.isHaveSeal(useDepartmentCode, seal);
             if (result == ResultUtil.isSuccess) {
                 jsonObjectBO.setMessage("可以添加");
                 jsonObjectBO.setCode(1);
@@ -421,7 +423,7 @@ public class SealWeChatController extends WeChatBaseController {
             init(httpServletRequest, httpServletResponse);
             JSONObject jsonObject = new JSONObject();
             WeChatUser weChatUser = currentUser();
-            List<SealOrder> sealorders = sealService.selectOrder(type, weChatUser.getTelphone());
+            List<SealOrder> sealorders = orderService.selectOrder(type, weChatUser.getTelphone());
             jsonObject.put("sealorders", sealorders);
             return JsonObjectBO.success("查询订单成功", jsonObject);
         } catch (Exception e) {
@@ -439,7 +441,7 @@ public class SealWeChatController extends WeChatBaseController {
             init(httpServletRequest, httpServletResponse);
             String SealId = (String) map.get("id");
             JSONObject jsonObject = new JSONObject();
-            SealOrder sealOrder = sealService.selectOrderDetail(SealId);
+            SealOrder sealOrder = orderService.selectOrderDetail(SealId);
             jsonObject.put("sealOrder", sealOrder);
             return JsonObjectBO.success("查询订单详细成功", jsonObject);
         } catch (Exception e) {
@@ -632,7 +634,7 @@ public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepart
             WeChatUser weChatUser = currentUser();
             String id = weChatSealVerificationPO.getId();
             SealAgent sealAgent = weChatSealVerificationPO.getSealAgent();
-            int result =  sealService.dateUpdate(weChatUser,id,sealAgent);
+            int result =  weChatSealService.dateUpdate(weChatUser,id,sealAgent);
             if(result==ResultUtil.isFail){
                 jsonObjectBO.setData(jsonObject);
                 jsonObjectBO.setMessage("修改失败");
