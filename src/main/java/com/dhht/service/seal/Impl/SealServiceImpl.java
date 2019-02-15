@@ -854,8 +854,8 @@ public class SealServiceImpl implements SealService {
         if (sealPayOrder == null){
          return  ResultUtil.isFail;
         }
-        sealPayOrder.setIsPay(true);
-        sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
+//        sealPayOrder.setIsPay(true);
+//        sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
 
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
 //            SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.PERSONAL);

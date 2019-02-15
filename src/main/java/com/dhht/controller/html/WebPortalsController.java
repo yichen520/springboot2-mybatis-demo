@@ -91,13 +91,12 @@ public class WebPortalsController extends BaseController {
 
     /**
      * 制作单位价格数据
-     * @param map
+     * @param makeDepartmentFlag
      * @return
      */
-    @RequestMapping(value = "/sealPriceInfo",method = RequestMethod.POST)
-    public JsonObjectBO getSealPrice(@RequestBody Map map){
+    @RequestMapping(value = "/sealPriceInfo",method = RequestMethod.GET)
+    public JsonObjectBO getSealPrice(@RequestParam String makeDepartmentFlag){
         try {
-            String makeDepartmentFlag = (String)map.get("makeDepartmentFlag");
             JSONObject jsonObject = new JSONObject();
             List<MakeDepartmentSealPrice> makeDepartmentSealPrices = makeDepartmentSealPriceService.selectByMakeDepartmentFlag(makeDepartmentFlag);
             jsonObject.put("sealPrice",makeDepartmentSealPrices);
@@ -167,8 +166,8 @@ public class WebPortalsController extends BaseController {
     }
 
 
-    @RequestMapping("/sealInfo")
-    public JsonObjectBO sealInfo(String code) {
+    @RequestMapping(value = "/sealInfo",method = RequestMethod.GET)
+    public JsonObjectBO sealInfo(@RequestParam String code) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         User user =null;
@@ -191,7 +190,7 @@ public class WebPortalsController extends BaseController {
      * @return
      */
     @Log("印章核验")
-    @RequestMapping("/checkSealCode")
+    @RequestMapping(value = "/checkSealCode",method = RequestMethod.POST)
     public JsonObjectBO checkSealCode(@RequestBody Map map) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
@@ -212,5 +211,7 @@ public class WebPortalsController extends BaseController {
             return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询失败");
         }
     }
+
+
 
 }

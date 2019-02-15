@@ -34,6 +34,7 @@ spring:
 #          url: jdbc:mysql://127.0.0.1:3306/seal?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
 #          username: root
 #          password: 123456
+
           url: jdbc:mysql://10.0.0.21:8739/dev_seal_V1_0?useSSL=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: dev_seal
           password: Tpf9Lt
@@ -113,11 +114,11 @@ trackerPort: :9000/
 trackerServer: 10.0.0.40
 trackerProtocol: http://
 file:
- local:
-   root: C:/temp/
-   ems: /Library/东华宏泰/
+  local:
+    root: C:/temp/
+    ems: /Library/东华宏泰/
 sealtemplate:
- filePath: C:/temp/seal
+  filePath: C:/temp/seal
 
 
 #设置redis中token过期时间
@@ -151,6 +152,6 @@ sms:
 
 
 #省级区域设定
-province: 430000
+province: 330000
 #是否要加密狗 true是要  false是不要
 suciz: false

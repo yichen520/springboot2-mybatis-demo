@@ -90,7 +90,6 @@ public class UseDepartmentImpl implements UseDepartmentService {
                 System.out.println(useDepartment.getManagerPhone());
                 weChatUserService.sendMessage(useDepartment.getManagerPhone(), business);
             }
-
             return JsonObjectBO.success("添加成功",null);
         }
     }

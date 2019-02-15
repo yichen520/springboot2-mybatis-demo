@@ -11,16 +11,24 @@
     <result column="express_way" property="expressWay" jdbcType="BIT" />
     <result column="courier_id" property="courierId" jdbcType="CHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="CHAR" />
+    <result column="is_evaluation" property="isEvaluation" jdbcType="BIT" />
+    <result column="payjs_order_id" property="payJsOrderId" jdbcType="VARCHAR" />
+    <result column="wechat_user_id" property="weChatUserId" jdbcType="CHAR" />
+    <result column="make_department_id" property="makeDepartmentId" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, seal_id, is_pay, pay_way, pay_accout, pay_date, express_way, courier_id, memo
+    id, seal_id, is_pay, pay_way, pay_accout, pay_date, express_way, courier_id, memo,refund_status,is_evaluation,payjs_order_id,wechat_user_id,make_department_id,createTime
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from seal_pay_order
     where id = #{id,jdbcType=CHAR}
   </select>
+
   <select id="selectBySealId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
@@ -32,105 +40,33 @@
     delete from seal_pay_order
     where id = #{id,jdbcType=CHAR}
   </delete>
+
   <insert id="insert" parameterType="com.dhht.model.SealPayOrder" >
     insert into seal_pay_order (id, seal_id, is_pay, pay_way, 
       pay_accout, pay_date, express_way, 
-      courier_id, memo)
+      courier_id, memo,refund_status,is_evaluation,payjs_order_id,wechat_user_id,
+      make_department_id,create_time
+      )
     values (#{id,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, #{isPay,jdbcType=BIT}, #{payWay,jdbcType=CHAR}, 
       #{payAccout,jdbcType=VARCHAR}, #{payDate,jdbcType=TIMESTAMP}, #{expressWay,jdbcType=BIT}, 
-      #{courierId,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR})
+      #{courierId,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR},#{refundStatus,jdbcType=CHAR},#{isEvaluation,jdbcType=BIT}),
+      #{payJsOrderId,jdbcType=VARCHAR},#{weChatUserId,jdbcType=CHAR},#{makeDepartmentId,jdbcType=CHAR},#{createTime,jdbcType=TIMESTAMP}
   </insert>
-  <insert id="insertSelective" parameterType="com.dhht.model.SealPayOrder" >
-    insert into seal_pay_order
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="sealId != null" >
-        seal_id,
-      </if>
-      <if test="isPay != null" >
-        is_pay,
-      </if>
-      <if test="payWay != null" >
-        pay_way,
-      </if>
-      <if test="payAccout != null" >
-        pay_accout,
-      </if>
-      <if test="payDate != null" >
-        pay_date,
-      </if>
-      <if test="expressWay != null" >
-        express_way,
-      </if>
-      <if test="courierId != null" >
-        courier_id,
-      </if>
-      <if test="memo != null" >
-        memo,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=CHAR},
-      </if>
-      <if test="sealId != null" >
-        #{sealId,jdbcType=CHAR},
-      </if>
-      <if test="isPay != null" >
-        #{isPay,jdbcType=BIT},
-      </if>
-      <if test="payWay != null" >
-        #{payWay,jdbcType=CHAR},
-      </if>
-      <if test="payAccout != null" >
-        #{payAccout,jdbcType=VARCHAR},
-      </if>
-      <if test="payDate != null" >
-        #{payDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="expressWay != null" >
-        #{expressWay,jdbcType=BIT},
-      </if>
-      <if test="courierId != null" >
-        #{courierId,jdbcType=CHAR},
-      </if>
-      <if test="memo != null" >
-        #{memo,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.SealPayOrder" >
-    update seal_pay_order
-    <set >
-      <if test="sealId != null" >
-        seal_id = #{sealId,jdbcType=CHAR},
-      </if>
-      <if test="isPay != null" >
-        is_pay = #{isPay,jdbcType=BIT},
-      </if>
-      <if test="payWay != null" >
-        pay_way = #{payWay,jdbcType=CHAR},
-      </if>
-      <if test="payAccout != null" >
-        pay_accout = #{payAccout,jdbcType=VARCHAR},
-      </if>
-      <if test="payDate != null" >
-        pay_date = #{payDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="expressWay != null" >
-        express_way = #{expressWay,jdbcType=BIT},
-      </if>
-      <if test="courierId != null" >
-        courier_id = #{courierId,jdbcType=CHAR},
-      </if>
-      <if test="memo != null" >
-        memo = #{memo,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=CHAR}
+
+  <update id="updateEvaluationStatus" parameterType="java.lang.String">
+    update seal_pay_order set is_evaluation = true where id = {#id}
   </update>
+
+  <update id="updateRefundStatus" parameterType="java.lang.String">
+    update seal_pay_order set refund_status = #{refundStatus,jdbcType=CHAR} where id = #{id}
+  </update>
+
+  <update id="updatePayStatus" parameterType="java.lang.String">
+    update seal_pay_order set is_pay = true ,
+    pay_way = #{payWay,jdbcType=VARCHAR}
+    where id = #{id}
+  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.dhht.model.SealPayOrder" >
     update seal_pay_order
     set seal_id = #{sealId,jdbcType=CHAR},
