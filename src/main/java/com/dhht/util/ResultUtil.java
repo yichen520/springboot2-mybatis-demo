@@ -43,7 +43,10 @@ public class ResultUtil {
     public static final int isNoEms=28;
     public static final int isNoSession=54;
     public static final int isNoMatchUseDepartment=55;
-
+    public static final int cancelOrederFail = 56;
+    public static final int cancelOrderOk = 57;
+    public static final int refundOrderOk = 58;
+    public static final int orderError = 59;
     public static String sealType(String sealType){
         switch (sealType){
             case "01":
@@ -134,6 +137,14 @@ public class ResultUtil {
             case 54:
                 response.setStatus(401);
                 return JsonObjectBO.error("session失效,请重新登录");
+            case 56:
+                return JsonObjectBO.error("该订单无法取消，请联系客服");
+            case 57:
+                return JsonObjectBO.ok("订单已取消");
+            case 58:
+                return JsonObjectBO.ok("订单退款成功");
+            case 59:
+                return JsonObjectBO.error("操作发生异常");
                 default:
                     return null;
         }

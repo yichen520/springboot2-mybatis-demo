@@ -6,6 +6,8 @@ import com.dhht.dao.SealDao;
 import com.dhht.dao.SealPayOrderMapper;
 import com.dhht.model.*;
 import com.dhht.service.order.OrderService;
+import com.dhht.util.DateUtil;
+import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,13 @@ public class OrderServiceImpl implements OrderService {
     private CourierMapper courierMapper;
 
 
+    @Override
+    public int insertOrder(SealPayOrder sealPayOrder) {
+        sealPayOrder.setIsEvaluation(false);
+        sealPayOrder.setCreateTime(DateUtil.getCurrentTime());
+        sealPayOrder.setRefundStatus("0");
+        return sealPayOrderMapper.insert(sealPayOrder);
+    }
 
     @Override
     public List<SealOrder> selectOrder(String type, String telphone) {
@@ -114,9 +123,50 @@ public class OrderServiceImpl implements OrderService {
         return sealOrder;
     }
 
+
+
     @Override
-    public int updatePay(SealPayOrder sealPayOrder) {
-        return sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
+    public int updateEvaluationStatus(String sealId) {
+        SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(sealId);
+        return sealPayOrderMapper.updateEvaluationStatus(sealPayOrder.getId());
     }
+
+    @Override
+    public int updateRefundStatus(String refundStatus, String sealId) {
+        SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(sealId);
+        return sealPayOrderMapper.updateRefundStatus(refundStatus,sealPayOrder.getId());
+    }
+
+    @Override
+    public int updatePayStatus(String payWay, String sealId) {
+       SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(sealId);
+       return sealPayOrderMapper.updatePayStatus("在线支付",sealPayOrder.getId());
+    }
+
+
+    @Override
+    public int cancelOrder(String id) {
+        SealPayOrder sealPayOrder = sealPayOrderMapper.selectByPrimaryKey(id);
+        if(sealPayOrder.getRefundStatus().equals("1")){
+            if(sealPayOrder.getIsPay()){
+                int result = sealPayOrderMapper.updatePayStatus("2",id);
+                if(result>0){
+                    return ResultUtil.refundOrderOk;
+                }else {
+                    return ResultUtil.orderError;
+                }
+            }else {
+                int result = sealPayOrderMapper.updateRefundStatus("3",id);
+                if(result>0){
+                    return ResultUtil.cancelOrderOk;
+                }else {
+                    return ResultUtil.orderError;
+                }
+            }
+        }else {
+            return ResultUtil.cancelOrederFail;
+        }
+    }
+
 
 }
