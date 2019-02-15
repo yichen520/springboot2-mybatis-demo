@@ -140,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public int updatePayStatus(String payWay, String sealId) {
        SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(sealId);
-       return sealPayOrderMapper.updatePayStatus("在线支付",sealPayOrder.getId());
+       return sealPayOrderMapper.updatePayStatus(payWay,sealPayOrder.getId());
     }
 
 

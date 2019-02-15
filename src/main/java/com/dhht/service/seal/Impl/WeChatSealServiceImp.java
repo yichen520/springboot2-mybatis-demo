@@ -236,8 +236,8 @@ public class WeChatSealServiceImp implements WeChatSealService {
         if (sealPayOrder == null){
             return  ResultUtil.isFail;
         }
-        sealPayOrder.setIsPay(true);
-        sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
+//        sealPayOrder.setIsPay(true);
+//        sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
             ArrayList<String> params = new ArrayList<String>();
             params.add(seal.getUseDepartmentName());
@@ -422,7 +422,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             sealPayOrder.setId(payOrderId);
             sealPayOrder.setSealId(sealId);
             sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-            sealPayOrderMapper.insertSelective(sealPayOrder);
+//            sealPayOrderMapper.insertSelective(sealPayOrder);
 
             //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
             if (sealInsert > 0 ) {
