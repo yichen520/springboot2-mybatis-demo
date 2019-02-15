@@ -6,11 +6,8 @@ import com.dhht.common.JsonObjectBO;
 import com.dhht.dao.*;
 import com.dhht.face.AFR;
 import com.dhht.model.*;
-import com.dhht.model.pojo.FileInfoVO;
-import com.dhht.model.pojo.SealVO;
+import com.dhht.model.pojo.*;
 
-import com.dhht.model.pojo.SealVerificationPO;
-import com.dhht.model.pojo.SealWeChatDTO;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
@@ -59,7 +56,6 @@ import static com.dhht.service.user.impl.UserServiceImpl.createRandomVcode;
 @Transactional
 public class SealServiceImpl implements SealService {
 
-    private static String ACCOUNT_TIP="该刻制单位还未配置此类型印章价格，只能通过到店支付方式付款元";
     @Autowired
     private SealDao sealDao;
 
@@ -99,8 +95,6 @@ public class SealServiceImpl implements SealService {
     @Autowired
     private NotifyService notifyService;
     @Autowired
-    private MakeDepartmentSealPriceMapper makeDepartmentSealPriceMapper;
-    @Autowired
     private SealOperationRecordMapper sealOperationRecordMapper;
     @Autowired
     private CourierMapper courierMapper;
@@ -112,8 +106,8 @@ public class SealServiceImpl implements SealService {
     private  DistrictMapper districtMapper;
     @Autowired
     private SealVerificationMapper sealVerificationMapper;
-
-
+    @Autowired
+    private FileService fileService;
     @Autowired
     private SmsSendService smsSendService;
 
@@ -130,8 +124,6 @@ public class SealServiceImpl implements SealService {
     @Resource(name = "fastDFSStoreServiceImpl")
     private FileStoreService fastDFSStoreServiceImpl;
 
-    @Autowired
-    private FileService fileService;
 
     @Value("${sms.template.express}")
     private int express;
@@ -612,6 +604,9 @@ public class SealServiceImpl implements SealService {
     @Override
     public int sealUpload(User user, String id, String sealedCardId, String imageDataId) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
+        if(!seal1.getIsUndertake()){
+            return ResultUtil.isFail;
+        }
         seal1.setSealStatusCode("01");
         String operateType = "01";
         String sealCode = seal1.getSealCode();
@@ -921,6 +916,17 @@ public class SealServiceImpl implements SealService {
         //印章操作
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
+        int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);
+        int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId);
+
+        if (result == 1 && insertSealOperationRecord1 == ResultUtil.isSuccess &&insertSealOperationRecord2 == ResultUtil.isSuccess) {
+            return ResultUtil.isSuccess;
+        } else {
+            return ResultUtil.isFail;
+        }
+    }
+
+    public int insertSealOperationRecord(Employee employee,String type,String sealId){
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
         sealOperationRecord.setSealId(sealId);
@@ -930,16 +936,32 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
         sealOperationRecord.setOperateType("001");
         int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
-        if (result == 1 && insertSealOperationRecord == 1) {
-            return ResultUtil.isSuccess;
-        } else {
-            return ResultUtil.isFail;
-        }
+        return insertSealOperationRecord;
     }
 
+    /**
+     * 制作单位审核
+     * @param sealId
+     * @param sealVerification
+     * @return
+     */
     @Override
-    public int makeDepartmentUntread() {
-        return 0;
+    public int makeDepartmentUntread(String sealId, SealVerification sealVerification) {
+        Seal seal = sealDao.selectByPrimaryKey(sealId);
+        seal.setIsUndertake(false);
+        String Id = UUIDUtil.generate();
+        sealVerification.setId(Id);
+        sealVerification.setSealId(sealId);
+        sealVerification.setFlag("1");
+        int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
+        int insertSealVerification = sealVerificationMapper.insertSelective(sealVerification);
+        if(updateSeal>0&&insertSealVerification>0){
+            return ResultUtil.isSuccess;
+        }else{
+            return ResultUtil.isFail;
+        }
+
+
     }
 
 
@@ -1325,7 +1347,7 @@ public class SealServiceImpl implements SealService {
     //印章核验
     @Override
     public int verifySeal(User user,String id, String rejectReason, String rejectRemark, String verify_type_name) {
-        SealVerification sealVerification = sealVerificationMapper.selectBySealId(id);
+        SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag        (id,"2");
         String telphone = user.getTelphone();
         RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
 //        Employee employee = employeeService.selectByPhone(telphone);
@@ -1753,8 +1775,6 @@ public class SealServiceImpl implements SealService {
     }
 
 
-
-
     public String testNum(int num) {
         StringBuilder str = new StringBuilder();//定义变长字符串
         Random random = new Random();
@@ -1805,9 +1825,6 @@ public class SealServiceImpl implements SealService {
         }
         return ResultUtil.isFail;
     }
-
-
-
 
     /**
      * 注销相关操作
@@ -1867,9 +1884,6 @@ public class SealServiceImpl implements SealService {
 
         return ResultUtil.isSuccess;
     }
-
-
-
 
 
 }

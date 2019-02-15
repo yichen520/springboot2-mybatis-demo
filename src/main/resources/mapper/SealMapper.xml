@@ -690,7 +690,7 @@
 
     <select id="selectSealByTelphone" resultMap="BaseResultMap"  parameterType="java.lang.String">
         select <include refid="Base_Column_List_seal" />
-     FROM  seal a join seal_agent sa on a.agent_id = sa.id  AND sa.login_telphone = #{telphone} order by record_date desc
+     FROM  seal a join seal_agent sa on a.agent_id = sa.id  AND sa.login_telphone = #{telphone}  order by record_date desc
 </select>
 
 
@@ -1284,7 +1284,10 @@
     order by record_date desc
   </select>
 
-
+  <select id="sealListOfDateUpdate" resultMap="BaseResultMap">
+      SELECT
+      <include refid="Base_Column_List" /> from seal a join seal_verification sv on a.id=sv.seal_id  AND sv.flag="1" and a.is_undertake=false
+  </select>
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type="01"
   </select>

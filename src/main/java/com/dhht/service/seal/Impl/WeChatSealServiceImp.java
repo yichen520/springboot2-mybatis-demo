@@ -105,15 +105,21 @@ public class WeChatSealServiceImp implements WeChatSealService {
      */
     @Override
     public List<SealVerificationPO> sealAndVerification(String telphone) {
-        List<Seal> seals = sealDao.selectSealByTelphone(telphone);
+        List<Seal> seals = sealDao.selectSealByTelphone(telphone); //该经办人做的所有的章
+//        List<Seal> seals1 = sealDao.sealListOfDateUpdate(); //制作单位退回的章
+//        List<Seal> allSeals = new ArrayList<>();
+//        allSeals.addAll(seals);
+//        allSeals.addAll(seals1);
         List<SealVerificationPO> sealVerificationPOS = new ArrayList<>();
         for(Seal seal:seals){
             SealVerificationPO sealVerificationPO =new SealVerificationPO();
             sealVerificationPO.setSeal(seal);
             String sealId = seal.getId();
             SealVerification sealVerification = sealVerificationMapper.selectBySealId(sealId);
-            sealVerificationPO.setSealVerification(sealVerification);
-            sealVerificationPOS.add(sealVerificationPO);
+            if(sealVerification.getRejectReason().equals("1")) {
+                sealVerificationPO.setSealVerification(sealVerification);
+                sealVerificationPOS.add(sealVerificationPO);
+            }
         }
         return sealVerificationPOS;
     }
@@ -316,8 +322,8 @@ public class WeChatSealServiceImp implements WeChatSealService {
             seal.setUseDepartmentCode(sealDTO.getUseDepartmentCode());
             seal.setUseDepartmentName(useDepartment.getName());
             seal.setSealStatusCode("03");
-            seal.setIsRecord(true);
-            seal.setRecordDate(DateUtil.getCurrentTime());
+            seal.setIsRecord(false);
+//            seal.setRecordDate(DateUtil.getCurrentTime());
             seal.setIsMake(false);
             seal.setIsDeliver(false);
             seal.setIsLoss(false);
@@ -333,10 +339,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
             }
 
-            seal.setIsRecord(true);
-            seal.setRecordDate(DateUtil.getCurrentTime());
-            seal.setIsUndertake(true);
-            seal.setUndertakeDate(DateUtil.getCurrentTime());
+
+//            seal.setIsUndertake(true);
+//            seal.setUndertakeDate(DateUtil.getCurrentTime());
             if(seal.getSealTypeCode().equals("01")){
                 Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"01");
                 if(seal2!=null){
@@ -369,31 +374,31 @@ public class WeChatSealServiceImp implements WeChatSealService {
             sealVerification.setVerifyTypeName("0");
             sealVerificationMapper.insertSelective(sealVerification);
 
-            //申请操作记录
-            String type1 = "00";
-            SealOperationRecord sealOperationRecord = new SealOperationRecord();
-            sealOperationRecord.setId(UUIDUtil.generate());
-            sealOperationRecord.setSealId(sealId);
-            sealOperationRecord.setOperateType(type1);
-            sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-            sealOperationRecord.setEmployeeName(user.getName());
-            int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
-            if (sealOperationRecordInsert < 0) {
-                return ResultUtil.isFail;
-            }
+//            //申请操作记录
+//            String type1 = "00";
+//            SealOperationRecord sealOperationRecord = new SealOperationRecord();
+//            sealOperationRecord.setId(UUIDUtil.generate());
+//            sealOperationRecord.setSealId(sealId);
+//            sealOperationRecord.setOperateType(type1);
+//            sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
+//            sealOperationRecord.setEmployeeName(user.getName());
+//            int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
+//            if (sealOperationRecordInsert < 0) {
+//                return ResultUtil.isFail;
+//            }
 
             //自动承接操作记录
-            String type2 = "01";
-            SealOperationRecord sealOperationRecord2 = new SealOperationRecord();
-            sealOperationRecord2.setId(UUIDUtil.generate());
-            sealOperationRecord2.setSealId(sealId);
-            sealOperationRecord2.setOperateType(type2);
-            sealOperationRecord2.setOperateTime(DateUtil.getCurrentTime());
-            sealOperationRecord2.setEmployeeName(makedepartment.getDepartmentName());
-            int sealOperationRecordInsert2 = sealOperationRecordMapper.insertSelective(sealOperationRecord2); //保存操作记录
-            if (sealOperationRecordInsert2< 0) {
-                return ResultUtil.isFail;
-            }
+//            String type2 = "01";
+//            SealOperationRecord sealOperationRecord2 = new SealOperationRecord();
+//            sealOperationRecord2.setId(UUIDUtil.generate());
+//            sealOperationRecord2.setSealId(sealId);
+//            sealOperationRecord2.setOperateType(type2);
+//            sealOperationRecord2.setOperateTime(DateUtil.getCurrentTime());
+//            sealOperationRecord2.setEmployeeName(makedepartment.getDepartmentName());
+//            int sealOperationRecordInsert2 = sealOperationRecordMapper.insertSelective(sealOperationRecord2); //保存操作记录
+//            if (sealOperationRecordInsert2< 0) {
+//                return ResultUtil.isFail;
+//            }
 
             //经办人信息
 
