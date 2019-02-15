@@ -12,6 +12,7 @@ import com.dhht.model.pojo.SealVO;
 import com.dhht.model.pojo.TrustedIdentityAuthenticationVO;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.seal.WeChatSealService;
 import com.dhht.service.tools.FileService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.util.ResultUtil;
@@ -57,6 +58,9 @@ public class SealController implements InitializingBean {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private WeChatSealService weChatSealService;
 
     private static Logger logger = LoggerFactory.getLogger(SealController.class);
 
@@ -350,7 +354,7 @@ public class SealController implements InitializingBean {
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
 
         try {
-            int a = sealService.expressdeliver( user,  seal);
+            int a = weChatSealService.expressdeliver( user,  seal);
             return ResultUtil.getResult(a);
         } catch (Exception e) {
             e.printStackTrace();

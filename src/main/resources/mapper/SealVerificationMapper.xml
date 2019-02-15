@@ -10,10 +10,11 @@
     <result column="reject_remark" property="rejectRemark" jdbcType="VARCHAR" />
     <result column="verification_date" property="verificationDate" jdbcType="TIMESTAMP" />
     <result column="is_reupload_data" property="isReuploadData" jdbcType="BIT" />
+    <result column="flag" property="flag" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, seal_id, is_verification, verify_type_name, reject_reason, reject_remark, verification_date, 
-    is_reupload_data
+    is_reupload_data,flag
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -28,10 +29,10 @@
   <insert id="insert" parameterType="com.dhht.model.SealVerification" >
     insert into seal_verification (id, seal_id, is_verification, 
       verify_type_name, reject_reason, reject_remark, 
-      verification_date, is_reupload_data)
+      verification_date, is_reupload_data,flag)
     values (#{id,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, #{isVerification,jdbcType=BIT}, 
       #{verifyTypeName,jdbcType=CHAR}, #{rejectReason,jdbcType=CHAR}, #{rejectRemark,jdbcType=VARCHAR}, 
-      #{verificationDate,jdbcType=TIMESTAMP}, #{isReuploadData,jdbcType=BIT})
+      #{verificationDate,jdbcType=TIMESTAMP}, #{isReuploadData,jdbcType=BIT},#{flag,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.SealVerification" >
     insert into seal_verification
@@ -60,6 +61,9 @@
       <if test="isReuploadData != null" >
         is_reupload_data,
       </if>
+      <if test="flag != null" >
+        flag,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -85,6 +89,9 @@
       </if>
       <if test="isReuploadData != null" >
         #{isReuploadData,jdbcType=BIT},
+      </if>
+      <if test="flag != null" >
+        flag,
       </if>
     </trim>
   </insert>
@@ -112,6 +119,9 @@
       <if test="isReuploadData != null" >
         is_reupload_data = #{isReuploadData,jdbcType=BIT},
       </if>
+      <if test="flag != null" >
+        flag,
+      </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
@@ -123,7 +133,8 @@
       reject_reason = #{rejectReason,jdbcType=CHAR},
       reject_remark = #{rejectRemark,jdbcType=VARCHAR},
       verification_date = #{verificationDate,jdbcType=TIMESTAMP},
-      is_reupload_data = #{isReuploadData,jdbcType=BIT}
+      is_reupload_data = #{isReuploadData,jdbcType=BIT},
+      flag = #{flag,jdbcType=CHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
   

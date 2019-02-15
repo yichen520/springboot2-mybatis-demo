@@ -11,6 +11,7 @@ import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.punish.PunishService;
 import com.dhht.service.seal.SealService;
+import com.dhht.service.seal.WeChatSealService;
 import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.service.user.UserLoginService;
 import com.dhht.service.user.WeChatUserService;
@@ -42,6 +43,8 @@ public class WebPortalsController extends BaseController {
     private WeChatUserService weChatUserService;
     @Autowired
     private UserLoginService userLoginService;
+    @Autowired
+    private WeChatSealService weChatSealService;
 
 
 
@@ -169,7 +172,7 @@ public class WebPortalsController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         User user =null;
         try {
-            List<Seal> seal = sealService.portalSealInfoByCode(code);
+            List<Seal> seal = weChatSealService.portalSealInfoByCode(code);
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
