@@ -12,6 +12,7 @@ import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentSealPriceService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.message.NotifyService;
+import com.dhht.service.order.OrderService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.SealCodeService;
 import com.dhht.service.seal.SealService;
@@ -94,19 +95,25 @@ public class SealServiceImpl implements SealService {
 
     @Autowired
     private NotifyService notifyService;
+
     @Autowired
     private SealOperationRecordMapper sealOperationRecordMapper;
+
     @Autowired
     private CourierMapper courierMapper;
+
     @Autowired
     private SealPayOrderMapper sealPayOrderMapper;
+
     @Autowired
     private RecipientsMapper recipientsMapper;
+
     @Autowired
     private  DistrictMapper districtMapper;
+
     @Autowired
     private SealVerificationMapper sealVerificationMapper;
-    @Autowired
+
     private FileService fileService;
     @Autowired
     private SmsSendService smsSendService;
