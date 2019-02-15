@@ -31,10 +31,10 @@ public interface WeChatSealService {
 
     Map<String,Object> weChatcheckSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
-    int updatePay(SealPayOrder sealPayOrder);
 
     int expressdeliver(User user, Seal seal);
 
+    //印章更换的时候查询印章
     int isHaveSeal(String useDepartmentCode,Seal seal);
 
 

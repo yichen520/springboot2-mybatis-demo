@@ -114,4 +114,9 @@ public class OrderServiceImpl implements OrderService {
         return sealOrder;
     }
 
+    @Override
+    public int updatePay(SealPayOrder sealPayOrder) {
+        return sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
+    }
+
 }

@@ -330,7 +330,7 @@ public class SealWeChatController extends WeChatBaseController {
     public JsonObjectBO checkPhone(@RequestBody SealPayOrder sealPayOrder, HttpServletResponse httpServletResponse) {
         try {
             init(httpServletRequest, httpServletResponse);
-            return ResultUtil.getResult(weChatSealService.updatePay(sealPayOrder));
+            return ResultUtil.getResult(orderService.updatePay(sealPayOrder));
         } catch (Exception e) {
             e.printStackTrace();
             return JsonObjectBO.exception("支付更改不成功");

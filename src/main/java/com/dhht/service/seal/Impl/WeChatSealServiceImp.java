@@ -611,10 +611,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
     }
 
 
-    @Override
-    public int updatePay(SealPayOrder sealPayOrder) {
-        return sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
-    }
+
 
     /**
      * 选择章
