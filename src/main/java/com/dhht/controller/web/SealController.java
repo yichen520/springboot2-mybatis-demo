@@ -756,13 +756,13 @@ public class SealController implements InitializingBean {
      * 制作单位印章退回
      */
     @RequestMapping(value = "/makeDepartmentUntread", method = RequestMethod.POST)
-    public JsonObjectBO makeDepartmentUntread(@RequestBody SealVerificationPO sealVerificationPO){
+    public JsonObjectBO makeDepartmentUntread(HttpServletRequest httpServletRequest,@RequestBody SealVerificationPO sealVerificationPO){
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
-
+            User user = (User) httpServletRequest.getSession(true).getAttribute("user");
             String sealId = sealVerificationPO.getSeal().getId();
             SealVerification sealVerification = sealVerificationPO.getSealVerification();
-            int makeDepartmentUntread = sealService.makeDepartmentUntread(sealId, sealVerification);
+            int makeDepartmentUntread = sealService.makeDepartmentUntread(user,sealId, sealVerification);
             if (makeDepartmentUntread == ResultUtil.isSuccess) {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("退回成功");

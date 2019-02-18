@@ -582,4 +582,31 @@ public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepart
         }
         return jsonObjectBO;
     }
+
+    /**
+     * 小程序取消订单  印章也相应取消
+     */
+    @RequestMapping(value = "/cancelSeal" ,method = RequestMethod.POST)
+    public JsonObjectBO cancelSeal(@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        WeChatUser weChatUser = currentUser();
+
+        try {
+            String Id = (String) map.get("sealId");
+            int a = sealService.cancelSeal(Id, weChatUser);
+            if (a == ResultUtil.isSuccess) {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("取消成功");
+            } else {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("取消失败");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"修改失败");
+        }
+        return jsonObjectBO;
+    }
+
+
 }

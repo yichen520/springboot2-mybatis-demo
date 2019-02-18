@@ -88,10 +88,10 @@ public interface SealService {
     int checkSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
    //承接中的退回
-   int makeDepartmentUntread(String sealId, SealVerification sealVerification);
+   int makeDepartmentUntread(User user ,String sealId, SealVerification sealVerification);
 
    //印章取消
-   int cencalSeal(String sealId);
+   int cancelSeal(String sealId,WeChatUser weChatUser);
 
 
 

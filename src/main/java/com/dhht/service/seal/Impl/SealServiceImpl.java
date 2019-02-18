@@ -926,7 +926,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeId(employee.getEmployeeId());   //从业人员登记
         sealOperationRecord.setEmployeeName(employee.getEmployeeName());
         sealOperationRecord.setEmployeeCode(employee.getEmployeeCode());
-        sealOperationRecord.setOperateType("001");
+        sealOperationRecord.setOperateType(type);
         int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
         return insertSealOperationRecord;
     }
@@ -938,8 +938,11 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int makeDepartmentUntread(String sealId, SealVerification sealVerification) {
+    public int makeDepartmentUntread(User user ,String sealId, SealVerification sealVerification) {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
+        String telphone = user.getTelphone();
+        Employee employee = employeeService.selectByPhone(telphone);
+        int insertSealOperationRecord = insertSealOperationRecord(employee,"10",sealId);
         if(sealVerification.getRejectReason().equals("3")){  //退款
             orderService.updateRefundStatus("1",sealId);
             seal.setIsCancel(true);
@@ -960,7 +963,7 @@ public class SealServiceImpl implements SealService {
         sealVerification.setVerificationDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
         int insertSealVerification = sealVerificationMapper.insertSelective(sealVerification);
-        if (updateSeal > 0 && insertSealVerification > 0) {
+        if (updateSeal > 0 && insertSealVerification > 0&& insertSealOperationRecord>0) {
             return ResultUtil.isSuccess;
         } else {
             return ResultUtil.isFail;
@@ -974,12 +977,23 @@ public class SealServiceImpl implements SealService {
      * @return
      */
     @Override
-    public int cencalSeal(String Id) {
+    public int cancelSeal(String Id,WeChatUser weChatUser) {
         Seal seal = sealDao.selectByPrimaryKey(Id);
         seal.setIsCancel(true);
         seal.setCancelDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
-        return 1;
+
+        Employee employee = new Employee();
+        employee.setEmployeeName(weChatUser.getName());
+        employee.setEmployeeId(weChatUser.getId());
+        employee.setEmployeeCode(weChatUser.getTelphone());
+        int insertSealOperationRecord = insertSealOperationRecord(employee,"10",Id);
+        if(insertSealOperationRecord>0 && updateSeal>0){
+            return ResultUtil.isSuccess;
+        }else{
+            return ResultUtil.isFail;
+        }
+
     }
 
 
