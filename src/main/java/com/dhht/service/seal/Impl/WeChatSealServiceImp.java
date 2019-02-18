@@ -429,6 +429,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             sealPayOrder.setId(payOrderId);
             sealPayOrder.setSealId(sealId);
             sealPayOrder.setPayDate(DateUtil.getCurrentTime());
+            sealPayOrder.setWeChatUserId(user.getId());
             orderService.insertOrder(sealPayOrder);
 
             //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库

@@ -18,8 +18,9 @@
     <result column="make_department_id" property="makeDepartmentId" jdbcType="CHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
   </resultMap>
+
   <sql id="Base_Column_List" >
-    id, seal_id, is_pay, pay_way, pay_accout, pay_date, express_way, courier_id, memo,refund_status,is_evaluation,payjs_order_id,wechat_user_id,make_department_id,createTime
+    id, seal_id, is_pay, pay_way, pay_accout, pay_date, express_way, courier_id, memo,refund_status,is_evaluation,payjs_order_id,wechat_user_id,make_department_id,create_time
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -49,8 +50,8 @@
       )
     values (#{id,jdbcType=CHAR}, #{sealId,jdbcType=CHAR}, #{isPay,jdbcType=BIT}, #{payWay,jdbcType=CHAR}, 
       #{payAccout,jdbcType=VARCHAR}, #{payDate,jdbcType=TIMESTAMP}, #{expressWay,jdbcType=BIT}, 
-      #{courierId,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR},#{refundStatus,jdbcType=CHAR},#{isEvaluation,jdbcType=BIT}),
-      #{payJsOrderId,jdbcType=VARCHAR},#{weChatUserId,jdbcType=CHAR},#{makeDepartmentId,jdbcType=CHAR},#{createTime,jdbcType=TIMESTAMP}
+      #{courierId,jdbcType=CHAR}, #{memo,jdbcType=VARCHAR},#{refundStatus,jdbcType=CHAR},#{isEvaluation,jdbcType=BIT},
+      #{payJsOrderId,jdbcType=VARCHAR},#{weChatUserId,jdbcType=CHAR},#{makeDepartmentId,jdbcType=CHAR},#{createTime,jdbcType=TIMESTAMP})
   </insert>
 
   <update id="updateEvaluationStatus" parameterType="java.lang.String">
@@ -80,4 +81,5 @@
       memo = #{memo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
+
 </mapper>
