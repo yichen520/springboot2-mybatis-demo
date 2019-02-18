@@ -665,7 +665,6 @@ public class SealController implements InitializingBean {
         FileInfoVO fileInfoVO = sealService.download(id);
         try {
             Pattern pattern = Pattern.compile("[^\u4E00-\u9FA5]");
-
             Matcher matcher = pattern.matcher(fileInfoVO.getFileName());
             String fileName = matcher.replaceAll("");
             fileName = URLEncoder.encode(fileName,"utf-8");

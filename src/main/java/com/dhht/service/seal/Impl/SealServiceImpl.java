@@ -430,7 +430,8 @@ public class SealServiceImpl implements SealService {
                 sealPayOrder.setPayDate(DateUtil.getCurrentTime());
                 sealPayOrder.setPayWay("到店支付");
                 sealPayOrder.setExpressWay(false);
-//                sealPayOrderMapper.insertSelective(sealPayOrder);
+                orderService.insertOrder(sealPayOrder);
+
 
                 //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
                 if (sealInsert > 0 && sealAgentInsert > 0) {
@@ -520,21 +521,6 @@ public class SealServiceImpl implements SealService {
                     if (sealMaterialInsert < 0 && sealMaterialInsert1 < 0) {
                         return ResultUtil.isError;
                     }
-
-
-//                    fileService.register(moulageId, "印模图像注册");
-//                    fileService.register(moulageImageId, "印模图像注册");
-//                    fileService.register(idCardPhotoId, "认证合一身份证照片注册 ");
-//                    fileService.register(fieldPhotoId, "认证合一现场照片注册");
-//
-//                    SyncEntity syncEntity = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealOperationRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity1 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealAgent, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity2 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(seal, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity3 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(faceCompareRecord, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity4 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity5 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(microsealMaterial, SyncDataType.SEAL, SyncOperateType.RECORD);
-//                    SyncEntity syncEntity6 = ((SealServiceImpl) AopContext.currentProxy()).getSyncDate(sealMaterial1, SyncDataType.SEAL, SyncOperateType.RECORD);
-
                 } else {
                     return ResultUtil.isError;
                 }
@@ -968,6 +954,7 @@ public class SealServiceImpl implements SealService {
         sealVerification.setId(Id);
         sealVerification.setSealId(sealId);
         sealVerification.setFlag("1");
+        sealVerification.setVerificationDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
         int insertSealVerification = sealVerificationMapper.insertSelective(sealVerification);
         if (updateSeal > 0 && insertSealVerification > 0) {
