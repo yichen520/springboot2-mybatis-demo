@@ -90,6 +90,9 @@ public interface SealService {
    //承接中的退回
    int makeDepartmentUntread(String sealId, SealVerification sealVerification);
 
+   //印章取消
+   int cencalSeal(String sealId);
+
 
 
 

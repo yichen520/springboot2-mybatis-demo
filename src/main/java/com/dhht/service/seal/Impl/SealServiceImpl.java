@@ -583,6 +583,7 @@ public class SealServiceImpl implements SealService {
         }
     }
 
+
     /**
      * 印模上传
      *
@@ -965,6 +966,20 @@ public class SealServiceImpl implements SealService {
             return ResultUtil.isFail;
         }
 
+    }
+
+    /**
+     * 取消制作印章
+     * @param Id
+     * @return
+     */
+    @Override
+    public int cencalSeal(String Id) {
+        Seal seal = sealDao.selectByPrimaryKey(Id);
+        seal.setIsCencal(true);
+        seal.setCencalDate(DateUtil.getCurrentTime());
+        int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
+        return 1;
     }
 
 
@@ -1350,6 +1365,9 @@ public class SealServiceImpl implements SealService {
     //印章核验
     @Override
     public int verifySeal(User user,String id, String rejectReason, String rejectRemark, String verify_type_name) {
+        Seal seal = sealDao.selectByPrimaryKey(id);
+        String makeDepartmentCode = seal.getMakeDepartmentCode();
+        MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(makeDepartmentCode);
         SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag        (id,"2");
         String telphone = user.getTelphone();
         RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
@@ -1374,6 +1392,10 @@ public class SealServiceImpl implements SealService {
         if(updateVerifySeal<0||insertSealOperationRecord<0){
             return ResultUtil.isFail;
         }else{
+            if(rejectRemark.equals("2")){ //如果印章问题  直接给制作单位发短信
+                String telphone1 = makeDepartmentSimple.getTelphone();
+
+            }
             return ResultUtil.isSuccess;
         }
 
