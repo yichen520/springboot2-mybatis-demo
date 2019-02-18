@@ -141,4 +141,8 @@
   <select id="selectBySealId" resultMap="BaseResultMap">
     select <include refid="Base_Column_List" /> from seal_verification where seal_id = #{sealId,jdbcType=CHAR}
   </select>
+
+  <select id="selectBySealIdAndFlag" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from seal_verification where seal_id = #{sealId,jdbcType=CHAR} and flag = #{flag,jdbcType=CHAR}
+  </select>
 </mapper>

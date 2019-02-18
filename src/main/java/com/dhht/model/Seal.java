@@ -106,9 +106,28 @@ public class Seal extends SealKey {
 
     private int applySource;
 
+    private Boolean isCencal;  //是否取消
+
+    private Date cencalDate; //取消日期
+
 
      private DeliveryExpressInfo deliveryExpressInfo;
 
+    public Boolean getIsCencal() {
+        return isCencal;
+    }
+
+    public void setIsCencal(Boolean isCencal) {
+        this.isCencal = isCencal;
+    }
+
+    public Date getCencalDate() {
+        return cencalDate;
+    }
+
+    public void setCencalDate(Date cencalDate) {
+        this.cencalDate = cencalDate;
+    }
 
     public Boolean getIsRecord() {
         return isRecord;

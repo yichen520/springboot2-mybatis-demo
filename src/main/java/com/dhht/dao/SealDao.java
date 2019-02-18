@@ -97,6 +97,8 @@ public interface SealDao {
 
     List<Seal> sealList(@Param("telphone") String telphone);
 
+    List<Seal> sealListOfDateUpdate();
+
     //------------------------------统计模块-------------------------------------//
     int countAddSeal(@Param("makeDepartmentCode") String makeDepartmentCode, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
 

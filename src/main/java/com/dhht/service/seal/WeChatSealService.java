@@ -29,9 +29,10 @@ public interface WeChatSealService {
 
     List<Seal> sealListForWeChat(String telphone);
 
+    //查询印章code
     Map<String,Object> weChatcheckSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
-
+    //线上快递交付
     int expressdeliver(User user, Seal seal);
 
     //印章更换的时候查询印章

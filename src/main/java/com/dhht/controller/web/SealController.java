@@ -6,10 +6,7 @@ import com.dhht.common.ImageGenerate;
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
 
-import com.dhht.model.pojo.FileInfoVO;
-import com.dhht.model.pojo.SealDTO;
-import com.dhht.model.pojo.SealVO;
-import com.dhht.model.pojo.TrustedIdentityAuthenticationVO;
+import com.dhht.model.pojo.*;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.seal.WeChatSealService;
@@ -756,6 +753,30 @@ public class SealController implements InitializingBean {
         return jsonObjectBO;
     }
 
+    /**
+     * 制作单位印章退回
+     */
+    @RequestMapping(value = "/makeDepartmentUntread", method = RequestMethod.POST)
+    public JsonObjectBO makeDepartmentUntread(@RequestBody SealVerificationPO sealVerificationPO){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        try {
+
+            String sealId = sealVerificationPO.getSeal().getId();
+            SealVerification sealVerification = sealVerificationPO.getSealVerification();
+            int makeDepartmentUntread = sealService.makeDepartmentUntread(sealId, sealVerification);
+            if (makeDepartmentUntread == ResultUtil.isSuccess) {
+                jsonObjectBO.setCode(1);
+                jsonObjectBO.setMessage("退回成功");
+            } else {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("退回失败");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JsonObjectBO.exception("请求失败");
+        }
+        return jsonObjectBO;
+    }
 
 
 }

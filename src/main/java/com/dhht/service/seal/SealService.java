@@ -2,10 +2,7 @@ package com.dhht.service.seal;
 
 import com.dhht.common.JsonObjectBO;
 import com.dhht.model.*;
-import com.dhht.model.pojo.FileInfoVO;
-import com.dhht.model.pojo.SealVO;
-import com.dhht.model.pojo.SealVerificationPO;
-import com.dhht.model.pojo.SealWeChatDTO;
+import com.dhht.model.pojo.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -84,17 +81,14 @@ public interface SealService {
    //承接
    int underTake(User user, String sealId);
 
-   //承接中的退回
-   int makeDepartmentUntread();
-
 
     List<Seal> portalSealInfo( String useDepartmentName, String useDepartmentCode, String status, String sealType, String recordDepartmentName, String sealCode);
 
 
     int checkSealCode(String sealCode,String useDepartmentCode,String sealTypeCode);
 
-   //----------------------------------------以下是小程序端口-------------------------------------//
-
+   //承接中的退回
+   int makeDepartmentUntread(String sealId, SealVerification sealVerification);
 
 
 

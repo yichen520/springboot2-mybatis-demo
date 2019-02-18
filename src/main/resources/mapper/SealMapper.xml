@@ -52,6 +52,8 @@
       <result column="missingpost_remark" property="missingpostRemark" jdbcType="VARCHAR" />
       <result column="is_undertake" property="isUndertake" jdbcType="BIT" />
       <result column="undertake_date" property="undertakeDate" jdbcType="TIMESTAMP" />
+      <result column="is_cencal" property="isCencal" jdbcType="BIT" />
+      <result column="cencal_date" property="cencalDate" jdbcType="TIMESTAMP" />
       <result column="apply_source" property="applySource" jdbcType="INTEGER" />
   </resultMap>
   
@@ -88,7 +90,7 @@
         is_deliver, is_logout, loss_date, is_loss, remark, logout_date, seal_reason, district_id,
         agent_id, getter_id, loss_person_id, logout_person_id, is_chipseal, is_pass, reject_reason,
         reject_remark, verify_type_name, is_earlywarning, is_apply, apply_date, earlywarning_date,
-        missingpost_remark, is_undertake, undertake_date,apply_source
+        missingpost_remark, is_undertake, undertake_date,apply_source,is_cencal,cencal_date
     </sql>
     <sql id="Base_Column_List_seal">
        a.id as id, seal_code, seal_name, seal_status_code, use_department_code, use_department_name,
@@ -99,7 +101,7 @@
         is_deliver, is_logout, loss_date, is_loss, remark, logout_date, seal_reason, district_id,
         agent_id, getter_id, loss_person_id, logout_person_id, is_chipseal, is_pass, reject_reason,
         reject_remark, verify_type_name, is_earlywarning, is_apply, apply_date, earlywarning_date,
-        missingpost_remark, is_undertake, undertake_date,apply_source
+        missingpost_remark, is_undertake, undertake_date,apply_source,is_cencal,cencal_date
     </sql>
   <select id="selectRecordDepartmentCode" resultMap="recordDepartmentCodeResult">
     SELECT record_department_code from seal GROUP BY record_department_code
@@ -139,7 +141,7 @@
                           is_chipseal, is_pass, reject_reason,
                           reject_remark, verify_type_name, is_earlywarning,
                           is_apply, apply_date, earlywarning_date,
-                          missingpost_remark, is_undertake, undertake_date
+                          missingpost_remark, is_undertake, undertake_date,is_cencal,cencal_date
         )
         values (#{id,jdbcType=CHAR}, #{sealCode,jdbcType=VARCHAR}, #{sealName,jdbcType=VARCHAR},
                 #{sealStatusCode,jdbcType=CHAR}, #{useDepartmentCode,jdbcType=CHAR}, #{useDepartmentName,jdbcType=VARCHAR},
@@ -158,6 +160,7 @@
                 #{rejectRemark,jdbcType=VARCHAR}, #{verifyTypeName,jdbcType=CHAR}, #{isEarlywarning,jdbcType=BIT},
                 #{isApply,jdbcType=BIT}, #{applyDate,jdbcType=TIMESTAMP}, #{earlywarningDate,jdbcType=TIMESTAMP},
                 #{missingpostRemark,jdbcType=VARCHAR}, #{isUndertake,jdbcType=BIT}, #{undertakeDate,jdbcType=TIMESTAMP}
+                , #{isCencal,jdbcType=BIT}, #{cencalDate,jdbcType=TIMESTAMP}
                )
     </insert>
 
@@ -317,6 +320,12 @@
             <if test="applySource != null" >
                 apply_source,
             </if>
+            <if test="isCencal != null" >
+                is_cencal,
+            </if>
+            <if test="cencalDate != null" >
+                cencal_date,
+            </if>
 
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -473,6 +482,12 @@
             <if test="applySource != null" >
                 #{applySource,jdbcType=INTEGER},
             </if>
+            <if test="isCencal != null" >
+                #{isCencal,jdbcType=BIT},
+            </if>
+            <if test="cencalDate != null" >
+                #{cencalDate,jdbcType=TIMESTAMP},
+            </if>
 
         </trim>
     </insert>
@@ -624,6 +639,12 @@
             <if test="undertakeDate != null" >
                 undertake_date = #{undertakeDate,jdbcType=TIMESTAMP},
             </if>
+            <if test="isCencal != null" >
+                is_cencal = #{isCencal,jdbcType=BIT},
+            </if>
+            <if test="undertakeDate != null" >
+                cencal_date = #{cencalDate,jdbcType=TIMESTAMP},
+            </if>
         </set>
         where id = #{id,jdbcType=CHAR}
         and seal_code = #{sealCode,jdbcType=VARCHAR}
@@ -690,7 +711,7 @@
 
     <select id="selectSealByTelphone" resultMap="BaseResultMap"  parameterType="java.lang.String">
         select <include refid="Base_Column_List_seal" />
-     FROM  seal a join seal_agent sa on a.agent_id = sa.id  AND sa.login_telphone = #{telphone} order by record_date desc
+     FROM  seal a join seal_agent sa on a.agent_id = sa.id  AND sa.login_telphone = #{telphone}  order by record_date desc
 </select>
 
 
@@ -720,6 +741,7 @@
   <select id="selectByCodeAndName" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     SELECT * from seal
     <where>
+        1=1
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE  "%"#{useDepartmentCode}"%"
       </if>
@@ -743,6 +765,9 @@
       </if>
       <if test="isLogout !=null and isLogout !=''">
         AND is_logout =  #{isLogout,jdbcType=BIT}
+      </if>
+      <if test="isCencal !=null and isCencal !=''">
+        AND is_cencal =  #{isCencal,jdbcType=BIT}
       </if>
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
@@ -1284,7 +1309,10 @@
     order by record_date desc
   </select>
 
-
+  <select id="sealListOfDateUpdate" resultMap="BaseResultMap">
+      SELECT
+      <include refid="Base_Column_List" /> from seal a join seal_verification sv on a.id=sv.seal_id  AND sv.flag="1" and a.is_undertake=false
+  </select>
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type="01"
   </select>

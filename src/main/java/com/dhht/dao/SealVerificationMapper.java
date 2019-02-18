@@ -18,4 +18,6 @@ public interface SealVerificationMapper {
     int updateByPrimaryKey(SealVerification record);
 
     SealVerification selectBySealId(String sealId);
+
+    SealVerification selectBySealIdAndFlag(String sealId,String flag);
 }
