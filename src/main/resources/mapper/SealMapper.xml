@@ -1165,6 +1165,9 @@
             <if test="isUndertake !=null ">
                 AND is_undertake =  #{isUndertake,jdbcType=BIT}
             </if>
+            <if test="isCencal !=null">
+                And is_cencal =  #{isCencal}
+            </if>
             <if test="useDepartmentCode !=null and useDepartmentCode !=''">
                 And use_department_code LIKE  "%"#{useDepartmentCode}"%"
             </if>
@@ -1189,6 +1192,7 @@
             <if test="sealTypeCode !=null and sealTypeCode !=''">
                 And seal_type_code LIKE  "%"#{sealTypeCode}"%"
             </if>
+
         </where>
         order by undertake_date desc
     </select>

@@ -1596,6 +1596,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
+            seal.setIsCencal(false);
         } else if (status.equals("01")) {  //已制作
             seal.setIsCencal(false);
             seal.setIsRecord(true);
@@ -1604,6 +1605,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
+            seal.setIsCencal(false);
         } else if (status.equals("02")) {  //已个人化
             seal.setIsCencal(false);
             seal.setIsRecord(true);
@@ -1612,28 +1614,33 @@ public class SealServiceImpl implements SealService {
             seal.setIsPersonal(true);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
+            seal.setIsCencal(false);
         } else if (status.equals("00")) {    //未交付
             seal.setIsCencal(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
+            seal.setIsCencal(false);
         } else if (status.equals("04")) {    //已交付
             seal.setIsCencal(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(true);
+            seal.setIsCencal(false);
         } else if (status.equals("05")) {  //已经挂失
             seal.setIsCencal(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
+            seal.setIsCencal(false);
         } else if (status.equals("06")) {   //已注销
             seal.setIsCencal(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
+            seal.setIsCencal(false);
         }else if (status.equals("08")) {   //待承接
             seal.setIsCencal(false);
             seal.setIsApply(false);
@@ -1641,7 +1648,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsRecord(false);
             seal.setIsMake(false);
             seal.setIsUndertake(false);
-            seal.setIsUndertake(false);
+            seal.setIsCencal(false);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
@@ -1652,6 +1659,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsDeliver(true);
             seal.setIsUndertake(true);
             seal.setIsApply(true);
+            seal.setIsCencal(false);
             list = sealDao.selectIsApply(seal);
         }else if(status.equals("10")){
             seal.setIsCencal(true);
@@ -1717,18 +1725,21 @@ public class SealServiceImpl implements SealService {
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
+            seal.setIsCencal(false);
             list = sealDao.selectIsDeliver(seal);
         } else if (status.equals("05")) {  //已经挂失
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
+            seal.setIsCencal(false);
             list = sealDao.selectIsLoss(seal);
         } else if (status.equals("06")) {   //已注销
             seal.setIsRecord(true);
 //            seal.setIsMake(true);
 //            seal.setIsDeliver(true);
             seal.setIsLogout(true);
+            seal.setIsCencal(false);
             list = sealDao.selectIsLogout(seal);
         }
         else if (status.equals("08")) {   //待承接
@@ -1737,6 +1748,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsRecord(false);
             seal.setIsMake(false);
             seal.setIsUndertake(false);
+            seal.setIsCencal(false);
             list = sealDao.selectIsUndertake(seal);
         }else if (status.equals("09")) {   //已备案
             seal.setIsRecord(true);
@@ -1744,6 +1756,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsDeliver(true);
             seal.setIsUndertake(true);
             seal.setIsApply(true);
+            seal.setIsCencal(false);
             list = sealDao.selectIsApply(seal);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitDeliver(seal);
