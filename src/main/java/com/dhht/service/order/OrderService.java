@@ -18,7 +18,7 @@ public interface OrderService {
 
     int updateRefundStatus ( String refundStatus,String sealId);
 
-    int updatePayStatus(String payWay,String sealId);
+    int updatePayStatus(String payWay,String id,String payJsOrderId);
 
     int cancelOrder(String id);
 }

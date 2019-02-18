@@ -6,6 +6,7 @@ import lombok.Data;
 import java.util.Date;
 @Data
 public class SealPayOrder {
+
     private String id;
 
     private String sealId;

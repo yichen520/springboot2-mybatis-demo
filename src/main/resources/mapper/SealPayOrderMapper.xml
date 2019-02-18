@@ -63,7 +63,8 @@
 
   <update id="updatePayStatus" parameterType="java.lang.String">
     update seal_pay_order set is_pay = true ,
-    pay_way = #{payWay,jdbcType=VARCHAR}
+    pay_way = #{payWay,jdbcType=VARCHAR},
+    payjs_order_id = #{payJsOrderId,jdbcType=VARCHAR}
     where id = #{id}
   </update>
 

@@ -180,50 +180,6 @@ public class SealWeChatController extends WeChatBaseController {
         }
     }
 
-    /**
-     * 可信身份认证
-     *
-     * @param map
-     * @return
-     */
-
-    @RequestMapping(value = "/TrustedIdentityAuthentication", method = RequestMethod.POST)
-    public JsonObjectBO TrustedIdentityAuthentication(@RequestBody Map map, HttpServletResponse httpServletResponse) {
-        init(httpServletRequest, httpServletResponse);
-        JsonObjectBO jsonObjectBO = new JsonObjectBO();
-        JSONObject jsonObject = new JSONObject();
-        TrustedIdentityAuthenticationVO result = new TrustedIdentityAuthenticationVO();
-        String certificateNo = (String) map.get("certificateNo");
-        String name = (String) map.get("name");
-        String fieldPhotoId = (String) map.get("fieldPhotoId");
-        FileInfoVO fieldFileInfo = fileService.readFile(fieldPhotoId);
-        byte[] fileDate = fieldFileInfo.getFileData();
-        float fileDatetoKb = fileDate.length / 1024;
-        if (fileDatetoKb > 25 || fileDatetoKb < 10) {
-            jsonObjectBO.setCode(-1);
-            jsonObjectBO.setMessage("重新上传，图片大小请小于25kb大于10kb");
-        } else {
-            BASE64Encoder base64Encoder = new BASE64Encoder();
-            String photoDate = base64Encoder.encode(fileDate);
-            IdentifyResult identifyResult = GuangRayIdentifier.identify(certificateNo, name, photoDate);
-            result.setFieldPhotoId(fieldPhotoId);
-            result.setCertificateNo(certificateNo);
-            result.setName(name);
-            result.setIsPass(identifyResult.isPassed());
-            result.setMessage(identifyResult.getMessage());
-            jsonObject.put("identifyResult", result);
-            if (identifyResult.isPassed()) {
-                jsonObjectBO.setData(jsonObject);
-                jsonObjectBO.setCode(1);
-                jsonObjectBO.setMessage(identifyResult.getMessage());
-            } else {
-                jsonObjectBO.setData(jsonObject);
-                jsonObjectBO.setCode(-1);
-                jsonObjectBO.setMessage("验证失败");
-            }
-        }
-        return jsonObjectBO;
-    }
 
     @RequestMapping(value = "/sealList", method = RequestMethod.POST)
     public JsonObjectBO sealList(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
@@ -404,24 +360,7 @@ public class SealWeChatController extends WeChatBaseController {
         return jsonObjectBO;
     }
 
-    /**
-     * 根据session中的用户查询订单
-     */
-    @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public JsonObjectBO order(@RequestBody Map map, HttpServletResponse httpServletResponse) {
-        try {
-            String type = (String) map.get("type");
-            init(httpServletRequest, httpServletResponse);
-            JSONObject jsonObject = new JSONObject();
-            WeChatUser weChatUser = currentUser();
-            List<SealOrder> sealorders = orderService.selectOrder(type, weChatUser.getTelphone());
-            jsonObject.put("sealorders", sealorders);
-            return JsonObjectBO.success("查询订单成功", jsonObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return JsonObjectBO.exceptionWithMessage(e.getMessage(), "查询订单失败");
-        }
-    }
+
 
     /**
      * 订单详细

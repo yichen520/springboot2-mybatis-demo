@@ -9,6 +9,7 @@ import com.dhht.model.pojo.SealWeChatDTO;
 import com.dhht.service.employee.EmployeeService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.message.NotifyService;
+import com.dhht.service.order.OrderService;
 import com.dhht.service.recordDepartment.RecordDepartmentService;
 import com.dhht.service.seal.SealCodeService;
 import com.dhht.service.seal.WeChatSealService;
@@ -41,6 +42,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
     @Value("${sms.template.getseal}")
     private int getseal;
+
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private SealVerificationMapper sealVerificationMapper;
@@ -269,13 +273,11 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 seal1.setLogoutPersonId(sealAgentId);
                 seal1.setIsLogout(true);
                 seal1.setLogoutDate(DateUtil.getCurrentTime());
-
                 SealOperationRecord sealOperationRecord = new SealOperationRecord();
                 sealOperationRecord.setId(UUIDUtil.generate());
                 sealOperationRecord.setSealId(seal1.getId());
                 sealOperationRecord.setEmployeeId(weChatUser.getId());  //小程序端的变更操作人就是小程序的登录用户
                 sealOperationRecord.setEmployeeName(weChatUser.getName());
-//                sealOperationRecord.setEmployeeCode();
                 sealOperationRecord.setOperateType("07");
                 sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
                 int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord);
@@ -422,16 +424,15 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 courierMapper.insertSelective(courier);
                 sealPayOrder.setCourierId(courierId);
             }
-            //插入到订单中
-//
+
+
             sealPayOrder.setId(payOrderId);
             sealPayOrder.setSealId(sealId);
             sealPayOrder.setPayDate(DateUtil.getCurrentTime());
-//            sealPayOrderMapper.insertSelective(sealPayOrder);
+            orderService.insertOrder(sealPayOrder);
 
             //当增加经办人，操作信息和印章信息成功后，生成印模信息 存入数据库
             if (sealInsert > 0 ) {
-
                 Map<String, String> map = new HashMap<>();
                 map.put("useDepartment", useDepartment.getName());
                 map.put("sealType", sealType);
