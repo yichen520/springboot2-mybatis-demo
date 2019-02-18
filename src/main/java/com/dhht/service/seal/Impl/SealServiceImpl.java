@@ -931,7 +931,7 @@ public class SealServiceImpl implements SealService {
     }
 
     /**
-     * 制作单位审核
+     * 制作单位退回
      * @param sealId
      * @param sealVerification
      * @return
@@ -952,6 +952,8 @@ public class SealServiceImpl implements SealService {
         }
         String Id = UUIDUtil.generate();
         sealVerification.setId(Id);
+        sealVerification.setIsVerification(true);
+        sealVerification.setVerifyTypeName("-1");
         sealVerification.setSealId(sealId);
         sealVerification.setFlag("1");
         sealVerification.setVerificationDate(DateUtil.getCurrentTime());
