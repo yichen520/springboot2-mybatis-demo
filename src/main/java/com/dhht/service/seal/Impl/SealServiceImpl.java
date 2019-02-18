@@ -274,8 +274,8 @@ public class SealServiceImpl implements SealService {
                 seal.setSealStatusCode("03");
                 seal.setIsRecord(true);
                 seal.setRecordDate(DateUtil.getCurrentTime());
-                seal.setIsCencal(false);
-                seal.setCencalDate(DateUtil.getCurrentTime());
+                seal.setIsCancel(false);
+                seal.setCancelDate(DateUtil.getCurrentTime());
                 seal.setIsMake(false);
                 seal.setIsDeliver(false);
                 seal.setIsLoss(false);
@@ -942,14 +942,14 @@ public class SealServiceImpl implements SealService {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
         if(sealVerification.getRejectReason().equals("3")){  //退款
             orderService.updateRefundStatus("1",sealId);
-            seal.setIsCencal(true);
-            seal.setCencalDate(DateUtil.getCurrentTime());
+            seal.setIsCancel(true);
+            seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("10"); //取消章
 
         }else {    //资料问题
             seal.setIsUndertake(false);
-            seal.setIsCencal(false);
-            seal.setCencalDate(DateUtil.getCurrentTime());
+            seal.setIsCancel(false);
+            seal.setCancelDate(DateUtil.getCurrentTime());
         }
         String Id = UUIDUtil.generate();
         sealVerification.setId(Id);
@@ -976,8 +976,8 @@ public class SealServiceImpl implements SealService {
     @Override
     public int cencalSeal(String Id) {
         Seal seal = sealDao.selectByPrimaryKey(Id);
-        seal.setIsCencal(true);
-        seal.setCencalDate(DateUtil.getCurrentTime());
+        seal.setIsCancel(true);
+        seal.setCancelDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
         return 1;
     }
@@ -1589,80 +1589,80 @@ public class SealServiceImpl implements SealService {
     public List<Seal> selectSealByBADW(Seal seal, String status) {
         List<Seal> list = new ArrayList<Seal>();
         if (status.equals("03")) {  //已备案
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
             seal.setIsMake(false);
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         } else if (status.equals("01")) {  //已制作
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
             seal.setIsMake(true);
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         } else if (status.equals("02")) {  //已个人化
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
             seal.setIsMake(true);
             seal.setIsPersonal(true);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         } else if (status.equals("00")) {    //未交付
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         } else if (status.equals("04")) {    //已交付
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         } else if (status.equals("05")) {  //已经挂失
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         } else if (status.equals("06")) {   //已注销
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         }else if (status.equals("08")) {   //待承接
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsApply(false);
             seal.setIsDeliver(false);
             seal.setIsRecord(false);
             seal.setIsMake(false);
             seal.setIsUndertake(false);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
         }else if (status.equals("09")) {   //已备案
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsUndertake(true);
             seal.setIsApply(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             list = sealDao.selectIsApply(seal);
         }else if(status.equals("10")){
-            seal.setIsCencal(true);
+            seal.setIsCancel(true);
         }
         list = sealDao.selectSealByBADW(seal);
         return list;
@@ -1725,21 +1725,21 @@ public class SealServiceImpl implements SealService {
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             list = sealDao.selectIsDeliver(seal);
         } else if (status.equals("05")) {  //已经挂失
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             list = sealDao.selectIsLoss(seal);
         } else if (status.equals("06")) {   //已注销
             seal.setIsRecord(true);
 //            seal.setIsMake(true);
 //            seal.setIsDeliver(true);
             seal.setIsLogout(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             list = sealDao.selectIsLogout(seal);
         }
         else if (status.equals("08")) {   //待承接
@@ -1748,7 +1748,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsRecord(false);
             seal.setIsMake(false);
             seal.setIsUndertake(false);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             list = sealDao.selectIsUndertake(seal);
         }else if (status.equals("09")) {   //已备案
             seal.setIsRecord(true);
@@ -1756,12 +1756,12 @@ public class SealServiceImpl implements SealService {
             seal.setIsDeliver(true);
             seal.setIsUndertake(true);
             seal.setIsApply(true);
-            seal.setIsCencal(false);
+            seal.setIsCancel(false);
             list = sealDao.selectIsApply(seal);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitDeliver(seal);
         }else if(status.equals("10")){
-            seal.setIsCencal(true);
+            seal.setIsCancel(true);
             list=sealDao.selectByCodeAndName(seal);
         }
         return list;
