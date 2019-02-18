@@ -17,5 +17,5 @@ public interface SealPayOrderMapper {
 
     int updateRefundStatus (@Param("refundStatus") String refundStatus,@Param("id") String id);
 
-    int updatePayStatus(@Param("payWay") String payWay,@Param("id") String id);
+    int updatePayStatus(@Param("payWay") String payWay,@Param("id") String id,@Param("payJsOrderId") String payJsOrderId);
 }

@@ -113,28 +113,28 @@ public class MakeDepartmentWebChatController extends WeChatBaseController {
         try {
             init(httpServletRequest,httpServletResponse);
             JSONObject jsonObject = new JSONObject();
-            //这是因为当时传的是cityname
-//            if (makedepartmentSimplePO.getCityName()!=null && makedepartmentSimplePO.getCityName()!="") {
-//
-//                List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
-//                jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
-//            }
-            if(makedepartmentSimplePO.getRegion()!=null && makedepartmentSimplePO.getRegion().length!=0){
-
-                String[] districtArray = makedepartmentSimplePO.getRegion();
-                String districtId ;
-                if(districtArray.length == 1){
-                    districtId = districtArray[0].substring(0,2);
-                }else if(districtArray.length == 2){
-                    districtId = districtArray[1].substring(0,4);
-                }else {
-                    districtId = districtArray[2].substring(0,6);
-                }
-                makedepartmentSimplePO.setDepartmentAddress(districtId);
+            if (makedepartmentSimplePO.getCityName()!=null && makedepartmentSimplePO.getCityName()!="") {
                 List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
                 jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
                 return JsonObjectBO.success("查询制作单位成功",jsonObject);
-            }else {
+            }
+//            if(makedepartmentSimplePO.getRegion()!=null && makedepartmentSimplePO.getRegion().length!=0){
+//
+//                String[] districtArray = makedepartmentSimplePO.getRegion();
+//                String districtId ;
+//                if(districtArray.length == 1){
+//                    districtId = districtArray[0].substring(0,2);
+//                }else if(districtArray.length == 2){
+//                    districtId = districtArray[1].substring(0,4);
+//                }else {
+//                    districtId = districtArray[2].substring(0,6);
+//                }
+//                makedepartmentSimplePO.setDepartmentAddress(districtId);
+//                List<MakedepartmentSimplePO> makedepartmentSimplePOs = makeDepartmentService.selectMakedePartment(makedepartmentSimplePO);
+//                jsonObject.put("makedepartmentList",makedepartmentSimplePOs);
+//                return JsonObjectBO.success("查询制作单位成功",jsonObject);
+//            }
+            else {
                 return JsonObjectBO.error("未传入区域获取制作单位");
             }
 

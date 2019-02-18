@@ -38,7 +38,6 @@ public class OrderServiceImpl implements OrderService {
     public int insertOrder(SealPayOrder sealPayOrder) {
         sealPayOrder.setIsEvaluation(false);
         sealPayOrder.setCreateTime(DateUtil.getCurrentTime());
-        sealPayOrder.setRefundStatus("0");
         return sealPayOrderMapper.insert(sealPayOrder);
     }
 
@@ -138,9 +137,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public int updatePayStatus(String payWay, String sealId) {
-       SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(sealId);
-       return sealPayOrderMapper.updatePayStatus(payWay,sealPayOrder.getId());
+    public int updatePayStatus(String payWay, String id,String payJsOrderId) {
+       return sealPayOrderMapper.updatePayStatus(payWay,id,payJsOrderId);
     }
 
 
@@ -149,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
         SealPayOrder sealPayOrder = sealPayOrderMapper.selectByPrimaryKey(id);
         if(sealPayOrder.getRefundStatus().equals("1")){
             if(sealPayOrder.getIsPay()){
-                int result = sealPayOrderMapper.updatePayStatus("2",id);
+                int result = sealPayOrderMapper.updateRefundStatus("2",id);
                 if(result>0){
                     return ResultUtil.refundOrderOk;
                 }else {
