@@ -47,6 +47,9 @@ public class ResultUtil {
     public static final int cancelOrderOk = 57;
     public static final int refundOrderOk = 58;
     public static final int orderError = 59;
+    public static final int evaluationOk = 60;
+    public static final int evaluationError = 61;
+
     public static String sealType(String sealType){
         switch (sealType){
             case "01":
@@ -145,6 +148,10 @@ public class ResultUtil {
                 return JsonObjectBO.ok("订单退款成功");
             case 59:
                 return JsonObjectBO.error("操作发生异常");
+            case 60:
+                return JsonObjectBO.error("评价成功");
+            case 61:
+                return JsonObjectBO.error("评价失败");
                 default:
                     return null;
         }

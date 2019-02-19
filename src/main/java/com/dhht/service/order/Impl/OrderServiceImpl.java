@@ -132,12 +132,11 @@ public class OrderServiceImpl implements OrderService {
                 if(ACCOUNT_TIP.contains(sealPayOrder.getPayAccout())){
                     sealPayOrder.setPayAccout("价格到店商议");
                 }
-                if (seal.getSealStatusCode().equals("04")||seal.getSealStatusCode().equals("09")){
+
+                if (sealPayOrder.getIsEvaluation()){
                     sealOrder.setSeal(seal);
                     sealOrder.setSealPayOrder(sealPayOrder);
                     orders.add(sealOrder);
-                }else {
-
                 }
             }
         }
