@@ -82,9 +82,9 @@ public class Seal extends SealKey {
 
     private boolean isChipseal;  //是否芯片章
 
-    private boolean isPass;  //是否通过
+    private boolean isUpdate;  //是否通过
 
-    private String rejectReason;// 退回理由
+    private Date updateDate;// 退回理由
 
     private String rejectRemark;//  退回备注
 
@@ -185,12 +185,12 @@ public class Seal extends SealKey {
         return isChipseal;
     }
 
-    public void setIsPass(boolean isPass) {
-        this.isPass= isPass;
+    public void setIsUpdate(boolean isUpdate) {
+        this.isUpdate= isUpdate;
     }
 
-    public boolean getIsPass() {
-        return isPass;
+    public boolean getIsUpdate() {
+        return isUpdate;
     }
 
 

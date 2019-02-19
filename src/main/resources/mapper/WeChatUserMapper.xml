@@ -10,10 +10,11 @@
     <result column="job" property="job" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
     <result column="is_company_accout" property="isCompanyAccout" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, gender, telphone, company, job, create_time, image,is_company_accout
+    id, name, gender, telphone, company, job, create_time, image,company_name,is_company_accout
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -28,10 +29,10 @@
   <insert id="insert" parameterType="com.dhht.model.WeChatUser" >
     insert into wechat_user (id, name, gender, telphone,
       company, job, create_time, 
-      image)
+      image,company_name,is_company_accout)
     values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{telphone,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{image,jdbcType=VARCHAR})
+      #{image,jdbcType=VARCHAR}), #{companyName,jdbcType=VARCHAR},  #{isCompanyAccout,jdbcType=BIT}
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.WeChatUser" >
     insert into wechat_user
@@ -59,6 +60,9 @@
       </if>
       <if test="image != null" >
         image,
+      </if>
+      <if test="companyName != null" >
+        company_name,
       </if>
       <if test="isCompanyAccout != null" >
         is_company_accout,
@@ -89,7 +93,10 @@
       <if test="image != null" >
         #{image,jdbcType=VARCHAR},
       </if>
-        <if test="image != null" >
+        <if test="companyName != null" >
+          #{companyName,jdbcType=VARCHAR},
+        </if>
+        <if test="isCompanyAccout != null" >
           #{isCompanyAccout,jdbcType=BIT},
         </if>
 
@@ -119,6 +126,12 @@
       <if test="image != null" >
         image = #{image,jdbcType=VARCHAR},
       </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="isCompanyAccout != null" >
+        is_company_accout = #{isCompanyAccout,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
@@ -130,7 +143,9 @@
       company = #{company,jdbcType=VARCHAR},
       job = #{job,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      image = #{image,jdbcType=VARCHAR}
+      image = #{image,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      is_company_accout = #{isCompanyAccout,jdbcType=VARCHAR},
     where id = #{id,jdbcType=CHAR}
   </update>
   

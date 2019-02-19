@@ -902,12 +902,15 @@ public class SealServiceImpl implements SealService {
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
         seal.setIsRecord(true);
+        seal.setIsUpdate(false);
+        seal.setUpdateDate(DateUtil.getCurrentTime());
         seal.setRecordDate(DateUtil.getCurrentTime());
         seal.setSealStatusCode("07");
         int result = sealDao.updateByPrimaryKeySelective(seal);
         //印章操作
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
+        int insertSealOperationRecord3= insertSealOperationRecord(employee,"11",sealId);
         int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);
         int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId);
 
@@ -949,10 +952,14 @@ public class SealServiceImpl implements SealService {
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("10"); //取消章
 
+
         }else {    //资料问题
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
+            seal.setIsUpdate(true);
+            seal.setUpdateDate(DateUtil.getCurrentTime());
             seal.setCancelDate(DateUtil.getCurrentTime());
+            seal.setSealStatusCode("11");
         }
         String Id = UUIDUtil.generate();
         sealVerification.setId(Id);
@@ -1663,6 +1670,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsMake(false);
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
+            seal.setIsUpdate(false);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
@@ -1677,6 +1685,11 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectIsApply(seal);
         }else if(status.equals("10")){
             seal.setIsCancel(true);
+        }else if(status.equals("11")){ //资料更新
+            seal.setIsCancel(false);
+            seal.setIsRecord(false);
+            seal.setIsUpdate(true);
+            seal.setIsUndertake(false);
         }
         list = sealDao.selectSealByBADW(seal);
         return list;
@@ -1763,6 +1776,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsMake(false);
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
+            seal.setIsUpdate(false);
             list = sealDao.selectIsUndertake(seal);
         }else if (status.equals("09")) {   //已备案
             seal.setIsRecord(true);
@@ -1777,7 +1791,14 @@ public class SealServiceImpl implements SealService {
         }else if(status.equals("10")){  //已退回
             seal.setIsCancel(true);
             list=sealDao.selectByCodeAndName(seal);
+        }else if(status.equals("11")){//资料更新
+            seal.setIsCancel(false);
+            seal.setIsRecord(false);
+            seal.setIsUpdate(true);
+            seal.setIsUndertake(false);
+            list=sealDao.selectByCodeAndName(seal);
         }
+        //后续可以同时归并到selectByCodeAndName（）中，由于时间紧暂未归并
         return list;
     }
 
