@@ -6,6 +6,7 @@ import com.dhht.controller.web.BaseController;
 import com.dhht.model.SealOrder;
 import com.dhht.model.WeChatUser;
 import com.dhht.service.order.OrderService;
+import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +59,19 @@ public class SealOrderController extends WeChatBaseController {
             }
         }catch (Exception e){
             return JsonObjectBO.exception("订单更新异常，请联系管理员");
+        }
+    }
+
+    @RequestMapping(value = "/cancelOrder")
+    public JsonObjectBO cancelOrder(@RequestBody Map map,HttpServletResponse httpServletResponse){
+        try {
+            init(httpServletRequest, httpServletResponse);
+            WeChatUser weChatUser = currentUser();
+            String id = (String)map.get("id");
+            int res = orderService.cancelOrder(id,weChatUser);
+            return ResultUtil.getResult(res);
+        }catch (Exception e){
+            return JsonObjectBO.exception("取消订单失败");
         }
     }
 

@@ -342,9 +342,6 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
             }
 
-
-//            seal.setIsUndertake(true);
-//            seal.setUndertakeDate(DateUtil.getCurrentTime());
             if(seal.getSealTypeCode().equals("01")){
                 Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"01");
                 if(seal2!=null){
@@ -377,36 +374,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
             sealVerification.setVerifyTypeName("0");
             sealVerificationMapper.insertSelective(sealVerification);
 
-//            //申请操作记录
-//            String type1 = "00";
-//            SealOperationRecord sealOperationRecord = new SealOperationRecord();
-//            sealOperationRecord.setId(UUIDUtil.generate());
-//            sealOperationRecord.setSealId(sealId);
-//            sealOperationRecord.setOperateType(type1);
-//            sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
-//            sealOperationRecord.setEmployeeName(user.getName());
-//            int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord); //保存操作记录
-//            if (sealOperationRecordInsert < 0) {
-//                return ResultUtil.isFail;
-//            }
-
-            //自动承接操作记录
-//            String type2 = "01";
-//            SealOperationRecord sealOperationRecord2 = new SealOperationRecord();
-//            sealOperationRecord2.setId(UUIDUtil.generate());
-//            sealOperationRecord2.setSealId(sealId);
-//            sealOperationRecord2.setOperateType(type2);
-//            sealOperationRecord2.setOperateTime(DateUtil.getCurrentTime());
-//            sealOperationRecord2.setEmployeeName(makedepartment.getDepartmentName());
-//            int sealOperationRecordInsert2 = sealOperationRecordMapper.insertSelective(sealOperationRecord2); //保存操作记录
-//            if (sealOperationRecordInsert2< 0) {
-//                return ResultUtil.isFail;
-//            }
 
             //经办人信息
-
             String saId = sealDTO.getSealAgent().getId();
-
             seal.setAgentId(sealDTO.getSealAgent().getId());
             seal.setIsUndertake(true);
             seal.setUndertakeDate(DateUtil.getCurrentTime());
@@ -429,7 +399,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
             sealPayOrder.setId(payOrderId);
             sealPayOrder.setSealId(sealId);
-            sealPayOrder.setPayDate(DateUtil.getCurrentTime());
+            sealPayOrder.setRefundStatus("0");
             sealPayOrder.setWeChatUserId(user.getId());
             orderService.insertOrder(sealPayOrder);
 
