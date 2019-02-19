@@ -173,6 +173,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
         if (useDepartment == null) {
             return ResultUtil.isNoDepartment;
         }
+
+
+        orderService.updateEvaluationStatus(seal.getId(),true);
         //印章操作
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
@@ -240,6 +243,8 @@ public class WeChatSealServiceImp implements WeChatSealService {
         seal.setSealStatusCode("04");
         seal.setGetterId(saId);
         int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal);
+
+
 
         //更新支付状态
         SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
