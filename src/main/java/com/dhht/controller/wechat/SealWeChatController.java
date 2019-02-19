@@ -198,7 +198,6 @@ public class SealWeChatController extends WeChatBaseController {
 
     /**
      * 上传
-     *
      * @param file
      * @return
      */

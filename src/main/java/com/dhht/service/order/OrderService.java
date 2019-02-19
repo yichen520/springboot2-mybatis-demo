@@ -2,6 +2,7 @@ package com.dhht.service.order;
 
 import com.dhht.model.SealOrder;
 import com.dhht.model.SealPayOrder;
+import com.dhht.model.WeChatUser;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,5 +21,5 @@ public interface OrderService {
 
     int updatePayStatus(String payWay,String id,String payJsOrderId);
 
-    int cancelOrder(String id);
+    int cancelOrder(String id, WeChatUser weChatUser);
 }

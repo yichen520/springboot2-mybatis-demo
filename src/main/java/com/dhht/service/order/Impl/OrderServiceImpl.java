@@ -6,6 +6,7 @@ import com.dhht.dao.SealDao;
 import com.dhht.dao.SealPayOrderMapper;
 import com.dhht.model.*;
 import com.dhht.service.order.OrderService;
+import com.dhht.service.seal.SealService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CourierMapper courierMapper;
+
+    @Autowired
+    private SealService sealService;
 
 
     @Override
@@ -143,19 +147,21 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public int cancelOrder(String id) {
+    public int cancelOrder(String id,WeChatUser weChatUser) {
         SealPayOrder sealPayOrder = sealPayOrderMapper.selectByPrimaryKey(id);
         if(sealPayOrder.getRefundStatus().equals("1")){
             if(sealPayOrder.getIsPay()){
                 int result = sealPayOrderMapper.updateRefundStatus("2",id);
-                if(result>0){
+                int sealResult = sealService.cancelSeal(sealPayOrder.getSealId(),weChatUser);
+                if(result>0&&sealResult>0){
                     return ResultUtil.refundOrderOk;
                 }else {
                     return ResultUtil.orderError;
                 }
             }else {
                 int result = sealPayOrderMapper.updateRefundStatus("3",id);
-                if(result>0){
+                int sealResult = sealService.cancelSeal(sealPayOrder.getSealId(),weChatUser);
+                if(result>0&&sealResult>0){
                     return ResultUtil.cancelOrderOk;
                 }else {
                     return ResultUtil.orderError;

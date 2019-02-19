@@ -26,7 +26,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/weChat/make")
-public class MakeDepartmentWebChatController extends WeChatBaseController {
+public class MakeDepartmentWeChatController extends WeChatBaseController {
 
     @Autowired
     private MakeDepartmentService makeDepartmentService;
