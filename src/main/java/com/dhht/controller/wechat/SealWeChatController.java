@@ -488,9 +488,6 @@ public class SealWeChatController extends WeChatBaseController {
     }
 
 //        WeChatUser weChatUser = (WeChatUser)httpServletRequest.getSession().getAttribute("weChatUser");
-
-
-
 //    @RequestMapping(value = "/unbindCompany", method = RequestMethod.POST)
 //    public JsonObjectBO unbindCompany(HttpServletResponse httpServletResponse) {
 //        try{
@@ -607,5 +604,72 @@ public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepart
         return jsonObjectBO;
     }
 
+
+    /**
+     * 小程序 个人用户搜索
+     */
+    @RequestMapping(value = "/selectByNameAndCode" , method = RequestMethod.GET)
+    public JsonObjectBO selectByUseDepartmentName(@RequestParam String code){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+
+        try{
+            List<UseDepartment> list = useDepartmentService.selectByNameAndCode(code);
+            jsonObject.put("list",list);
+            jsonObjectBO.setMessage("查询成功");
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+        }catch(Exception e){
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"查询异常");
+        }
+        return jsonObjectBO;
+    }
+
+
+    /**
+     * 小程序绑定 用户
+     */
+    @RequestMapping(value = "/binding" , method = RequestMethod.POST)
+    public JsonObjectBO binding(@RequestBody Map map){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        WeChatUser weChatUser = currentUser();
+        try{
+            String Id = (String)map.get("id");
+            int a = useDepartmentService.binding(Id,weChatUser);
+            if(a==ResultUtil.isSuccess) {
+                jsonObjectBO.setMessage("绑定成功");
+                jsonObjectBO.setCode(1);
+            }else {
+                jsonObjectBO.setMessage("绑定失败");
+                jsonObjectBO.setCode(-1);
+            }
+        }catch(Exception e){
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"绑定失败");
+        }
+        return jsonObjectBO;
+    }
+
+
+    /**
+     * 小程序解除绑定  用户
+     */
+    @RequestMapping(value = "/relieveBinding" , method = RequestMethod.POST)
+    public JsonObjectBO relieveBinding(){
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        WeChatUser weChatUser = currentUser();
+        try{
+            int a = useDepartmentService.relieveBinding(weChatUser);
+            if(a==ResultUtil.isSuccess) {
+                jsonObjectBO.setMessage("解绑成功");
+                jsonObjectBO.setCode(1);
+            }else {
+                jsonObjectBO.setMessage("解绑失败");
+                jsonObjectBO.setCode(-1);
+            }
+        }catch(Exception e){
+            return JsonObjectBO.exceptionWithMessage(e.getMessage(),"解绑失败");
+        }
+        return jsonObjectBO;
+    }
 
 }

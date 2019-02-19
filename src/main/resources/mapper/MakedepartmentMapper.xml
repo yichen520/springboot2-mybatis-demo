@@ -447,6 +447,15 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
         )as b on a.flag=b.flag and  a.version=b.ver where department_address like '${districtId}%' and delete_status = 1 and version_time BETWEEN #{startTime} and #{endTime}
     </select>
 
+   <select id="selectByMakeDepartmentName" resultMap="BaseResultMap">
+    select id,department_code,department_name,legal_name from make_department where 1=1
+    <if test="departmentName !=null">
+      and department_name like "%"#{departmentName}"%"
+    </if>
+    <if test="departmentCode !=null">
+      and department_code = #{departmentCode}
+    </if>
+   </select>
 
 
 

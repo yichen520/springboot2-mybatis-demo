@@ -1774,7 +1774,7 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectIsApply(seal);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitDeliver(seal);
-        }else if(status.equals("10")){
+        }else if(status.equals("10")){  //已退回
             seal.setIsCancel(true);
             list=sealDao.selectByCodeAndName(seal);
         }

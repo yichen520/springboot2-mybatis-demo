@@ -45,6 +45,8 @@ public interface UseDepartmentDao {
 
     UseDepartment selectDetailById(@Param("id") String id);
 
+    List<UseDepartment> selectByNameAndCode(@Param("code") String code);
+
     //统计部分
     int indexCountAdd(@Param("districtId") String districtId);
 

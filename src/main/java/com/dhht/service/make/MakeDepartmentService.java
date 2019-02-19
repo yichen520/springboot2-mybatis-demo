@@ -57,4 +57,6 @@ public interface MakeDepartmentService {
     List<MakedepartmentSimplePO> selectMakedePartmentByRegionId(MakedepartmentSimplePO makedepartmentSimplePO);
 
     Makedepartment getCompany(String company);
+
+//    List<Makedepartment> selectByMakeDepartmentName(String departmentName,String departmentCode);
 }
