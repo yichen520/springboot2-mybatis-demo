@@ -910,6 +910,7 @@ public class SealServiceImpl implements SealService {
         //印章操作
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
+        int insertSealOperationRecord3= insertSealOperationRecord(employee,"11",sealId);
         int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);
         int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId);
 
