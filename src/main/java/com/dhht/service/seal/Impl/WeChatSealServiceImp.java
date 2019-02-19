@@ -323,7 +323,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             seal.setSealName(useDepartment.getName() + sealType);
             seal.setUseDepartmentCode(sealDTO.getUseDepartmentCode());
             seal.setUseDepartmentName(useDepartment.getName());
-            seal.setSealStatusCode("03");
+            seal.setSealStatusCode("08");
             seal.setIsRecord(false);
             seal.setIsMake(false);
             seal.setIsDeliver(false);

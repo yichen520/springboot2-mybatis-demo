@@ -1,5 +1,7 @@
 package com.dhht.service.order.Impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dhht.dao.CourierMapper;
 import com.dhht.dao.RecipientsMapper;
 import com.dhht.dao.SealDao;
@@ -9,12 +11,21 @@ import com.dhht.service.order.OrderService;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service("orderService")
 @Transactional
@@ -54,11 +65,18 @@ public class OrderServiceImpl implements OrderService {
                 SealOrder sealOrder = new SealOrder();
                 Seal seal = seals.get(i);
                 SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if(sealPayOrder.getRefundStatus().equals("0")||sealPayOrder.getRefundStatus().equals("1")){
+                    sealPayOrder.setIsRefund(true);
+                }else {
+                    sealPayOrder.setIsRefund(false);
+                }
+
                 if(sealPayOrder.getExpressWay()){
                     sealPayOrder.setExpressWayName("EMS");
                 }else {
                     sealPayOrder.setExpressWayName("自取");
                 }
+
                 if(ACCOUNT_TIP.contains(sealPayOrder.getPayAccout())){
                     sealPayOrder.setPayAccout("价格到店商议");
                 }
@@ -73,6 +91,12 @@ public class OrderServiceImpl implements OrderService {
                 SealOrder sealOrder = new SealOrder();
                 Seal seal = seals.get(i);
                 SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if(sealPayOrder.getRefundStatus().equals("0")||sealPayOrder.getRefundStatus().equals("1")){
+                    sealPayOrder.setIsRefund(true);
+                }else {
+                    sealPayOrder.setIsRefund(false);
+                }
+
                 if(sealPayOrder.getExpressWay()){
                     sealPayOrder.setExpressWayName("EMS");
                 }else {
@@ -94,6 +118,12 @@ public class OrderServiceImpl implements OrderService {
                 SealOrder sealOrder = new SealOrder();
                 Seal seal = seals.get(i);
                 SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
+                if(sealPayOrder.getRefundStatus().equals("0")||sealPayOrder.getRefundStatus().equals("1")){
+                    sealPayOrder.setIsRefund(true);
+                }else {
+                    sealPayOrder.setIsRefund(false);
+                }
+
                 if(sealPayOrder.getExpressWay()){
                     sealPayOrder.setExpressWayName("EMS");
                 }else {
@@ -142,7 +172,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public int updatePayStatus(String payWay, String id,String payJsOrderId) {
-       return sealPayOrderMapper.updatePayStatus(payWay,id,payJsOrderId);
+        Date payDate = DateUtil.getCurrentTime();
+       return sealPayOrderMapper.updatePayStatus(payWay,id,payJsOrderId,payDate);
     }
 
 
@@ -161,9 +192,11 @@ public class OrderServiceImpl implements OrderService {
             }else {
                 int result = sealPayOrderMapper.updateRefundStatus("3",id);
                 int sealResult = sealService.cancelSeal(sealPayOrder.getSealId(),weChatUser);
-                if(result>0&&sealResult>0){
+                boolean refundResult = refundOrderToPayJs(sealPayOrder.getPayJsOrderId());
+                if(result>0&&sealResult>0&&refundResult){
                     return ResultUtil.cancelOrderOk;
                 }else {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return ResultUtil.orderError;
                 }
             }
@@ -172,5 +205,34 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    public boolean refundOrderToPayJs(String payJsOrderId){
+        try {
+            HttpPost httpPost = new HttpPost("https://payjs.cn/api/refund");
+            CloseableHttpClient client = HttpClients.createDefault();
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("payjs_order_id",payJsOrderId);
+            jsonParam.put("sign",null);
+            StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
+            entity.setContentEncoding("UTF-8");
+            entity.setContentType("application/json");
+            httpPost.setEntity(entity);
+            HttpResponse resp = client.execute(httpPost);
+            if (resp.getStatusLine().getStatusCode() == 200) {
+                HttpEntity httpEntity = resp.getEntity();
+                String respContent = EntityUtils.toString(httpEntity, "UTF-8");
+                JSONObject jsonObject = JSONObject.parseObject(respContent);
+                String returnCode = (String) jsonObject.get("return_code");
+                if(returnCode.equals("1")){
+                    return true;
+                }else {
+                    return false;
+                }
+            }else {
+                return false;
+            }
+        }catch (Exception e) {
+            return false;
+        }
+    }
 
 }

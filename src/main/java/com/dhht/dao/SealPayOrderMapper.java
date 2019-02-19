@@ -4,6 +4,8 @@ import com.dhht.model.SealPayOrder;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 @Repository
 public interface SealPayOrderMapper {
 
@@ -17,5 +19,5 @@ public interface SealPayOrderMapper {
 
     int updateRefundStatus (@Param("refundStatus") String refundStatus,@Param("id") String id);
 
-    int updatePayStatus(@Param("payWay") String payWay,@Param("id") String id,@Param("payJsOrderId") String payJsOrderId);
+    int updatePayStatus(@Param("payWay") String payWay,@Param("id") String id,@Param("payJsOrderId") String payJsOrderId,@Param("payDate") Date payDate);
 }

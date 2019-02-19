@@ -29,6 +29,8 @@ public class SealPayOrder {
 
     private String refundStatus;
 
+    private Boolean isRefund;
+
     private Boolean isEvaluation;
 
     private String payJsOrderId;
