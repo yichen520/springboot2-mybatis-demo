@@ -951,7 +951,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsCancel(true);
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("10"); //取消章
-            
+
 
         }else {    //资料问题
             seal.setIsUndertake(false);
@@ -1798,6 +1798,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsUndertake(false);
             list=sealDao.selectByCodeAndName(seal);
         }
+        //后续可以同时归并到selectByCodeAndName（）中，由于时间紧暂未归并
         return list;
     }
 
