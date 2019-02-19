@@ -902,6 +902,8 @@ public class SealServiceImpl implements SealService {
         seal.setIsUndertake(true);
         seal.setUndertakeDate(DateUtil.getCurrentTime());
         seal.setIsRecord(true);
+        seal.setIsUpdate(false);
+        seal.setUpdateDate(DateUtil.getCurrentTime());
         seal.setRecordDate(DateUtil.getCurrentTime());
         seal.setSealStatusCode("07");
         int result = sealDao.updateByPrimaryKeySelective(seal);
@@ -952,7 +954,10 @@ public class SealServiceImpl implements SealService {
         }else {    //资料问题
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
+            seal.setIsUpdate(true);
+            seal.setUpdateDate(DateUtil.getCurrentTime());
             seal.setCancelDate(DateUtil.getCurrentTime());
+            seal.setSealStatusCode("11");
         }
         String Id = UUIDUtil.generate();
         sealVerification.setId(Id);
