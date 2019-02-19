@@ -12,6 +12,7 @@ import com.dhht.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.xml.ws.Action;
 import java.util.List;
@@ -45,9 +46,10 @@ public class EvaluateServiceImpl implements EvaluateService {
         int result = evaluateMapper.insertSelective(evaluate);
         int orderResult = orderService.updateEvaluationStatus(orderId,false);
         if(result>0&&orderResult>0){
-            return 1;
+           return ResultUtil.evaluationOk;
         }
-        return 0;
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        return ResultUtil.evaluationError;
     }
 
     @Override
