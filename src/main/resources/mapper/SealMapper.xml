@@ -766,10 +766,10 @@
       <if test="isLogout !=null and isLogout !=''">
         AND is_logout =  #{isLogout,jdbcType=BIT}
       </if>
-      <if test="isCancel !=null and isCancel !=''">
+      <if test="isCancel !=null">
         AND is_cancel =  #{isCancel,jdbcType=BIT}
       </if>
-      <if test="isUpdate !=null and isUpdate !=''">
+      <if test="isUpdate !=null ">
         AND is_update =  #{isUpdate,jdbcType=BIT}
       </if>
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
@@ -1142,55 +1142,64 @@
     </select>
 
     <select id="selectIsUndertake" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
-        SELECT  <include refid="Base_Column_List" /> from seal as s left join seal_verification as sv on s.id=sv.seal_id and sv.is_reupload_data=true and s.is_cancel = false
+        SELECT  <include refid="Base_Column_List" /> from seal
+        <where>
             <if test="isRecord !=null ">
-                AND s.is_record =  #{isRecord,jdbcType=BIT}
+                AND is_record =  #{isRecord,jdbcType=BIT}
             </if>
             <if test="isMake !=null ">
-                AND s.is_make =  #{isMake,jdbcType=BIT}
+                AND is_make =  #{isMake,jdbcType=BIT}
             </if>
             <if test="isPersonal !=null ">
-                AND s.is_personal =  #{isPersonal,jdbcType=BIT}
+                AND is_personal =  #{isPersonal,jdbcType=BIT}
             </if>
             <if test="isDeliver !=null ">
-                AND s.is_deliver =  #{isDeliver,jdbcType=BIT}
+                AND is_deliver =  #{isDeliver,jdbcType=BIT}
             </if>
             <if test="isLoss !=null ">
-                or s.is_loss =  #{isLoss,jdbcType=BIT}
+                or is_loss =  #{isLoss,jdbcType=BIT}
             </if>
             <if test="isLogout !=null ">
-                AND s.is_logout =  #{isLogout,jdbcType=BIT}
+                AND is_logout =  #{isLogout,jdbcType=BIT}
             </if>
             <if test="isApply !=null ">
-                AND s.is_apply =  #{isApply,jdbcType=BIT}
+                AND is_apply =  #{isApply,jdbcType=BIT}
             </if>
             <if test="isUndertake !=null ">
-                AND s.is_undertake =  #{isUndertake,jdbcType=BIT}
+                AND is_undertake =  #{isUndertake,jdbcType=BIT}
+            </if>
+            <if test="isCancel !=null">
+                And is_cancel =  #{isCancel}
+            </if>
+            <if test="isUpdate !=null">
+                And is_update =  #{isUpdate}
             </if>
             <if test="useDepartmentCode !=null and useDepartmentCode !=''">
-                And s.use_department_code LIKE  "%"#{useDepartmentCode}"%"
+                And use_department_code LIKE  "%"#{useDepartmentCode}"%"
             </if>
             <if test="useDepartmentName !=null and useDepartmentName !=''">
-                AND s.use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
+                AND use_department_name LIKE  "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
             </if>
             <if test="districtId !=null and districtId!=''">
-                AND s.district_id like #{districtId}"%"
+                AND district_id like #{districtId}"%"
             </if>
             <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
-                AND s.make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
+                AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
             </if>
             <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
-                AND s.record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+                AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
             </if>
             <if test="sealCode !=null and sealCode !=''">
-                And s.seal_code LIKE  "%"#{sealCode}"%"
+                And seal_code LIKE  "%"#{sealCode}"%"
             </if>
             <if test="recordDepartmentName !=null and recordDepartmentName !=''">
-                AND s.record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
+                AND record_department_name LIKE  "%"#{recordDepartmentName,jdbcType=VARCHAR}"%"
             </if>
             <if test="sealTypeCode !=null and sealTypeCode !=''">
-                And s.seal_type_code LIKE  "%"#{sealTypeCode}"%"
+                And seal_type_code LIKE  "%"#{sealTypeCode}"%"
             </if>
+
+        </where>
         order by undertake_date desc
     </select>
 

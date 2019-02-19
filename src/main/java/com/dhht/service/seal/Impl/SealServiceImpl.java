@@ -1778,7 +1778,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
             seal.setIsUpdate(false);
-            list = sealDao.selectIsUndertake(seal);
+            list = sealDao.selectByCodeAndName(seal);
         }else if (status.equals("09")) {   //已备案
             seal.setIsRecord(true);
             seal.setIsMake(true);

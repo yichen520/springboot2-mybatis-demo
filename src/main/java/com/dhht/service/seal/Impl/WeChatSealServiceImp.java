@@ -331,7 +331,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             seal.setSealStatusCode("08");
             seal.setIsRecord(false);
             seal.setIsUpdate(false);
-//            seal.setRecordDate(DateUtil.getCurrentTime());
+            seal.setRecordDate(DateUtil.getCurrentTime());
             seal.setIsMake(false);
             seal.setIsDeliver(false);
             seal.setIsLoss(false);
@@ -383,8 +383,8 @@ public class WeChatSealServiceImp implements WeChatSealService {
             //经办人信息
             String saId = sealDTO.getSealAgent().getId();
             seal.setAgentId(sealDTO.getSealAgent().getId());
-            seal.setIsUndertake(true);
-            seal.setUndertakeDate(DateUtil.getCurrentTime());
+//            seal.setIsUndertake(true);
+//            seal.setUndertakeDate(DateUtil.getCurrentTime());
             int sealInsert = sealDao.insertSelective(seal);
 
 
