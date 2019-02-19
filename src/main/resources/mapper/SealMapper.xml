@@ -769,6 +769,9 @@
       <if test="isCancel !=null and isCancel !=''">
         AND is_cancel =  #{isCancel,jdbcType=BIT}
       </if>
+      <if test="isUpdate !=null and isUpdate !=''">
+        AND is_update =  #{isUpdate,jdbcType=BIT}
+      </if>
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>
@@ -1215,6 +1218,12 @@
       </if>
       <if test="isUndertake !=null ">
        AND is_undertake = #{isUndertake,jdbcType=BIT}
+      </if>
+      <if test="isCancel !=null ">
+       AND is_cancel = #{isCancel,jdbcType=BIT}
+      </if>
+      <if test="isUpdate !=null ">
+       AND is_update = #{isUpdate,jdbcType=BIT}
       </if>
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE "%"#{useDepartmentCode}"%"

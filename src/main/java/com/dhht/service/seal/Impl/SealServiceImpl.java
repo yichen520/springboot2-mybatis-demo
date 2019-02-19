@@ -951,6 +951,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsCancel(true);
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("10"); //取消章
+            
 
         }else {    //资料问题
             seal.setIsUndertake(false);
@@ -1669,6 +1670,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsMake(false);
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
+            seal.setIsUpdate(false);
         }else if(status.equals("07")){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
@@ -1683,6 +1685,11 @@ public class SealServiceImpl implements SealService {
             list = sealDao.selectIsApply(seal);
         }else if(status.equals("10")){
             seal.setIsCancel(true);
+        }else if(status.equals("11")){ //资料更新
+            seal.setIsCancel(false);
+            seal.setIsRecord(false);
+            seal.setIsUpdate(true);
+            seal.setIsUndertake(false);
         }
         list = sealDao.selectSealByBADW(seal);
         return list;
@@ -1769,6 +1776,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsMake(false);
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
+            seal.setIsUpdate(false);
             list = sealDao.selectIsUndertake(seal);
         }else if (status.equals("09")) {   //已备案
             seal.setIsRecord(true);
@@ -1782,6 +1790,12 @@ public class SealServiceImpl implements SealService {
             list=sealDao.selectWaitDeliver(seal);
         }else if(status.equals("10")){  //已退回
             seal.setIsCancel(true);
+            list=sealDao.selectByCodeAndName(seal);
+        }else if(status.equals("11")){//资料更新
+            seal.setIsCancel(false);
+            seal.setIsRecord(false);
+            seal.setIsUpdate(true);
+            seal.setIsUndertake(false);
             list=sealDao.selectByCodeAndName(seal);
         }
         return list;
