@@ -701,4 +701,10 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     public Makedepartment getCompany(String company) {
         return makedepartmentMapper.selectDetailById(company);
     }
+
+//    @Override
+//    public List<Makedepartment> selectByMakeDepartmentName(String departmentName,String departmentCode) {
+//        List<Makedepartment> makedepartments = makedepartmentMapper.selectByMakeDepartmentName(departmentName,departmentCode);
+//        return makedepartments;
+//    }
 }

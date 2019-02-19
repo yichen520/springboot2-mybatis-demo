@@ -4,6 +4,7 @@ import com.dhht.common.JsonObjectBO;
 
 import com.dhht.model.UseDepartment;
 import com.dhht.model.User;
+import com.dhht.model.WeChatUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,4 +32,10 @@ public interface UseDepartmentService {
     UseDepartment selectByCode(String useDepartmentCode);
 
     UseDepartment selectActiveUseDepartmentByCode(String socialCode);
+
+    List<UseDepartment> selectByNameAndCode(String code);
+
+    int binding(String id, WeChatUser weChatUser);
+
+    int relieveBinding(WeChatUser weChatUser);
 }

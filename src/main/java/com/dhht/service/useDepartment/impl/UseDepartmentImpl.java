@@ -14,10 +14,7 @@ import com.dhht.service.useDepartment.UseDepartmentService;
 import com.dhht.service.user.WeChatUserService;
 import com.dhht.sync.SyncDataType;
 import com.dhht.sync.SyncOperateType;
-import com.dhht.util.CompareFieldsUtil;
-import com.dhht.util.DateUtil;
-import com.dhht.util.StringUtil;
-import com.dhht.util.UUIDUtil;
+import com.dhht.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.aop.framework.AopContext;
@@ -314,6 +311,45 @@ public class UseDepartmentImpl implements UseDepartmentService {
     public UseDepartment selectActiveUseDepartmentByCode(String useDepartmentCode){
         UseDepartment useDepartment = useDepartmentDao.selectActiveUseDepartmentByCode(useDepartmentCode);
         return setDistrictName(useDepartment);
+    }
+
+    /**
+     * 根据name和code查找单位
+
+     * @param code
+     * @return
+     */
+    @Override
+    public List<UseDepartment> selectByNameAndCode(String code) {
+        List<UseDepartment> list = useDepartmentDao.selectByNameAndCode(code);
+        return list;
+    }
+
+    /**
+     * 用户绑定使用单位
+     * @param id
+     * @param weChatUser
+     * @return
+     */
+    @Override
+    public int binding(String id, WeChatUser weChatUser) {
+        UseDepartment useDepartment = useDepartmentDao.selectById(id);
+        weChatUser.setCompanyName(useDepartment.getName());
+        weChatUser.setCompany(id);
+        return weChatUserService.updateWeChatUser(weChatUser,weChatUser.getId());
+
+    }
+
+    /**
+     * 用户解绑单位
+     * @param weChatUser
+     * @return
+     */
+    @Override
+    public int relieveBinding(WeChatUser weChatUser) {
+        weChatUser.setCompanyName(null);
+        weChatUser.setCompany(null);
+        return weChatUserService.updateWeChatUser(weChatUser,weChatUser.getId());
     }
 
     /**
