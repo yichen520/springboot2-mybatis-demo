@@ -15,7 +15,7 @@ public interface OrderService {
 
     SealOrder selectOrderDetail(String sealId);
 
-    int updateEvaluationStatus(String sealId);
+    int updateEvaluationStatus(String sealId,boolean isEvaluation);
 
     int updateRefundStatus ( String refundStatus,String sealId);
 

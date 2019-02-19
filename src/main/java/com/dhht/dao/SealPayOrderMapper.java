@@ -15,7 +15,7 @@ public interface SealPayOrderMapper {
 
     SealPayOrder selectBySealId(String sealId);
 
-    int updateEvaluationStatus(@Param("id") String id);
+    int updateEvaluationStatus(@Param("id") String id,@Param("isEvaluation") boolean isEvaluation);
 
     int updateRefundStatus (@Param("refundStatus") String refundStatus,@Param("id") String id);
 

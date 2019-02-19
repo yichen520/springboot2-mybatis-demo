@@ -11,9 +11,11 @@ import java.util.List;
  * @Date 2018/12/29 9:14
  */
 public interface EvaluateService {
-     int insert(Evaluate evaluate, WeChatUser user) ;
+
+    int insert(Evaluate evaluate, WeChatUser user,String orderId) ;
 
     List<Evaluate> selectEvaluateList(Evaluate evaluate);
 
     int deleteEvaluate(String id);
+
 }

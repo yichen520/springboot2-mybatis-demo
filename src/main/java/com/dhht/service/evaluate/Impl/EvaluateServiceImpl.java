@@ -5,6 +5,7 @@ import com.dhht.dao.MakedepartmentMapper;
 import com.dhht.model.*;
 import com.dhht.service.evaluate.EvaluateService;
 import com.dhht.service.make.MakeDepartmentService;
+import com.dhht.service.order.OrderService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
@@ -27,9 +28,11 @@ public class EvaluateServiceImpl implements EvaluateService {
     private EvaluateMapper evaluateMapper;
     @Autowired
     private MakeDepartmentService makeDepartmentService;
+    @Autowired
+    private OrderService orderService;
 
     @Override
-    public int insert(Evaluate evaluate, WeChatUser user) {
+    public int insert(Evaluate evaluate, WeChatUser user,String orderId) {
         evaluate.setId(UUIDUtil.generate());
         if(user == null){
             return ResultUtil.isNoLoginUser;
@@ -40,7 +43,11 @@ public class EvaluateServiceImpl implements EvaluateService {
         evaluate.setUserName(user.getTelphone());
         evaluate.setEvaluateTime(DateUtil.getCurrentTime());
         int result = evaluateMapper.insertSelective(evaluate);
-        return result;
+        int orderResult = orderService.updateEvaluationStatus(orderId,false);
+        if(result>0&&orderResult>0){
+            return 1;
+        }
+        return 0;
     }
 
     @Override

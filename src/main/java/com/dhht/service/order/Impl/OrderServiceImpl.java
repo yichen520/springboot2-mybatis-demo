@@ -159,9 +159,9 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public int updateEvaluationStatus(String sealId) {
+    public int updateEvaluationStatus(String sealId,boolean isEvaluation) {
         SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(sealId);
-        return sealPayOrderMapper.updateEvaluationStatus(sealPayOrder.getId());
+        return sealPayOrderMapper.updateEvaluationStatus(sealPayOrder.getId(),isEvaluation);
     }
 
     @Override
