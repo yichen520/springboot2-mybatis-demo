@@ -988,6 +988,7 @@ public class SealServiceImpl implements SealService {
     public int cancelSeal(String Id,WeChatUser weChatUser) {
         Seal seal = sealDao.selectByPrimaryKey(Id);
         seal.setIsCancel(true);
+        seal.setSealStatusCode("10");
         seal.setCancelDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
 
