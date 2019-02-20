@@ -772,6 +772,9 @@
       <if test="isUpdate !=null ">
         AND is_update =  #{isUpdate,jdbcType=BIT}
       </if>
+        <if test="isUndertake !=null ">
+            AND is_undertake =  #{isUndertake,jdbcType=BIT}
+        </if>
       <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
         AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
       </if>

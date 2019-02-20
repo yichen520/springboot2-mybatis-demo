@@ -337,6 +337,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             seal.setIsLoss(false);
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
+            seal.setIsCancel(false);
             seal.setDistrictId(useDepartment.getDistrictId());
             seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
             seal.setMakeDepartmentName(makedepartment.getDepartmentName());
