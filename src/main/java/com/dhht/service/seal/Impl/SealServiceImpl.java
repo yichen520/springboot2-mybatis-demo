@@ -141,7 +141,7 @@ public class SealServiceImpl implements SealService {
     @Value("${sms.template.getseal}")
     private int getseal;
 
-    @Value("${sms.template.redo")
+    @Value("${sms.template.redo}")
     private int redo;
 
     @Override
