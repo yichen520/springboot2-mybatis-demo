@@ -33,7 +33,7 @@ public class EvaluateServiceImpl implements EvaluateService {
     private OrderService orderService;
 
     @Override
-    public int insert(Evaluate evaluate, WeChatUser user,String orderId) {
+    public int insert(Evaluate evaluate, WeChatUser user,String sealId) {
         evaluate.setId(UUIDUtil.generate());
         if(user == null){
             return ResultUtil.isNoLoginUser;
@@ -44,7 +44,7 @@ public class EvaluateServiceImpl implements EvaluateService {
         evaluate.setUserName(user.getTelphone());
         evaluate.setEvaluateTime(DateUtil.getCurrentTime());
         int result = evaluateMapper.insertSelective(evaluate);
-        int orderResult = orderService.updateEvaluationStatus(orderId,false);
+        int orderResult = orderService.updateEvaluationStatus(sealId,false);
         if(result>0&&orderResult>0){
            return ResultUtil.evaluationOk;
         }

@@ -180,7 +180,7 @@ public class MakeDepartmentWeChatController extends WeChatBaseController {
         try {
             init(httpServletRequest,httpServletResponse);
             WeChatUser weChatUser = currentUser();
-            return  ResultUtil.getResult(evaluateService.insert(evaluate,weChatUser,evaluate.getOrderId()));
+            return  ResultUtil.getResult(evaluateService.insert(evaluate,weChatUser,evaluate.getSealId()));
         }catch (Exception e){
             e.printStackTrace();
             return JsonObjectBO.exception("评价失败");

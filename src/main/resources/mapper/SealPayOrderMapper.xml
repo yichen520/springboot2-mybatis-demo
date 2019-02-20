@@ -58,7 +58,7 @@
     update seal_pay_order set is_evaluation = #{isEvaluation,jdbcType=BIT} where id = #{id}
   </update>
 
-  <update id="updateRefundStatus" parameterType="java.lang.String">
+  <update id="updateRefundStatus" parameterType="java.lang.Object">
     update seal_pay_order set refund_status = #{refundStatus,jdbcType=CHAR} where id = #{id}
   </update>
 

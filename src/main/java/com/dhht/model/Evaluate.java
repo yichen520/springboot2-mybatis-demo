@@ -31,6 +31,6 @@ public class Evaluate {
 
     private Integer atttitudeScore;
 
-    private String orderId;
+    private String sealId;
 
 }

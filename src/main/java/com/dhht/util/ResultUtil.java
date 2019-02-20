@@ -149,7 +149,7 @@ public class ResultUtil {
             case 59:
                 return JsonObjectBO.error("操作发生异常");
             case 60:
-                return JsonObjectBO.error("评价成功");
+                return JsonObjectBO.ok("评价成功");
             case 61:
                 return JsonObjectBO.error("评价失败");
                 default:
