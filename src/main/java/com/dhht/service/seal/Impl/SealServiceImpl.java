@@ -914,7 +914,7 @@ public class SealServiceImpl implements SealService {
         int insertSealOperationRecord3= insertSealOperationRecord(employee,"11",sealId);
         int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);
         int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId);
-
+        orderService.updateRefundStatus("-1",sealId);
         if (result == 1 && insertSealOperationRecord1 == ResultUtil.isSuccess &&insertSealOperationRecord2 == ResultUtil.isSuccess) {
             return ResultUtil.isSuccess;
         } else {
@@ -1749,7 +1749,7 @@ public class SealServiceImpl implements SealService {
         } else if (status.equals("00")) {    //未交付
             list = sealDao.selectUndelivered(seal);
         } else if (status.equals("04")) {    //已交付
-           // seal.setSealStatusCode("04");
+            seal.setSealStatusCode("04");
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
