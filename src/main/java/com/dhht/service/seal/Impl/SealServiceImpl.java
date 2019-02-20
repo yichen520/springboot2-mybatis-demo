@@ -906,7 +906,7 @@ public class SealServiceImpl implements SealService {
         seal.setIsUpdate(false);
         seal.setUpdateDate(DateUtil.getCurrentTime());
         seal.setRecordDate(DateUtil.getCurrentTime());
-        seal.setSealStatusCode("07");
+        seal.setSealStatusCode("03");
         int result = sealDao.updateByPrimaryKeySelective(seal);
         //印章操作
         String telphone = user.getTelphone();
@@ -994,7 +994,7 @@ public class SealServiceImpl implements SealService {
 
         Employee employee = new Employee();
         employee.setEmployeeName(weChatUser.getName());
-        employee.setEmployeeId(weChatUser.getId());
+        employee.setEmployeeId(weChatUser.getCertificateNo());
         employee.setEmployeeCode(weChatUser.getTelphone());
         int insertSealOperationRecord = insertSealOperationRecord(employee,"10",Id);
         if(insertSealOperationRecord>0 && updateSeal>0){

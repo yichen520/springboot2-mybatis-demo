@@ -12,9 +12,11 @@
     <result column="image" property="image" jdbcType="VARCHAR" />
     <result column="company_name" property="companyName" jdbcType="VARCHAR" />
     <result column="is_company_accout" property="isCompanyAccout" jdbcType="BIT" />
+    <result column="certificate_no" property="certificateNo" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, gender, telphone, company, job, create_time, image,company_name,is_company_accout
+    id, name, gender, telphone, company, job, create_time, image,company_name,is_company_accout,certificate_no
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -29,10 +31,10 @@
   <insert id="insert" parameterType="com.dhht.model.WeChatUser" >
     insert into wechat_user (id, name, gender, telphone,
       company, job, create_time, 
-      image,company_name,is_company_accout)
+      image,company_name,is_company_accout,certificate_no)
     values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{telphone,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{image,jdbcType=VARCHAR}), #{companyName,jdbcType=VARCHAR},  #{isCompanyAccout,jdbcType=BIT}
+      #{image,jdbcType=VARCHAR}), #{companyName,jdbcType=VARCHAR},  #{isCompanyAccout,jdbcType=BIT},#{certificateNo,jdbcType=VARCHAR}
   </insert>
   <insert id="insertSelective" parameterType="com.dhht.model.WeChatUser" >
     insert into wechat_user
@@ -67,6 +69,9 @@
       <if test="isCompanyAccout != null" >
         is_company_accout,
       </if>
+      <if test="certificateNo !=null">
+        certificate_no,
+      </if>
       </trim>
       <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -99,7 +104,9 @@
         <if test="isCompanyAccout != null" >
           #{isCompanyAccout,jdbcType=BIT},
         </if>
-
+        <if test="certificateNo !=null">
+          #{certificateNo,jdbcType=VARCHAR}
+        </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.dhht.model.WeChatUser" >
@@ -132,6 +139,9 @@
       <if test="isCompanyAccout != null" >
         is_company_accout = #{isCompanyAccout,jdbcType=VARCHAR},
       </if>
+      <if test="certificateNo !=null">
+        certificate_no = #{certificateNo,jdbcType=VARCHAR}
+      </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
@@ -146,6 +156,7 @@
       image = #{image,jdbcType=VARCHAR},
       company_name = #{companyName,jdbcType=VARCHAR},
       is_company_accout = #{isCompanyAccout,jdbcType=VARCHAR},
+      certificate_no = #{certificateNo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
   
