@@ -71,6 +71,12 @@ public class OrderServiceImpl implements OrderService {
                     sealPayOrder.setIsRefund(false);
                 }
 
+                if((sealPayOrder.getRefundStatus().equals("0")||sealPayOrder.getRefundStatus().equals("-1"))&&!sealPayOrder.getIsPay()){
+                    sealPayOrder.setIsRightPay(true);
+                }else {
+                    sealPayOrder.setIsRightPay(false);
+                }
+
                 if(sealPayOrder.getExpressWay()){
                     sealPayOrder.setExpressWayName("EMS");
                 }else {
@@ -95,6 +101,12 @@ public class OrderServiceImpl implements OrderService {
                     sealPayOrder.setIsRefund(true);
                 }else {
                     sealPayOrder.setIsRefund(false);
+                }
+
+                if((sealPayOrder.getRefundStatus().equals("0")||sealPayOrder.getRefundStatus().equals("-1"))&&!sealPayOrder.getIsPay()){
+                    sealPayOrder.setIsRightPay(true);
+                }else {
+                    sealPayOrder.setIsRightPay(false);
                 }
 
                 if(sealPayOrder.getExpressWay()){
@@ -122,6 +134,12 @@ public class OrderServiceImpl implements OrderService {
                     sealPayOrder.setIsRefund(true);
                 }else {
                     sealPayOrder.setIsRefund(false);
+                }
+
+                if((sealPayOrder.getRefundStatus().equals("0")||sealPayOrder.getRefundStatus().equals("-1"))&&!sealPayOrder.getIsPay()){
+                    sealPayOrder.setIsRightPay(true);
+                }else {
+                    sealPayOrder.setIsRightPay(false);
                 }
 
                 if(sealPayOrder.getExpressWay()){
@@ -179,9 +197,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public int cancelOrder(String id,WeChatUser weChatUser) {
         SealPayOrder sealPayOrder = sealPayOrderMapper.selectByPrimaryKey(id);
-        if(sealPayOrder.getRefundStatus().equals("1")){
-            if(sealPayOrder.getIsPay()){
-                int result = sealPayOrderMapper.updateRefundStatus("2",id);
+        if(sealPayOrder.getRefundStatus().equals("0")||sealPayOrder.getRefundStatus().equals("1")){
+            if(!sealPayOrder.getIsPay()){
+                int result = sealPayOrderMapper.updateRefundStatus("3",id);
                 int sealResult = sealService.cancelSeal(sealPayOrder.getSealId(),weChatUser);
                 if(result>0&&sealResult>0){
                     return ResultUtil.refundOrderOk;
@@ -189,10 +207,10 @@ public class OrderServiceImpl implements OrderService {
                     return ResultUtil.orderError;
                 }
             }else {
-                int result = sealPayOrderMapper.updateRefundStatus("3",id);
+                int result = sealPayOrderMapper.updateRefundStatus("2",id);
                 int sealResult = sealService.cancelSeal(sealPayOrder.getSealId(),weChatUser);
                 boolean refundResult = refundOrderToPayJs(sealPayOrder.getPayJsOrderId());
-                if(result>0&&sealResult>0&&refundResult){
+                if(result>0&&sealResult>0){
                     return ResultUtil.cancelOrderOk;
                 }else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -212,13 +230,12 @@ public class OrderServiceImpl implements OrderService {
             jsonParam.put("payjs_order_id",payJsOrderId);
             jsonParam.put("sign",null);
             StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
-            entity.setContentEncoding("UTF-8");
-            entity.setContentType("application/json");
             httpPost.setEntity(entity);
             HttpResponse resp = client.execute(httpPost);
             if (resp.getStatusLine().getStatusCode() == 200) {
                 HttpEntity httpEntity = resp.getEntity();
                 String respContent = EntityUtils.toString(httpEntity, "UTF-8");
+                System.out.println(respContent);
                 JSONObject jsonObject = JSONObject.parseObject(respContent);
                 String returnCode = (String) jsonObject.get("return_code");
                 if(returnCode.equals("1")){
