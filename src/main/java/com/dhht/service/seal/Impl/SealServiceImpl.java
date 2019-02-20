@@ -141,6 +141,9 @@ public class SealServiceImpl implements SealService {
     @Value("${sms.template.getseal}")
     private int getseal;
 
+    @Value("${sms.template.redo")
+    private int redo;
+
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
         return useDepartmentDao.selectByCode(useDepartmentCode);
@@ -1417,7 +1420,11 @@ public class SealServiceImpl implements SealService {
         }else{
             if(rejectRemark.equals("2")){ //如果印章问题  直接给制作单位发短信
                 String telphone1 = makeDepartmentSimple.getTelphone();
-
+                ArrayList<String> params = new ArrayList<>();
+                params.add(makeDepartmentSimple.getLegalName());
+                params.add(seal.getUseDepartmentName());
+                params.add(chooseType(seal.getSealTypeCode())+seal.getSealCode());
+                smsSendService.sendSingleMsgByTemplate(telphone1, redo, params);
             }
             return ResultUtil.isSuccess;
         }
