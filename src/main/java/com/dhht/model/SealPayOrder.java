@@ -13,6 +13,8 @@ public class SealPayOrder {
 
     private Boolean isPay;
 
+    private Boolean isRightPay;
+
     private String payWay;
 
     private String payAccout;
