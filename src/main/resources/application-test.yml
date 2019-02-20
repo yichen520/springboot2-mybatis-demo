@@ -118,6 +118,7 @@ sms:
         agentCheck: 261421
         business: 261418
         weChatVerificationCode: 261419
+        redo: 280716
 
 #公告条数
 notice:
