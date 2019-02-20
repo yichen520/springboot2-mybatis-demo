@@ -10,8 +10,10 @@ import com.dhht.model.*;
 import com.dhht.service.order.OrderService;
 import com.dhht.service.seal.SealService;
 import com.dhht.util.DateUtil;
+import com.dhht.util.HttpInvoker;
 import com.dhht.util.ResultUtil;
 
+import com.dhht.util.SignUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -210,7 +212,7 @@ public class OrderServiceImpl implements OrderService {
                 int result = sealPayOrderMapper.updateRefundStatus("2",id);
                 int sealResult = sealService.cancelSeal(sealPayOrder.getSealId(),weChatUser);
                 boolean refundResult = refundOrderToPayJs(sealPayOrder.getPayJsOrderId());
-                if(result>0&&sealResult>0){
+                if(result>0&&sealResult>0&&refundResult){
                     return ResultUtil.cancelOrderOk;
                 }else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -222,33 +224,23 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public boolean refundOrderToPayJs(String payJsOrderId){
+    public boolean refundOrderToPayJs(String payJsOrderId) {
         try {
-            HttpPost httpPost = new HttpPost("https://payjs.cn/api/refund");
-            CloseableHttpClient client = HttpClients.createDefault();
-            JSONObject jsonParam = new JSONObject();
-            jsonParam.put("payjs_order_id",payJsOrderId);
-            jsonParam.put("sign",null);
-            StringEntity entity = new StringEntity(jsonParam.toString(), "utf-8");
-            httpPost.setEntity(entity);
-            HttpResponse resp = client.execute(httpPost);
-            if (resp.getStatusLine().getStatusCode() == 200) {
-                HttpEntity httpEntity = resp.getEntity();
-                String respContent = EntityUtils.toString(httpEntity, "UTF-8");
-                System.out.println(respContent);
-                JSONObject jsonObject = JSONObject.parseObject(respContent);
-                String returnCode = (String) jsonObject.get("return_code");
-                if(returnCode.equals("1")){
-                    return true;
-                }else {
-                    return false;
-                }
-            }else {
+            Map<String, String> map = new HashMap<>();
+            map.put("payjs_order_id", payJsOrderId);
+            String md5 = SignUtil.sign(map);
+            map.put("sign", md5.toUpperCase());
+            String result = HttpInvoker.readContentFromPost("https://payjs.cn/api/refund", map);
+            System.out.println(result);
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            String returnCode = jsonObject.getString("return_code");
+            if (returnCode.equals("1")) {
+                return true;
+            } else {
                 return false;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
-
 }

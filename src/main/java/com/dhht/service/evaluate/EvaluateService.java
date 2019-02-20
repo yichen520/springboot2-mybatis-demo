@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface EvaluateService {
 
-    int insert(Evaluate evaluate, WeChatUser user,String orderId) ;
+    int insert(Evaluate evaluate, WeChatUser user,String sealId) ;
 
     List<Evaluate> selectEvaluateList(Evaluate evaluate);
 
