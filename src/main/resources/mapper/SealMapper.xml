@@ -642,7 +642,7 @@
             <if test="isCancel != null" >
                 is_cancel = #{isCancel,jdbcType=BIT},
             </if>
-            <if test="undertakeDate != null" >
+            <if test="cancelDate != null" >
                 cancel_date = #{cancelDate,jdbcType=TIMESTAMP},
             </if>
         </set>
