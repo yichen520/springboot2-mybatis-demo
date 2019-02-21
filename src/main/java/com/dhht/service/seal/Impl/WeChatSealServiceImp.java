@@ -350,26 +350,35 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
             if(seal.getSealTypeCode().equals("01")){
                 Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"01");
-                if(seal2!=null){
+                List<Seal> seal3 = sealDao.selectByTypeAndUseDepartmentCode3(sealDTO.getUseDepartmentCode(),null,"01");
+                if(seal3.size()!=0) {
                     return ResultUtil.isHaveSeal;
                 }
+                if(seal2!=null){
+                        return ResultUtil.isHaveSeal;
+                }
+
             }
             if(seal.getSealTypeCode().equals("05")){
                 Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"05");
+                List<Seal> seal3 = sealDao.selectByTypeAndUseDepartmentCode3(sealDTO.getUseDepartmentCode(),null,"05");
+                if(seal3.size()!=0) {
+                    return ResultUtil.isHaveSeal;
+                }
                 if(seal2!=null){
                     return ResultUtil.isHaveSeal;
                 }
+
             }
             if (seal.getSealReason().equals("03")) {
                 if (seal.getSealTypeCode().equals("01")) {
                     Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null,"01");
-                    if (seal1 != null) {
                         int logoutSeal = sealDao.logoutSeal(seal.getUseDepartmentCode(),"01");
                     }
                     else {
                         return ResultUtil.isNoSeal;
                     }
-                }
+
             }
 
             //核验记录

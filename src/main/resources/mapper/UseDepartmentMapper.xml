@@ -320,6 +320,6 @@
     </select>
     <select id="selectByNameAndCode" resultMap="BaseResultMap">
         select id,code,`name`,legal_name from use_department
-        where code like "%"#{code}"%" or `name` like "%"#{code}"%"
+        where code like "%"#{code}"%" or `name` like "%"#{code}"%" and is_delete = 0 and department_status = "01"
     </select>
 </mapper>
