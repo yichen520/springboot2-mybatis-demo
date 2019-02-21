@@ -352,6 +352,12 @@ public class UseDepartmentImpl implements UseDepartmentService {
         return weChatUserService.updateWeChatUser(weChatUser,weChatUser.getId());
     }
 
+    @Override
+    public UseDepartment selectByFlag(String flag) {
+        UseDepartment useDepartment = useDepartmentDao.selectByFlag(flag);
+        return useDepartment;
+    }
+
     /**
      * 数据同步
      * @param object

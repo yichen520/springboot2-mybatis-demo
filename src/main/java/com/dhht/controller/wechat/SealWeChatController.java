@@ -514,12 +514,11 @@ public class SealWeChatController extends WeChatBaseController {
      * @param httpServletResponse
      * @return
      */
-    @RequestMapping(value = "/companyAccoutRegister", method = RequestMethod.POST)
+    @RequestMapping(value = "/companyAccountRegister", method = RequestMethod.POST)
 public JsonObjectBO companyRegister(@RequestBody UseDepartmentRegister useDepartmentRegister,HttpServletResponse httpServletResponse) {
     try{
         init(httpServletRequest,httpServletResponse);
         int result =  weChatUserService.companyRegister(useDepartmentRegister);
-
         return ResultUtil.getResult(result);
     } catch (Exception e) {
         e.printStackTrace();

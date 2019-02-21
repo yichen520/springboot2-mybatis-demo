@@ -73,19 +73,6 @@ public class WeChatUserServiceImpl implements WeChatUserService {
        // expire(mobilePhone);
         boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,param,params);
         if(result){
-//            SMSCode smscode= smsCodeDao.getSms(mobilePhone);
-//            if(smscode==null){
-//                smscode = new SMSCode();
-//                smscode.setId(UUIDUtil.generate());
-//                smscode.setLastTime(System.currentTimeMillis());
-//                smscode.setPhone(mobilePhone);
-//                smscode.setSmscode(code);
-//                smsCodeDao.save(smscode);
-//            }else{
-//                smscode.setLastTime(System.currentTimeMillis());
-//                smscode.setSmscode(code);
-//                smsCodeDao.update(smscode);
-//            }
            return ResultUtil.isSendVerificationCode;
         }else {
             return ResultUtil.isError;
@@ -197,11 +184,20 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     }
 
     @Override
-    public int companyRegister(UseDepartmentRegister useDepartmentRegister) {
+    public int  companyRegister(UseDepartmentRegister useDepartmentRegister) {
+
+        WeChatUser tempWeChatUser = weChatUserMapper.selectByTelPhone(useDepartmentRegister.getMobliePhone());
+        if(tempWeChatUser!=null){
+            return ResultUtil.isRepairCompany;
+        }
 
         UseDepartment useDepartment = useDepartmentDao.selectCompanyInfo(useDepartmentRegister);
-        if(useDepartment.getName()!=null){
-            //新增到用户表
+        if(useDepartment!=null&&useDepartment.getName()!=null){
+            String rightCaptcha = stringRedisTemplate.opsForValue().get(useDepartment.getLegalTelphone());
+            if(!useDepartmentRegister.getCaptcha().equals(rightCaptcha)){
+                return ResultUtil.isCodeError;
+            }
+
             WeChatUser weChatUser =new WeChatUser();
             weChatUser.setCreateTime(DateUtil.getCurrentTime());
             weChatUser.setId(UUIDUtil.generate());
@@ -209,8 +205,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
             weChatUser.setCompany(useDepartment.getId());
             weChatUser.setCompanyName(useDepartment.getName());
             weChatUser.setCompanyAccout(true);
-          int result =  weChatUserMapper.insertSelective(weChatUser);
-          //插入到一张新表（如果做企业单位添加员工时，可用）
+            int result =  weChatUserMapper.insertSelective(weChatUser);
            if(result>0){
                return ResultUtil.isSuccess;
            }else {

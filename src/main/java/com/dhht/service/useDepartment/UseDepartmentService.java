@@ -38,4 +38,8 @@ public interface UseDepartmentService {
     int binding(String id, WeChatUser weChatUser);
 
     int relieveBinding(WeChatUser weChatUser);
+
+    UseDepartment selectByFlag(String flag);
+
+
 }

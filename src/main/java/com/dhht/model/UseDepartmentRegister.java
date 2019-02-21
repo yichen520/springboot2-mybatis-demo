@@ -13,6 +13,5 @@ public class UseDepartmentRegister {
     private String code;
     private String name;
     private String mobliePhone;
-
-
+    private String captcha;
 }

@@ -32,10 +32,9 @@ public interface UseDepartmentDao {
     int updateByPrimaryKey(UseDepartment record);
 
 
-
     List<UseDepartment> findAllMake();
 
-    List<UseDepartment> selectByFlag(@Param("flag") String flag);
+    UseDepartment selectByFlag(@Param("flag") String flag);
 
     int updateById(UseDepartment useDepartment);
 

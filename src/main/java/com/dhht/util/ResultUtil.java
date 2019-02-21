@@ -49,6 +49,7 @@ public class ResultUtil {
     public static final int orderError = 59;
     public static final int evaluationOk = 60;
     public static final int evaluationError = 61;
+    public static final int isRepairCompany = 62;
 
     public static String sealType(String sealType){
         switch (sealType){
@@ -152,6 +153,8 @@ public class ResultUtil {
                 return JsonObjectBO.ok("评价成功");
             case 61:
                 return JsonObjectBO.error("评价失败");
+            case 62:
+                return JsonObjectBO.error("该企业已经注册，请勿重复注册");
                 default:
                     return null;
         }
