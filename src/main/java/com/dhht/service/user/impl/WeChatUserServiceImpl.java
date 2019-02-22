@@ -49,6 +49,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
     @Autowired
     private WeChatUserMapper weChatUserMapper;
+
     @Autowired
     private UseDepartmentDao useDepartmentDao;
 

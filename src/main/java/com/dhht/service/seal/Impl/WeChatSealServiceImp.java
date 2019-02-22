@@ -355,7 +355,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
                     return ResultUtil.isHaveSeal;
                 }
                 if(seal2!=null){
+
                         return ResultUtil.isHaveSeal;
+
                 }
 
             }
@@ -366,7 +368,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
                     return ResultUtil.isHaveSeal;
                 }
                 if(seal2!=null){
+
                     return ResultUtil.isHaveSeal;
+
                 }
 
             }

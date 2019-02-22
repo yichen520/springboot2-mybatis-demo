@@ -117,7 +117,9 @@ public class SealServiceImpl implements SealService {
     @Autowired
     private SealVerificationMapper sealVerificationMapper;
 
+    @Autowired
     private FileService fileService;
+
     @Autowired
     private SmsSendService smsSendService;
 
