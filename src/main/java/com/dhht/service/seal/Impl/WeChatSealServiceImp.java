@@ -311,12 +311,27 @@ public class WeChatSealServiceImp implements WeChatSealService {
             MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
             RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
 
-            for (Seal seal : list) {
-                if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && (sealDTO.getSeal().getSealTypeCode().equals("05") || sealDTO.getSeal().getSealTypeCode().equals("01"))) {
-                    return ResultUtil.isHaveSeal;
-                }
-            }
+//            for (Seal seal : list) {
+//                if (seal.getSealTypeCode().equals(sealDTO.getSeal().getSealTypeCode()) && (sealDTO.getSeal().getSealTypeCode().equals("05") || sealDTO.getSeal().getSealTypeCode().equals("01"))) {
+//                     return ResultUtil.isHaveSeal;
+//                }
+//            }
+
             Seal seal = sealDTO.getSeal();
+
+//                if (seal.getSealTypeCode().equals("05") && !seal.getSealReason().equals("03")) {
+//                    if (list.size() != 0) {
+//                        return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
+//                    }
+//
+//                } else if (seal.getSealTypeCode().equals("01") && !seal.getSealReason().equals("03")) {
+//                    if (list.size() != 0) {
+//                        return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
+//                    }
+//                }
+
+
+
             String sealcode1 = sealCodeService.getMaxSealCode(makedepartment.getDepartmentAddress());
             String serial = "00000000";
             String sealcode = makedepartment.getDepartmentAddress() + serial.substring(0, serial.length() - sealcode1.length()) + sealcode1;
@@ -348,39 +363,42 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 seal.setRecordDepartmentName(recordDepartment.getDepartmentName());
             }
 
-            if(seal.getSealTypeCode().equals("01")){
-                Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"01");
+            if(seal.getSealTypeCode().equals("01")&& !seal.getSealReason().equals("03")){
+//                Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"01");
                 List<Seal> seal3 = sealDao.selectByTypeAndUseDepartmentCode3(sealDTO.getUseDepartmentCode(),null,"01");
+
                 if(seal3.size()!=0) {
                     return ResultUtil.isHaveSeal;
                 }
-                if(seal2!=null){
-
-                        return ResultUtil.isHaveSeal;
-
-                }
+//                if(seal2!=null){
+//
+//                        return ResultUtil.isHaveSeal;
+//
+//                }
 
             }
-            if(seal.getSealTypeCode().equals("05")){
-                Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"05");
+            if(seal.getSealTypeCode().equals("05")&& !seal.getSealReason().equals("03")){
+//                Seal seal2 = sealDao.selectByTypeAndUseDepartmentCode(sealDTO.getUseDepartmentCode(),null,"05");
                 List<Seal> seal3 = sealDao.selectByTypeAndUseDepartmentCode3(sealDTO.getUseDepartmentCode(),null,"05");
+
                 if(seal3.size()!=0) {
                     return ResultUtil.isHaveSeal;
                 }
-                if(seal2!=null){
-
-                    return ResultUtil.isHaveSeal;
-
-                }
+//                if(seal2!=null){
+//
+//                    return ResultUtil.isHaveSeal;
+//
+//                }
 
             }
             if (seal.getSealReason().equals("03")) {
                 if (seal.getSealTypeCode().equals("01")) {
-                    Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null,"01");
-                        int logoutSeal = sealDao.logoutSeal(seal.getUseDepartmentCode(),"01");
-                    }
-                    else {
+                    if(sealDao.selectByTypeAndUseDepartmentCode3(seal.getUseDepartmentCode(),null,"01").size()== 0)
+                    {
                         return ResultUtil.isNoSeal;
+                    }
+//                    Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(seal.getUseDepartmentCode(),null,"01");
+                        int logoutSeal = sealDao.logoutSeal(seal.getUseDepartmentCode(),"01");
                     }
 
             }
@@ -536,6 +554,20 @@ public class WeChatSealServiceImp implements WeChatSealService {
     public List<Seal> portalSealInfoByCode(String code) {
         List<Seal> seals = sealDao.selectByCodeAndType(code);
         return seals;
+//        List<Seal> seals = sealDao.selectIsLogout1(code);
+//        List<Seal> seals1 = sealDao.selectIsCancel(code);
+//        List<Seal> sealList = new ArrayList<>();
+//        sealList.addAll(seals);
+//        sealList.addAll(seals1);
+//        for(Seal seal:seals){
+//            for(Seal seal2:seals1){
+//                if(seal.getSealCode().equals(seal2.getSealCode())){
+//                    sealList.remove(seal2);
+//                }
+//            }
+//        }
+//        return sealList;
+
     }
 
     @Override
