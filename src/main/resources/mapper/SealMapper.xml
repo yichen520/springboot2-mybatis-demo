@@ -1126,9 +1126,15 @@
             </if>
             <if test="isLogout !=null ">
             AND is_logout =  #{isLogout,jdbcType=BIT}
-        </if>
+            </if>
             <if test="isApply !=null ">
                 AND is_apply =  #{isApply,jdbcType=BIT}
+            </if>
+            <if test="isCancel !=null">
+            AND is_cancel =  #{isCancel,jdbcType=BIT}
+            </if>
+            <if test="isUpdate !=null">
+                AND is_update =  #{isUpdate,jdbcType=BIT}
             </if>
             <if test="isUndertake !=null ">
                 AND is_undertake =  #{isUndertake,jdbcType=BIT}
