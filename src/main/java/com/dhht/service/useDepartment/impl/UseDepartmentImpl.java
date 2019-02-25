@@ -128,6 +128,44 @@ public class UseDepartmentImpl implements UseDepartmentService {
             }
     }
 
+    @Override
+    public int updateFromWeChatAPP(UseDepartment useDepartment, User updateUser) {
+        useDepartmentDao.deleteById(useDepartment.getId());
+        UseDepartment oldUseDepartment = useDepartmentDao.selectById(useDepartment.getId());
+        UseDepartment newUseDepartment = new UseDepartment();
+        newUseDepartment = oldUseDepartment;
+        useDepartment = (UseDepartment)StringUtil.deleteSpace(useDepartment);
+        if (oldUseDepartment == null) {
+            return ResultUtil.isError;
+        } else {
+            newUseDepartment.setVersion(useDepartment.getVersion() + 1);
+            newUseDepartment.setIsDelete(false);
+            newUseDepartment.setUpdateTime(DateUtil.getCurrentTime());
+            newUseDepartment.setName(useDepartment.getName());
+            newUseDepartment.setLegalName(useDepartment.getLegalName());
+            newUseDepartment.setTelphone(useDepartment.getTelphone());
+            newUseDepartment.setAddress(useDepartment.getAddress());
+            newUseDepartment.setPostalCode(useDepartment.getPostalCode());
+            String uuid = UUIDUtil.generate();
+            newUseDepartment.setId(uuid);
+            newUseDepartment.setFlag(oldUseDepartment.getFlag());
+            newUseDepartment.setDepartmentStatus(oldUseDepartment.getDepartmentStatus());
+            String operateUUid = UUIDUtil.generate();
+            String[] ignore = new String[]{"id","departmentAddress","isDelete","version","operator","updateTime","specialBusinessLicenceScanning","managerPhone","managerName"};
+            int r = useDepartmentDao.insert(newUseDepartment);
+            boolean operateResult = historyService.insertOperateRecord(updateUser,useDepartment.getFlag(),useDepartment.getId(),"userDepartment",SyncOperateType.UPDATE,operateUUid);
+            boolean operateDetailResult = historyService.insertUpdateRecord(newUseDepartment,oldUseDepartment,operateUUid,ignore);
+            if (r == 1&&operateDetailResult&&operateResult) {
+                SyncEntity syncEntity =  ((UseDepartmentImpl) AopContext.currentProxy()).getSyncDate(useDepartment, SyncDataType.USERDEPARTMENT, SyncOperateType.UPDATE);
+                return ResultUtil.isSuccess;
+            } else {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return ResultUtil.isFail;
+            }
+        }
+    }
+
+
     /**
      * 查询全部
      * @param pageNum
@@ -355,6 +393,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     @Override
     public UseDepartment selectByFlag(String flag) {
         UseDepartment useDepartment = useDepartmentDao.selectByFlag(flag);
+        useDepartment.setDistrictName(districtService.selectByDistrictId(useDepartment.getDistrictId()));
         return useDepartment;
     }
 

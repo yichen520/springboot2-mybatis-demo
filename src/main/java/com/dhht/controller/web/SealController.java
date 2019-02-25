@@ -171,6 +171,7 @@ public class SealController implements InitializingBean {
             }
             return jsonObjectBO;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage(), e);
             return JsonObjectBO.exception("备案失败");
         }

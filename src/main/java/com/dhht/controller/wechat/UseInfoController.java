@@ -122,9 +122,28 @@ public class UseInfoController extends WeChatBaseController {
             User user = new User();
             user.setId(weChatUser.getId());
             user.setRealName(weChatUser.getName());
-            return useDepartmentService.update(useDepartment, user);
+            int result =  useDepartmentService.updateFromWeChatAPP(useDepartment, user);
+            return ResultUtil.getResult(result);
         } catch (Exception e) {
             return JsonObjectBO.exception("企业变更异常");
+        }
+    }
+
+
+    @RequestMapping("/getCompany")
+    public JsonObjectBO getCompanyByWeChatUser(HttpServletRequest httpServletRequest){
+        try {
+            WeChatUser weChatUser = currentUser();
+            String flag = weChatUser.getCompany();
+            UseDepartment useDepartment = useDepartmentService.selectByFlag(flag);
+            if(useDepartment==null){
+                return JsonObjectBO.error("您未设置默认企业");
+            }
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("useDepartment",useDepartment);
+            return JsonObjectBO.success("获取成功",jsonObject);
+        }catch (Exception e){
+            return JsonObjectBO.exception("获取企业信息失败");
         }
     }
 }

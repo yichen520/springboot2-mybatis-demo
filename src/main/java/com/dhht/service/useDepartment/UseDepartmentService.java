@@ -19,6 +19,8 @@ public interface UseDepartmentService {
 
     JsonObjectBO update(UseDepartment useDepartment,User updateUser);
 
+    int updateFromWeChatAPP(UseDepartment useDepartment,User updateUser);
+
     JsonObjectBO find(String localDistrictId,String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize);
 
     JsonObjectBO delete(UseDepartment useDepartment,User updateUser);
@@ -40,6 +42,7 @@ public interface UseDepartmentService {
     int relieveBinding(WeChatUser weChatUser);
 
     UseDepartment selectByFlag(String flag);
+
 
 
 }

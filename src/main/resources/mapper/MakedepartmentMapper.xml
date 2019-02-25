@@ -109,7 +109,7 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
     LEFT JOIN make_department_attach_info ON make_department.flag = make_department_attach_info.make_department_flag
     WHERE
     make_department.delete_status = 0
-    AND make_department.department_address LIKE "%"#{departmentName,jdbcType=VARCHAR}"%"
+    AND make_department.department_name LIKE "%"#{departmentName,jdbcType=VARCHAR}"%"
     and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR}"%"
     ) AS t
     LEFT JOIN make_department_evaluate ON t.flag = make_department_evaluate.make_department_id
