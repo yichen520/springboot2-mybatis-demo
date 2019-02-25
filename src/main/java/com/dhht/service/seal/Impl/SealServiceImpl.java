@@ -993,7 +993,7 @@ public class SealServiceImpl implements SealService {
     public int cancelSeal(String Id,WeChatUser weChatUser) {
         Seal seal = sealDao.selectByPrimaryKey(Id);
         seal.setIsCancel(true);
-        seal.setSealStatusCode("11");
+        seal.setSealStatusCode("10");
         seal.setCancelDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
 
@@ -1001,7 +1001,7 @@ public class SealServiceImpl implements SealService {
         employee.setEmployeeName(weChatUser.getName());
         employee.setEmployeeId(weChatUser.getCertificateNo());
         employee.setEmployeeCode(weChatUser.getTelphone());
-        int insertSealOperationRecord = insertSealOperationRecord(employee,"11",Id);
+        int insertSealOperationRecord = insertSealOperationRecord(employee,"10",Id);
         if(insertSealOperationRecord>0 && updateSeal>0){
             return ResultUtil.isSuccess;
         }else{
