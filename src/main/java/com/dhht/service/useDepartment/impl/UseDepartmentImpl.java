@@ -373,7 +373,7 @@ public class UseDepartmentImpl implements UseDepartmentService {
     public int binding(String id, WeChatUser weChatUser) {
         UseDepartment useDepartment = useDepartmentDao.selectById(id);
         weChatUser.setCompanyName(useDepartment.getName());
-        weChatUser.setCompany(id);
+        weChatUser.setCompany(useDepartment.getFlag());
         return weChatUserService.updateWeChatUser(weChatUser,weChatUser.getId());
 
     }
