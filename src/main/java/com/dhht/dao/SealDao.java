@@ -20,7 +20,7 @@ public interface SealDao {
 
     Seal selectByPrimaryKey(@Param("id") String id);
 
-    List<Seal> selectByCodeAndType(String useDepartmentCode);
+    List<Seal> selectByCodeAndType(@Param("useDepartmentCode") String useDepartmentCode,@Param("sealTypeCode") String sealTypeCode);
 
     List<Seal> selectByCodeAndType05(String useDepartmentCode);
 

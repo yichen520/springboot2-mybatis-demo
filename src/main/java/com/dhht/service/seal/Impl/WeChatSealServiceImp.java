@@ -307,7 +307,6 @@ public class WeChatSealServiceImp implements WeChatSealService {
     @Override
     public int sealWeChatRecord(WeChatUser user, SealWeChatDTO sealDTO, String payOrderId) {
         try {
-            List<Seal> list = sealDao.selectByCodeAndType(sealDTO.getUseDepartmentCode());
             UseDepartment useDepartment = useDepartmentDao.selectByCode(sealDTO.getUseDepartmentCode());
             MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(sealDTO.getMakedepartmentCode());
             RecordDepartment recordDepartment = recordDepartmentMapper.selectBydistrict(makedepartment.getDepartmentAddress());
@@ -553,7 +552,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
     @Override
     public List<Seal> portalSealInfoByCode(String code) {
-        List<Seal> seals = sealDao.selectByCodeAndType(code);
+        List<Seal> seals = sealDao.selectIsLogout1(code);
         return seals;
 //        List<Seal> seals = sealDao.selectIsLogout1(code);
 //        List<Seal> seals1 = sealDao.selectIsCancel(code);

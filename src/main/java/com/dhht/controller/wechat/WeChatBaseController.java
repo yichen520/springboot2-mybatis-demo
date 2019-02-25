@@ -35,7 +35,7 @@ public class WeChatBaseController {
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
         if(httpServletRequest.getCookies()!=null){
-            return;
+            return ;
         }
         if(httpServletRequest.getCookies()==null&&httpServletRequest.getRequestURI().contains("/weChat/login")){
             Cookie cookie=new Cookie("JSESSIONID",UUIDUtil.generate());
@@ -45,10 +45,7 @@ public class WeChatBaseController {
             cookie.setPath(httpServletRequest.getContextPath());
             //添加cookie
             httpServletResponse.addCookie(cookie);
-            System.out.println(httpServletResponse.getHeader("Set-Cookie"));
         }
-
-
 
     }
 

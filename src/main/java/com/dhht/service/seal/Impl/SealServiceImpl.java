@@ -227,8 +227,8 @@ public class SealServiceImpl implements SealService {
             }
             FaceCompareRecord faceCompareRecord = null;
             FaceCompareRecord TrustedIdentityAuthenticationResult = null;
-            List<Seal> list = sealDao.selectByCodeAndType(useDepartmentCode);
-            List<Seal> list1 = sealDao.selectByCodeAndType05(useDepartmentCode);
+            List<Seal> list = sealDao.selectByCodeAndType(useDepartmentCode,"05");
+            List<Seal> list1 = sealDao.selectByCodeAndType(useDepartmentCode,"01");
             UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);  //根据usedepartment查询对应的使用公司
             if (useDepartment == null) {
                 return ResultUtil.isNoDepartment;
