@@ -49,6 +49,7 @@ public interface SealDao {
     List<Seal> allUndertakeSeal(@Param("makeDepartmentCode") String makeDepartmentCode);
 
 //    int insertVerifySeal(String id,boolean isPass,String rejectReason,String rejectRemark);
+    List<Seal> selectAllSealByLoginTelPhone(String telphone);
 
     List<Seal> selectByCodeAndName(Seal seal);
 
@@ -125,14 +126,6 @@ public interface SealDao {
     int countLossSealByDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     int countLogoutSealByDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
-
-//    int countAddSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
-//
-//    int countLossSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
-//
-//    int countLogoutSealByLikeDistrictId(@Param("districtId") String districtId, @Param("sealTypeCode") String sealTypeCode, @Param("startTime") String startTime, @Param("endTime") String endTime);
-//
-//    List<SealDistrict> countByDistrictId(List<DistrictMenus> districtIds);
 
     int indexCountSum(@Param("districtId") String districtId);
 

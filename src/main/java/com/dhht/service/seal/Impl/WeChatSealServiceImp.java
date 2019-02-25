@@ -109,7 +109,8 @@ public class WeChatSealServiceImp implements WeChatSealService {
      */
     @Override
     public List<SealVerificationPO> sealAndVerification(String telphone) {
-        List<Seal> seals = sealDao.selectSealByTelphone(telphone); //该经办人做的所有的章
+        List<Seal> seals = sealDao.selectAllSealByLoginTelPhone(telphone); //该经办人做的所有的章
+
 //        List<Seal> seals1 = sealDao.sealListOfDateUpdate(); //制作单位退回的章
 //        List<Seal> allSeals = new ArrayList<>();
 //        allSeals.addAll(seals);

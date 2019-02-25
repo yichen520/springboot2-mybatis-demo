@@ -1366,6 +1366,10 @@
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type= #{flag}
   </select>
 
+    <select id="selectAllSealByLoginTelPhone" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" /> from seal left join seal_agent on seal.agent_id=seal_agent.id where telphone=#{telphone} or login_telphone=#{telphone}
+    </select>
+
     <select id="sealList" parameterType="java.lang.String" resultMap="BaseResultMap">
       SELECT seal.*
       FROM seal

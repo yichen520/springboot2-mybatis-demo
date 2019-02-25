@@ -146,6 +146,7 @@ public class SealServiceImpl implements SealService {
     @Value("${sms.template.redo}")
     private int redo;
 
+
     @Override
     public UseDepartment isrecord(String useDepartmentCode) {
         return useDepartmentDao.selectByCode(useDepartmentCode);
@@ -591,7 +592,6 @@ public class SealServiceImpl implements SealService {
 
     /**
      * 印模上传
-     *
      * @param user
      * @param id
      * @param sealedCardId
