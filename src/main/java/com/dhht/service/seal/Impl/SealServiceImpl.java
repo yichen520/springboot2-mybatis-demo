@@ -779,6 +779,8 @@ public class SealServiceImpl implements SealService {
         seal1.setEarlywarningDate(DateUtil.getCurrentTime());
 
         orderService.updateEvaluationStatus(id,true);
+        SealOrder sealOrder = orderService.selectOrderDetail(id);
+        orderService.updatePayStatus(sealOrder.getSealPayOrder().getPayWay(),sealOrder.getSealPayOrder().getId(),sealOrder.getSealPayOrder().getPayJsOrderId());
         RecordDepartment recordDepartment = recordDepartmentService.selectByCode(seal1.getRecordDepartmentCode());
         MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal1.getMakeDepartmentCode());
         User user1 = new User();
