@@ -169,7 +169,11 @@ public class SealWeChatController extends WeChatBaseController {
             } else if (a == ResultUtil.isNoSeal) {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("印章刻制原因选择错误,该企业还没有公章");
-            } else {
+            }
+            else if (a == ResultUtil.isNoApply) {
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("该章还未备案，不能进行变更操作");
+            }else {
                 jsonObjectBO.setCode(-1);
                 jsonObjectBO.setMessage("添加失败");
             }

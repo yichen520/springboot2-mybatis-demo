@@ -959,7 +959,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsCancel(true);
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("10"); //取消章
-
+            sealVerification.setRejectReason("3");
 
         }else {    //资料问题
             seal.setIsUndertake(false);
@@ -968,6 +968,8 @@ public class SealServiceImpl implements SealService {
             seal.setUpdateDate(DateUtil.getCurrentTime());
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("11");
+
+            sealVerification.setRejectReason("1");
         }
         String Id = UUIDUtil.generate();
         sealVerification.setId(Id);
@@ -1657,10 +1659,14 @@ public class SealServiceImpl implements SealService {
             seal.setIsLoss(false);
             seal.setIsCancel(false);
         } else if (status.equals("04")) {    //已交付
-            seal.setIsCancel(false);
             seal.setIsRecord(true);
+            seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsCancel(false);
+            seal.setIsApply(false);
+            seal.setIsLogout(false);
+            seal.setIsLoss(false);
+            seal.setIsUndertake(true);
         } else if (status.equals("05")) {  //已经挂失
             seal.setIsCancel(false);
             seal.setIsRecord(true);
@@ -1688,7 +1694,6 @@ public class SealServiceImpl implements SealService {
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
         }else if (status.equals("09")) {   //已备案
-            seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
@@ -1696,6 +1701,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsApply(true);
             seal.setIsCancel(false);
             list = sealDao.selectIsApply(seal);
+            return list;
         }else if(status.equals("10")){
             seal.setIsCancel(true);
         }else if(status.equals("11")){ //资料更新

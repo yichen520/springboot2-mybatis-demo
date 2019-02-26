@@ -115,7 +115,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             SealVerificationPO sealVerificationPO =new SealVerificationPO();
             sealVerificationPO.setSeal(seal);
             String sealId = seal.getId();
-            SealVerification sealVerification = sealVerificationMapper.selectBySealId(sealId);
+            SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag(sealId,"1");
             if("1".equals(sealVerification.getRejectReason())) {
                 sealVerificationPO.setSealVerification(sealVerification);
                 sealVerificationPOS.add(sealVerificationPO);
@@ -272,6 +272,9 @@ public class WeChatSealServiceImp implements WeChatSealService {
         try {
             Seal seal1 = sealDao.selectByPrimaryKey(sealId);
             if (seal1 != null) {
+                if(!seal1.getIsApply()){
+                    return ResultUtil.isNoApply;
+                }
                 seal1.setLogoutPersonId(sealAgentId);
                 seal1.setIsLogout(true);
                 seal1.setLogoutDate(DateUtil.getCurrentTime());
@@ -314,17 +317,6 @@ public class WeChatSealServiceImp implements WeChatSealService {
 //            }
 
             Seal seal = sealDTO.getSeal();
-
-//                if (seal.getSealTypeCode().equals("05") && !seal.getSealReason().equals("03")) {
-//                    if (list.size() != 0) {
-//                        return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
-//                    }
-//
-//                } else if (seal.getSealTypeCode().equals("01") && !seal.getSealReason().equals("03")) {
-//                    if (list.size() != 0) {
-//                        return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
-//                    }
-//                }
 
 
 
@@ -399,20 +391,19 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
             }
 
-            //核验记录
-            SealVerification sealVerification = new SealVerification();
-            sealVerification.setId(UUIDUtil.generate());
-            sealVerification.setSealId(sealId);
-            sealVerification.setIsVerification(false);
-            sealVerification.setVerifyTypeName("0");
-            sealVerificationMapper.insertSelective(sealVerification);
+//            //核验记录
+//            SealVerification sealVerification = new SealVerification();
+//            sealVerification.setId(UUIDUtil.generate());
+//            sealVerification.setSealId(sealId);
+//            sealVerification.setIsVerification(false);
+//            sealVerification.setVerifyTypeName("0");
+////            sealVerification.setFlag("1");
+//            sealVerificationMapper.insertSelective(sealVerification);
 
 
             //经办人信息
             String saId = sealDTO.getSealAgent().getId();
             seal.setAgentId(sealDTO.getSealAgent().getId());
-//            seal.setIsUndertake(true);
-//            seal.setUndertakeDate(DateUtil.getCurrentTime());
             int sealInsert = sealDao.insertSelective(seal);
 
 
