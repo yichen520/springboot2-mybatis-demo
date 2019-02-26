@@ -39,6 +39,7 @@ public class ResultUtil {
     public static final int isCodeError = 51;
     public static final int isSendVerificationCode=27;
     public static final int isNoSealVerification=29;
+    public static final int isNoApply=30;
     public static final int isNoSeal=53;
     public static final int isNoEms=28;
     public static final int isNoSession=54;
@@ -132,6 +133,8 @@ public class ResultUtil {
                 return JsonObjectBO.error("无ems信息");
             case 29:
                 return JsonObjectBO.error("未核验通过，请重新核验");
+            case 30:
+                return JsonObjectBO.error("该章还未备案，不能进行变更操作");
             case 50:
                 return JsonObjectBO.error("会话失效,请重新登录");
             case 51:
