@@ -705,7 +705,7 @@
   </select>
 
     <select id="selectIsLogout1"  parameterType="java.lang.String" resultMap="BaseResultMap">
-        select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND is_logout = 0 and is_cancel=0
+        select  <include refid="Base_Column_List" /> from seal WHERE use_department_code = #{useDepartmentCode} AND is_logout = 0 and is_cancel=0 and is_apply=1
     </select>
 
     <select id="selectIsCancel"  parameterType="java.lang.String" resultMap="BaseResultMap">
