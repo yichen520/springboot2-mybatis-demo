@@ -729,7 +729,6 @@ public class SealServiceImpl implements SealService {
 
     /**
      * 线下交付
-     *
      * @param user
      * @param
      * @param

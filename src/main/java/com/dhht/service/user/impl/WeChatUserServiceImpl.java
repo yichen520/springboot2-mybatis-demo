@@ -203,9 +203,11 @@ public class WeChatUserServiceImpl implements WeChatUserService {
                 weChatUser.setCreateTime(DateUtil.getCurrentTime());
                 weChatUser.setId(UUIDUtil.generate());
                 weChatUser.setTelphone(useDepartmentRegister.getMobilePhone());
-                weChatUser.setCompany(useDepartment.getId());
+                weChatUser.setName(useDepartmentRegister.getLegalName());
+                weChatUser.setCompany(useDepartment.getFlag());
                 weChatUser.setCompanyName(useDepartment.getName());
                 weChatUser.setCompanyAccout(true);
+                weChatUser.setCertificateNo(useDepartmentRegister.getLegalId());
                 int result = weChatUserMapper.insert(weChatUser);
                 if (result > 0) {
                     return ResultUtil.isSuccess;
@@ -216,10 +218,11 @@ public class WeChatUserServiceImpl implements WeChatUserService {
                 if(tempWeChatUser.isCompanyAccout()){
                     return ResultUtil.isRepairCompany;
                 }else if(tempWeChatUser.getCompany()==null||tempWeChatUser.getCompany().equals("")){
-                    tempWeChatUser.setName(useDepartment.getName());
-                    tempWeChatUser.setCompany(useDepartment.getId());
+                    tempWeChatUser.setName(useDepartmentRegister.getLegalName());
+                    tempWeChatUser.setCompany(useDepartment.getFlag());
                     tempWeChatUser.setCompanyName(useDepartment.getName());
                     tempWeChatUser.setCompanyAccout(true);
+                    tempWeChatUser.setCertificateNo(useDepartmentRegister.getLegalId());
                     int result = weChatUserMapper.updateByPrimaryKey(tempWeChatUser);
                     if (result > 0) {
                         return ResultUtil.isSuccess;
@@ -228,7 +231,9 @@ public class WeChatUserServiceImpl implements WeChatUserService {
                     }
                 }else if(!tempWeChatUser.isCompanyAccout()&&tempWeChatUser.getCompany()!=null||tempWeChatUser.getCompany()!=""){
                     if(tempWeChatUser.getCompany().equals(useDepartment.getFlag())) {
+                        tempWeChatUser.setName(useDepartmentRegister.getLegalName());
                         tempWeChatUser.setCompanyAccout(true);
+                        tempWeChatUser.setCertificateNo(useDepartmentRegister.getLegalId());
                         int result = weChatUserMapper.updateByPrimaryKey(tempWeChatUser);
                         if (result > 0) {
                             return ResultUtil.isSuccess;
