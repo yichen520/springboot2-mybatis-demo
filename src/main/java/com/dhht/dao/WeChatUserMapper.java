@@ -1,6 +1,7 @@
 package com.dhht.dao;
 
 import com.dhht.model.WeChatUser;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,5 +18,5 @@ public interface WeChatUserMapper {
 
     int updateByPrimaryKey(WeChatUser record);
 
-    WeChatUser selectByTelPhone(String telPhone);
+    WeChatUser selectByTelPhone(@Param("telPhone") String telPhone);
 }

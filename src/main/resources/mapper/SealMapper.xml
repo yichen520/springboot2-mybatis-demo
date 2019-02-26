@@ -1373,7 +1373,7 @@
   </select>
 
     <select id="selectAllSealByLoginTelPhone" resultMap="BaseResultMap">
-    select  <include refid="Base_Column_List" /> from seal as s left join seal_agent as sa on s.agent_id=sa.id where telphone=#{telphone} or login_telphone=#{telphone}
+    select  <include refid="Base_Column_List" /> from seal as s left join (select * from seal_agent) as sa on s.agent_id=sa.id where telphone=#{telphone} or login_telphone=#{telphone}
     </select>
 
     <select id="sealList" parameterType="java.lang.String" resultMap="BaseResultMap">

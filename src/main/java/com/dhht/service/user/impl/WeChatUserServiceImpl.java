@@ -54,28 +54,27 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     private UseDepartmentDao useDepartmentDao;
 
     @Value("${sms.template.insertUser}")
-    private int userCode ;
-
+    private int userCode;
 
 
     @Override
-    public int sendMessage(String mobilePhone,int param) {
-        Map<String,Object> map = new HashMap<>();
+    public int sendMessage(String mobilePhone, int param) {
+        Map<String, Object> map = new HashMap<>();
         String code = StringUtil.createRandomVcode();
         ArrayList<String> params = new ArrayList<String>();
         params.add(code);
-        if(!stringRedisTemplate.hasKey(mobilePhone)){
-            stringRedisTemplate.opsForValue().append(mobilePhone,code);
-        }else {
+        if (!stringRedisTemplate.hasKey(mobilePhone)) {
+            stringRedisTemplate.opsForValue().append(mobilePhone, code);
+        } else {
             stringRedisTemplate.delete(mobilePhone);
-            stringRedisTemplate.opsForValue().append(mobilePhone,code);
+            stringRedisTemplate.opsForValue().append(mobilePhone, code);
         }
-        stringRedisTemplate.expire(mobilePhone,300, TimeUnit.SECONDS);
-       // expire(mobilePhone);
-        boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone,param,params);
-        if(result){
-           return ResultUtil.isSendVerificationCode;
-        }else {
+        stringRedisTemplate.expire(mobilePhone, 300, TimeUnit.SECONDS);
+        // expire(mobilePhone);
+        boolean result = smsSendService.sendSingleMsgByTemplate(mobilePhone, param, params);
+        if (result) {
+            return ResultUtil.isSendVerificationCode;
+        } else {
             return ResultUtil.isError;
         }
     }
@@ -90,17 +89,16 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     }
 
     @Override
-    public Map<String,Object> isLogin(String mobilePhone, String inputVerificationCode,HttpServletRequest request) {
-        Map<String,Object> map = new HashMap<>();
+    public Map<String, Object> isLogin(String mobilePhone, String inputVerificationCode, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
         String verificationCode = stringRedisTemplate.opsForValue().get(mobilePhone);
-        if(verificationCode.equals(inputVerificationCode)){
+        if (verificationCode.equals(inputVerificationCode)) {
             map.put("status", "ok");
-            map.put("message","登录成功");
-            map.put("mobilePhone",mobilePhone);
-            request.getSession().setAttribute("mobilePhone",mobilePhone);
-
+            map.put("message", "登录成功");
+            map.put("mobilePhone", mobilePhone);
+            request.getSession().setAttribute("mobilePhone", mobilePhone);
             WeChatUser weChatUser = weChatUserMapper.selectByTelPhone(mobilePhone);
-            if(weChatUser==null) {
+            if (weChatUser == null) {
                 WeChatUser weChatUser1 = new WeChatUser();
                 weChatUser1.setId(UUIDUtil.generate());
                 weChatUser1.setName(testNum(6));
@@ -108,65 +106,69 @@ public class WeChatUserServiceImpl implements WeChatUserService {
                 weChatUser1.setCreateTime(DateUtil.getCurrentTime());
                 weChatUserMapper.insertSelective(weChatUser1);
                 map.put("weChatUser", weChatUser1);
-            }
-            else {
+                request.getSession().setAttribute("weChatUser", weChatUser1);
+            } else {
                 map.put("weChatUser", weChatUser);
+                request.getSession().setAttribute("weChatUser", weChatUser);
             }
-            request.getSession().setAttribute("weChatUser",weChatUser);
+
             return map;
-        }else {
+        } else {
             map.put("status", "error");
             map.put("currentAuthority", "guest");
-            map.put("message","登录失败！请核对验证码！");
+            map.put("message", "登录失败！请核对验证码！");
             return map;
         }
     }
 
     /**
      * 用户修改
+     *
      * @param weChatUser
      * @param id
      * @return
      */
     @Override
     public int updateWeChatUser(WeChatUser weChatUser, String id) {
-       int weChatUserUpdate = weChatUserMapper.updateByPrimaryKeySelective(weChatUser);
-       if(weChatUserUpdate<0){
-           return ResultUtil.isFail;
-       }else{
-           return ResultUtil.isSuccess;
-       }
+        int weChatUserUpdate = weChatUserMapper.updateByPrimaryKeySelective(weChatUser);
+        if (weChatUserUpdate < 0) {
+            return ResultUtil.isFail;
+        } else {
+            return ResultUtil.isSuccess;
+        }
     }
 
     /**
      * 用户查询
+     *
      * @param telphone
      * @return
      */
     @Override
-    public Map<String,Object>  selectWeChatUser(String telphone) {
-        Map<String,Object> map = new HashMap<>();
+    public Map<String, Object> selectWeChatUser(String telphone) {
+        Map<String, Object> map = new HashMap<>();
         WeChatUser weChatUser = weChatUserMapper.selectByTelPhone(telphone);
-        if(weChatUser==null){
+        if (weChatUser == null) {
             map.put("status", "error");
             map.put("currentAuthority", "guest");
-            map.put("message","数据不存在");
+            map.put("message", "数据不存在");
             return map;
         }
         map.put("status", "ok");
-        map.put("message","查询成功");
-        map.put("weChatUser",weChatUser);
+        map.put("message", "查询成功");
+        map.put("weChatUser", weChatUser);
         return map;
     }
 
 
     /**
      * 设置过期时间五分钟
+     *
      * @param key
      */
-    private void expire(String key){
+    private void expire(String key) {
         Jedis jedis = new Jedis();
-        jedis.expire(key,300);
+        jedis.expire(key, 300);
     }
 
     @Override
@@ -185,35 +187,62 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     }
 
     @Override
-    public int  companyRegister(UseDepartmentRegister useDepartmentRegister) {
+    public int companyRegister(UseDepartmentRegister useDepartmentRegister) {
 
-        WeChatUser tempWeChatUser = weChatUserMapper.selectByTelPhone(useDepartmentRegister.getMobliePhone());
-        if(tempWeChatUser!=null){
-            return ResultUtil.isRepairCompany;
+        String rightCaptcha = stringRedisTemplate.opsForValue().get(useDepartmentRegister.getMobilePhone());
+        if (!useDepartmentRegister.getCaptcha().equals(rightCaptcha)) {
+            return ResultUtil.isCodeError;
         }
 
+        WeChatUser tempWeChatUser = weChatUserMapper.selectByTelPhone(useDepartmentRegister.getMobilePhone());
         UseDepartment useDepartment = useDepartmentDao.selectCompanyInfo(useDepartmentRegister);
-        if(useDepartment!=null&&useDepartment.getName()!=null){
-            String rightCaptcha = stringRedisTemplate.opsForValue().get(useDepartment.getLegalTelphone());
-            if(!useDepartmentRegister.getCaptcha().equals(rightCaptcha)){
-                return ResultUtil.isCodeError;
-            }
 
-            WeChatUser weChatUser =new WeChatUser();
-            weChatUser.setCreateTime(DateUtil.getCurrentTime());
-            weChatUser.setId(UUIDUtil.generate());
-            weChatUser.setTelphone(useDepartmentRegister.getMobliePhone());
-            weChatUser.setCompany(useDepartment.getId());
-            weChatUser.setCompanyName(useDepartment.getName());
-            weChatUser.setCompanyAccout(true);
-            int result =  weChatUserMapper.insertSelective(weChatUser);
-           if(result>0){
-               return ResultUtil.isSuccess;
-           }else {
-               return ResultUtil.isFail;
-           }
-        }
-        else {
+        if (useDepartment != null && useDepartment.getName() != null) {
+            if(tempWeChatUser==null) {
+                WeChatUser weChatUser = new WeChatUser();
+                weChatUser.setCreateTime(DateUtil.getCurrentTime());
+                weChatUser.setId(UUIDUtil.generate());
+                weChatUser.setTelphone(useDepartmentRegister.getMobilePhone());
+                weChatUser.setCompany(useDepartment.getId());
+                weChatUser.setCompanyName(useDepartment.getName());
+                weChatUser.setCompanyAccout(true);
+                int result = weChatUserMapper.insert(weChatUser);
+                if (result > 0) {
+                    return ResultUtil.isSuccess;
+                } else {
+                    return ResultUtil.isFail;
+                }
+            }else{
+                if(tempWeChatUser.isCompanyAccout()){
+                    return ResultUtil.isRepairCompany;
+                }else if(tempWeChatUser.getCompany()==null||tempWeChatUser.getCompany().equals("")){
+                    tempWeChatUser.setName(useDepartment.getName());
+                    tempWeChatUser.setCompany(useDepartment.getId());
+                    tempWeChatUser.setCompanyName(useDepartment.getName());
+                    tempWeChatUser.setCompanyAccout(true);
+                    int result = weChatUserMapper.updateByPrimaryKey(tempWeChatUser);
+                    if (result > 0) {
+                        return ResultUtil.isSuccess;
+                    } else {
+                        return ResultUtil.isFail;
+                    }
+                }else if(!tempWeChatUser.isCompanyAccout()&&tempWeChatUser.getCompany()!=null||tempWeChatUser.getCompany()!=""){
+                    if(tempWeChatUser.getCompany().equals(useDepartment.getFlag())) {
+                        tempWeChatUser.setCompanyAccout(true);
+                        int result = weChatUserMapper.updateByPrimaryKey(tempWeChatUser);
+                        if (result > 0) {
+                            return ResultUtil.isSuccess;
+                        } else {
+                            return ResultUtil.isFail;
+                        }
+                    }else {
+                        return ResultUtil.isBindingOtherCompay;
+                    }
+                }else {
+                    return ResultUtil.isError;
+                }
+            }
+        } else {
             return ResultUtil.isNoMatchUseDepartment;
         }
     }

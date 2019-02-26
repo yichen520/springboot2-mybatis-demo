@@ -212,9 +212,10 @@ public class WeChatSealServiceImp implements WeChatSealService {
         notify.setNotifyUser(userId);
         notify.setNotifyContent("您的"+seal.getSealName()+"编号"+seal.getSealCode()+"的印章请尽快备案");
         int notifyResult = notifyService.insertNotify(notify,user1);
-        if(notifyResult==ResultUtil.isFail){
-            return ResultUtil.isFail;
-        }
+
+//        if(notifyResult==ResultUtil.isFail){
+//            return ResultUtil.isFail;
+//        }
 
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
