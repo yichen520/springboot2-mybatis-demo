@@ -115,7 +115,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             SealVerificationPO sealVerificationPO =new SealVerificationPO();
             sealVerificationPO.setSeal(seal);
             String sealId = seal.getId();
-            SealVerification sealVerification = sealVerificationMapper.selectBySealId(sealId);
+            SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag(sealId,"1");
             if("1".equals(sealVerification.getRejectReason())) {
                 sealVerificationPO.setSealVerification(sealVerification);
                 sealVerificationPOS.add(sealVerificationPO);
