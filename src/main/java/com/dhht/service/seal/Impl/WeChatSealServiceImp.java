@@ -390,13 +390,14 @@ public class WeChatSealServiceImp implements WeChatSealService {
 
             }
 
-            //核验记录
-            SealVerification sealVerification = new SealVerification();
-            sealVerification.setId(UUIDUtil.generate());
-            sealVerification.setSealId(sealId);
-            sealVerification.setIsVerification(false);
-            sealVerification.setVerifyTypeName("0");
-            sealVerificationMapper.insertSelective(sealVerification);
+//            //核验记录
+//            SealVerification sealVerification = new SealVerification();
+//            sealVerification.setId(UUIDUtil.generate());
+//            sealVerification.setSealId(sealId);
+//            sealVerification.setIsVerification(false);
+//            sealVerification.setVerifyTypeName("0");
+////            sealVerification.setFlag("1");
+//            sealVerificationMapper.insertSelective(sealVerification);
 
 
             //经办人信息

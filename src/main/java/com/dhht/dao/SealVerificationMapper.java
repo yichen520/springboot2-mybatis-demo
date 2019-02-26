@@ -1,6 +1,7 @@
 package com.dhht.dao;
 
 import com.dhht.model.SealVerification;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,5 +20,5 @@ public interface SealVerificationMapper {
 
     SealVerification selectBySealId(String sealId);
 
-    SealVerification selectBySealIdAndFlag(String sealId,String flag);
+    SealVerification selectBySealIdAndFlag(@Param("sealId") String sealId,@Param("flag") String flag);
 }
