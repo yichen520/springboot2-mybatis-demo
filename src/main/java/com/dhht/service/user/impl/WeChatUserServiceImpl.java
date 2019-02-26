@@ -93,7 +93,7 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     public Map<String,Object> isLogin(String mobilePhone, String inputVerificationCode,HttpServletRequest request) {
         Map<String,Object> map = new HashMap<>();
         String verificationCode = stringRedisTemplate.opsForValue().get(mobilePhone);
-        if(verificationCode.equals(inputVerificationCode)){
+       if(verificationCode.equals(inputVerificationCode)){
             map.put("status", "ok");
             map.put("message","登录成功");
             map.put("mobilePhone",mobilePhone);

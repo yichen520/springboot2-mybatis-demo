@@ -1118,26 +1118,23 @@
             <if test="isPersonal !=null ">
                 AND is_personal =  #{isPersonal,jdbcType=BIT}
             </if>
-            <if test="isDeliver !=null ">
-                AND is_deliver =  #{isDeliver,jdbcType=BIT}
-            </if>
-            <if test="isLoss !=null ">
-                or is_loss =  #{isLoss,jdbcType=BIT}
-            </if>
-            <if test="isLogout !=null ">
-            AND is_logout =  #{isLogout,jdbcType=BIT}
-            </if>
             <if test="isApply !=null ">
                 AND is_apply =  #{isApply,jdbcType=BIT}
             </if>
             <if test="isCancel !=null">
-            AND is_cancel =  #{isCancel,jdbcType=BIT}
+                AND is_cancel =  #{isCancel,jdbcType=BIT}
             </if>
             <if test="isUpdate !=null">
                 AND is_update =  #{isUpdate,jdbcType=BIT}
             </if>
             <if test="isUndertake !=null ">
                 AND is_undertake =  #{isUndertake,jdbcType=BIT}
+            </if>
+            <if test="isDeliver !=null ">
+                AND is_deliver =  #{isDeliver,jdbcType=BIT}
+            </if>
+            <if test="isLogout !=null ">
+            AND is_logout =  #{isLogout,jdbcType=BIT}
             </if>
             <if test="useDepartmentCode !=null and useDepartmentCode !=''">
                 And use_department_code LIKE  "%"#{useDepartmentCode}"%"
@@ -1162,6 +1159,9 @@
             </if>
             <if test="sealTypeCode !=null and sealTypeCode !=''">
                 And seal_type_code LIKE  "%"#{sealTypeCode}"%"
+            </if>
+            <if test="isLoss !=null ">
+                and  is_loss =  #{isLoss,jdbcType=BIT}
             </if>
 
         </where>
@@ -1258,6 +1258,9 @@
       <if test="isCancel !=null ">
        AND is_cancel = #{isCancel,jdbcType=BIT}
       </if>
+        <if test="isApply !=null ">
+            AND is_apply =  #{isApply,jdbcType=BIT}
+        </if>
       <if test="isUpdate !=null ">
        AND is_update = #{isUpdate,jdbcType=BIT}
       </if>
@@ -1294,6 +1297,18 @@
       <if test="isLogout !=null ">
         AND is_logout = #{isLogout,jdbcType=BIT}
       </if>
+        <if test="isCancel !=null ">
+            AND is_cancel = #{isCancel,jdbcType=BIT}
+        </if>
+        <if test="isUpdate !=null ">
+            AND is_update = #{isUpdate,jdbcType=BIT}
+        </if>
+        <if test="isUndertake !=null ">
+            AND is_undertake = #{isUndertake,jdbcType=BIT}
+        </if>
+        <if test="isApply !=null ">
+            AND is_apply =  #{isApply,jdbcType=BIT}
+        </if>
       <if test="isUndertake !=null ">
         AND is_undertake = #{isUndertake,jdbcType=BIT}
       </if>
@@ -1373,7 +1388,7 @@
   </select>
 
     <select id="selectAllSealByLoginTelPhone" resultMap="BaseResultMap">
-    select  <include refid="Base_Column_List" /> from seal as s left join seal_agent as sa on s.agent_id=sa.id where telphone=#{telphone} or login_telphone=#{telphone}
+    select  *  from seal as s left join seal_agent as a on s.agent_id = a.id where telphone=#{telphone} or login_telphone=#{telphone}
     </select>
 
     <select id="sealList" parameterType="java.lang.String" resultMap="BaseResultMap">
