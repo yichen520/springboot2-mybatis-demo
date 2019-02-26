@@ -1229,10 +1229,13 @@
 
   <select id="selectSealByBADW"  parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
     select distinct <include refid="Base_Column_List" /> from seal
+
     <where>
+
       (
+        1=1
       <if test="isRecord !=null ">
-       is_record = #{isRecord,jdbcType=BIT}
+       and is_record = #{isRecord,jdbcType=BIT}
     </if>
       <if test="isMake !=null ">
         AND is_make = #{isMake,jdbcType=BIT}
@@ -1255,9 +1258,9 @@
       <if test="isCancel !=null ">
        AND is_cancel = #{isCancel,jdbcType=BIT}
       </if>
-        <if test="isApply !=null ">
-            AND is_apply =  #{isApply,jdbcType=BIT}
-        </if>
+      <if test="isApply !=null ">
+       AND is_apply =  #{isApply,jdbcType=BIT}
+      </if>
       <if test="isUpdate !=null ">
        AND is_update = #{isUpdate,jdbcType=BIT}
       </if>
@@ -1275,7 +1278,7 @@
       </if>)
       OR
       (
-      district_id = #{districtId}
+        1=1
       <if test="isRecord !=null ">
         AND is_record = #{isRecord,jdbcType=BIT}
       </if>
