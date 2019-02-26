@@ -971,15 +971,13 @@ public class SealServiceImpl implements SealService {
 
             sealVerification.setRejectReason("1");
         }
-        String Id = UUIDUtil.generate();
-        sealVerification.setId(Id);
         sealVerification.setIsVerification(true);
         sealVerification.setVerifyTypeName("-1");
         sealVerification.setSealId(sealId);
         sealVerification.setFlag("1");
         sealVerification.setVerificationDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
-        int insertSealVerification = sealVerificationMapper.insertSelective(sealVerification);
+        int insertSealVerification = sealVerificationMapper.updateBySealIdAndFlag(sealVerification);
         if (updateSeal > 0 && insertSealVerification > 0&& insertSealOperationRecord>0) {
             return ResultUtil.isSuccess;
         } else {
