@@ -33,9 +33,9 @@
     insert into wechat_user (id, `name`, gender, telphone,
       company, job, create_time, 
       image,company_name,is_company_accout,certificate_no)
-    values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{telphone,jdbcType=VARCHAR},
+    values ( #{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{telphone,jdbcType=VARCHAR},
       #{company,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{image,jdbcType=VARCHAR}), #{companyName,jdbcType=VARCHAR},  #{isCompanyAccout,jdbcType=BIT},#{certificateNo,jdbcType=VARCHAR}
+      #{image,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR},#{isCompanyAccout,jdbcType=BIT},#{certificateNo,jdbcType=VARCHAR})
   </insert>
 
   <insert id="insertSelective" parameterType="com.dhht.model.WeChatUser" >
