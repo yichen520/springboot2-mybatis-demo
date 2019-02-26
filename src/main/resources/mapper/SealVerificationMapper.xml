@@ -145,4 +145,32 @@
   <select id="selectBySealIdAndFlag" resultMap="BaseResultMap">
     select <include refid="Base_Column_List" /> from seal_verification where seal_id = #{sealId,jdbcType=CHAR} and flag = #{flag,jdbcType=CHAR}
   </select>
+
+  <update id="updateBySealIdAndFlag"  parameterType="com.dhht.model.SealVerification" >
+    update seal_verification
+    <set >
+      <if test="isVerification != null" >
+        is_verification = #{isVerification,jdbcType=BIT},
+      </if>
+      <if test="verifyTypeName != null" >
+        verify_type_name = #{verifyTypeName,jdbcType=CHAR},
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason = #{rejectReason,jdbcType=CHAR},
+      </if>
+      <if test="rejectRemark != null" >
+        reject_remark = #{rejectRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="verificationDate != null" >
+        verification_date = #{verificationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isReuploadData != null" >
+        is_reupload_data = #{isReuploadData,jdbcType=BIT},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag},
+      </if>
+    </set>
+    where seal_id = #{sealId} and flag = "1"
+  </update>
 </mapper>

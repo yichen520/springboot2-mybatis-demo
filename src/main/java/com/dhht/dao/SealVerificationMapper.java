@@ -21,4 +21,6 @@ public interface SealVerificationMapper {
     SealVerification selectBySealId(String sealId);
 
     SealVerification selectBySealIdAndFlag(@Param("sealId") String sealId,@Param("flag") String flag);
+
+    int updateBySealIdAndFlag(SealVerification record);
 }
