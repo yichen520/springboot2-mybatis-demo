@@ -22,4 +22,6 @@ public interface OrderService {
     int updatePayStatus(String payWay,String id,String payJsOrderId);
 
     int cancelOrder(String id, WeChatUser weChatUser);
+
+    SealPayOrder selectBySealId(String sealId);
 }

@@ -224,6 +224,12 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public SealPayOrder selectBySealId(String sealId) {
+        SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(sealId);
+        return sealPayOrder;
+    }
+
     public boolean refundOrderToPayJs(String payJsOrderId) {
         try {
             Map<String, String> map = new HashMap<>();
