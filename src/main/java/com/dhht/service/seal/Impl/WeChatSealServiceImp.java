@@ -282,16 +282,15 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 seal1.setLogoutPersonId(sealAgentId1);
                 seal1.setIsLogout(true);
                 seal1.setLogoutDate(DateUtil.getCurrentTime());
+                seal1.setSealStatusCode("06");
                 SealOperationRecord sealOperationRecord = new SealOperationRecord();
                 sealOperationRecord.setId(UUIDUtil.generate());
                 sealOperationRecord.setSealId(seal1.getId());
                 sealOperationRecord.setEmployeeId(weChatUser.getCertificateNo());  //小程序端的变更操作人就是小程序的登录用户
                 sealOperationRecord.setEmployeeName(weChatUser.getName());
                 sealOperationRecord.setOperateType("07");
-                sealOperationRecord.setEmployeeCode(weChatUser.getTelphone());
                 sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
                 int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord);
-
                 int sealUpdate = sealDao.updateByPrimaryKeySelective(seal1);
                 if(sealOperationRecordInsert<0 && sealUpdate<0&&sealAgentInsert<0){
                     return ResultUtil.isError;
