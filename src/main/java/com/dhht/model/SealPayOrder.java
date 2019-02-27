@@ -9,6 +9,8 @@ public class SealPayOrder {
 
     private String id;
 
+    private String orderCode;
+
     private String sealId;
 
     private Boolean isPay;

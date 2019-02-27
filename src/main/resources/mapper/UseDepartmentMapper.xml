@@ -313,16 +313,19 @@
         from use_department where `code` =#{code} and `name` =#{name}
         and legal_id=#{legalId} and legal_name = #{legalName} and is_delete = 0 limit 1
     </select>
+
     <select id="selectCompanyInfo" resultMap="BaseResultMap" parameterType="com.dhht.model.UseDepartmentRegister" >
         select <include refid="Base_Column_List"/>
         from use_department where `code` =#{code} and `name` =#{name}
         and legal_id=#{legalId} and legal_name = #{legalName} and is_delete = 0 limit 1
     </select>
+
     <select id="selectByNameAndCode" resultMap="BaseResultMap">
         select id,code,`name`,legal_name from use_department
         where is_delete = 0 and department_status = "01"
         <if test="code !=null and code !=''">
         and code like "%"#{code}"%" or `name` like "%"#{code}"%"
         </if>
+        and is_delete = 0
     </select>
 </mapper>

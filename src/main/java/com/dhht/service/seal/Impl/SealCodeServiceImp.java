@@ -112,7 +112,7 @@ public class SealCodeServiceImp implements  SealCodeService {
      * @return
      */
     @Override
-    public String getMaxSealCode(String districtId){
+    public synchronized String getMaxSealCode(String districtId){
         String num = "";
         Jedis jedis = new Jedis();
         if(redisTemplate.hasKey(districtId)){

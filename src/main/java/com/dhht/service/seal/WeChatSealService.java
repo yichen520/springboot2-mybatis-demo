@@ -40,7 +40,6 @@ public interface WeChatSealService {
     //印章更换的时候查询印章
     int isHaveSeal(String useDepartmentCode,Seal seal);
 
-
     //判断是否资料更新
     SealVerificationPO isSealVerification(String sealId);
 

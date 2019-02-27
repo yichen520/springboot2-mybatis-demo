@@ -19,7 +19,7 @@ public interface UseDepartmentService {
 
     JsonObjectBO update(UseDepartment useDepartment,User updateUser);
 
-    int updateFromWeChatAPP(UseDepartment useDepartment,User updateUser);
+    int updateFromWeChatAPP(UseDepartment useDepartment,WeChatUser updateUser);
 
     JsonObjectBO find(String localDistrictId,String code,String name,String districtId,String departmentStatus,int pageNum, int pageSize);
 

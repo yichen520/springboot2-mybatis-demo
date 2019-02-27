@@ -212,9 +212,10 @@ public class WeChatSealServiceImp implements WeChatSealService {
         notify.setNotifyUser(userId);
         notify.setNotifyContent("您的"+seal.getSealName()+"编号"+seal.getSealCode()+"的印章请尽快备案");
         int notifyResult = notifyService.insertNotify(notify,user1);
-        if(notifyResult==ResultUtil.isFail){
-            return ResultUtil.isFail;
-        }
+
+//        if(notifyResult==ResultUtil.isFail){
+//            return ResultUtil.isFail;
+//        }
 
         SealAgent sealAgent = new SealAgent();
         String saId = UUIDUtil.generate();
@@ -240,15 +241,10 @@ public class WeChatSealServiceImp implements WeChatSealService {
         seal.setGetterId(saId);
         int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal);
 
+        SealPayOrder sealOrder = orderService.selectBySealId(seal.getId());
+        orderService.updatePayStatus(sealOrder.getPayWay(),sealOrder.getId(),sealOrder.getPayJsOrderId());  //订单更新支付状态
 
 
-        //更新支付状态
-        SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal.getId());
-        if (sealPayOrder == null){
-            return  ResultUtil.isFail;
-        }
-//        sealPayOrder.setIsPay(true);
-//        sealPayOrderMapper.updateByPrimaryKeySelective(sealPayOrder);
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
             ArrayList<String> params = new ArrayList<String>();
             params.add(seal.getUseDepartmentName());
