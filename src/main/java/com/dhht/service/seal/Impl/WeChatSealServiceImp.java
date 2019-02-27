@@ -274,19 +274,26 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 if(!seal1.getIsApply()){
                     return ResultUtil.isNoApply;
                 }
-                seal1.setLogoutPersonId(sealAgentId);
+                SealAgent sealAgent = sealAgentMapper.selectByPrimaryKey(sealAgentId);
+                String sealAgentId1 = UUIDUtil.generate();
+                sealAgent.setId(sealAgentId1);
+                sealAgent.setBusinessType("03");
+                int sealAgentInsert = sealAgentMapper.insert(sealAgent);
+                seal1.setLogoutPersonId(sealAgentId1);
                 seal1.setIsLogout(true);
                 seal1.setLogoutDate(DateUtil.getCurrentTime());
                 SealOperationRecord sealOperationRecord = new SealOperationRecord();
                 sealOperationRecord.setId(UUIDUtil.generate());
                 sealOperationRecord.setSealId(seal1.getId());
-                sealOperationRecord.setEmployeeId(weChatUser.getId());  //小程序端的变更操作人就是小程序的登录用户
+                sealOperationRecord.setEmployeeId(weChatUser.getCertificateNo());  //小程序端的变更操作人就是小程序的登录用户
                 sealOperationRecord.setEmployeeName(weChatUser.getName());
                 sealOperationRecord.setOperateType("07");
+                sealOperationRecord.setEmployeeCode(weChatUser.getTelphone());
                 sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
                 int sealOperationRecordInsert = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+
                 int sealUpdate = sealDao.updateByPrimaryKeySelective(seal1);
-                if(sealOperationRecordInsert<0 && sealUpdate<0){
+                if(sealOperationRecordInsert<0 && sealUpdate<0&&sealAgentInsert<0){
                     return ResultUtil.isError;
                 }else{
                     return ResultUtil.isSuccess;
