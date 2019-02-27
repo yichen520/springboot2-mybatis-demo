@@ -116,13 +116,11 @@ public class UseInfoController extends WeChatBaseController {
     }
 
     @RequestMapping("/updateCompany")
-    public JsonObjectBO updateCompany(@RequestBody UseDepartment useDepartment) {
+    public JsonObjectBO updateCompany(@RequestBody UseDepartment useDepartment,HttpServletResponse httpServletResponse) {
         try {
+            init(httpServletRequest,httpServletResponse);
             WeChatUser weChatUser = currentUser();
-            User user = new User();
-            user.setId(weChatUser.getId());
-            user.setRealName(weChatUser.getName());
-            int result =  useDepartmentService.updateFromWeChatAPP(useDepartment, user);
+            int result =  useDepartmentService.updateFromWeChatAPP(useDepartment, weChatUser);
             return ResultUtil.getResult(result);
         } catch (Exception e) {
             return JsonObjectBO.exception("企业变更异常");

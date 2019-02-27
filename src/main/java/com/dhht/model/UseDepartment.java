@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by 崔杨 on 2018/6/13.
  */
 @Data
-public class UseDepartment {
+public class UseDepartment implements  Cloneable{
     private String id;
     @EntityComment("使用单位编码")
     private String code;   //印章使用单位编码
@@ -87,4 +87,12 @@ public class UseDepartment {
     private Date updateTime;
     private String foundDateFormat;
 
+    @Override
+    public Object clone()  {
+        try {
+            return super.clone();
+        }catch (Exception e) {
+            return null;
+        }
+    }
 }
