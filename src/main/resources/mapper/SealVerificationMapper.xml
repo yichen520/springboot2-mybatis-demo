@@ -173,4 +173,8 @@
     </set>
     where seal_id = #{sealId} and flag = "1"
   </update>
+  
+  <select id="selectBySealIdAndReason" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from seal_verification where seal_id = #{id,jdbcType=CHAR} and reject_reason = #{rejectReason,jdbcType=CHAR} and flag = 1
+  </select>
 </mapper>

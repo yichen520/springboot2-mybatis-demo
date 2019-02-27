@@ -1273,6 +1273,10 @@ public class SealServiceImpl implements SealService {
 //        SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
 //        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode, "06");
+        if(seal.getIsCancel()){
+            SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndReason(id,"3");
+            sealVo.setSealVerifications(sealVerification);
+        }
         if (microsealMaterial == null) {
             sealVo.setMicromoulageImageId("");
         } else {

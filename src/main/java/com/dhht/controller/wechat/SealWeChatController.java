@@ -146,7 +146,7 @@ public class SealWeChatController extends WeChatBaseController {
         init(httpServletRequest, httpServletResponse);
         WeChatUser weChatUser = currentUser();
         String sealId = (String) map.get("sealId");
-        String sealAgentId = (String) map.get("sealAgentId");
+            String sealAgentId = (String) map.get("sealAgentId");
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         try {
             int a = weChatSealService.cachetChange(sealId,sealAgentId,weChatUser);

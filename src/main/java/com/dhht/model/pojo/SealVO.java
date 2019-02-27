@@ -43,4 +43,6 @@ public class SealVO  {
 
     private Makedepartment makeDepartment;
 
+    private SealVerification sealVerifications;
+
 }
