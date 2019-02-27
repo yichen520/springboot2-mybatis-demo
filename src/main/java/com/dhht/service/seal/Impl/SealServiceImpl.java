@@ -953,14 +953,14 @@ public class SealServiceImpl implements SealService {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
-        int insertSealOperationRecord = insertSealOperationRecord(employee,"10",sealId);
+
         if(sealVerification.getRejectReason().equals("3")){  //退款
             orderService.updateRefundStatus("1",sealId);
             seal.setIsCancel(true);
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("10"); //取消章
             sealVerification.setRejectReason("3");
-
+            int insertSealOperationRecord = insertSealOperationRecord(employee,"10",sealId); //印章不做退回操作
         }else {    //资料问题
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
@@ -968,7 +968,7 @@ public class SealServiceImpl implements SealService {
             seal.setUpdateDate(DateUtil.getCurrentTime());
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("11");
-
+            int insertSealOperationRecord = insertSealOperationRecord(employee,"11",sealId); //印章资料问题退回操作
             sealVerification.setRejectReason("1");
         }
         sealVerification.setIsVerification(true);
@@ -978,7 +978,7 @@ public class SealServiceImpl implements SealService {
         sealVerification.setVerificationDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
         int insertSealVerification = sealVerificationMapper.updateBySealIdAndFlag(sealVerification);
-        if (updateSeal > 0 && insertSealVerification > 0&& insertSealOperationRecord>0) {
+        if (updateSeal > 0 && insertSealVerification > 0) {
             return ResultUtil.isSuccess;
         } else {
             return ResultUtil.isFail;

@@ -126,7 +126,7 @@
     <if test="operateType !=null and operateType!=''">
       and operate_type = #{operateType}
     </if>
-
+    order by operate_time
   </select>
 
 </mapper>
