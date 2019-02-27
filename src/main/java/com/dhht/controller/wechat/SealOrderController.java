@@ -75,5 +75,4 @@ public class SealOrderController extends WeChatBaseController {
         }
     }
 
-
 }
