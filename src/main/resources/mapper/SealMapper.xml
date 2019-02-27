@@ -1388,7 +1388,7 @@
   </select>
 
     <select id="selectAllSealByLoginTelPhone" resultMap="BaseResultMap">
-    select   s.*  from seal as s left join seal_agent as a on s.agent_id = a.id where telphone=#{telphone} or login_telphone=#{telphone}
+    select   s.*  from seal as s left join seal_agent as a on s.agent_id = a.id where s.is_undertake=0 and (a.telphone=#{telphone} or a.login_telphone=#{telphone})
     </select>
 
     <select id="sealList" parameterType="java.lang.String" resultMap="BaseResultMap">
