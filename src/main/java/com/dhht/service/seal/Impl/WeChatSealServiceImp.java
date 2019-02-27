@@ -278,6 +278,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 String sealAgentId1 = UUIDUtil.generate();
                 sealAgent.setId(sealAgentId1);
                 sealAgent.setBusinessType("03");
+                sealAgent.setFlag("");
                 int sealAgentInsert = sealAgentMapper.insert(sealAgent);
                 seal1.setLogoutPersonId(sealAgentId1);
                 seal1.setIsLogout(true);
