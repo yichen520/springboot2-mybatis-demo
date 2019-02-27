@@ -111,15 +111,19 @@ public class WeChatSealServiceImp implements WeChatSealService {
     public List<SealVerificationPO> sealAndVerification(String telphone) {
         List<Seal> seals = sealDao.selectAllSealByLoginTelPhone(telphone); //该经办人做的所有的章
         List<SealVerificationPO> sealVerificationPOS = new ArrayList<>();
-        for(Seal seal:seals){
-            SealVerificationPO sealVerificationPO =new SealVerificationPO();
+        for(Seal seal:seals) {
+            SealVerificationPO sealVerificationPO = new SealVerificationPO();
             sealVerificationPO.setSeal(seal);
             String sealId = seal.getId();
-            SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag(sealId,"1");
-            if("1".equals(sealVerification.getRejectReason())&& sealVerification!=null) {
-                sealVerificationPO.setSealVerification(sealVerification);
-                sealVerificationPOS.add(sealVerificationPO);
+            SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag(sealId, "1");
+            if (sealVerification == null) {
+            } else {
+                if ("1".equals(sealVerification.getRejectReason())) {
+                    sealVerificationPO.setSealVerification(sealVerification);
+                    sealVerificationPOS.add(sealVerificationPO);
+                }
             }
+
         }
         return sealVerificationPOS;
     }
