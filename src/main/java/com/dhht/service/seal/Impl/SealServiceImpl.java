@@ -436,7 +436,10 @@ public class SealServiceImpl implements SealService {
                 sealPayOrder.setSealId(sealId);
                 sealPayOrder.setPayDate(DateUtil.getCurrentTime());
                 sealPayOrder.setPayWay("到店支付");
+                sealPayOrder.setRefundStatus("-1");
+                sealPayOrder.setPayAccout("价格到店商议");
                 sealPayOrder.setExpressWay(false);
+                sealPayOrder.setIsPay(true);
                 orderService.insertOrder(sealPayOrder);
 
 
