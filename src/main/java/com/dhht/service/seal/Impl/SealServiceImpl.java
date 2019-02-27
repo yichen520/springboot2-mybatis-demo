@@ -264,6 +264,7 @@ public class SealServiceImpl implements SealService {
 //                Seal seal1 = new Seal();
 //                String sealcode = SealSerialNum(districtId);
                 String sealcode1 = sealCodeService.getMaxSealCode(districtId);
+                System.out.println(sealcode1);
                 String serial = "00000000";
                 String sealcode = districtId + serial.substring(0, serial.length() - sealcode1.length()) + sealcode1;
 

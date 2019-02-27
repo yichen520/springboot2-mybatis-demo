@@ -120,7 +120,7 @@
         is_reupload_data = #{isReuploadData,jdbcType=BIT},
       </if>
       <if test="flag != null" >
-        flag = #{falg},
+        flag = #{flag},
       </if>
     </set>
     where id = #{id,jdbcType=CHAR}

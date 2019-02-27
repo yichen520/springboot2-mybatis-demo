@@ -23,10 +23,12 @@ public interface WeChatSealService {
 
     MakeDepartmentSealPrice sealPrice(Map map);
 
+
     List<Seal> sealProgress(Map map);
 
     List<Seal> portalSealInfoByCode(String cdode);
 
+    //进度查询列表
     List<Seal> sealListForWeChat(String telphone);
 
     //查询印章code
