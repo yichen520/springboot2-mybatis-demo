@@ -144,10 +144,14 @@ public class WeChatSealServiceImp implements WeChatSealService {
         UseDepartment useDepartment = useDepartmentService.selectByCode(seal.getUseDepartmentCode());
         MakeDepartmentSimple makedepartmentSimple = makeDepartmentService.selectByDepartmentCode(seal.getMakeDepartmentCode());
         RecordDepartment recordDepartment = recordDepartmentService.selectByCode(seal.getMakeDepartmentCode());
+        List<SealOperationRecord> sealOperationRecords = sealOperationRecordMapper.selectSealOperationRecord(id,"12");
+
+
         SealVerificationPO sealVerificationPO = new SealVerificationPO();
         sealVerificationPO.setSeal(seal);
         sealVerificationPO.setSealVerification(sealVerification);
         sealVerificationPO.setSealAgent(list);
+        sealVerificationPO.setSealOperationRecord(sealOperationRecords.get(0));
         sealVerificationPO.setMakeDepartmentSimple(makedepartmentSimple);
         sealVerificationPO.setRecordDepartment(recordDepartment);
         sealVerificationPO.setUseDepartment(useDepartment);

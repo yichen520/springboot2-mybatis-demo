@@ -13,4 +13,5 @@ public class SealVerificationPO {
     private UseDepartment useDepartment;
     private MakeDepartmentSimple makeDepartmentSimple;
     private RecordDepartment recordDepartment;
+    private SealOperationRecord sealOperationRecord;
 }

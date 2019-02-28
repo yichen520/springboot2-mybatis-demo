@@ -298,27 +298,6 @@ public class SealCountServiceImp implements SealCuontService {
                     if (sealTypeCodes != null && sealTypeCodes.size() != 0) {
                         for (String sealTypeCode1 : sealTypeCodes) {
                             if (sealTypeCode.equals(sealTypeCode1)) {
-//                                String sealType = "";
-//                                switch (sealTypeCode) {
-//                                    case "01":
-//                                        sealType = "单位专用章";
-//                                        break;
-//                                    case "02":
-//                                        sealType = "财务专用章";
-//                                        break;
-//                                    case "03":
-//                                        sealType = "税务专用章";
-//                                        break;
-//                                    case "04":
-//                                        sealType = "合同专用章";
-//                                        break;
-//                                    case "05":
-//                                        sealType = "法人代表人名章";
-//                                        break;
-//                                    case "06":
-//                                        sealType = "其他类型印章";
-//                                        break;
-//                                }
                                 String sealType = new SealServiceImpl().chooseType(sealTypeCode);
                                 SealCount Num = getStatus(makeDepartmentCode, sealTypeCode, startTime, endTime);
                                 newSealNum = Num.getNewSealNum();
@@ -388,27 +367,6 @@ public class SealCountServiceImp implements SealCuontService {
 
                     if (sealTypeCodes!=null&&sealTypeCodes.size()!=0 ) {
                         for (String sealTypeCode : sealTypeCodes) {
-//                            String sealType = "";
-//                            switch (sealTypeCode) {
-//                                case "01":
-//                                    sealType = "单位专用章";
-//                                    break;
-//                                case "02":
-//                                    sealType = "财务专用章";
-//                                    break;
-//                                case "03":
-//                                    sealType = "税务专用章";
-//                                    break;
-//                                case "04":
-//                                    sealType = "合同专用章";
-//                                    break;
-//                                case "05":
-//                                    sealType = "法人代表人名章";
-//                                    break;
-//                                case "06":
-//                                    sealType = "其他类型印章";
-//                                    break;
-//                            }
                             String sealType = new SealServiceImpl().chooseType(sealTypeCode);
 
                             SealCount Num = getStatusAndDistrictId(districtchilrenId.getDistrictId(), sealTypeCode, startTime, endTime);
