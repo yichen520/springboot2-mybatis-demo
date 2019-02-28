@@ -921,9 +921,8 @@ public class SealServiceImpl implements SealService {
         //印章操作
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
-        int insertSealOperationRecord3= insertSealOperationRecord(employee,"11",sealId);
-        int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);
-        int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId);
+        int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);  //承接相当于已经备案  申请操作人
+        int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId); //承接操作人
         orderService.updateRefundStatus("-1",sealId);
         if (result == 1 && insertSealOperationRecord1 == ResultUtil.isSuccess &&insertSealOperationRecord2 == ResultUtil.isSuccess) {
             return ResultUtil.isSuccess;
@@ -971,7 +970,7 @@ public class SealServiceImpl implements SealService {
             seal.setUpdateDate(DateUtil.getCurrentTime());
             seal.setCancelDate(DateUtil.getCurrentTime());
             seal.setSealStatusCode("11");
-            int insertSealOperationRecord = insertSealOperationRecord(employee,"11",sealId); //印章资料问题退回操作
+            int insertSealOperationRecord = insertSealOperationRecord(employee,"12",sealId); //印章资料问题退回操作
             sealVerification.setRejectReason("1");
         }
         sealVerification.setIsVerification(true);
@@ -1219,6 +1218,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public SealVO selectDetailById(String id) {
         Seal seal = sealDao.selectByPrimaryKey(id);
+        List<SealVerification> sealVerifications = new ArrayList<>();
         String useDepartmentCode = seal.getUseDepartmentCode();
         String makeDepartmentCode = seal.getMakeDepartmentCode();
         UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
@@ -1273,12 +1273,16 @@ public class SealServiceImpl implements SealService {
         sealVo.setMakeDepartment(makedepartment);
         sealVo.setUseDepartment(useDepartment);
         sealVo.setSealOperationRecords(sealOperationRecordMapper.selectSealOperationRecord(id,null));
-//        SealOperationRecord sealOperationRecord = sealDao.selectOperationRecordByCode(id);   //操作记录
-//        SealMaterial sealMaterial = sealDao.selectSealMaterial(sealCode,"04");
+        SealVerification sealVerification1 = sealVerificationMapper.selectBySealIdAndFlag(id,"2");
+        if(sealVerification1!=null){
+            sealVerifications.add(sealVerification1);
+            sealVo.setSealVerifications(sealVerifications);
+        }
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode, "06");
         if(seal.getIsCancel()){
             SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndReason(id,"3");
-            sealVo.setSealVerifications(sealVerification);
+            sealVerifications.add(sealVerification);
+            sealVo.setSealVerifications(sealVerifications);
         }
         if (microsealMaterial == null) {
             sealVo.setMicromoulageImageId("");
@@ -1405,17 +1409,30 @@ public class SealServiceImpl implements SealService {
         Seal seal = sealDao.selectByPrimaryKey(id);
         String makeDepartmentCode = seal.getMakeDepartmentCode();
         MakeDepartmentSimple makeDepartmentSimple = makeDepartmentService.selectByDepartmentCode(makeDepartmentCode);
-        SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag        (id,"2");
+        SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndFlag(id,"2");
         String telphone = user.getTelphone();
         RecordDepartment recordDepartment = recordDepartmentService.selectByPhone(telphone);
 //        Employee employee = employeeService.selectByPhone(telphone);
+        if(sealVerification!=null) {
+            sealVerification.setRejectReason(rejectReason);
+            sealVerification.setRejectRemark(rejectRemark);
+            sealVerification.setVerifyTypeName(verify_type_name);
+            sealVerification.setVerificationDate(DateUtil.getCurrentTime());
+            sealVerification.setFlag("2");
+            int updateVerifySeal = sealVerificationMapper.updateByPrimaryKeySelective(sealVerification);
+        }else{
+            SealVerification sealVerification1 = new SealVerification();
+            sealVerification1.setId(UUIDUtil.generate());
+            sealVerification1.setSealId(id);
+            sealVerification1.setIsVerification(true);
+            sealVerification1.setVerifyTypeName(verify_type_name);
+            sealVerification1.setRejectReason(rejectReason);
+            sealVerification1.setRejectRemark(rejectRemark);
+            sealVerification1.setVerificationDate(DateUtil.getCurrentTime());
+            sealVerification1.setFlag("2");
+            int insertVerifySeal = sealVerificationMapper.insertSelective(sealVerification1);
 
-        sealVerification.setRejectReason(rejectReason);
-        sealVerification.setRejectRemark(rejectRemark);
-        sealVerification.setVerifyTypeName(verify_type_name);
-        sealVerification.setVerificationDate(DateUtil.getCurrentTime());
-        sealVerification.setFlag("2");
-        int updateVerifySeal = sealVerificationMapper.updateByPrimaryKeySelective(sealVerification);
+        }
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
@@ -1426,7 +1443,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeId(recordDepartment.getCertificateNo());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
-        if(updateVerifySeal<0||insertSealOperationRecord<0){
+        if(insertSealOperationRecord<0){
             return ResultUtil.isFail;
         }else{
             if(rejectRemark.equals("2")){ //如果印章问题  直接给制作单位发短信
