@@ -1369,7 +1369,7 @@
 
   <select id="sealListOfDateUpdate" resultMap="BaseResultMap">
       SELECT
-      <include refid="Base_Column_List" /> from seal a join seal_verification sv on a.id=sv.seal_id  AND sv.flag="1" and a.is_undertake=false order by record_date desc
+      <include refid="Base_Column_List" /> from seal a join seal_verification sv on a.id=sv.seal_id  AND sv.flag="1" and a.is_undertake=false order by record_date 
   </select>
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type="01"
