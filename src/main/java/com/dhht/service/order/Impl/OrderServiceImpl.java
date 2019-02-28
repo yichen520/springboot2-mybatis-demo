@@ -237,7 +237,6 @@ public class OrderServiceImpl implements OrderService {
             String md5 = SignUtil.sign(map);
             map.put("sign", md5.toUpperCase());
             String result = HttpInvoker.readContentFromPost("https://payjs.cn/api/refund", map);
-            System.out.println(result);
             JSONObject jsonObject = JSONObject.parseObject(result);
             String returnCode = jsonObject.getString("return_code");
             if (returnCode.equals("1")) {

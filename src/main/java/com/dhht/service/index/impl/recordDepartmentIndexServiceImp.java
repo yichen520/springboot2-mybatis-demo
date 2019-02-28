@@ -61,7 +61,6 @@ public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexSer
                 }
             }
         }
-       // return result;
         return sortList(result);
     }
 
@@ -74,9 +73,15 @@ public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexSer
     public List<IndexCount> polyline(String districtId) {
         districtId = StringUtil.getDistrictId(districtId);
         List<IndexCount> result = new ArrayList<>();
-        int month = getMonth();
+        int month = getMonthORYear(Calendar.MONTH)+1;
+        int year = getMonthORYear(Calendar.YEAR);
+        for(Integer i = month+1;i<=12;i++){
+            int value = sealDao.indexCountPolyline(year-1,i, districtId);
+            IndexCount indexCount = new IndexCount(i.toString(), value);
+            result.add(indexCount);
+        }
         for (Integer i = 1; i <= month; i++) {
-            int value = sealDao.indexCountPolyline(i, districtId);
+            int value = sealDao.indexCountPolyline(year,i, districtId);
             IndexCount indexCount = new IndexCount(i.toString(), value);
             result.add(indexCount);
         }
@@ -164,13 +169,9 @@ public class recordDepartmentIndexServiceImp implements RecordDepartmentIndexSer
         return indexCounts;
     }
 
-    /**
-     * 获取当前月
-     * @return
-     */
-    public int getMonth() {
-        Date date = new Date();
-        return date.getMonth() + 1;
+    public int getMonthORYear(Integer i){
+        Calendar calendar = Calendar.getInstance();
+         return calendar.get(i);
     }
 
     /**
