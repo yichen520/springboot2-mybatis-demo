@@ -1503,38 +1503,38 @@ SELECT
   </select>
   
   <select id="indexCountSum" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%'
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' and is_apply = true
   </select>
   
   <select id="indexCountAdd" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(apply_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')  and is_apply = true
   </select>
 
   <select id="indexCountDel" parameterType="java.lang.String" resultType="java.lang.Integer">
-    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') AND is_logout = 1
+    SELECT COUNT(id) from seal WHERE district_id LIKE '${districtId}%' AND date_format(apply_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') AND is_logout = 1
   </select>
   
   <select id="indexCountSealByDepartment" resultMap="indexCountResultMap">
-    select make_department_code, count(id) from seal GROUP BY make_department_code desc
+    select make_department_code, count(id) from seal where is_apply = true GROUP BY make_department_code desc
   </select>
 
   <select id="indexCountPolyline" resultType="java.lang.Integer" parameterType="java.lang.Object">
-    select count(seal_code) from seal where MONTH(record_date) = #{month} and district_id LIKE '${districtId}%'
+    select count(seal_code) from seal where YEAR (apply_date)= #{year} and MONTH (apply_date) = #{month} and district_id LIKE '${districtId}%' and is_apply = true
   </select>
 
   <select id="indexCountPieChart" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
+    SELECT COUNT(id) FROM  seal where make_department_code = #{makeDepartmentCode} and seal_type_code = #{sealTypeCode} and date_format(apply_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') and is_apply = true
   </select>
   
   <select id="indexCountAllSealByMakeDepartment" resultType="java.lang.Integer" parameterType="java.lang.String">
-    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')
+    SELECT COUNT(id) FROM seal where make_department_code = #{makeDepartmentCode} AND date_format(apply_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') and is_apply = true
   </select>
   
   <select id="indexCountSealTypeByMakeDepartment" resultMap="indexSealTypeResultMap" parameterType="java.lang.String">
-    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(record_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m') GROUP BY seal_type_code
+    SELECT id,seal_type_code FROM seal where make_department_code = #{makeDepartmentCode}  AND date_format(apply_date,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 0 MONTH),'%Y-%m')  and is_apply = true GROUP BY seal_type_code
   </select>
     <select id="countSealByMonthAndMakeDepartment" parameterType="java.lang.String" resultType="java.lang.Integer">
-SELECT COUNT(1)   FROM seal where make_department_code = #{makeDepartmentCode} and   DATE_FORMAT( make_date, '%Y-%m' ) = DATE_FORMAT( CURDATE() , '%Y-%m' )
+SELECT COUNT(1)   FROM seal where make_department_code = #{makeDepartmentCode} and   DATE_FORMAT( apply_date, '%Y-%m' ) = DATE_FORMAT( CURDATE() , '%Y-%m' )  and is_apply = true
     </select>
 
 </mapper>
