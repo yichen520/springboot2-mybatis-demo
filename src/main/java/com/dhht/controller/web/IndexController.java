@@ -7,6 +7,7 @@ import com.dhht.model.IndexCount;
 import com.dhht.model.IndexOverview;
 import com.dhht.model.Seal;
 import com.dhht.model.User;
+import com.dhht.model.pojo.SealDTO;
 import com.dhht.service.index.EmployeeIndexService;
 import com.dhht.service.index.RecordDepartmentIndexService;
 import com.dhht.service.seal.SealService;
@@ -126,4 +127,28 @@ public class IndexController {
             return JsonObjectBO.exception("查询印章列表失败");
         }
     }
+
+    /**
+     * 待承接列表
+     */
+    @RequestMapping("/sealUnderTakeIndex")
+    public JsonObjectBO sealUnderTake(HttpServletRequest httpServletRequest, @RequestBody SealDTO sealDTO) {
+        JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
+        User user = (User) httpServletRequest.getSession(true).getAttribute("user");
+
+        int pageNum = sealDTO.getPageNum();
+        int pageSize = sealDTO.getPageSize();
+        try {
+            PageInfo<Seal> seal = sealService.sealInfo(user, null, null, "08", pageNum, pageSize, null, null, null);
+            jsonObject.put("seal", seal);
+            jsonObjectBO.setData(jsonObject);
+            jsonObjectBO.setCode(1);
+            jsonObjectBO.setMessage("查询成功");
+            return jsonObjectBO;
+        } catch (Exception e) {
+            return JsonObjectBO.exception("查询印章列表失败");
+        }
+    }
+
 }
