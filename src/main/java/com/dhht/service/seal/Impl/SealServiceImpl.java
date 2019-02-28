@@ -1218,7 +1218,6 @@ public class SealServiceImpl implements SealService {
     @Override
     public SealVO selectDetailById(String id) {
         Seal seal = sealDao.selectByPrimaryKey(id);
-        List<SealVerification> sealVerifications = new ArrayList<>();
         String useDepartmentCode = seal.getUseDepartmentCode();
         String makeDepartmentCode = seal.getMakeDepartmentCode();
         UseDepartment useDepartment = useDepartmentService.selectByCode(useDepartmentCode);
@@ -1275,14 +1274,12 @@ public class SealServiceImpl implements SealService {
         sealVo.setSealOperationRecords(sealOperationRecordMapper.selectSealOperationRecord(id,null));
         SealVerification sealVerification1 = sealVerificationMapper.selectBySealIdAndFlag(id,"2");
         if(sealVerification1!=null){
-            sealVerifications.add(sealVerification1);
-            sealVo.setSealVerifications(sealVerifications);
+            sealVo.setSealVerifications(sealVerification1);
         }
         SealMaterial microsealMaterial = sealDao.selectSealMaterial(sealCode, "06");
         if(seal.getIsCancel()){
             SealVerification sealVerification = sealVerificationMapper.selectBySealIdAndReason(id,"3");
-            sealVerifications.add(sealVerification);
-            sealVo.setSealVerifications(sealVerifications);
+            sealVo.setSealVerifications(sealVerification);
         }
         if (microsealMaterial == null) {
             sealVo.setMicromoulageImageId("");
