@@ -173,11 +173,11 @@ public class SealCountServiceImp implements SealCuontService {
      * @param endTime
      * @return
      */
-    public SealCount getStatus(String makeDepartmentCode, String sealTypeCode, String startTime, String endTime) {
+    public SealCount getStatus(String districtId,String makeDepartmentCode, String sealTypeCode, String startTime, String endTime) {
 
-        int newSealNum = sealDao.countAddSeal(makeDepartmentCode, sealTypeCode, startTime, endTime);
-        int lossSealNum = sealDao.countLossSeal(makeDepartmentCode, sealTypeCode, startTime, endTime);
-        int logoutSealNum = sealDao.countLogoutSeal(makeDepartmentCode, sealTypeCode, startTime, endTime);
+        int newSealNum = sealDao.countAddSeal(districtId,makeDepartmentCode, sealTypeCode, startTime, endTime);
+        int lossSealNum = sealDao.countLossSeal(districtId,makeDepartmentCode, sealTypeCode, startTime, endTime);
+        int logoutSealNum = sealDao.countLogoutSeal(districtId,makeDepartmentCode, sealTypeCode, startTime, endTime);
         SealCount sealCount = new SealCount();
         sealCount.setNewSealNum(newSealNum);
         sealCount.setLossSealNum(lossSealNum);
@@ -288,6 +288,8 @@ public class SealCountServiceImp implements SealCuontService {
                 }else {
                      seals = sealDao.selectByMakeDepartmentCode(makeDepartmentCode,null); //根据code查找seal中的所有印章
                 }
+
+
                 Set<String> set = new HashSet<>();
                 for (Seal seal : seals) {
                     set.add(seal.getSealTypeCode());
@@ -299,7 +301,12 @@ public class SealCountServiceImp implements SealCuontService {
                         for (String sealTypeCode1 : sealTypeCodes) {
                             if (sealTypeCode.equals(sealTypeCode1)) {
                                 String sealType = new SealServiceImpl().chooseType(sealTypeCode);
-                                SealCount Num = getStatus(makeDepartmentCode, sealTypeCode, startTime, endTime);
+                                SealCount Num = null;
+                                if(user.getRoleId().equals("BADW")) {
+                                     Num = getStatus(user.getDistrictId(),makeDepartmentCode, sealTypeCode, startTime, endTime);
+                                }else{
+                                     Num = getStatus(null,makeDepartmentCode, sealTypeCode, startTime, endTime);
+                                }
                                 newSealNum = Num.getNewSealNum();
                                 lossSealNum = Num.getLossSealNum();
                                 logoutSealNum = Num.getLogoutSealNum();
@@ -311,7 +318,12 @@ public class SealCountServiceImp implements SealCuontService {
                         }
                     } else { //当前端输入type不存在当时候
                         String sealType = new SealServiceImpl().chooseType(sealTypeCode);
-                        SealCount Num = getStatus(makeDepartmentCode, sealTypeCode, startTime, endTime);
+                        SealCount Num = null;
+                        if(user.getRoleId().equals("BADW")) {
+                             Num = getStatus(user.getDistrictId(),makeDepartmentCode, sealTypeCode, startTime, endTime);
+                        }else{
+                             Num = getStatus(null,makeDepartmentCode, sealTypeCode, startTime, endTime);
+                        }
                         newSealNum = Num.getNewSealNum();
                         lossSealNum = Num.getLossSealNum();
                         logoutSealNum = Num.getLogoutSealNum();
