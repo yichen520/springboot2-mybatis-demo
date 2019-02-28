@@ -89,7 +89,6 @@ public class SealCountController {
         List<String> Status = (List<String>) map.get("Ststus");
         String districtId = (String) map.get("districtId");
         String startTime = (String) map.get("startTime");
-
         String endTime1 = (String) map.get("endTime");
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date date = fmt.parse(endTime1);
@@ -99,11 +98,9 @@ public class SealCountController {
         Date date1 = calendar.getTime();
         String endTime = fmt.format(date1);
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
-
-            List<SealCount> sealCounts = sealCuontService.countByDistrictId(user, districtIds, sealTypeCodes, startTime, endTime);
-            jsonObject.put("sealCounts", sealCounts);
-
-            return JsonObjectBO.success("查询", jsonObject);
+        List<SealCount> sealCounts = sealCuontService.countByDistrictId(user, districtIds, sealTypeCodes, startTime, endTime);
+        jsonObject.put("sealCounts", sealCounts);
+        return JsonObjectBO.success("查询", jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
             return JsonObjectBO.exception("统计失败");
@@ -124,7 +121,6 @@ public class SealCountController {
         JSONObject jsonObject = new JSONObject();
         String districtId = (String) map.get("districtId");
         String status = "01";
-
         try {
             List<MakeDepartmentSimple> makeDepartmentSimples = makeDepartmentService.selectInfo(districtId, null, status);
             jsonObject.put("makeDepartmentSimples", makeDepartmentSimples);
@@ -146,7 +142,6 @@ public class SealCountController {
     public JsonObjectBO selectDistrict(HttpServletRequest httpServletRequest){
         User user = (User)httpServletRequest.getSession().getAttribute("user");
         JSONObject jsonObject = new JSONObject();
-
         try {
             List<DistrictMenus> districtMenus = districtService.selectOneDistrict(user.getDistrictId()) ;
             jsonObject.put("district",districtMenus);
