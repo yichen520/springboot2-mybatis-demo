@@ -7,6 +7,7 @@ import com.dhht.model.*;
 import com.dhht.service.District.DistrictService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.seal.SealCuontService;
+import com.dhht.util.DateUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +53,13 @@ public class SealCountController {
             List<String> sealTypeCodes = (List<String>) map.get("sealTypeCodes");
             List<String> districtIds = (List<String>) map.get("districtIds");
             String startTime = (String) map.get("startTime");
-            String endTime = (String) map.get("endTime");
+            DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+            String endTime1 = (String) map.get("endTime");
+            Date date = fmt.parse(endTime1);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_MONTH,1);
+            String  endTime = calendar.getTime().toString();
             List<SealCount> sealCounts = sealCuontService.countByDepartment( user,districtIds, sealTypeCodes, startTime, endTime);
             jsonObject.put("sealCounts", sealCounts);
             return JsonObjectBO.success("查询", jsonObject);
@@ -69,6 +80,7 @@ public class SealCountController {
     @Log("根据区域统计")
     @RequestMapping(value = "/selectByDistrictId")
     public JsonObjectBO selectByDistrictId(@RequestBody Map map, HttpServletRequest httpServletRequest) {
+        try {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         List<String> districtIds = (List) map.get("districtIds");
@@ -76,9 +88,15 @@ public class SealCountController {
         List<String> Status = (List<String>) map.get("Ststus");
         String districtId = (String) map.get("districtId");
         String startTime = (String) map.get("startTime");
-        String endTime = (String) map.get("endTime");
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        String endTime1 = (String) map.get("endTime");
+        Date date = fmt.parse(endTime1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH,1);
+        String  endTime = calendar.getTime().toString();
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
-        try {
+
             List<SealCount> sealCounts = sealCuontService.countByDistrictId(user, districtIds, sealTypeCodes, startTime, endTime);
             jsonObject.put("sealCounts", sealCounts);
 
