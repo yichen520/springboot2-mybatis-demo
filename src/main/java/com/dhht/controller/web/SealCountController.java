@@ -53,13 +53,14 @@ public class SealCountController {
             List<String> sealTypeCodes = (List<String>) map.get("sealTypeCodes");
             List<String> districtIds = (List<String>) map.get("districtIds");
             String startTime = (String) map.get("startTime");
-            DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             String endTime1 = (String) map.get("endTime");
+            DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
             Date date = fmt.parse(endTime1);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            calendar.add(Calendar.DAY_OF_MONTH,1);
-            String  endTime = calendar.getTime().toString();
+            calendar.add(Calendar.DATE,1);
+            Date date1 = calendar.getTime();
+            String endTime = fmt.format(date1);
             List<SealCount> sealCounts = sealCuontService.countByDepartment( user,districtIds, sealTypeCodes, startTime, endTime);
             jsonObject.put("sealCounts", sealCounts);
             return JsonObjectBO.success("查询", jsonObject);
@@ -88,13 +89,15 @@ public class SealCountController {
         List<String> Status = (List<String>) map.get("Ststus");
         String districtId = (String) map.get("districtId");
         String startTime = (String) map.get("startTime");
-        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+
         String endTime1 = (String) map.get("endTime");
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date date = fmt.parse(endTime1);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH,1);
-        String  endTime = calendar.getTime().toString();
+        calendar.add(Calendar.DATE,1);
+        Date date1 = calendar.getTime();
+        String endTime = fmt.format(date1);
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
 
             List<SealCount> sealCounts = sealCuontService.countByDistrictId(user, districtIds, sealTypeCodes, startTime, endTime);
