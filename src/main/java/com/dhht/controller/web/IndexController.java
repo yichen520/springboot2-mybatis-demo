@@ -131,7 +131,7 @@ public class IndexController {
     /**
      * 待承接列表
      */
-    @RequestMapping("/sealUnderTakeIndex")
+    @RequestMapping("/sealUndertakeIndex")
     public JsonObjectBO sealUnderTake(HttpServletRequest httpServletRequest, @RequestBody SealDTO sealDTO) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();

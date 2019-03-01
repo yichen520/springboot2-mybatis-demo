@@ -1369,7 +1369,7 @@
 
   <select id="sealListOfDateUpdate" resultMap="BaseResultMap">
       SELECT
-      <include refid="Base_Column_List" /> from seal a join seal_verification sv on a.id=sv.seal_id  AND sv.flag="1" and a.is_undertake=false order by record_date desc
+      <include refid="Base_Column_List" /> from seal a join seal_verification sv on a.id=sv.seal_id  AND sv.flag="1" and a.is_undertake=false order by record_date
   </select>
   <select id="SelectByCodeAndFlag" resultType="com.dhht.model.SealOperationRecord">
     SELECT * from seal_operate_record WHERE seal_id =#{id} AND operate_type="01"
@@ -1394,7 +1394,7 @@
     <select id="sealList" parameterType="java.lang.String" resultMap="BaseResultMap">
       SELECT seal.*
       FROM seal
-      LEFT JOIN seal_agent ON seal.agent_id = seal_agent.id where (seal_agent.login_telphone = #{telphone} or seal_agent.telphone = #{telphone})
+      LEFT JOIN seal_agent ON seal.agent_id = seal_agent.id where (seal_agent.login_telphone = #{telphone} or seal_agent.telphone = #{telphone}) order by record_date desc
     </select>
 
   <select id="selectByMakeDepartmentCode" resultMap="BaseResultMap">
@@ -1421,13 +1421,19 @@ select  <include refid="Base_Column_List" /> from seal where seal_code = (select
   <select id="countAddSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
         SELECT count(id) from seal s  where
          s.seal_type_code=#{sealTypeCode} and s.make_department_code= #{makeDepartmentCode}
-		and is_record = true and is_make = true and is_undertake = true and is_cancel=false and is_deliver = true AND is_apply=true and apply_date BETWEEN  #{startTime} and #{endTime}
+         <if test="districtId!=null">
+             and district_id  =  #{districtId}
+         </if>
+		and is_record = true and is_make = true and is_undertake = true and is_cancel=false and is_deliver = true AND is_apply=true and apply_date  BETWEEN  #{startTime} and #{endTime}
   </select>
 
   <select id="countLossSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
 
       SELECT count(id) from seal s  where
       s.seal_type_code=#{sealTypeCode} and s.make_department_code= #{makeDepartmentCode}
+      <if test="districtId!=null">
+          and district_id  =  #{districtId}
+      </if>
         and  is_loss =true and is_cancel=false  and is_undertake = true
         and is_logout!=true AND loss_date BETWEEN  #{startTime} and #{endTime}
   </select>
@@ -1436,6 +1442,9 @@ select  <include refid="Base_Column_List" /> from seal where seal_code = (select
   <select id="countLogoutSeal"  resultType="java.lang.Integer" parameterType="java.lang.String">
       SELECT count(id) from seal s  where
       s.seal_type_code=#{sealTypeCode} and s.make_department_code= #{makeDepartmentCode}
+      <if test="districtId!=null">
+          and district_id  =  #{districtId}
+      </if>
       and  is_logout =true AND  is_cancel=false and logout_date BETWEEN  #{startTime} and #{endTime}
   </select>
 
