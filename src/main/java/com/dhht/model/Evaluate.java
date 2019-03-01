@@ -33,4 +33,6 @@ public class Evaluate {
 
     private String sealId;
 
+    private String headImage;
+
 }

@@ -6,6 +6,7 @@ import com.dhht.model.*;
 import com.dhht.service.evaluate.EvaluateService;
 import com.dhht.service.make.MakeDepartmentService;
 import com.dhht.service.order.OrderService;
+import com.dhht.service.user.WeChatUserService;
 import com.dhht.util.DateUtil;
 import com.dhht.util.ResultUtil;
 import com.dhht.util.UUIDUtil;
@@ -31,6 +32,10 @@ public class EvaluateServiceImpl implements EvaluateService {
     private MakeDepartmentService makeDepartmentService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private WeChatUserService weChatUserService;
+
+    private  final String DEFAULT_HEAD_ID = "60cc55ac9ece4a2ca376367c3adcb134";
 
     @Override
     public int insert(Evaluate evaluate, WeChatUser user,String sealId) {
@@ -41,7 +46,7 @@ public class EvaluateServiceImpl implements EvaluateService {
         MakeDepartmentSimple makedepartment = makeDepartmentService.selectByDepartmentCode(evaluate.getMakeDepartmentId());
         evaluate.setFlag(makedepartment.getFlag());
         evaluate.setUserId(user.getId());
-        evaluate.setUserName(user.getTelphone());
+        evaluate.setUserName(user.getName());
         evaluate.setEvaluateTime(DateUtil.getCurrentTime());
         int result = evaluateMapper.insertSelective(evaluate);
         int orderResult = orderService.updateEvaluationStatus(sealId,false);
@@ -54,7 +59,20 @@ public class EvaluateServiceImpl implements EvaluateService {
 
     @Override
     public List<Evaluate> selectEvaluateList(Evaluate evaluate) {
-        return evaluateMapper.selectEvaluateList(evaluate);
+        List<Evaluate> evaluates = evaluateMapper.selectEvaluateList(evaluate);
+        for(Evaluate evaluate1: evaluates){
+            WeChatUser weChatUser = weChatUserService.selectById(evaluate1.getUserId());
+            if(weChatUser!=null){
+                if(weChatUser.getImage()!=null&&weChatUser.getImage()!="") {
+                    evaluate1.setHeadImage(weChatUser.getImage());
+                }else {
+                    evaluate1.setHeadImage(DEFAULT_HEAD_ID);
+                }
+            }else {
+                evaluate1.setHeadImage(DEFAULT_HEAD_ID);
+            }
+        }
+        return evaluates;
     }
 
     @Override

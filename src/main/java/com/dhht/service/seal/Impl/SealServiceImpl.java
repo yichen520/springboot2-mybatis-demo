@@ -1453,7 +1453,6 @@ public class SealServiceImpl implements SealService {
             }
             return ResultUtil.isSuccess;
         }
-
     }
 
     @Override
@@ -1466,7 +1465,6 @@ public class SealServiceImpl implements SealService {
     public List<Seal> selectSealByDistrictId(String districtId) {
         String districtId1 = districtId.substring(0, 4);
         List<Seal> seals = sealDao.selectLikeDistrictId1(districtId1);
-
         return seals;
     }
 
@@ -1474,8 +1472,6 @@ public class SealServiceImpl implements SealService {
     @Override
     public PageInfo<Seal> Infoseal(User user, String useDepartmentName, String useDepartmentCode, String status, int pageNum, int pageSize) {
         String districtId = user.getDistrictId().substring(0, 2);
-
-
         Seal seal = new Seal();
         seal.setUseDepartmentCode(useDepartmentCode);
         seal.setUseDepartmentName(useDepartmentName);
@@ -1489,7 +1485,6 @@ public class SealServiceImpl implements SealService {
 
     /**
      * 图片下载
-     *
      * @param id
      * @return
      */
