@@ -1324,6 +1324,7 @@
         <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
             AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
         </if>
+        
 
       )
     </where>
