@@ -253,6 +253,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
         orderService.updatePayStatus(sealOrder.getPayWay(),sealOrder.getId(),sealOrder.getPayJsOrderId());  //订单更新支付状态
 
 
+
         if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
             ArrayList<String> params = new ArrayList<String>();
             params.add(seal.getUseDepartmentName());
@@ -351,6 +352,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
             seal.setIsPersonal(false);
             seal.setIsLogout(false);
             seal.setIsCancel(false);
+            seal.setVerifyTypeName("0");
             seal.setDistrictId(useDepartment.getDistrictId());
             seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
             seal.setMakeDepartmentName(makedepartment.getDepartmentName());

@@ -288,6 +288,7 @@ public class SealServiceImpl implements SealService {
                 seal.setIsLoss(false);
                 seal.setIsPersonal(false);
                 seal.setIsLogout(false);
+                seal.setVerifyTypeName("0");
                 seal.setDistrictId(useDepartment.getDistrictId());
                 seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
                 seal.setMakeDepartmentName(makedepartment.getDepartmentName());
@@ -1430,6 +1431,7 @@ public class SealServiceImpl implements SealService {
             int insertVerifySeal = sealVerificationMapper.insertSelective(sealVerification1);
 
         }
+        seal.setVerifyTypeName(verify_type_name);
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
@@ -1440,6 +1442,7 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setEmployeeId(recordDepartment.getCertificateNo());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+        int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
         if(insertSealOperationRecord<0){
             return ResultUtil.isFail;
         }else{
