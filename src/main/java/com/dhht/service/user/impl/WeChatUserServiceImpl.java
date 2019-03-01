@@ -160,6 +160,11 @@ public class WeChatUserServiceImpl implements WeChatUserService {
         return map;
     }
 
+    @Override
+    public WeChatUser selectById(String id) {
+        return weChatUserMapper.selectByPrimaryKey(id);
+    }
+
 
     /**
      * 设置过期时间五分钟

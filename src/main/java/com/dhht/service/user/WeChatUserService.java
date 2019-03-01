@@ -42,6 +42,8 @@ public interface WeChatUserService {
      */
     Map<String,Object>  selectWeChatUser(String telphone);
 
+    WeChatUser selectById(String id);
+
     UseDepartment bindCompany(UseDepartment useDepartment);
 
     int updateWeChatUserInfo(WeChatUser weChatUser);

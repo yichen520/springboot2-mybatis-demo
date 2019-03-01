@@ -1,13 +1,9 @@
 package com.dhht.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dhht.annotation.Log;
 import com.dhht.common.JsonObjectBO;
-import com.dhht.controller.web.SuspiciousController;
 import com.dhht.model.Suspicious;
-import com.dhht.model.User;
 import com.dhht.model.WeChatUser;
-import com.dhht.model.pojo.SuspiciousPO;
 import com.dhht.service.suspicious.SuspiciousService;
 import com.dhht.util.ResultUtil;
 import org.slf4j.Logger;
@@ -40,6 +36,9 @@ public class SuspiciousWeChatController {
     public JsonObjectBO add(@RequestBody Suspicious suspicious, HttpServletRequest httpServletRequest) {
         WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("weChatUser");
         try {
+            if(user==null){
+                return JsonObjectBO.error("未登陆，请登入后操作");
+            }
             return ResultUtil.getResult(suspiciousService.weChatInsertSuspicious(suspicious, user));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -58,6 +57,9 @@ public class SuspiciousWeChatController {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         JSONObject jsonObject = new JSONObject();
         WeChatUser user = (WeChatUser) httpServletRequest.getSession().getAttribute("weChatUser");
+        if(user==null){
+            return JsonObjectBO.error("未登陆，请登入后操作");
+        }
         String loginTelphone = user.getTelphone();
         try {
             List<Suspicious> suspicious = suspiciousService.selectAll(loginTelphone);
@@ -67,7 +69,7 @@ public class SuspiciousWeChatController {
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return JsonObjectBO.exception("查询失败！");
+            return JsonObjectBO.exception("查询失败");
         }
     }
 
@@ -94,7 +96,6 @@ public class SuspiciousWeChatController {
                 jsonObjectBO.setCode(1);
                 jsonObjectBO.setMessage("查询成功");
             }
-
             return jsonObjectBO;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
