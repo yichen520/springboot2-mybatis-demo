@@ -34,26 +34,26 @@ public class EmsServiceImp implements EmsService {
     @Override
     public Map<String,Object> insertEms(Ems ems) throws Exception {
         Map<String,Object> map = new HashMap<>();
-       try {
-           if (ems == null) {
-               map.put("status", "error");
-               map.put("message","数据不存在");
-               return map;
-           }
-           JSONObject jsonObject = new JSONObject();
-           Cache.put("ems", ems);
-           String emsJson = JSON.toJSONString(ems);
-           String fileId = byteOutStream(ems.getAddresser(),filePath, emsJson);
-           map.put("status", "ok");
-           map.put("message","上传成功");
-           map.put("fileId",fileId);
-           return map;
-       }catch (IOException e) {
-           e.printStackTrace();
-           map.put("status", "error");
-           map.put("message","出现异常");
-           return map;
-       }
+        try {
+            if (ems == null) {
+                map.put("status", "error");
+                map.put("message","数据不存在");
+                return map;
+            }
+            JSONObject jsonObject = new JSONObject();
+            Cache.put("ems", ems);
+            String emsJson = JSON.toJSONString(ems);
+            String fileId = byteOutStream(ems.getAddresser(),filePath, emsJson);
+            map.put("status", "ok");
+            map.put("message","上传成功");
+            map.put("fileId",fileId);
+            return map;
+        }catch (IOException e) {
+            e.printStackTrace();
+            map.put("status", "error");
+            map.put("message","出现异常");
+            return map;
+        }
 
     }
 

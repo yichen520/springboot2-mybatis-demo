@@ -831,6 +831,9 @@
     <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
       AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
     </if>
+      <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+          AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+      </if>
 
   </where>
   order by make_date desc
@@ -1318,6 +1321,9 @@
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE "%"#{useDepartmentCode}"%"
       </if>
+        <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+            AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+        </if>
 
 
       )
@@ -1361,6 +1367,9 @@
       <if test="useDepartmentName !=null and useDepartmentName !=''">
         AND use_department_name LIKE "%"#{useDepartmentName,jdbcType=VARCHAR}"%"
       </if>
+        <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
+            AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
+        </if>
       and
       district_id = #{districtId}
       )
