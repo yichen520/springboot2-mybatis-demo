@@ -43,7 +43,7 @@ public class EmsServiceImp implements EmsService {
            JSONObject jsonObject = new JSONObject();
            Cache.put("ems", ems);
            String emsJson = JSON.toJSONString(ems);
-           String fileId = byteOutStream(ems.getSender(),filePath, emsJson);
+           String fileId = byteOutStream(ems.getAddresser(),filePath, emsJson);
            map.put("status", "ok");
            map.put("message","上传成功");
            map.put("fileId",fileId);

@@ -1318,12 +1318,6 @@
       <if test="useDepartmentCode !=null and useDepartmentCode !=''">
         And use_department_code LIKE "%"#{useDepartmentCode}"%"
       </if>
-        <if test="recordDepartmentCode !=null and recordDepartmentCode!=''">
-            AND record_department_code = #{recordDepartmentCode,jdbcType=CHAR}
-        </if>
-        <if test="makeDepartmentCode !=null and makeDepartmentCode!=''">
-            AND make_department_code = #{makeDepartmentCode,jdbcType=CHAR}
-        </if>
 
 
       )
