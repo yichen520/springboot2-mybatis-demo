@@ -1433,7 +1433,7 @@ public class SealServiceImpl implements SealService {
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
-        sealOperationRecord.setOperateType("06");  //核验的操作人
+        sealOperationRecord.setOperateType("09");  //核验的操作人
         sealOperationRecord.setEmployeeCode(recordDepartment.getDepartmentCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeName(recordDepartment.getDepartmentName());
