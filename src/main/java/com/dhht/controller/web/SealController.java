@@ -351,6 +351,7 @@ public class SealController implements InitializingBean {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
 
+
         try {
             int a = weChatSealService.expressdeliver( user,  seal);
             return ResultUtil.getResult(a);

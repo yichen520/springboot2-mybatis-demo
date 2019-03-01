@@ -13,7 +13,7 @@ public class Ems {
     private  String senderDistrictId;
     private  String senderAddress;
 
-    private  String addressee;  //收件人信息
+    private  String addresser;  //收件人信息
     private  String addresseeTelPhone;
     private  String addresseePhone;
     private  String addresseeDistrictId;

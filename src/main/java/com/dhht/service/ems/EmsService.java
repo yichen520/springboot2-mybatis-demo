@@ -5,5 +5,5 @@ import com.dhht.model.Ems;
 import java.util.Map;
 
 public interface EmsService {
-    Map<String,Object> insertEms(Ems ems) throws Exception;
+    Map<String,Object> insertEms(Ems ems)throws Exception;
 }
