@@ -923,7 +923,7 @@ public class SealServiceImpl implements SealService {
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
         int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);  //承接相当于已经备案  申请操作人
-        int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId); //承接操作人
+        int insertSealOperationRecord2 = insertSealOperationRecord(employee,"01",sealId); //承接操作人
         orderService.updateRefundStatus("-1",sealId);
         if (result == 1 && insertSealOperationRecord1 == ResultUtil.isSuccess &&insertSealOperationRecord2 == ResultUtil.isSuccess) {
             return ResultUtil.isSuccess;

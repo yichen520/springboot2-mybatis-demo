@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class EmsServiceImp implements EmsService {
            JSONObject jsonObject = new JSONObject();
            Cache.put("ems", ems);
            String emsJson = JSON.toJSONString(ems);
-           String fileId = byteOutStream(filePath, emsJson);
+           String fileId = byteOutStream(ems.getSender(),filePath, emsJson);
            map.put("status", "ok");
            map.put("message","上传成功");
            map.put("fileId",fileId);
@@ -56,23 +57,25 @@ public class EmsServiceImp implements EmsService {
 
     }
 
-    public  String  byteOutStream(String filePath,String jsonString) throws Exception {
+    public  String  byteOutStream(String sender,String filePath,String jsonString) throws Exception {
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = simpleDateFormat.format(DateUtil.getCurrentTime());
         //1:使用File类创建一个要操作的文件路径
-//        File file = new File(filePath+"ems/ems.txt");
-//        if(!file.getParentFile().exists()){ //如果文件的目录不存在
-//            file.getParentFile().mkdirs(); //创建目录
-//
-//        }
+        File file = new File(filePath+"ems/"+date+sender+".txt");
+        if(!file.getParentFile().exists()){ //如果文件的目录不存在
+            file.getParentFile().mkdirs(); //创建目录
+
+        }
 
         //2: 实例化对象
-//        OutputStream output = new FileOutputStream(file);
+        OutputStream output = new FileOutputStream(file);
 
         //3: 准备好实现内容的输出
 //        String msg = object.toString();
         byte data[] = jsonString.getBytes();
-//        output.write(data);
-//        output.close();
+        output.write(data);
+        output.close();
         FileInfo fileInfo = fileService.save(data, DateUtil.getCurrentTime() + "ems", "txt", "", FileService.CREATE_TYPE_UPLOAD,UUIDUtil.generate(),"ems");
         String fileId = fileInfo.getId();
         return fileId;
