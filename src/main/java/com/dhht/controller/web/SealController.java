@@ -376,7 +376,7 @@ public class SealController implements InitializingBean {
                     jsonObjectBO.setCode(-1);
                     jsonObjectBO.setMessage("交付未成功");
                 }else{
-                   jsonObject.put("fileId",map.get("fileId"));
+                   jsonObject.put("fileData",map.get("fileData"));
                    jsonObject.put("fileName",map.get("fileName"));
                    jsonObjectBO.setCode(1);
                    jsonObjectBO.setMessage("交付成功");

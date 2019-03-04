@@ -73,7 +73,7 @@ public class EmsServiceImp implements EmsService {
             String fileId = byteOutStream(ems.getAddresser(),filePath, emsJson);
             map.put("status", "ok");
             map.put("message","上传成功");
-            map.put("fileId",fileId);
+            map.put("fileData",emsJson);
             map.put("fileName",date+ems.getAddresser());
             return map;
         }catch (IOException e) {
