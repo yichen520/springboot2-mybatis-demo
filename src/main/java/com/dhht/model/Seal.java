@@ -110,8 +110,7 @@ public class Seal extends SealKey {
 
     private Date cancelDate; //取消日期
 
-
-     private DeliveryExpressInfo deliveryExpressInfo;
+    private DeliveryExpressInfo deliveryExpressInfo;
 
     public Boolean getIsCancel() {
         return isCancel;

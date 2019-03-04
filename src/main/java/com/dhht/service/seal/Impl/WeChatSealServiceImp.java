@@ -258,20 +258,20 @@ public class WeChatSealServiceImp implements WeChatSealService {
             SealPayOrder sealOrder = orderService.selectBySealId(seal.getId());
             orderService.updatePayStatus(sealOrder.getPayWay(), sealOrder.getId(), sealOrder.getPayJsOrderId());  //订单更新支付状态
 
-            DeliveryExpressInfo deliveryExpressInfo = seal1.getDeliveryExpressInfo();
-            Ems ems = new Ems();
-            ems.setSender(deliveryExpressInfo.getSendName());
-            ems.setSenderTelPhone(deliveryExpressInfo.getSendTelphone());
-            ems.setSenderAddress(deliveryExpressInfo.getSendAddressDetail());
-            ems.setSenderDistrictId(deliveryExpressInfo.getSenddistrictId());
-            ems.setAddresser(deliveryExpressInfo.getReceiveName());
-            ems.setAddresseeDistrictId(deliveryExpressInfo.getReceivedistrictId());
-            ems.setAddresseeTelPhone(deliveryExpressInfo.getReceivephone());
-            ems.setAddresseeAddress(deliveryExpressInfo.getReceiveAddressDetail());
-            Map map = emsService.insertEms(ems);
-            if(map.get("status").equals("error")){
-                return ResultUtil.isFail;
-            }
+//            DeliveryExpressInfo deliveryExpressInfo = seal1.getDeliveryExpressInfo();
+//            Ems ems = new Ems();
+//            ems.setSender(deliveryExpressInfo.getSendName());
+//            ems.setSenderTelPhone(deliveryExpressInfo.getSendTelphone());
+//            ems.setSenderAddress(deliveryExpressInfo.getSendAddressDetail());
+//            ems.setSenderDistrictId(deliveryExpressInfo.getSenddistrictId());
+//            ems.setAddresser(deliveryExpressInfo.getReceiveName());
+//            ems.setAddresseeDistrictId(deliveryExpressInfo.getReceivedistrictId());
+//            ems.setAddresseeTelPhone(deliveryExpressInfo.getReceivephone());
+//            ems.setAddresseeAddress(deliveryExpressInfo.getReceiveAddressDetail());
+//            Map map = emsService.insertEms(ems);
+//            if(map.get("status").equals("error")){
+//                return ResultUtil.isFail;
+//            }
 
             if (insertSealOperationRecord > 0 && updateByPrimaryKey > 0 && sealAgentResult > 0) {
                 ArrayList<String> params = new ArrayList<String>();

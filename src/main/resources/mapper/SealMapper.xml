@@ -809,6 +809,7 @@
   <select id="selectIsMake" parameterType="com.dhht.model.Seal" resultMap="BaseResultMap">
   SELECT * from seal
   <where>
+      1=1 and
     is_record = 1 AND is_make =1 and is_personal =0 and is_deliver = 0 and is_logout = 0 AND is_loss = 0
       <if test="sealCode !=null and sealCode !=''">
           And seal_code LIKE  "%"#{sealCode}"%"

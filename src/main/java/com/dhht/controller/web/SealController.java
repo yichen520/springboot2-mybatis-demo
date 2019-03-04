@@ -8,6 +8,7 @@ import com.dhht.model.*;
 
 import com.dhht.model.pojo.*;
 import com.dhht.service.employee.EmployeeService;
+import com.dhht.service.ems.EmsService;
 import com.dhht.service.seal.SealService;
 import com.dhht.service.seal.WeChatSealService;
 import com.dhht.service.tools.FileService;
@@ -55,6 +56,9 @@ public class SealController implements InitializingBean {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private EmsService emsService;
 
     @Autowired
     private WeChatSealService weChatSealService;
@@ -241,7 +245,6 @@ public class SealController implements InitializingBean {
     }
     /**
      * 印章信息
-
      */
     @Log("印章信息")
     @RequestMapping("/sealInfo")
@@ -260,6 +263,7 @@ public class SealController implements InitializingBean {
         int pageSize = sealDTO.getPageSize();
         try {
             PageInfo<Seal> seal = sealService.sealInfo(user,useDepartmentName, useDepartmentCode, status, pageNum, pageSize,sealType,recordDepartmentName,sealCode);
+
             jsonObject.put("seal", seal);
             jsonObjectBO.setData(jsonObject);
             jsonObjectBO.setCode(1);
@@ -349,12 +353,40 @@ public class SealController implements InitializingBean {
     @RequestMapping("/expressdeliver")
     public JsonObjectBO expressdeliver(HttpServletRequest httpServletRequest, @RequestBody Seal seal) {
         JsonObjectBO jsonObjectBO = new JsonObjectBO();
+        JSONObject jsonObject = new JSONObject();
         User user = (User) httpServletRequest.getSession(true).getAttribute("user");
 
 
         try {
             int a = weChatSealService.expressdeliver( user,  seal);
-            return ResultUtil.getResult(a);
+            DeliveryExpressInfo deliveryExpressInfo = seal.getDeliveryExpressInfo();
+            Ems ems = new Ems();
+            ems.setSender(deliveryExpressInfo.getSendName());
+            ems.setSenderTelPhone(deliveryExpressInfo.getSendTelphone());
+            ems.setSenderAddress(deliveryExpressInfo.getSendAddressDetail());
+            ems.setSenderDistrictId(deliveryExpressInfo.getSenddistrictId());
+            ems.setAddresser(deliveryExpressInfo.getReceiveName());
+            ems.setAddresseeDistrictId(deliveryExpressInfo.getReceivedistrictId());
+            ems.setAddresseeTelPhone(deliveryExpressInfo.getReceivephone());
+            ems.setAddresseeAddress(deliveryExpressInfo.getReceiveAddressDetail());
+            Map map = emsService.insertEms(ems);
+
+            if(a==ResultUtil.isSuccess){
+                if(map.get("status").equals("error")){
+                    jsonObjectBO.setCode(-1);
+                    jsonObjectBO.setMessage("交付未成功");
+                }else{
+                   jsonObject.put("fileId",map.get("fileId"));
+                   jsonObject.put("fileName",map.get("fileName"));
+                   jsonObjectBO.setCode(1);
+                   jsonObjectBO.setMessage("交付成功");
+                   jsonObjectBO.setData(jsonObject);
+                }
+            }else{
+                jsonObjectBO.setCode(-1);
+                jsonObjectBO.setMessage("交付未成功");
+            }
+            return jsonObjectBO;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);
