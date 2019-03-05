@@ -288,6 +288,7 @@ public class SealServiceImpl implements SealService {
                 seal.setIsLoss(false);
                 seal.setIsPersonal(false);
                 seal.setIsLogout(false);
+                seal.setVerifyTypeName("0");
                 seal.setDistrictId(useDepartment.getDistrictId());
                 seal.setMakeDepartmentCode(makedepartment.getDepartmentCode());
                 seal.setMakeDepartmentName(makedepartment.getDepartmentName());
@@ -922,7 +923,7 @@ public class SealServiceImpl implements SealService {
         String telphone = user.getTelphone();
         Employee employee = employeeService.selectByPhone(telphone);
         int insertSealOperationRecord1= insertSealOperationRecord(employee,"00",sealId);  //承接相当于已经备案  申请操作人
-        int insertSealOperationRecord2 = insertSealOperationRecord(employee,"001",sealId); //承接操作人
+        int insertSealOperationRecord2 = insertSealOperationRecord(employee,"01",sealId); //承接操作人
         orderService.updateRefundStatus("-1",sealId);
         if (result == 1 && insertSealOperationRecord1 == ResultUtil.isSuccess &&insertSealOperationRecord2 == ResultUtil.isSuccess) {
             return ResultUtil.isSuccess;
@@ -1430,16 +1431,18 @@ public class SealServiceImpl implements SealService {
             int insertVerifySeal = sealVerificationMapper.insertSelective(sealVerification1);
 
         }
+        seal.setVerifyTypeName(verify_type_name);
 
         SealOperationRecord sealOperationRecord = new SealOperationRecord();
         sealOperationRecord.setId(UUIDUtil.generate());
-        sealOperationRecord.setOperateType("06");  //核验的操作人
+        sealOperationRecord.setOperateType("09");  //核验的操作人
         sealOperationRecord.setEmployeeCode(recordDepartment.getDepartmentCode());
         sealOperationRecord.setOperateTime(DateUtil.getCurrentTime());
         sealOperationRecord.setEmployeeName(recordDepartment.getDepartmentName());
         sealOperationRecord.setEmployeeId(recordDepartment.getCertificateNo());
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
+        int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
         if(insertSealOperationRecord<0){
             return ResultUtil.isFail;
         }else{

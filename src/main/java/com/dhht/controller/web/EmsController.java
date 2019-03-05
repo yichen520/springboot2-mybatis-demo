@@ -36,4 +36,23 @@ public class EmsController {
             return resultMap;
         }
     }
+
+    /**
+     * 下载ems文件
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/downloadEms")
+    public Map<String,Object>  downLoadEms(@RequestBody Map map){
+        Map<String,Object> resultMap = new HashMap<>();
+        try {
+            String id = (String) map.get("id");
+            resultMap = emsService.downLoad(id);
+            return resultMap;
+        }catch (Exception e){
+            resultMap.put("status", "error");
+            resultMap.put("message","出现异常");
+            return resultMap;
+        }
+    }
 }

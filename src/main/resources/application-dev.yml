@@ -116,7 +116,7 @@ trackerProtocol: http://
 file:
   local:
     root: C:/temp/
-    ems: /Library/东华宏泰/
+    ems: /Users/imac_dhht/Desktop/
 sealtemplate:
   filePath: C:/temp/seal
 
