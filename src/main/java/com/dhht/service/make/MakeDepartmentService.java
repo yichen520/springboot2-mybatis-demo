@@ -52,7 +52,7 @@ public interface MakeDepartmentService {
 
     MakedepartmentSimplePO selectMakedepartmentSimplePODetailById(String id);
 
-    Makedepartment selectByAllName(String name);
+    List<Makedepartment> selectByName(String name);
 
     List<MakedepartmentSimplePO> selectMakedePartmentByRegionId(MakedepartmentSimplePO makedepartmentSimplePO);
 

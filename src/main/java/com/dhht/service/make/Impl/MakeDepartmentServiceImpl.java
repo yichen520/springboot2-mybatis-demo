@@ -508,8 +508,8 @@ public class MakeDepartmentServiceImpl implements MakeDepartmentService {
     }
 
     @Override
-    public Makedepartment selectByAllName(String name){
-        Makedepartment makedepartment = makedepartmentMapper.selectByAllName(name);
+    public List<Makedepartment> selectByName(String name){
+        List<Makedepartment> makedepartment = makedepartmentMapper.selectByName(name);
         return makedepartment;
     }
 

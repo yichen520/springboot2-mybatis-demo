@@ -36,7 +36,7 @@ public interface MakedepartmentMapper {
 
     MakeDepartmentSimple selectByDepartmentCode(@Param("departmentCode") String code);
 
-    Makedepartment selectByAllName(@Param("name")String name);
+    List<Makedepartment> selectByName(@Param("name")String name);
 
     List<Makedepartment> selectByFlag(@Param("flag") String flag);
 
