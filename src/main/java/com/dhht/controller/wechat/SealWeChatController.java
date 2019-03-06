@@ -253,8 +253,31 @@ public class SealWeChatController extends WeChatBaseController {
                 return JsonObjectBO.error("获取验证码失败");
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return JsonObjectBO.exception("获取验证码失败");
+        }
+    }
+
+    @RequestMapping(value = "/getAgentCode")
+    public JsonObjectBO getAgentCode(HttpServletRequest request, @RequestBody Map map, HttpServletResponse httpServletResponse){
+        String telphone = (String) map.get("telphone");
+        init(httpServletRequest, httpServletResponse);
+        try {
+            int result = weChatUserService.sendMessage(telphone,261421);
+            return ResultUtil.getResult(result);
+        } catch (Exception e) {
+            return JsonObjectBO.exception("获取验证码失败");
+        }
+    }
+
+    @RequestMapping(value = "/agentCheckCode")
+    public JsonObjectBO agentCheckCode(HttpServletRequest request, @RequestBody Map map, HttpServletResponse httpServletResponse){
+        try {
+            String telphone = (String)map.get("telphone");
+            String vcode = (String)map.get("vcode");
+            int result = weChatUserService.isRightVerificationCode(telphone,vcode);
+            return ResultUtil.getResult(result);
+        }catch (Exception e){
+            return JsonObjectBO.exception("验证码比对失败");
         }
     }
 

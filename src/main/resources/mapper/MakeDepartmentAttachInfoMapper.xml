@@ -54,12 +54,11 @@
       bank_account = #{bankAccount,jdbcType=VARCHAR},
       bank_name = #{bankName,jdbcType=VARCHAR},
       bank_address = #{bankAddress,jdbcType=VARCHAR},
-      latitude = #{latitude,jdbcType=VARCHAR},
-      longitude = #{longitude,jdbcType=VARCHAR},
       address_detail = #{addressDetail,jdbcType=VARCHAR},
       promise_time = #{promiseTime,jdbcType=VARCHAR},
       remarks = #{remarks,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
 </mapper>

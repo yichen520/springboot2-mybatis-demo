@@ -46,4 +46,6 @@ public interface WeChatSealService {
     //资料更新
     int dateUpdate(WeChatUser weChatUser,String id,SealAgent sealAgent);
 
+
+
 }
