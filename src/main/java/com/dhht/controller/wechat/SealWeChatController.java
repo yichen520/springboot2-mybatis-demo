@@ -126,6 +126,32 @@ public class SealWeChatController extends WeChatBaseController {
         }
     }
 
+    @RequestMapping("/getDriver")
+    public JsonObjectBO getDriverStatus(HttpServletResponse httpServletResponse) {
+        init(httpServletRequest, httpServletResponse);
+        int count = 0;
+        WeChatUser weChatUser = currentUser();
+        Map map = new HashMap();
+        map.put("telphone",weChatUser.getTelphone());
+        try {
+            List<Seal> sealOperationRecords = weChatSealService.sealProgress(map);
+            for(Seal seal:sealOperationRecords) {
+               if(seal.getIsDeliver()){
+                  count ++;
+               }
+            }
+            if(count>0){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("num",count);
+                return JsonObjectBO.success("查询到印章",jsonObject);
+            }
+            return JsonObjectBO.error("未找到已交付的章");
+        } catch (Exception e) {
+            e.printStackTrace();
+           return JsonObjectBO.exception("发生异常");
+        }
+    }
+
     @RequestMapping("/makeDepartmentSort")
     public JsonObjectBO makeDepartmentSort(@RequestBody Map map, HttpServletResponse httpServletResponse) {
         try {
