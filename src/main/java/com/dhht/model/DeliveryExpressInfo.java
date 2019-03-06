@@ -26,7 +26,7 @@ public class DeliveryExpressInfo {
     private  String agentidcard;
     private  String agentPhotoImage;
     private String agentidcardFrontImage;
-    private String agentidcardFrontReverseImage;
+    private String agentidcardReverseImage;
     private String agentproxyImage;
 
     private String loginTelphone;
