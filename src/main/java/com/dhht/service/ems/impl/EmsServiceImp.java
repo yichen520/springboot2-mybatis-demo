@@ -98,7 +98,6 @@ public class EmsServiceImp implements EmsService {
             Seal seal1 = sealDao.selectByPrimaryKey(id);
             SealPayOrder sealPayOrder = sealPayOrderMapper.selectBySealId(seal1.getId());
             if (sealPayOrder.getCourierId() != null && !sealPayOrder.getCourierId().isEmpty()) {
-                //  Recipients recipients =recipientsMapper.selectByPrimaryKey(courierMapper.selectByPrimaryKey(sealPayOrder.getCourierId()).getRecipientsId());
 
                 Recipients recipients = recipientsMapper.selectByPrimaryKey(courierMapper.selectBySealId(seal1.getId()).getRecipientsId());
                 DeliveryExpressInfo deliveryExpressInfo = new DeliveryExpressInfo();

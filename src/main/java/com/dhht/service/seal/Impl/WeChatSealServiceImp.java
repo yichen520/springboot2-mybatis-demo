@@ -243,7 +243,7 @@ public class WeChatSealServiceImp implements WeChatSealService {
                 sealAgent.setCertificateNo(seal.getDeliveryExpressInfo().getAgentidcard());
                 sealAgent.setCertificateType("111");
                 sealAgent.setIdCardFrontId(seal.getDeliveryExpressInfo().getAgentidcardFrontImage());
-                sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardFrontReverseImage());
+                sealAgent.setIdCardReverseId(seal.getDeliveryExpressInfo().getAgentidcardReverseImage());
                 sealAgent.setProxyId(seal.getDeliveryExpressInfo().getAgentproxyImage());
             }
 

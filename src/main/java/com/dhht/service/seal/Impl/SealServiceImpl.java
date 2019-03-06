@@ -1770,7 +1770,7 @@ public class SealServiceImpl implements SealService {
                         deliveryExpressInfo.setAgentidcard(sealAgent.getCertificateNo());
                         deliveryExpressInfo.setAgentphone(sealAgent.getTelphone());
                         deliveryExpressInfo.setAgentidcardFrontImage(sealAgent.getIdCardFrontId());
-                        deliveryExpressInfo.setAgentidcardFrontReverseImage(sealAgent.getIdCardReverseId());
+                        deliveryExpressInfo.setAgentidcardReverseImage(sealAgent.getIdCardReverseId());
                         deliveryExpressInfo.setAgentPhotoImage(sealAgent.getAgentPhotoId());
                         deliveryExpressInfo.setAgentproxyImage(sealAgent.getProxyId());
 //                        deliveryExpressInfo.setLoginTelphone(sealAgent.getLoginTelPhone());
