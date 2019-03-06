@@ -197,8 +197,8 @@ and make_department.department_address like #{departmentAddress,jdbcType=VARCHAR
     select <include refid="Simple_Column_list"/> from make_department where  department_name like '%${departmentName}%' and department_address like '${districtId}%' limit 0,10
   </select>
 
-  <select id="selectByAllName" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List"/> from make_department  where  department_name = #{name,jdbcType=VARCHAR} and delete_status = 0
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List"/> from make_department  where  department_name  like '%${name}%'  and delete_status = 0
   </select>
 
   <select id="selectByDepartmentCode" resultMap="SimpleResultMap" parameterType="java.lang.String" >

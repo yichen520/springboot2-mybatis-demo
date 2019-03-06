@@ -81,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
                 if(sealPayOrder.getExpressWay()){
                     sealPayOrder.setExpressWayName("EMS");
+                    sealPayOrder.setPayAccout(sealPayOrder.getPayAccout()+"(含邮费)");
                 }else {
                     sealPayOrder.setExpressWayName("自取");
                 }
@@ -113,6 +114,7 @@ public class OrderServiceImpl implements OrderService {
 
                 if(sealPayOrder.getExpressWay()){
                     sealPayOrder.setExpressWayName("EMS");
+                    sealPayOrder.setPayAccout(sealPayOrder.getPayAccout()+"(含邮费)");
                 }else {
                     sealPayOrder.setExpressWayName("自取");
                 }
@@ -146,9 +148,11 @@ public class OrderServiceImpl implements OrderService {
 
                 if(sealPayOrder.getExpressWay()){
                     sealPayOrder.setExpressWayName("EMS");
+                    sealPayOrder.setPayAccout(sealPayOrder.getPayAccout()+" (含邮费)");
                 }else {
                     sealPayOrder.setExpressWayName("自取");
                 }
+
                 if(ACCOUNT_TIP.contains(sealPayOrder.getPayAccout())){
                     sealPayOrder.setPayAccout("价格到店商议");
                 }

@@ -36,14 +36,15 @@ public class DistrictController implements InitializingBean
      private StringRedisTemplate template;
     @Autowired
     private RedisTemplate redisTemplate;
-   // @Value("${province}")
-    private String  provinceDistrictId ="330000";
+
+    @Value("${province}")
+    private String  provinceDistrictId;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         List<DistrictMenus> district = districtService.selectAllDistrict();
        List<DistrictMenus> districtMenus = districtService.selectOneDistrict(provinceDistrictId);
-        List<DistrictMenus> tempDistrictMenus = districtService.selectTempOneDistrict(provinceDistrictId);
+       List<DistrictMenus> tempDistrictMenus = districtService.selectTempOneDistrict(provinceDistrictId);
         if(district== null) {
             return ;
         }

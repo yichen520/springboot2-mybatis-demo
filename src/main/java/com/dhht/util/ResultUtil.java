@@ -52,6 +52,8 @@ public class ResultUtil {
     public static final int evaluationError = 61;
     public static final int isRepairCompany = 62;
     public static final int isBindingOtherCompay = 63;
+    public static final int isRightCode = 64;
+
 
     public static String sealType(String sealType){
         switch (sealType){
@@ -161,6 +163,8 @@ public class ResultUtil {
                 return JsonObjectBO.error("该企业已经注册，请勿重复注册");
             case 63:
                 return JsonObjectBO.error("该用户已绑定其他企业，无法注册该企业账号，请解除绑定后再做操作!");
+            case 64:
+                return JsonObjectBO.ok("验证成功");
                 default:
                     return null;
         }

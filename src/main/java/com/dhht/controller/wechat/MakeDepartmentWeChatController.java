@@ -48,9 +48,9 @@ public class MakeDepartmentWeChatController extends WeChatBaseController {
     public JsonObjectBO selectByAllName(@RequestBody Map map){
         try {
             String name = (String)map.get("name");
-            Makedepartment makedepartment = makeDepartmentService.selectByAllName(name);
+            List<Makedepartment> makeDepartments = makeDepartmentService.selectByName(name);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("makeDepartment",makedepartment);
+            jsonObject.put("makeDepartment",makeDepartments);
             return JsonObjectBO.success("查询成功",jsonObject);
         }catch (Exception e){
             return JsonObjectBO.exception("查询失败");

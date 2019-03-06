@@ -161,6 +161,24 @@ public class WeChatUserServiceImpl implements WeChatUserService {
     }
 
     @Override
+    public int isRightVerificationCode(String phone, String inputVerificationCode) {
+        try {
+            String verificationCode = stringRedisTemplate.opsForValue().get(phone);
+            if(verificationCode!=null){
+                if(verificationCode.equals(inputVerificationCode)){
+                    return ResultUtil.isRightCode;
+                }else {
+                    return ResultUtil.isCodeError;
+                }
+            }else {
+                return ResultUtil.isCodeError;
+            }
+        }catch (Exception e){
+            return ResultUtil.isCodeError;
+        }
+    }
+
+    @Override
     public WeChatUser selectById(String id) {
         return weChatUserMapper.selectByPrimaryKey(id);
     }
@@ -193,7 +211,6 @@ public class WeChatUserServiceImpl implements WeChatUserService {
 
     @Override
     public int companyRegister(UseDepartmentRegister useDepartmentRegister) {
-
         String rightCaptcha = stringRedisTemplate.opsForValue().get(useDepartmentRegister.getMobilePhone());
         if (!useDepartmentRegister.getCaptcha().equals(rightCaptcha)) {
             return ResultUtil.isCodeError;

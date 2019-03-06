@@ -42,6 +42,8 @@ public interface WeChatUserService {
      */
     Map<String,Object>  selectWeChatUser(String telphone);
 
+    int isRightVerificationCode(String phone,String inputVerificationCode);
+
     WeChatUser selectById(String id);
 
     UseDepartment bindCompany(UseDepartment useDepartment);
