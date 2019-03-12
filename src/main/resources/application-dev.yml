@@ -115,7 +115,7 @@ trackerServer: 10.0.0.40
 trackerProtocol: http://
 file:
   local:
-    root: C:/temp/
+    root: /Users/imac_dhht/Desktop/temp
     ems: /Users/imac_dhht/Desktop/
 sealtemplate:
   filePath: C:/temp/seal
@@ -144,7 +144,7 @@ sms:
         newUserName: 150917
         makedepartmentpunish: 160963
         employeepunish: 160972
-        express: 261423
+        express: 289439
         getseal: 261422
         agentCheck: 261421
         business: 261418
@@ -153,6 +153,6 @@ sms:
 
 
 #省级区域设定
-province: 330000
+province: 810000
 #是否要加密狗 true是要  false是不要
 suciz: false

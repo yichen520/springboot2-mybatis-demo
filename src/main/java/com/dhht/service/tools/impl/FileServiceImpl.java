@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private FileMapper fileMapper;
 
-    @Resource(name="fastDFSStoreServiceImpl")
+    @Resource(name="localStoreFileService")
     private FileStoreService fileStoreService;
 
     private static final Logger logger = LoggerFactory.getLogger(FileLocalStoreServiceImpl.class);
