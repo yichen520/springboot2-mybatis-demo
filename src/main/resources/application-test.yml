@@ -147,7 +147,7 @@ face:
   similarity: 45
 seal:
    template:
-        filepath: /Users/imac_dhht/Desktop/
+        filepath: C:/temp/
 
 #省级区域设定
 province: 630000
