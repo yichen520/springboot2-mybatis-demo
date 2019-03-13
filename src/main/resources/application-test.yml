@@ -131,10 +131,10 @@ trackerProtocol: http://
 
 file:
  local:
-   root: C:/temp/
-   ems: C:/temp/
+   root: C:/temp
+   ems: C:/temp
 
-filePath: C:/temp/
+filePath: C:/temp
 
 
 
@@ -147,7 +147,7 @@ face:
   similarity: 45
 seal:
    template:
-        filepath: C:/temp
+        filepath: /Users/imac_dhht/Desktop/
 
 #省级区域设定
 province: 630000
