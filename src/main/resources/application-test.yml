@@ -131,10 +131,10 @@ trackerProtocol: http://
 
 file:
  local:
-   root: C:/temp
-   ems: C:/temp
+   root: C:/temp/seal
+   ems: C:/temp/seal
 
-filePath: C:/temp
+filePath: C:/temp/seal
 
 
 
