@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/weChat/recopients")
-public class RecipientsController extends WeChatBaseController {
+public class  RecipientsController extends WeChatBaseController {
     @Autowired
     private RecipientsService recipientsService;
 

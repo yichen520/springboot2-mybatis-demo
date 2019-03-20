@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping(value = "weChat/sealOrder")
 public class SealOrderController extends WeChatBaseController {
 
+
     @Autowired
     private OrderService orderService;
     @Autowired
