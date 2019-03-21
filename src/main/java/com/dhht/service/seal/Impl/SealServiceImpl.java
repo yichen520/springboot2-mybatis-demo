@@ -227,8 +227,8 @@ public class SealServiceImpl implements SealService {
             }
             FaceCompareRecord faceCompareRecord = null;
             FaceCompareRecord TrustedIdentityAuthenticationResult = null;
-            List<Seal> list = sealDao.selectByCodeAndType(useDepartmentCode,"05");
-            List<Seal> list1 = sealDao.selectByCodeAndType(useDepartmentCode,"01");
+            List<Seal> list = sealDao.selectByCodeAndType(useDepartmentCode,SealUtil.SEAL_TYPE_CODE_05);
+            List<Seal> list1 = sealDao.selectByCodeAndType(useDepartmentCode,SealUtil.SEAL_TYPE_CODE_01);
             UseDepartment useDepartment = useDepartmentDao.selectByCode(useDepartmentCode);  //根据usedepartment查询对应的使用公司
             if (useDepartment == null) {
                 return ResultUtil.isNoDepartment;
@@ -245,12 +245,12 @@ public class SealServiceImpl implements SealService {
             }
 
             for (Seal seal : seals) {
-                if (seal.getSealTypeCode().equals("05") && !seal.getSealReason().equals("03")) {
+                if (seal.getSealTypeCode().equals(SealUtil.SEAL_TYPE_CODE_05) && !seal.getSealReason().equals(SealUtil.SEAL_REASON_03)) {
                     if (list.size() != 0) {
                         return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
                     }
 
-                } else if (seal.getSealTypeCode().equals("01") && !seal.getSealReason().equals("03")) {
+                } else if (seal.getSealTypeCode().equals(SealUtil.SEAL_TYPE_CODE_01) && !seal.getSealReason().equals(SealUtil.SEAL_REASON_03)) {
                     if (list1.size() != 0) {
                         return ResultUtil.isHaveSeal;    //该公司的法务印章或者单位章已经存在
                     }
@@ -278,7 +278,7 @@ public class SealServiceImpl implements SealService {
                 seal.setSealName(useDepartment.getName());
                 seal.setUseDepartmentCode(useDepartmentCode);
                 seal.setUseDepartmentName(useDepartment.getName());
-                seal.setSealStatusCode("03");
+                seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_03);
                 seal.setIsRecord(true);
                 seal.setRecordDate(DateUtil.getCurrentTime());
                 seal.setIsCancel(false);
@@ -298,15 +298,15 @@ public class SealServiceImpl implements SealService {
                 seal.setRecordDate(DateUtil.getCurrentTime());
                 seal.setIsUndertake(true);
                 seal.setUndertakeDate(DateUtil.getCurrentTime());
-                if (seal.getSealReason().equals("03")) {
+                if (seal.getSealReason().equals(SealUtil.SEAL_REASON_03)) {
                     String logoutId = UUIDUtil.generate();
-                    if (seal.getSealTypeCode().equals("01")) {
-                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, "01");
+                    if (seal.getSealTypeCode().equals(SealUtil.SEAL_TYPE_CODE_01)) {
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, SealUtil.SEAL_TYPE_CODE_01);
                         if (seal1 != null) {
                             seal1.setLogoutPersonId(logoutId);
-                            seal.setSealStatusCode("03");
+                            seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_03);
                             logoutAbout(seal1, employee);
-                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode, "01");
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode, SealUtil.SEAL_TYPE_CODE_01);
                             //经办人信息
                             SealAgent sealAgent = new SealAgent();
                             sealAgent.setId(logoutId);
@@ -328,12 +328,12 @@ public class SealServiceImpl implements SealService {
                             int sealAgentInsert = sealAgentMapper.insert(sealAgent);
 
                         }
-                    } else if (seal.getSealTypeCode().equals("05")) {
-                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, "05");
+                    } else if (seal.getSealTypeCode().equals(SealUtil.SEAL_TYPE_CODE_05)) {
+                        Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode, null, SealUtil.SEAL_TYPE_CODE_05);
                         if (seal1 != null) {
-                            seal.setSealStatusCode("03");
+                            seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_03);
                             logoutAbout(seal1, employee);
-                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode, "05");
+                            int logoutSeal = sealDao.logoutSeal(useDepartmentCode, SealUtil.SEAL_TYPE_CODE_05);
                             //经办人信息
                             SealAgent sealAgent = new SealAgent();
                             sealAgent.setId(logoutId);
@@ -609,7 +609,7 @@ public class SealServiceImpl implements SealService {
         if(!seal1.getIsUndertake()){
             return ResultUtil.isFail;
         }
-        seal1.setSealStatusCode("01");
+        seal1.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_01);
         String operateType = "01";
         String sealCode = seal1.getSealCode();
         SealOperationRecord sealOperationRecord1 = sealDao.SelectByCodeAndFlag03(sealCode, operateType);  //查找印模上传的
@@ -689,7 +689,7 @@ public class SealServiceImpl implements SealService {
     public int sealPersonal(String id, User user) {
         Seal seal1 = sealDao.selectByPrimaryKey(id);
         if (seal1.getIsChipseal()) {
-            seal1.setSealStatusCode("02");
+            seal1.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_02);
             if (seal1.getIsLogout()) {
                 return ResultUtil.isFail;
             }
@@ -849,7 +849,7 @@ public class SealServiceImpl implements SealService {
         }
         sealAgent.setEntryType(entryType);
         int sealAgentResult = sealAgentMapper.insert(sealAgent);
-        seal1.setSealStatusCode("04");
+        seal1.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_04);
         seal1.setGetterId(saId);
         int updateByPrimaryKey = sealDao.updateByPrimaryKeySelective(seal1);
 
@@ -881,7 +881,7 @@ public class SealServiceImpl implements SealService {
     @Override
     public int newsealRecord(User user, String sealId) {
         Seal seal = sealDao.selectByPrimaryKey(sealId);
-        seal.setSealStatusCode("09");
+        seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_09);
         seal.setIsApply(true);
         seal.setApplyDate(DateUtil.getCurrentTime());
         seal.setIsEarlywarning(true);
@@ -917,7 +917,7 @@ public class SealServiceImpl implements SealService {
         seal.setIsUpdate(false);
         seal.setUpdateDate(DateUtil.getCurrentTime());
         seal.setRecordDate(DateUtil.getCurrentTime());
-        seal.setSealStatusCode("03");
+        seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_03);
         int result = sealDao.updateByPrimaryKeySelective(seal);
         //印章操作
         String telphone = user.getTelphone();
@@ -961,7 +961,7 @@ public class SealServiceImpl implements SealService {
             orderService.updateRefundStatus("1",sealId);
             seal.setIsCancel(true);
             seal.setCancelDate(DateUtil.getCurrentTime());
-            seal.setSealStatusCode("10"); //取消章
+            seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_10); //取消章
             sealVerification.setRejectReason("3");
             int insertSealOperationRecord = insertSealOperationRecord(employee,"10",sealId); //印章不做退回操作
         }else {    //资料问题
@@ -970,7 +970,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsUpdate(true);
             seal.setUpdateDate(DateUtil.getCurrentTime());
             seal.setCancelDate(DateUtil.getCurrentTime());
-            seal.setSealStatusCode("11");
+            seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_11);
             int insertSealOperationRecord = insertSealOperationRecord(employee,"12",sealId); //印章资料问题退回操作
             sealVerification.setRejectReason("1");
         }
@@ -998,7 +998,7 @@ public class SealServiceImpl implements SealService {
     public int cancelSeal(String Id,WeChatUser weChatUser) {
         Seal seal = sealDao.selectByPrimaryKey(Id);
         seal.setIsCancel(true);
-        seal.setSealStatusCode("10");
+        seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_10);
         seal.setCancelDate(DateUtil.getCurrentTime());
         int updateSeal = sealDao.updateByPrimaryKeySelective(seal);
 
@@ -1027,7 +1027,7 @@ public class SealServiceImpl implements SealService {
         FaceCompareRecord faceCompareRecord = null;
         FaceCompareRecord TrustedIdentityAuthenticationResult = null;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
-        seal1.setSealStatusCode("05");
+        seal1.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_05);
         if (seal1.getIsLoss()) {
             return ResultUtil.isFail;
         }
@@ -1132,7 +1132,7 @@ public class SealServiceImpl implements SealService {
         FaceCompareRecord faceCompareRecord = null;
         FaceCompareRecord TrustedIdentityAuthenticationResult = null;
         Seal seal1 = sealDao.selectByPrimaryKey(id);
-        seal1.setSealStatusCode("06");
+        seal1.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_06);
 
         if (seal1.getIsLogout()) {
             return ResultUtil.isFail;
@@ -1641,7 +1641,7 @@ public class SealServiceImpl implements SealService {
     //用于备案单位印章查询
     public List<Seal> selectSealByBADW(Seal seal, String status) {
         List<Seal> list = new ArrayList<Seal>();
-        if (status.equals("03")) {  //已备案
+        if (status.equals(SealUtil.SEAL_STATUS_CODE_03)) {  //已备案
             seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
@@ -1650,7 +1650,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsLogout(false);
             seal.setIsLoss(false);
             seal.setIsCancel(false);
-        } else if (status.equals("01")) {  //已制作
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_01)) {  //已制作
             seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
@@ -1659,7 +1659,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsLogout(false);
             seal.setIsLoss(false);
             seal.setIsCancel(false);
-        } else if (status.equals("02")) {  //已个人化
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_02)) {  //已个人化
             seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
@@ -1668,14 +1668,14 @@ public class SealServiceImpl implements SealService {
             seal.setIsLogout(false);
             seal.setIsLoss(false);
             seal.setIsCancel(false);
-        } else if (status.equals("00")) {    //未交付
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_00)) {    //未交付
             seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsDeliver(false);
             seal.setIsLogout(false);
             seal.setIsLoss(false);
             seal.setIsCancel(false);
-        } else if (status.equals("04")) {    //已交付
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_04)) {    //已交付
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
@@ -1684,21 +1684,21 @@ public class SealServiceImpl implements SealService {
             seal.setIsLogout(false);
             seal.setIsLoss(false);
             seal.setIsUndertake(true);
-        } else if (status.equals("05")) {  //已经挂失
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_05)) {  //已经挂失
             seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
             seal.setIsCancel(false);
-        } else if (status.equals("06")) {   //已注销
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_06)) {   //已注销
             seal.setIsCancel(false);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLogout(true);
             seal.setIsCancel(false);
-        }else if (status.equals("08")) {   //待承接
+        }else if (status.equals(SealUtil.SEAL_STATUS_CODE_08)) {   //待承接
             seal.setIsCancel(false);
             seal.setIsApply(false);
             seal.setIsDeliver(false);
@@ -1707,10 +1707,10 @@ public class SealServiceImpl implements SealService {
             seal.setIsUndertake(false);
             seal.setIsCancel(false);
             seal.setIsUpdate(false);
-        }else if(status.equals("07")){ //待交付
+        }else if(status.equals(SealUtil.SEAL_STATUS_CODE_07)){ //待交付
             list=sealDao.selectWaitdeliveredByBADW(seal);
             return list;
-        }else if (status.equals("09")) {   //已备案
+        }else if (status.equals(SealUtil.SEAL_STATUS_CODE_09)) {   //已备案
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
@@ -1719,9 +1719,9 @@ public class SealServiceImpl implements SealService {
             seal.setIsCancel(false);
             list = sealDao.selectIsApply(seal);
             return list;
-        }else if(status.equals("10")){
+        }else if(status.equals(SealUtil.SEAL_STATUS_CODE_10)){
             seal.setIsCancel(true);
-        }else if(status.equals("11")){ //资料更新
+        }else if(status.equals(SealUtil.SEAL_STATUS_CODE_11)){ //资料更新
             seal.setIsCancel(false);
             seal.setIsRecord(false);
             seal.setIsUpdate(true);
@@ -1734,9 +1734,9 @@ public class SealServiceImpl implements SealService {
     //用于印章管理
     public List<Seal> chooseSealStatus(Seal seal, String status) {
         List<Seal> list = new ArrayList<Seal>();
-        if (status.equals("03")) {  //已申请
+        if (status.equals(SealUtil.SEAL_STATUS_CODE_03)) {  //已申请
             list = sealDao.selectIsRecord(seal);
-        } else if (status.equals("01")) {  //已制作
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_01)) {  //已制作
             list = sealDao.selectIsMake(seal);
             for (Seal seal1 :list){
                 SealPayOrder sealPayOrder =sealPayOrderMapper.selectBySealId(seal1.getId());
@@ -1779,25 +1779,25 @@ public class SealServiceImpl implements SealService {
                     seal1.setDeliveryExpressInfo(deliveryExpressInfo);
                 }
             }
-        } else if (status.equals("02")) {  //已个人化
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_02)) {  //已个人化
             list = sealDao.selectPersonal(seal);
-        } else if (status.equals("00")) {    //未交付
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_00)) {    //未交付
             list = sealDao.selectUndelivered(seal);
-        } else if (status.equals("04")) {    //已交付
-            seal.setSealStatusCode("04");
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_04)) {    //已交付
+            seal.setSealStatusCode(SealUtil.SEAL_STATUS_CODE_04);
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsCancel(false);
             list = sealDao.selectIsDeliver(seal);
-        } else if (status.equals("05")) {  //已经挂失
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_05)) {  //已经挂失
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
             seal.setIsLoss(true);
             seal.setIsCancel(false);
             list = sealDao.selectIsLoss(seal);
-        } else if (status.equals("06")) {   //已注销
+        } else if (status.equals(SealUtil.SEAL_STATUS_CODE_06)) {   //已注销
             seal.setIsRecord(true);
 //            seal.setIsMake(true);
 //            seal.setIsDeliver(true);
@@ -1805,7 +1805,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsCancel(false);
             list = sealDao.selectIsLogout(seal);
         }
-        else if (status.equals("08")) {   //待承接
+        else if (status.equals(SealUtil.SEAL_STATUS_CODE_08)) {   //待承接
             seal.setIsApply(false);
             seal.setIsDeliver(false);
             seal.setIsRecord(false);
@@ -1814,7 +1814,7 @@ public class SealServiceImpl implements SealService {
             seal.setIsCancel(false);
             seal.setIsUpdate(false);
             list = sealDao.selectByCodeAndName(seal);
-        }else if (status.equals("09")) {   //已备案
+        }else if (status.equals(SealUtil.SEAL_STATUS_CODE_09)) {   //已备案
             seal.setIsRecord(true);
             seal.setIsMake(true);
             seal.setIsDeliver(true);
@@ -1822,12 +1822,12 @@ public class SealServiceImpl implements SealService {
             seal.setIsApply(true);
             seal.setIsCancel(false);
             list = sealDao.selectIsApply(seal);
-        }else if(status.equals("07")){ //待交付
+        }else if(status.equals(SealUtil.SEAL_STATUS_CODE_07)){ //待交付
             list=sealDao.selectWaitDeliver(seal);
-        }else if(status.equals("10")){  //已退回
+        }else if(status.equals(SealUtil.SEAL_STATUS_CODE_10)){  //已退回
             seal.setIsCancel(true);
             list=sealDao.selectByCodeAndName(seal);
-        }else if(status.equals("11")){//资料更新
+        }else if(status.equals(SealUtil.SEAL_STATUS_CODE_11)){//资料更新
             seal.setIsCancel(false);
             seal.setIsRecord(false);
             seal.setIsUpdate(true);
