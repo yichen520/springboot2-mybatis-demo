@@ -29,5 +29,19 @@ public class SealUtil {
     public static final String SEAL_STATUS_CODE_10 ="10";//已退回
     public static final String SEAL_STATUS_CODE_11 ="11";//资料更新
 
+    public static final String SEAL_AGENT_BUSINESS_TYPE_0="00";//经办人申请
+    public static final String SEAL_AGENT_BUSINESS_TYPE_1="01";//经办人领取
+    public static final String SEAL_AGENT_BUSINESS_TYPE_2="02";//经办人挂失
+    public static final String SEAL_AGENT_BUSINESS_TYPE_3="03";//经办人注销
+    public static final String SEAL_AGENT_BUSINESS_TYPE_000="000";//小程序申请
+
+    public static final String SEALMATERIAL_TYPE_1="01";//挂失营业执照
+    public static final String SEALMATERIAL_TYPE_2="02";//印鉴留存卡
+    public static final String SEALMATERIAL_TYPE_3="03";//印章图像数据
+    public static final String SEALMATERIAL_TYPE_4="04";//印模图像
+    public static final String SEALMATERIAL_TYPE_5="05";//印模二维数据
+    public static final String SEALMATERIAL_TYPE_6="06";//印模图片缩略图
+    public static final String SEALMATERIAL_TYPE_7="07";//注销营业执照
+
 
 }

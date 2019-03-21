@@ -313,7 +313,7 @@ public class SealServiceImpl implements SealService {
                             sealAgent.setName(agentName);
                             sealAgent.setTelphone(agentTelphone);
                             sealAgent.setAgentPhotoId(agentPhotoId);
-                            sealAgent.setBusinessType("03");
+                            sealAgent.setBusinessType(SealUtil.SEAL_AGENT_BUSINESS_TYPE_3);
                             sealAgent.setCertificateNo(certificateNo);
                             sealAgent.setCertificateType(certificateType);
                             sealAgent.setIdCardFrontId(idcardFrontId);
@@ -340,7 +340,7 @@ public class SealServiceImpl implements SealService {
                             sealAgent.setName(agentName);
                             sealAgent.setTelphone(agentTelphone);
                             sealAgent.setAgentPhotoId(agentPhotoId);
-                            sealAgent.setBusinessType("03");
+                            sealAgent.setBusinessType(SealUtil.SEAL_AGENT_BUSINESS_TYPE_3);
                             sealAgent.setCertificateNo(certificateNo);
                             sealAgent.setCertificateType(certificateType);
                             sealAgent.setIdCardFrontId(idcardFrontId);
@@ -412,7 +412,7 @@ public class SealServiceImpl implements SealService {
                 sealAgent.setName(agentName);
                 sealAgent.setTelphone(agentTelphone);
                 sealAgent.setAgentPhotoId(agentPhotoId);
-                sealAgent.setBusinessType("00");
+                sealAgent.setBusinessType(SealUtil.SEAL_AGENT_BUSINESS_TYPE_0);
                 sealAgent.setCertificateNo(certificateNo);
                 sealAgent.setCertificateType(certificateType);
                 sealAgent.setIdCardFrontId(idcardFrontId);
@@ -500,14 +500,14 @@ public class SealServiceImpl implements SealService {
                     SealMaterial sealMaterial = new SealMaterial();
                     sealMaterial.setId(UUIDUtil.generate());
                     sealMaterial.setSealCode(sealcode);
-                    sealMaterial.setType("04");
+                    sealMaterial.setType(SealUtil.SEALMATERIAL_TYPE_4);
                     sealMaterial.setFilePath(moulageImageId);
                     int sealMaterialInsert = sealDao.insertSealMaterial(sealMaterial);
 
                     SealMaterial microsealMaterial = new SealMaterial();
                     microsealMaterial.setId(UUIDUtil.generate());
                     microsealMaterial.setSealCode(sealcode);
-                    microsealMaterial.setType("06");
+                    microsealMaterial.setType(SealUtil.SEALMATERIAL_TYPE_6);
                     microsealMaterial.setFilePath(micromoulageImageId);
                     sealDao.insertSealMaterial(microsealMaterial);
 
@@ -525,7 +525,7 @@ public class SealServiceImpl implements SealService {
                     SealMaterial sealMaterial1 = new SealMaterial();
                     sealMaterial1.setId(UUIDUtil.generate());
                     sealMaterial1.setSealCode(sealcode);
-                    sealMaterial1.setType("05");
+                    sealMaterial1.setType(SealUtil.SEALMATERIAL_TYPE_5);
                     sealMaterial1.setFilePath(moulageId);
                     int sealMaterialInsert1 = sealDao.insertSealMaterial(sealMaterial1);
 
@@ -640,12 +640,12 @@ public class SealServiceImpl implements SealService {
         SealMaterial sealMaterial = new SealMaterial();
         sealMaterial.setId(UUIDUtil.generate());
         sealMaterial.setSealCode(sealCode);
-        sealMaterial.setType("02");  //02为印鉴留存卡
+        sealMaterial.setType(SealUtil.SEALMATERIAL_TYPE_2);  //02为印鉴留存卡
         sealMaterial.setFilePath(sealedCardId);
         SealMaterial sealMaterial1 = new SealMaterial();
         sealMaterial1.setId(UUIDUtil.generate());
         sealMaterial1.setSealCode(sealCode);
-        sealMaterial1.setType("03");  //03为印章图像数据
+        sealMaterial1.setType(SealUtil.SEALMATERIAL_TYPE_3);  //03为印章图像数据
         sealMaterial1.setFilePath(imageDataId);
         sealMaterialLists.add(sealMaterial);
         sealMaterialLists.add(sealMaterial1);
@@ -840,7 +840,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
 //        sealAgent.setLoginTelPhone(agentTelphone);
-        sealAgent.setBusinessType("01");
+        sealAgent.setBusinessType(SealUtil.SEAL_AGENT_BUSINESS_TYPE_1);
         sealAgent.setName(name);
         if (entryType.equals("00")) {
             sealAgent.setFaceCompareRecordId(faceCompareRecordResult.getId());
@@ -1066,7 +1066,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardFrontId(idcardFrontId);
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
-        sealAgent.setBusinessType("02");
+        sealAgent.setBusinessType(SealUtil.SEAL_AGENT_BUSINESS_TYPE_2);
         sealAgent.setEntryType(entryType);
         sealAgent.setName(name);
         if (entryType.equals("00")) {
@@ -1098,10 +1098,10 @@ public class SealServiceImpl implements SealService {
         sealOperationRecord.setSealId(id);
         int insertSealOperationRecord = sealOperationRecordMapper.insertSelective(sealOperationRecord);
 
-        //营业执照
+        //挂失营业执照
         SealMaterial sealMaterial = new SealMaterial();
         sealMaterial.setId(UUIDUtil.generate());
-        sealMaterial.setType("01");
+        sealMaterial.setType(SealUtil.SEALMATERIAL_TYPE_1);
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setFilePath(businesslicenseId);
         sealDao.insertSealMaterial(sealMaterial);
@@ -1172,7 +1172,7 @@ public class SealServiceImpl implements SealService {
         sealAgent.setIdCardFrontId(idcardFrontId);
         sealAgent.setIdCardReverseId(idcardReverseId);
         sealAgent.setProxyId(proxyId);
-        sealAgent.setBusinessType("03");
+        sealAgent.setBusinessType(SealUtil.SEAL_AGENT_BUSINESS_TYPE_3);
         sealAgent.setEntryType(entryType);
         sealAgent.setName(name);
 
@@ -1180,7 +1180,7 @@ public class SealServiceImpl implements SealService {
         //营业执照
         SealMaterial sealMaterial = new SealMaterial();
         sealMaterial.setId(UUIDUtil.generate());
-        sealMaterial.setType("07");//注销的营业执照
+        sealMaterial.setType(SealUtil.SEALMATERIAL_TYPE_7);//注销的营业执照
         sealMaterial.setSealCode(sealCode);
         sealMaterial.setFilePath(businesslicenseId);
         sealDao.insertSealMaterial(sealMaterial);
@@ -1993,13 +1993,13 @@ public class SealServiceImpl implements SealService {
      */
     public int isHaveSeal(String useDepartmentCode,Seal seal){
         if(seal.getSealTypeCode().equals("01")) {
-            Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"01");
+            Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,SealUtil.SEAL_TYPE_CODE_01);
             if(seal1!=null){
                 return ResultUtil.isHaveSeal;
             }
         }
         if(seal.getSealTypeCode().equals("05")){
-            Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,"05");
+            Seal seal1 = sealDao.selectByTypeAndUseDepartmentCode(useDepartmentCode,null,SealUtil.SEAL_TYPE_CODE_05);
             if(seal1!=null){
                 return ResultUtil.isHaveSeal;
             }
